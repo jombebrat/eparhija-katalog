@@ -194,7 +194,7 @@ function page(lang, dir) {
     <div class="container slab__inner">
       <a class="wordmark" href="${root}${dir}"><b>${t(lang, S.org)}</b><span>${t(lang, S.sub)}</span></a>
       <nav class="langs" aria-label="${t(lang, S.langsLabel)}">
-        ${LANGS.map((l) => `<a href="${here(l)}" hreflang="${strings[l.id].htmlLang}" lang="${strings[l.id].htmlLang}" data-lang${l.id === lang ? ' aria-current="page"' : ''}><span class="l-long">${esc(strings[l.id].langName)}</span><span class="l-short" aria-hidden="true">${esc(strings[l.id].langShort)}</span></a>`).join('\n        ')}
+        ${LANGS.map((l) => `<a href="${here(l)}" hreflang="${strings[l.id].htmlLang}" lang="${strings[l.id].htmlLang}" aria-label="${esc(strings[l.id].langName)}" data-lang${l.id === lang ? ' aria-current="page"' : ''}><span class="l-long">${esc(strings[l.id].langName)}</span><span class="l-short" aria-hidden="true">${esc(strings[l.id].langShort)}</span></a>`).join('\n        ')}
       </nav>
       <button class="listbtn" type="button" data-open-list hidden>${t(lang, S.list)} <span class="listbtn__n" data-count>0</span></button>
     </div>
