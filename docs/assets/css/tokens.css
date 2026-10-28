@@ -16,8 +16,7 @@
   --color-focus: oklch(50% 0.095 188);
   --font-display: "Onest", ui-sans-serif, system-ui, sans-serif; --font-body: var(--font-display);
   --font-outlier: ui-monospace, monospace;
-  --color-scrim: oklch(16% 0 0 / 0.42); --color-on-ink-2: oklch(80% 0.004 100); --color-rule-on-ink: oklch(36% 0 0);
-  --color-band: oklch(95.5% 0.004 100); --color-band-2: oklch(90.5% 0.005 100);
+  --color-scrim: oklch(16% 0 0 / 0.42); --color-on-ink-2: oklch(80% 0.004 100);
   --radius-card: 12px; --radius-pill: 999px; --rule-hair: 1px;
   --shadow-card: 0 20px 40px oklch(20% 0 0 / 0.16);
   --tracking-display: -0.04em; --display-weight: 700;

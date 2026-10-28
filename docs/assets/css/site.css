@@ -4,7 +4,6 @@
 /* Hallmark · pre-emit critique: P4 H4 E4 S5 R4 V4 · weakest: P, a stock list argues little; it argues that the code is the way in, so the search by code leads the first screen */
 /* Hallmark · waive 83 · the photographs are the warehouse's own product shots, one per article on sale · a catalogue's pictures are its inventory, not a stock gallery */
 /* Hallmark · waive 22 · ink and greys at zero chroma, as the Ink theme sets them · the catalogue is printed in plain black so the gold of each icon and chandelier carries the colour */
-/* Hallmark · note · at the owner's request the categories alternate two greys and the order band is ink, so each section reads apart; the Ink theme's two-band limit yields to it */
 /* Hallmark · waive 77 · the catalogue section holds twelve category sections, each a head over its grid · a warehouse catalogue reads as one long list by nature */
 /* Hallmark · waive 59 · the sticky catalogue bar sits 64px under the hero and rules the seam with hairlines · the bar is chrome that opens the catalogue, not a section */
 /* Hallmark · answered F20 · each category keeps the warehouse's own count of articles; a row ends where the stock ends */
@@ -128,10 +127,10 @@ input[type="search"]::-webkit-search-cancel-button, input[type="search"]::-webki
 .listbtn--bar:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
 .listbtn--bar .listbtn__n { background: var(--color-paper-3); }
 
-.nomatch { max-width: 52ch; padding-block: var(--space-2xl); font-size: var(--text-lead); color: var(--color-ink-2); }
+.nomatch { max-width: 52ch; padding-top: var(--space-2xl); font-size: var(--text-lead); color: var(--color-ink-2); }
 
-.cat { padding-block: var(--space-3xl); background: var(--color-band); }
-.cat[data-tone="b"] { background: var(--color-band-2); }
+.cat { padding-top: var(--space-3xl); }
+.cat:first-of-type { padding-top: var(--space-2xl); }
 .cat[hidden] { display: none; }
 .cat__head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-md); margin-bottom: var(--space-xl); padding-bottom: var(--space-md); border-bottom: var(--rule-hair) solid var(--color-ink); }
 .cat__count { color: var(--color-muted); font-size: var(--text-md); white-space: nowrap; font-variant-numeric: tabular-nums; }
@@ -139,9 +138,9 @@ input[type="search"]::-webkit-search-cancel-button, input[type="search"]::-webki
 .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-2xl) var(--gap-columns); margin: 0; padding: 0; list-style: none; }
 .card { display: flex; flex-direction: column; gap: var(--space-xs); min-width: 0; }
 .card[hidden] { display: none; }
-.card__img { position: relative; display: grid; place-items: center; aspect-ratio: 1; border-radius: var(--radius-card); background: var(--color-paper); transition: background-color var(--dur-short) var(--ease-out); }
+.card__img { position: relative; display: grid; place-items: center; aspect-ratio: 1; border-radius: var(--radius-card); background: var(--color-paper-2); transition: background-color var(--dur-short) var(--ease-out); }
 .card__img img { position: absolute; inset: 0; width: 100%; height: 100%; padding: var(--space-lg); object-fit: contain; mix-blend-mode: multiply; }
-.card__img:hover { background: var(--color-paper-2); }
+.card__img:hover { background: var(--color-paper-3); }
 .card__img--none { color: var(--color-muted); font-size: var(--text-sm); }
 .card__name { margin-top: var(--space-xs); font: 600 var(--text-md)/1.35 var(--font-body); letter-spacing: 0; text-wrap: pretty; }
 .card__name a { color: inherit; text-decoration: none; }
@@ -154,7 +153,7 @@ input[type="search"]::-webkit-search-cancel-button, input[type="search"]::-webki
 
 /* wax candles: a price table beside the photograph */
 .candles { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: var(--gap-columns); align-items: start; }
-.candles__photo { display: grid; place-items: center; margin: 0; padding: var(--space-xl); border-radius: var(--radius-card); background: var(--color-paper); }
+.candles__photo { display: grid; place-items: center; margin: 0; padding: var(--space-xl); border-radius: var(--radius-card); background: var(--color-paper-2); }
 .candles__photo img { width: auto; max-height: 560px; mix-blend-mode: multiply; }
 .candles__body { min-width: 0; }
 .candles__body .lead { margin-bottom: var(--space-xl); }
@@ -174,26 +173,20 @@ input[type="search"]::-webkit-search-cancel-button, input[type="search"]::-webki
 .add--row { min-height: 44px; }
 
 /* ---------- order ---------- */
-.order { padding-block: var(--section-gap) var(--section-gap-s); background: var(--color-ink); color: var(--color-paper); }
-.order h2 { color: var(--color-paper); }
-.order .lead { color: var(--color-on-ink-2); }
+.order { margin-top: var(--section-gap); padding-block: var(--section-gap-s); background: var(--color-paper-2); }
 .order__grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--space-3xl); align-items: start; }
 .order .lead { margin-top: var(--space-md); }
 .steps { display: grid; gap: var(--space-md); margin: var(--space-xl) 0 0; padding: 0; list-style: none; counter-reset: step; }
-.steps li { display: grid; grid-template-columns: var(--space-xl) minmax(0, 1fr); align-items: baseline; gap: var(--space-sm); counter-increment: step; color: var(--color-on-ink-2); }
-.steps li::before { content: counter(step); font: 700 var(--text-2xl)/1 var(--font-display); letter-spacing: -0.03em; color: var(--color-paper); }
-.facts { margin: 0; border-top: var(--rule-hair) solid var(--color-paper); }
-.facts__row { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 5fr); gap: var(--space-md); padding-block: var(--space-lg); border-bottom: var(--rule-hair) solid var(--color-rule-on-ink); }
-.facts dt { font-size: var(--text-sm); color: var(--color-on-ink-2); }
-.facts dd { margin: 0; font-size: var(--text-lg); font-weight: 600; color: var(--color-paper); }
+.steps li { display: grid; grid-template-columns: var(--space-xl) minmax(0, 1fr); align-items: baseline; gap: var(--space-sm); counter-increment: step; color: var(--color-ink-2); }
+.steps li::before { content: counter(step); font: 700 var(--text-2xl)/1 var(--font-display); letter-spacing: -0.03em; color: var(--color-ink); }
+.facts { margin: 0; border-top: var(--rule-hair) solid var(--color-ink); }
+.facts__row { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 5fr); gap: var(--space-md); padding-block: var(--space-lg); border-bottom: var(--rule-hair) solid var(--color-rule); }
+.facts dt { font-size: var(--text-sm); color: var(--color-ink-2); }
+.facts dd { margin: 0; font-size: var(--text-lg); font-weight: 600; color: var(--color-ink); }
 .facts dd a { color: inherit; }
-.facts dd a:hover { text-decoration-color: var(--color-accent-soft); }
-.facts dd a:focus-visible { outline: 2px solid var(--color-accent-soft); outline-offset: 2px; }
-.order .fill { border-color: var(--color-on-ink-2); color: var(--color-on-ink-2); }
+.facts dd a:hover { text-decoration-color: var(--color-accent); }
+.facts dd a:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
 .order__facts .btn { margin-top: var(--space-xl); }
-.order .btn--primary { border-color: var(--color-paper); background: var(--color-paper); color: var(--color-ink); }
-.order .btn--primary:hover { background: var(--color-paper-3); }
-.order .btn--primary:focus-visible { outline-color: var(--color-accent-soft); }
 
 /* ---------- footer: colophon block ---------- */
 .colophon { padding-block: var(--space-2xl) var(--space-3xl); }
@@ -313,7 +306,7 @@ dialog::backdrop { background: var(--color-scrim); }
   .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-xl) var(--space-md); }
   .card__img img { padding: var(--space-sm); }
   .card__price { font-size: var(--text-md); }
-  .cat { padding-block: var(--space-2xl); }
+  .cat { padding-top: var(--space-2xl); }
   .cat__head { margin-bottom: var(--space-lg); }
   .facts__row { grid-template-columns: minmax(0, 1fr); gap: var(--space-2xs); padding-block: var(--space-md); }
   .detail { width: 100%; max-width: 100%; max-height: 100dvh; height: 100dvh; margin: 0; border-radius: 0; }

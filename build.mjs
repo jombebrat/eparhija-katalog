@@ -94,16 +94,15 @@ function page(lang, dir) {
         </li>`;
   };
 
-  const tone = (c) => (cats.indexOf(c) % 2 ? 'b' : 'a');
   const sections = cats.map((c) => {
     if (c.id === 'bougies') return candlesSection(c);
     const list = byCat[c.id];
-    return `<section class="cat" id="${c.id}" aria-labelledby="h-${c.id}" data-cat data-tone="${tone(c)}"><div class="container">
+    return `<section class="cat" id="${c.id}" aria-labelledby="h-${c.id}" data-cat>
         <div class="cat__head"><h2 id="h-${c.id}">${t(lang, c.name[lang])}</h2><p class="cat__count">${count(lang, list.length)}</p></div>
         <ul class="grid" role="list">
         ${list.map(card).join('\n        ')}
         </ul>
-      </div></section>`;
+      </section>`;
   }).join('\n      ');
 
   function candlesSection(c) {
@@ -119,7 +118,7 @@ function page(lang, dir) {
     }).join('\n            ');
     const dk = catalogue.candles.dikiri;
     const dkName = S.dikiri;
-    return `<section class="cat cat--candles" id="${c.id}" aria-labelledby="h-${c.id}" data-cat data-tone="${tone(c)}"><div class="container">
+    return `<section class="cat cat--candles" id="${c.id}" aria-labelledby="h-${c.id}" data-cat>
         <div class="cat__head"><h2 id="h-${c.id}">${t(lang, c.name[lang])}</h2><p class="cat__count">${count(lang, candleRows.length + 1, 'sizes')}</p></div>
         <div class="candles">
           <figure class="candles__photo"><img src="${img(root, ph.file, false)}" width="${ph.W}" height="${ph.H}" alt="" loading="lazy" decoding="async"></figure>
@@ -142,7 +141,7 @@ function page(lang, dir) {
             </div>
           </div>
         </div>
-      </div></section>`;
+      </section>`;
   }
 
   // data the script needs: names and prices in this language, photos, strings
@@ -161,6 +160,7 @@ function page(lang, dir) {
     `<div class="facts__row"><dt>${t(lang, S.rowEmail)}</dt><dd>${site.email ? `<a href="mailto:${esc(site.email)}">${esc(site.email)}</a>` : fill('email', S.fillEmail)}</dd></div>`,
     site.phone ? `<div class="facts__row"><dt>${t(lang, S.rowPhone)}</dt><dd><a href="tel:${esc(site.phone.replace(/[^+\d]/g, ''))}">${esc(site.phone)}</a></dd></div>` : '',
     `<div class="facts__row"><dt>${t(lang, S.rowAddress)}</dt><dd>${site.address?.[lang] ? t(lang, site.address[lang]).replace(/\n/g, '<br>') : fill('address', S.fillAddress)}</dd></div>`,
+    `<div class="facts__row"><dt>${t(lang, S.rowPrices)}</dt><dd>${t(lang, S.pricesNote)}</dd></div>`,
   ].filter(Boolean).join('\n            ');
 
   const alternates = LANGS.map((l) => `<link rel="alternate" hreflang="${strings[l.id].htmlLang}" href="${site.url ? absolute(l) : here(l)}">`).join('\n  ')
@@ -236,8 +236,10 @@ function page(lang, dir) {
           <button class="listbtn listbtn--bar" type="button" data-open-list hidden>${t(lang, S.list)} <span class="listbtn__n" data-count>0</span></button>
         </div>
       </div>
-      <div class="container nomatch-wrap"><p class="nomatch" data-nomatch hidden></p></div>
+      <div class="container">
+      <p class="nomatch" data-nomatch hidden></p>
       ${sections}
+      </div>
     </section>
 
     <section class="order" id="commander" aria-labelledby="h-order">
