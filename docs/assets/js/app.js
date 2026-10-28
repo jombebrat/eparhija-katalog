@@ -44,6 +44,8 @@
       const chip = chips.find((x) => x.dataset.chip === c.id);
       if (chip) chip.toggleAttribute('data-empty', !any);
     });
+    let k = 0;
+    cats.forEach((c) => { if (!c.hidden) c.dataset.tone = k++ % 2 ? 'b' : 'a'; });
     clearBtn.hidden = !terms.length;
     if (!terms.length) { status.textContent = defaultStatus; noMatch.hidden = true; return; }
     status.textContent = fmt(S.matches, { n: countText(shown), q: raw.trim() });
