@@ -1,0 +1,11 @@
+{
+  "_help": "Contact details of the warehouse. Fill them in, then run `node build.mjs`. An empty field shows a dashed 'to complete' slot (email, address) or is left out (phone). `url` is the public address of the site once it is online, e.g. https://jombebrat.github.io/eparhija-katalog/ (used for search engines and link previews).",
+  "url": "",
+  "email": "",
+  "phone": "",
+  "address": {
+    "fr": "",
+    "en": "",
+    "sr": ""
+  }
+}
