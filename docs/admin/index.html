@@ -20,8 +20,8 @@
       <p class="gate__org">Magacin Eparhije zapadnoevropske</p>
       <h1>Prijava za administratore</h1>
       <div class="field">
-          <label for="l-email">Mejl</label>
-          <input class="input" id="l-email" name="email" type="email" autocomplete="username" required aria-required="true" inputmode="email" spellcheck="false">
+          <label for="l-email">Korisničko ime ili mejl</label>
+          <input class="input" id="l-email" name="email" type="text" autocomplete="username" required aria-required="true" autocapitalize="none" autocorrect="off" spellcheck="false">
         </div>
       <div class="field">
           <label for="l-pass">Lozinka</label>
@@ -41,9 +41,10 @@
       </a>
       <nav class="tabs" aria-label="Odeljci">
         <a href="#artikli" data-tab="artikli">Artikli</a>
-        <a href="#kategorije" data-tab="kategorije">Kategorije</a>
-        <a href="#svestenstvo" data-tab="svestenstvo">Sveštenstvo</a>
         <a href="#porudzbine" data-tab="porudzbine">Porudžbine <span class="tabs__n" data-new-orders hidden></span></a>
+        <a href="#statistika" data-tab="statistika">Statistika</a>
+        <a href="#svestenstvo" data-tab="svestenstvo">Sveštenstvo</a>
+        <a href="#kategorije" data-tab="kategorije">Kategorije</a>
       </nav>
       <div class="bar__me">
         <span class="bar__email" data-me></span>
@@ -57,7 +58,7 @@
       <section class="screen" data-screen="artikli" aria-labelledby="h-artikli">
         <div class="screen__head">
           <h1 id="h-artikli">Artikli i stanje</h1>
-          <button class="btn btn--primary" type="button" data-new="product">Novi artikal</button>
+          <div class="screen__actions"><button class="btn" type="button" data-csv="products">Izvezi u Excel (CSV)</button><button class="btn btn--primary" type="button" data-new="product">Novi artikal</button></div>
         </div>
         <div class="toolbar" role="search">
           <div class="field field--grow"><label for="q-artikli">Pretraga</label><input class="input" id="q-artikli" type="search" name="q" autocomplete="off" spellcheck="false" placeholder="P011, кадионица" data-q></div>
@@ -65,6 +66,7 @@
           <div class="field"><span class="field__label" id="f-l">Prikaz</span><div class="seg" role="group" aria-labelledby="f-l" data-f>
           <button type="button" data-v="" aria-pressed="false">Svi <span class="seg__n" data-n=""></span></button>
           <button type="button" data-v="out" aria-pressed="false">Nema na stanju <span class="seg__n" data-n="out"></span></button>
+          <button type="button" data-v="low" aria-pressed="false">Za naručivanje <span class="seg__n" data-n="low"></span></button>
           <button type="button" data-v="hidden" aria-pressed="false">Sakriveni <span class="seg__n" data-n="hidden"></span></button>
         </div></div>
         </div>
@@ -93,6 +95,7 @@
       <section class="screen" data-screen="porudzbine" aria-labelledby="h-porudzbine" hidden>
         <div class="screen__head">
           <h1 id="h-porudzbine">Porudžbine</h1>
+          <button class="btn" type="button" data-csv="orders">Izvezi u Excel (CSV)</button>
         </div>
         <div class="toolbar">
           <div class="field"><span class="field__label" id="s-l">Status</span><div class="seg" role="group" aria-labelledby="s-l" data-s>
@@ -103,6 +106,22 @@
         </div></div>
         </div>
         <div class="region" data-region="orders"></div>
+      </section>
+
+      <section class="screen" data-screen="statistika" aria-labelledby="h-statistika" hidden>
+        <div class="screen__head">
+          <h1 id="h-statistika">Statistika</h1>
+          <button class="btn" type="button" data-csv="stats">Izvezi prodaju (CSV)</button>
+        </div>
+        <div class="toolbar">
+          <div class="field"><span class="field__label" id="p-l">Period</span><div class="seg" role="group" aria-labelledby="p-l" data-p>
+          <button type="button" data-v="30" aria-pressed="false">Poslednjih 30 dana</button>
+          <button type="button" data-v="90" aria-pressed="false">90 dana</button>
+          <button type="button" data-v="365" aria-pressed="false">12 meseci</button>
+          <button type="button" data-v="sve" aria-pressed="false">Od početka</button>
+        </div></div>
+        </div>
+        <div class="region stats" data-region="stats"></div>
       </section>
     </main>
   </div>
@@ -115,7 +134,7 @@
   <dialog class="sheet" data-sheet aria-labelledby="sheet-title"></dialog>
   <noscript><p class="boot">Administracija radi samo sa uključenim JavaScriptom.</p></noscript>
 
-  <script type="application/json" id="admin-config">{"url":"https://ivzzhtaksdwbhhioilsn.supabase.co","key":"sb_publishable_rxpulg5CJqz_TpV1brvBCQ_C2ioyLyW"}</script>
+  <script type="application/json" id="admin-config">{"url":"https://ivzzhtaksdwbhhioilsn.supabase.co","key":"sb_publishable_rxpulg5CJqz_TpV1brvBCQ_C2ioyLyW","userDomain":"magacin.example.com"}</script>
   <script type="module" src="../assets/js/admin.js"></script>
 </body>
 </html>

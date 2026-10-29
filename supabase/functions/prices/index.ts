@@ -1,5 +1,5 @@
-// POST { email } -> { priest: { name, parish, phone }, prices: { CODE: price } }
-// Prices are only returned for an email on the clergy list (table public.priests, active = true).
+// POST { email } -> { priest: { name, parish, phone, address }, prices: { CODE: price } }
+// Prices are only returned for an email on the members' list (table public.priests, active = true).
 // Failed checks are counted per IP so nobody can try addresses one after another.
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
@@ -39,7 +39,7 @@ Deno.serve(async (req) => {
   ]);
   if ((mine ?? 0) >= MAX_FAILS_PER_IP || (all ?? 0) >= MAX_FAILS_TOTAL) return json({ error: 'too_many' }, 429);
 
-  const { data: priest, error } = await db.from('priests').select('id, name, parish, phone').eq('email', email).eq('active', true).maybeSingle();
+  const { data: priest, error } = await db.from('priests').select('id, name, parish, phone, address').eq('email', email).eq('active', true).maybeSingle();
   if (error) return json({ error: 'server' }, 500);
   await db.from('attempts').insert({ ip, ok: !!priest });
   if (Math.random() < 0.05) await db.from('attempts').delete().lt('at', new Date(Date.now() - 86400000).toISOString());
@@ -51,5 +51,5 @@ Deno.serve(async (req) => {
   const { data: products, error: e2 } = await db.from('products').select('code, price').eq('active', true);
   if (e2) return json({ error: 'server' }, 500);
   const prices = Object.fromEntries((products ?? []).map((p) => [p.code, Number(p.price)]));
-  return json({ priest: { name: priest.name ?? '', parish: priest.parish ?? '', phone: priest.phone ?? '' }, prices });
+  return json({ priest: { name: priest.name ?? '', parish: priest.parish ?? '', phone: priest.phone ?? '', address: priest.address ?? '' }, prices });
 });

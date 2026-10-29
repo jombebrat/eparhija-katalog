@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mon compte · Magasin de l’Éparchie d’Europe occidentale</title>
+  <meta name="description" content="Vos commandes au magasin de l’Éparchie et leurs PDF.">
+  <meta name="robots" content="noindex">
+  <link rel="alternate" hreflang="fr" href="../compte/">
+  <link rel="alternate" hreflang="en" href="../en/account/">
+  <link rel="alternate" hreflang="sr-Cyrl" href="../sr/nalog/">
+  <link rel="icon" href="../favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="stylesheet" href="../assets/css/account.css">
+  <script>document.documentElement.className = 'js';</script>
+</head>
+<body class="acct-page">
+  <a class="skip" href="#main">Aller au catalogue</a>
+  <header class="slab">
+    <div class="container slab__inner">
+      <a class="wordmark" href="../"><img class="wordmark__grb" src="../assets/img/grb-112.webp" width="48" height="56" alt=""><b>Magasin de l’Éparchie d’Europe occidentale</b></a>
+      <nav class="langs" aria-label="Langue">
+        <a href="../compte/" hreflang="fr" lang="fr" aria-label="Français" data-lang aria-current="page"><span class="l-long">Français</span><span class="l-short" aria-hidden="true">fr</span></a>
+        <a href="../en/account/" hreflang="en" lang="en" aria-label="English" data-lang><span class="l-long">English</span><span class="l-short" aria-hidden="true">en</span></a>
+        <a href="../sr/nalog/" hreflang="sr-Cyrl" lang="sr-Cyrl" aria-label="Српски" data-lang><span class="l-long">Српски</span><span class="l-short" aria-hidden="true">sr</span></a>
+      </nav>
+      <a class="listbtn" href="../">Catalogue</a>
+    </div>
+  </header>
+
+  <main id="main" class="acct">
+    <div class="container acct__inner">
+      <h1>Mon compte</h1>
+      <p class="acct__boot" data-boot>…</p>
+      <noscript><p>Vos commandes et leurs PDF. Réservé aux membres de la liste.</p></noscript>
+
+      <section class="acct__out" data-out hidden aria-labelledby="h-signin">
+        <h2 id="h-signin" class="visually-hidden">Se connecter</h2>
+        <p class="acct__lead">Vos commandes et leurs PDF. Réservé aux membres de la liste.</p>
+        <form class="acct__form" data-send novalidate>
+          <div class="field"><label for="ac-email">Votre e-mail</label><input id="ac-email" name="email" type="email" autocomplete="email" inputmode="email" spellcheck="false" required aria-required="true" aria-describedby="ac-help"></div>
+          <button class="btn btn--primary" type="submit">Recevoir un code</button>
+        </form>
+        <form class="acct__form" data-verify novalidate hidden>
+          <p class="acct__sent" data-sent></p>
+          <div class="field"><label for="ac-code">Code reçu par e-mail</label><input id="ac-code" name="code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]*" maxlength="10" spellcheck="false" required aria-required="true" aria-describedby="ac-help"></div>
+          <button class="btn btn--primary" type="submit">Se connecter</button>
+          <p class="acct__links"><button class="textbtn" type="button" data-again>Renvoyer le code</button><button class="textbtn" type="button" data-other>Changer d’adresse</button></p>
+        </form>
+        <p class="acct__help" id="ac-help" data-help>Nous envoyons un code à 6 chiffres à cette adresse.</p>
+      </section>
+
+      <section class="acct__in" data-in hidden aria-labelledby="h-orders">
+        <div class="acct__who">
+          <div><p class="acct__name" data-name></p><p class="acct__meta" data-meta></p></div>
+          <button class="btn" type="button" data-signout>Se déconnecter</button>
+        </div>
+        <div class="acct__cols">
+          <section class="acct__orders">
+            <h2 id="h-orders">Vos commandes</h2>
+            <div data-orders aria-live="polite"></div>
+          </section>
+          <section class="acct__details" aria-labelledby="h-details">
+            <h2 id="h-details">Vos coordonnées</h2>
+            <p class="acct__meta">Elles remplissent le formulaire de commande.</p>
+            <form class="acct__form" data-details novalidate>
+              <div class="field"><label for="ad-name">Nom</label><input id="ad-name" name="name" type="text" autocomplete="name"></div>
+              <div class="field"><label for="ad-parish">Paroisse <span class="field__opt">(facultatif)</span></label><input id="ad-parish" name="parish" type="text" autocomplete="organization"></div>
+              <div class="field"><label for="ad-phone">Téléphone <span class="field__opt">(facultatif)</span></label><input id="ad-phone" name="phone" type="tel" autocomplete="tel"></div>
+              <div class="field"><label for="ad-address">Adresse de livraison <span class="field__opt">(facultatif)</span></label><textarea id="ad-address" name="address" rows="3" autocomplete="street-address"></textarea></div>
+              <button class="btn" type="submit">Enregistrer</button>
+              <p class="acct__help" data-details-help aria-live="polite"></p>
+            </form>
+          </section>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="colophon">
+    <div class="container colophon__inner">
+      <img class="colophon__grb" src="../assets/img/grb-112.webp" width="48" height="56" alt="">
+      <div class="colophon__text">
+        <p><b>Magasin de l’Éparchie d’Europe occidentale.</b> Éparchie d’Europe occidentale de l’Église orthodoxe serbe, 23, rue du Simplon, 75018 Paris.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script type="application/json" id="account-data">{"lang":"fr","locale":"fr-FR","catalogue":"../","api":{"url":"https://ivzzhtaksdwbhhioilsn.supabase.co","key":"sb_publishable_rxpulg5CJqz_TpV1brvBCQ_C2ioyLyW"},"s":{"acTitle":"Mon compte","acEmail":"Votre e-mail","acSend":"Recevoir un code","acSendHelp":"Nous envoyons un code à 6 chiffres à cette adresse.","acSending":"Envoi…","acSent":"Code envoyé à {email}. Il est valable une heure ; regardez aussi dans les indésirables.","acCode":"Code reçu par e-mail","acSignIn":"Se connecter","acSigningIn":"Connexion…","acAgain":"Renvoyer le code","acOther":"Changer d’adresse","acWrongCode":"Ce code ne correspond pas ou a expiré. Demandez-en un nouveau.","acNoCode":"Entrez le code reçu par e-mail.","acMailOff":"L’envoi des codes n’est pas encore activé par l’entrepôt. Les prix et la commande restent disponibles dans le catalogue.","acMailFailed":"L’e-mail n’est pas parti. Réessayez dans un instant.","acSignedOut":"Session terminée. Demandez un nouveau code.","acOrders":"Vos commandes","acOrdersEmpty":"Aucune commande pour l’instant.","acOrdersEmptyText":"Les commandes envoyées depuis le catalogue apparaissent ici, avec leur PDF.","acOrdersError":"Vos commandes ne se sont pas chargées.","acRetry":"Réessayer","acOrder":"Commande n° {n}","acStatusNew":"Reçue","acStatusDone":"Traitée","acStatusCancelled":"Annulée","acLines":"Voir les articles","acPdf":"PDF","acPdfMaking":"Préparation…","acPdfFailed":"Le PDF n’a pas pu être préparé. Réessayez.","acReorder":"Commander à nouveau","acReorderSome":"Plus disponibles, non ajoutés : {codes}.","acSave":"Enregistrer","acSaving":"Enregistrement…","acSaved":"Enregistré.","acSaveFailed":"Non enregistré. Réessayez.","acItem":"Article","acQty":"Qté","acAmount":"Montant","acCatalogue":"Catalogue","code":"Code","total":"Total indicatif","kg":"kg","signOut":"Se déconnecter","loginUnknown":"Cette adresse n’est pas sur la liste des membres. Vérifiez-la, ou continuez sans les prix.","loginTooMany":"Trop d’essais. Réessayez dans un quart d’heure.","loginInvalid":"Écrivez l’adresse sous la forme nom@exemple.fr.","loginFailed":"La vérification n’a pas abouti. Réessayez dans un instant.","formName":"Nom","formParish":"Paroisse","formPhone":"Téléphone","formAddress":"Adresse de livraison","optional":"facultatif"},"items":{"one":"article","other":"articles"}}</script>
+  <script type="module" src="../assets/js/account.js"></script>
+</body>
+</html>

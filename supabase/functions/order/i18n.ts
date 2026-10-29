@@ -1,4 +1,4 @@
-// Words for the order PDF and the emails, in the language the priest chose on the site.
+// Words for the order PDF and the emails, in the language the member chose on the site.
 export type Lang = 'fr' | 'en' | 'sr';
 
 export const LOCALE: Record<Lang, string> = { fr: 'fr-FR', en: 'en-GB', sr: 'sr-Cyrl-RS' };
@@ -29,6 +29,8 @@ export const T: Record<Lang, Record<string, string>> = {
     mailPriest: 'Bonjour,\n\nVoici votre commande n° {n}, envoyée à l’entrepôt de l’Éparchie. Le détail est dans le PDF joint.\n\nTotal indicatif : {total}',
     mailWarehouse: 'Nouvelle commande n° {n} de {who}.\n\nTotal indicatif : {total}\n\nLe détail est dans le PDF joint. Répondre à ce message écrit directement à {email}.',
     file: 'commande-{n}.pdf',
+    codeSubject: 'Votre code : {code}',
+    codeMail: 'Bonjour,\n\nVoici votre code pour ouvrir votre compte sur le catalogue de l’entrepôt de l’Éparchie :\n\n{code}\n\nIl est valable une heure. Si vous n’avez rien demandé, ignorez ce message.',
   },
   en: {
     org: 'Warehouse of the Eparchy of Western Europe',
@@ -55,6 +57,8 @@ export const T: Record<Lang, Record<string, string>> = {
     mailPriest: 'Hello,\n\nHere is your order no. {n}, sent to the Eparchy’s warehouse. The details are in the attached PDF.\n\nEstimated total: {total}',
     mailWarehouse: 'New order no. {n} from {who}.\n\nEstimated total: {total}\n\nThe details are in the attached PDF. Replying to this message writes to {email}.',
     file: 'order-{n}.pdf',
+    codeSubject: 'Your code: {code}',
+    codeMail: 'Hello,\n\nHere is your code to open your account on the Eparchy warehouse catalogue:\n\n{code}\n\nIt works for one hour. If you did not ask for it, ignore this message.',
   },
   sr: {
     org: 'Магацин Епархије западноевропске',
@@ -81,6 +85,8 @@ export const T: Record<Lang, Record<string, string>> = {
     mailPriest: 'Добар дан,\n\nово је ваша поруџбина бр. {n}, послата магацину Епархије. Детаљи су у приложеном PDF-у.\n\nОквирни збир: {total}',
     mailWarehouse: 'Нова поруџбина бр. {n}: {who}.\n\nОквирни збир: {total}\n\nДетаљи су у приложеном PDF-у. Одговор на ову поруку иде директно на {email}.',
     file: 'porudzbina-{n}.pdf',
+    codeSubject: 'Ваш код: {code}',
+    codeMail: 'Добар дан,\n\nово је ваш код за улазак у налог на каталогу магацина Епархије:\n\n{code}\n\nВажи један сат. Ако нисте тражили код, занемарите ову поруку.',
   },
 };
 

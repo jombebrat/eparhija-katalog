@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My account · Warehouse of the Eparchy of Western Europe</title>
+  <meta name="description" content="Your orders at the Eparchy warehouse and their PDFs.">
+  <meta name="robots" content="noindex">
+  <link rel="alternate" hreflang="fr" href="../../compte/">
+  <link rel="alternate" hreflang="en" href="../../en/account/">
+  <link rel="alternate" hreflang="sr-Cyrl" href="../../sr/nalog/">
+  <link rel="icon" href="../../favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <link rel="stylesheet" href="../../assets/css/account.css">
+  <script>document.documentElement.className = 'js';</script>
+</head>
+<body class="acct-page">
+  <a class="skip" href="#main">Skip to the catalogue</a>
+  <header class="slab">
+    <div class="container slab__inner">
+      <a class="wordmark" href="../../en/"><img class="wordmark__grb" src="../../assets/img/grb-112.webp" width="48" height="56" alt=""><b>Warehouse of the Eparchy of Western Europe</b></a>
+      <nav class="langs" aria-label="Language">
+        <a href="../../compte/" hreflang="fr" lang="fr" aria-label="Français" data-lang><span class="l-long">Français</span><span class="l-short" aria-hidden="true">fr</span></a>
+        <a href="../../en/account/" hreflang="en" lang="en" aria-label="English" data-lang aria-current="page"><span class="l-long">English</span><span class="l-short" aria-hidden="true">en</span></a>
+        <a href="../../sr/nalog/" hreflang="sr-Cyrl" lang="sr-Cyrl" aria-label="Српски" data-lang><span class="l-long">Српски</span><span class="l-short" aria-hidden="true">sr</span></a>
+      </nav>
+      <a class="listbtn" href="../../en/">Catalogue</a>
+    </div>
+  </header>
+
+  <main id="main" class="acct">
+    <div class="container acct__inner">
+      <h1>My account</h1>
+      <p class="acct__boot" data-boot>…</p>
+      <noscript><p>Your orders and their PDFs. For members on the list.</p></noscript>
+
+      <section class="acct__out" data-out hidden aria-labelledby="h-signin">
+        <h2 id="h-signin" class="visually-hidden">Sign in</h2>
+        <p class="acct__lead">Your orders and their PDFs. For members on the list.</p>
+        <form class="acct__form" data-send novalidate>
+          <div class="field"><label for="ac-email">Your email</label><input id="ac-email" name="email" type="email" autocomplete="email" inputmode="email" spellcheck="false" required aria-required="true" aria-describedby="ac-help"></div>
+          <button class="btn btn--primary" type="submit">Get a code</button>
+        </form>
+        <form class="acct__form" data-verify novalidate hidden>
+          <p class="acct__sent" data-sent></p>
+          <div class="field"><label for="ac-code">Code from the email</label><input id="ac-code" name="code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]*" maxlength="10" spellcheck="false" required aria-required="true" aria-describedby="ac-help"></div>
+          <button class="btn btn--primary" type="submit">Sign in</button>
+          <p class="acct__links"><button class="textbtn" type="button" data-again>Send the code again</button><button class="textbtn" type="button" data-other>Use another address</button></p>
+        </form>
+        <p class="acct__help" id="ac-help" data-help>We send a 6-digit code to this address.</p>
+      </section>
+
+      <section class="acct__in" data-in hidden aria-labelledby="h-orders">
+        <div class="acct__who">
+          <div><p class="acct__name" data-name></p><p class="acct__meta" data-meta></p></div>
+          <button class="btn" type="button" data-signout>Sign out</button>
+        </div>
+        <div class="acct__cols">
+          <section class="acct__orders">
+            <h2 id="h-orders">Your orders</h2>
+            <div data-orders aria-live="polite"></div>
+          </section>
+          <section class="acct__details" aria-labelledby="h-details">
+            <h2 id="h-details">Your details</h2>
+            <p class="acct__meta">They fill in the order form.</p>
+            <form class="acct__form" data-details novalidate>
+              <div class="field"><label for="ad-name">Name</label><input id="ad-name" name="name" type="text" autocomplete="name"></div>
+              <div class="field"><label for="ad-parish">Parish <span class="field__opt">(optional)</span></label><input id="ad-parish" name="parish" type="text" autocomplete="organization"></div>
+              <div class="field"><label for="ad-phone">Phone <span class="field__opt">(optional)</span></label><input id="ad-phone" name="phone" type="tel" autocomplete="tel"></div>
+              <div class="field"><label for="ad-address">Delivery address <span class="field__opt">(optional)</span></label><textarea id="ad-address" name="address" rows="3" autocomplete="street-address"></textarea></div>
+              <button class="btn" type="submit">Save</button>
+              <p class="acct__help" data-details-help aria-live="polite"></p>
+            </form>
+          </section>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="colophon">
+    <div class="container colophon__inner">
+      <img class="colophon__grb" src="../../assets/img/grb-112.webp" width="48" height="56" alt="">
+      <div class="colophon__text">
+        <p><b>Warehouse of the Eparchy of Western Europe.</b> Serbian Orthodox Eparchy of Western Europe, 23, rue du Simplon, 75018 Paris.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script type="application/json" id="account-data">{"lang":"en","locale":"en-GB","catalogue":"../../en/","api":{"url":"https://ivzzhtaksdwbhhioilsn.supabase.co","key":"sb_publishable_rxpulg5CJqz_TpV1brvBCQ_C2ioyLyW"},"s":{"acTitle":"My account","acEmail":"Your email","acSend":"Get a code","acSendHelp":"We send a 6-digit code to this address.","acSending":"Sending…","acSent":"Code sent to {email}. It works for one hour; check the spam folder too.","acCode":"Code from the email","acSignIn":"Sign in","acSigningIn":"Signing in…","acAgain":"Send the code again","acOther":"Use another address","acWrongCode":"That code doesn’t match or has expired. Ask for a new one.","acNoCode":"Enter the code from the email.","acMailOff":"The warehouse hasn’t switched on sending codes yet. Prices and ordering still work in the catalogue.","acMailFailed":"The email didn’t go out. Try again in a moment.","acSignedOut":"Your session ended. Ask for a new code.","acOrders":"Your orders","acOrdersEmpty":"No orders yet.","acOrdersEmptyText":"Orders sent from the catalogue show up here, with their PDF.","acOrdersError":"Your orders didn’t load.","acRetry":"Try again","acOrder":"Order no. {n}","acStatusNew":"Received","acStatusDone":"Completed","acStatusCancelled":"Cancelled","acLines":"See the items","acPdf":"PDF","acPdfMaking":"Preparing…","acPdfFailed":"The PDF couldn’t be prepared. Try again.","acReorder":"Order again","acReorderSome":"No longer available, not added: {codes}.","acSave":"Save","acSaving":"Saving…","acSaved":"Saved.","acSaveFailed":"Not saved. Try again.","acItem":"Item","acQty":"Qty","acAmount":"Amount","acCatalogue":"Catalogue","code":"Code","total":"Estimated total","kg":"kg","signOut":"Sign out","loginUnknown":"This address isn’t on the members’ list. Check it, or continue without prices.","loginTooMany":"Too many tries. Try again in fifteen minutes.","loginInvalid":"Write the address as name@example.com.","loginFailed":"The check didn’t go through. Try again in a moment.","formName":"Name","formParish":"Parish","formPhone":"Phone","formAddress":"Delivery address","optional":"optional"},"items":{"one":"item","other":"items"}}</script>
+  <script type="module" src="../../assets/js/account.js"></script>
+</body>
+</html>

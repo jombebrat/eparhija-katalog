@@ -305,6 +305,9 @@ html:not(.priced) .candles__table .price { display: none; }
 .account { display: flex; align-items: center; gap: var(--space-sm); min-width: 0; }
 .account[hidden], .account [hidden] { display: none; }
 .account__who { max-width: 16rem; overflow: hidden; color: var(--color-on-ink-2); font-size: var(--text-sm); white-space: nowrap; text-overflow: ellipsis; }
+a.account__who { display: inline-flex; align-items: center; min-height: 40px; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+a.account__who:hover { color: var(--color-paper); }
+a.account__who:focus-visible { outline: 2px solid var(--color-accent-soft); outline-offset: 2px; border-radius: 2px; }
 .account__out { min-height: 40px; padding: 0 var(--space-xs); border: 0; border-radius: 8px; background: transparent; color: var(--color-paper); font: 600 var(--text-sm)/1 var(--font-body); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.2em; cursor: pointer; }
 .account__out:hover { text-decoration-color: var(--color-accent-soft); }
 .account__out:active { background: var(--color-ink-2); }

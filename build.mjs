@@ -61,7 +61,7 @@ const t = (lang, s) => esc(typo(lang, s));
 const CLIENT_STRINGS = ['add', 'added', 'noMatch', 'matches', 'photoOf', 'emptyTitle', 'emptyText', 'qty', 'less', 'more', 'remove', 'total', 'copy', 'copied', 'copyFailed', 'clearList', 'mailHello', 'kg', 'perKg', 'close', 'code', 'browse',
   'loginUnknown', 'loginTooMany', 'loginFailed', 'loginInvalid', 'checking', 'showPrices', 'signOut', 'pricesFor', 'guestList', 'formName', 'formParish', 'formPhone', 'formAddress', 'formNote', 'optional', 'nameMissing',
   'sendOrder', 'sending', 'orderDone', 'orderDoneMail', 'orderDoneNoMail', 'downloadPdf', 'orderFailed', 'orderUnknown', 'orderUnavailable', 'done', 'outOfStock',
-  'noPhoto', 'addLabel', 'candlesLead', 'candlesCaption', 'thFormat', 'thSize', 'thDetail', 'thPrice', 'thPriceUnit', 'thList'];
+  'noPhoto', 'addLabel', 'acLink', 'candlesLead', 'candlesCaption', 'thFormat', 'thSize', 'thDetail', 'thPrice', 'thPriceUnit', 'thList'];
 
 const X = '<svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>';
 
@@ -84,6 +84,7 @@ function page(lang, dir) {
     addLabel: typo(lang, S.addLabel),
     items: S.items, sizes: S.sizes,
     cats: cd.cats, p: cd.p,
+    account: `${root}${dir}${S.acSlug}/`,
   };
 
   const contactRows = [
@@ -131,7 +132,7 @@ function page(lang, dir) {
       </nav>
       <div class="account" data-account hidden>
         <button class="listbtn listbtn--login" type="button" data-login>${t(lang, S.showPrices)}</button>
-        <span class="account__who" data-who hidden></span>
+        <a class="account__who" data-who hidden href="${root}${thisLang.dir}${S.acSlug}/"></a>
         <button class="account__out" type="button" data-logout hidden>${t(lang, S.signOut)}</button>
       </div>
       <button class="listbtn" type="button" data-open-list hidden>${t(lang, S.list)} <span class="listbtn__n" data-count>0</span></button>
@@ -205,7 +206,7 @@ function page(lang, dir) {
       <div class="colophon__text">
         <p><b>${t(lang, S.brand)}.</b> ${t(lang, S.orgFull)}, ${t(lang, S.address)}.</p>
         <p>${t(lang, S.footerLine)} ${t(lang, S.footerPhotos)}</p>
-        <p>${t(lang, S.otherLangs)} ${LANGS.filter((l) => l.id !== lang).map((l) => `<a href="${here(l)}" hreflang="${strings[l.id].htmlLang}" lang="${strings[l.id].htmlLang}" data-lang>${esc(strings[l.id].langName)}</a>`).join(` ${lang === 'fr' ? 'et' : lang === 'en' ? 'and' : 'и'} `)}. <a href="${root}admin/">${t(lang, S.admin)}</a></p>
+        <p>${t(lang, S.otherLangs)} ${LANGS.filter((l) => l.id !== lang).map((l) => `<a href="${here(l)}" hreflang="${strings[l.id].htmlLang}" lang="${strings[l.id].htmlLang}" data-lang>${esc(strings[l.id].langName)}</a>`).join(` ${lang === 'fr' ? 'et' : lang === 'en' ? 'and' : 'и'} `)}. <a href="${root}${dir}${S.acSlug}/">${t(lang, S.acLink)}</a> · <a href="${root}admin/">${t(lang, S.admin)}</a></p>
       </div>
     </div>
   </footer>
@@ -277,7 +278,7 @@ for (const l of LANGS) {
 // ---------- the admin panel (Serbian, Latin script) ----------
 function adminPage() {
   const apiUrl = (process.env.SITE_API_URL || site.supabaseUrl || '').replace(/\/$/, '');
-  const config = { url: apiUrl, key: site.supabaseKey || '' };
+  const config = { url: apiUrl, key: site.supabaseKey || '', userDomain: 'magacin.example.com' };
   const field = (id, label, type, ac, extra = '') => `<div class="field">
           <label for="${id}">${label}</label>
           <input class="input" id="${id}" name="${type === 'password' ? 'password' : 'email'}" type="${type}" autocomplete="${ac}" required aria-required="true"${extra}>
@@ -306,7 +307,7 @@ function adminPage() {
       <img class="gate__grb" src="../assets/img/grb-240.webp" width="82" height="96" alt="">
       <p class="gate__org">Magacin Eparhije zapadnoevropske</p>
       <h1>Prijava za administratore</h1>
-      ${field('l-email', 'Mejl', 'email', 'username', ' inputmode="email" spellcheck="false"')}
+      ${field('l-email', 'Korisničko ime ili mejl', 'text', 'username', ' autocapitalize="none" autocorrect="off" spellcheck="false"')}
       ${field('l-pass', 'Lozinka', 'password', 'current-password')}
       <p class="gate__msg" role="alert" data-login-msg hidden></p>
       <button class="btn btn--primary btn--block" type="submit">Prijavi se</button>
@@ -322,9 +323,10 @@ function adminPage() {
       </a>
       <nav class="tabs" aria-label="Odeljci">
         <a href="#artikli" data-tab="artikli">Artikli</a>
-        <a href="#kategorije" data-tab="kategorije">Kategorije</a>
-        <a href="#svestenstvo" data-tab="svestenstvo">Sveštenstvo</a>
         <a href="#porudzbine" data-tab="porudzbine">Porudžbine <span class="tabs__n" data-new-orders hidden></span></a>
+        <a href="#statistika" data-tab="statistika">Statistika</a>
+        <a href="#svestenstvo" data-tab="svestenstvo">Sveštenstvo</a>
+        <a href="#kategorije" data-tab="kategorije">Kategorije</a>
       </nav>
       <div class="bar__me">
         <span class="bar__email" data-me></span>
@@ -338,12 +340,12 @@ function adminPage() {
       <section class="screen" data-screen="artikli" aria-labelledby="h-artikli">
         <div class="screen__head">
           <h1 id="h-artikli">Artikli i stanje</h1>
-          <button class="btn btn--primary" type="button" data-new="product">Novi artikal</button>
+          <div class="screen__actions"><button class="btn" type="button" data-csv="products">Izvezi u Excel (CSV)</button><button class="btn btn--primary" type="button" data-new="product">Novi artikal</button></div>
         </div>
         <div class="toolbar" role="search">
           <div class="field field--grow"><label for="q-artikli">Pretraga</label><input class="input" id="q-artikli" type="search" name="q" autocomplete="off" spellcheck="false" placeholder="P011, кадионица" data-q></div>
           <div class="field"><label for="k-artikli">Kategorija</label><span class="select"><select class="input" id="k-artikli" name="k" data-k><option value="">Sve kategorije</option></select></span></div>
-          ${seg('f', 'Prikaz', [['', 'Svi', ''], ['out', 'Nema na stanju', 'out'], ['hidden', 'Sakriveni', 'hidden']])}
+          ${seg('f', 'Prikaz', [['', 'Svi', ''], ['out', 'Nema na stanju', 'out'], ['low', 'Za naručivanje', 'low'], ['hidden', 'Sakriveni', 'hidden']])}
         </div>
         <div class="region" data-region="products"></div>
       </section>
@@ -370,11 +372,23 @@ function adminPage() {
       <section class="screen" data-screen="porudzbine" aria-labelledby="h-porudzbine" hidden>
         <div class="screen__head">
           <h1 id="h-porudzbine">Porudžbine</h1>
+          <button class="btn" type="button" data-csv="orders">Izvezi u Excel (CSV)</button>
         </div>
         <div class="toolbar">
           ${seg('s', 'Status', [['new', 'Nove', 'new'], ['done', 'Izvršene', 'done'], ['cancelled', 'Otkazane', 'cancelled'], ['all', 'Sve', 'all']])}
         </div>
         <div class="region" data-region="orders"></div>
+      </section>
+
+      <section class="screen" data-screen="statistika" aria-labelledby="h-statistika" hidden>
+        <div class="screen__head">
+          <h1 id="h-statistika">Statistika</h1>
+          <button class="btn" type="button" data-csv="stats">Izvezi prodaju (CSV)</button>
+        </div>
+        <div class="toolbar">
+          ${seg('p', 'Period', [['30', 'Poslednjih 30 dana'], ['90', '90 dana'], ['365', '12 meseci'], ['sve', 'Od početka']])}
+        </div>
+        <div class="region stats" data-region="stats"></div>
       </section>
     </main>
   </div>
@@ -396,3 +410,121 @@ function adminPage() {
 mkdirSync(join(ROOT, 'docs/admin'), { recursive: true });
 writeFileSync(join(ROOT, 'docs/admin/index.html'), adminPage());
 console.log('wrote docs/admin/index.html');
+
+// ---------- the member's account page, one per language ----------
+const ACCOUNT_STRINGS = ['acTitle', 'acEmail', 'acSend', 'acSendHelp', 'acSending', 'acSent', 'acCode', 'acSignIn', 'acSigningIn', 'acAgain', 'acOther',
+  'acWrongCode', 'acNoCode', 'acMailOff', 'acMailFailed', 'acSignedOut', 'acOrders', 'acOrdersEmpty', 'acOrdersEmptyText', 'acOrdersError', 'acRetry',
+  'acOrder', 'acStatusNew', 'acStatusDone', 'acStatusCancelled', 'acLines', 'acPdf', 'acPdfMaking', 'acPdfFailed', 'acReorder', 'acReorderSome',
+  'acSave', 'acSaving', 'acSaved', 'acSaveFailed', 'acItem', 'acQty', 'acAmount', 'acCatalogue', 'code', 'total', 'kg', 'signOut',
+  'loginUnknown', 'loginTooMany', 'loginInvalid', 'loginFailed', 'formName', 'formParish', 'formPhone', 'formAddress', 'optional'];
+const accountPath = (l) => `${l.dir}${strings[l.id].acSlug}/`;
+function accountPage(lang) {
+  const S = strings[lang];
+  const me = LANGS.find((l) => l.id === lang);
+  const root = '../'.repeat(accountPath(me).split('/').filter(Boolean).length);
+  const catalogue = root + me.dir;
+  const apiUrl = (process.env.SITE_API_URL || site.supabaseUrl || '').replace(/\/$/, '');
+  const data = {
+    lang, locale: S.locale, catalogue,
+    api: apiUrl ? { url: apiUrl, key: site.supabaseKey || '' } : null,
+    s: Object.fromEntries(ACCOUNT_STRINGS.map((k) => [k, T(lang, k)])), items: S.items,
+  };
+  const langLinks = LANGS.map((l) => `<a href="${root}${accountPath(l)}" hreflang="${strings[l.id].htmlLang}" lang="${strings[l.id].htmlLang}" aria-label="${esc(strings[l.id].langName)}" data-lang${l.id === lang ? ' aria-current="page"' : ''}><span class="l-long">${esc(strings[l.id].langName)}</span><span class="l-short" aria-hidden="true">${esc(strings[l.id].langShort)}</span></a>`).join('\n        ');
+  const opt = ` <span class="field__opt">(${t(lang, S.optional)})</span>`;
+  const input = (id, name, label, type, auto, optional = true) => `<div class="field"><label for="${id}">${t(lang, label)}${optional ? opt : ''}</label><input id="${id}" name="${name}" type="${type}" autocomplete="${auto}"></div>`;
+  return `<!doctype html>
+<html lang="${S.htmlLang}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>${t(lang, S.acTitle)} · ${t(lang, S.brand)}</title>
+  <meta name="description" content="${t(lang, S.acDescription)}">
+  <meta name="robots" content="noindex">
+  ${LANGS.map((l) => `<link rel="alternate" hreflang="${strings[l.id].htmlLang}" href="${root}${accountPath(l)}">`).join('\n  ')}
+  <link rel="icon" href="${root}favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="${root}apple-touch-icon.png">
+  <link rel="stylesheet" href="${root}assets/css/account.css">
+  <script>document.documentElement.className = 'js';</script>
+</head>
+<body class="acct-page">
+  <a class="skip" href="#main">${t(lang, S.skip)}</a>
+  <header class="slab">
+    <div class="container slab__inner">
+      <a class="wordmark" href="${catalogue}"><img class="wordmark__grb" src="${root}assets/img/grb-112.webp" width="48" height="56" alt=""><b>${t(lang, S.brand)}</b></a>
+      <nav class="langs" aria-label="${t(lang, S.langsLabel)}">
+        ${langLinks}
+      </nav>
+      <a class="listbtn" href="${catalogue}">${t(lang, S.acCatalogue)}</a>
+    </div>
+  </header>
+
+  <main id="main" class="acct">
+    <div class="container acct__inner">
+      <h1>${t(lang, S.acTitle)}</h1>
+      <p class="acct__boot" data-boot>…</p>
+      <noscript><p>${t(lang, S.acLead)}</p></noscript>
+
+      <section class="acct__out" data-out hidden aria-labelledby="h-signin">
+        <h2 id="h-signin" class="visually-hidden">${t(lang, S.acSignIn)}</h2>
+        <p class="acct__lead">${t(lang, S.acLead)}</p>
+        <form class="acct__form" data-send novalidate>
+          <div class="field"><label for="ac-email">${t(lang, S.acEmail)}</label><input id="ac-email" name="email" type="email" autocomplete="email" inputmode="email" spellcheck="false" required aria-required="true" aria-describedby="ac-help"></div>
+          <button class="btn btn--primary" type="submit">${t(lang, S.acSend)}</button>
+        </form>
+        <form class="acct__form" data-verify novalidate hidden>
+          <p class="acct__sent" data-sent></p>
+          <div class="field"><label for="ac-code">${t(lang, S.acCode)}</label><input id="ac-code" name="code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]*" maxlength="10" spellcheck="false" required aria-required="true" aria-describedby="ac-help"></div>
+          <button class="btn btn--primary" type="submit">${t(lang, S.acSignIn)}</button>
+          <p class="acct__links"><button class="textbtn" type="button" data-again>${t(lang, S.acAgain)}</button><button class="textbtn" type="button" data-other>${t(lang, S.acOther)}</button></p>
+        </form>
+        <p class="acct__help" id="ac-help" data-help>${t(lang, S.acSendHelp)}</p>
+      </section>
+
+      <section class="acct__in" data-in hidden aria-labelledby="h-orders">
+        <div class="acct__who">
+          <div><p class="acct__name" data-name></p><p class="acct__meta" data-meta></p></div>
+          <button class="btn" type="button" data-signout>${t(lang, S.signOut)}</button>
+        </div>
+        <div class="acct__cols">
+          <section class="acct__orders">
+            <h2 id="h-orders">${t(lang, S.acOrders)}</h2>
+            <div data-orders aria-live="polite"></div>
+          </section>
+          <section class="acct__details" aria-labelledby="h-details">
+            <h2 id="h-details">${t(lang, S.acDetails)}</h2>
+            <p class="acct__meta">${t(lang, S.acDetailsLead)}</p>
+            <form class="acct__form" data-details novalidate>
+              ${input('ad-name', 'name', S.formName, 'text', 'name', false)}
+              ${input('ad-parish', 'parish', S.formParish, 'text', 'organization')}
+              ${input('ad-phone', 'phone', S.formPhone, 'tel', 'tel')}
+              <div class="field"><label for="ad-address">${t(lang, S.formAddress)}${opt}</label><textarea id="ad-address" name="address" rows="3" autocomplete="street-address"></textarea></div>
+              <button class="btn" type="submit">${t(lang, S.acSave)}</button>
+              <p class="acct__help" data-details-help aria-live="polite"></p>
+            </form>
+          </section>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="colophon">
+    <div class="container colophon__inner">
+      <img class="colophon__grb" src="${root}assets/img/grb-112.webp" width="48" height="56" alt="">
+      <div class="colophon__text">
+        <p><b>${t(lang, S.brand)}.</b> ${t(lang, S.orgFull)}, ${t(lang, S.address)}.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script type="application/json" id="account-data">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>
+  <script type="module" src="${root}assets/js/account.js"></script>
+</body>
+</html>
+`;
+}
+for (const l of LANGS) {
+  const out = join(ROOT, 'docs', accountPath(l), 'index.html');
+  mkdirSync(dirname(out), { recursive: true });
+  writeFileSync(out, accountPage(l.id));
+  console.log('wrote', out.replace(ROOT + '/', ''));
+}

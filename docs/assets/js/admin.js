@@ -4,6 +4,9 @@
 import { norm, esc, photoUrl } from './render.js';
 
 const C = JSON.parse(document.getElementById('admin-config').textContent);
+// an admin can sign in with a bare user name: "djakon" is the account djakon@<userDomain>
+const USER_DOMAIN = C.userDomain || 'magacin.example.com';
+const shown = (e) => (e && e.endsWith(`@${USER_DOMAIN}`) ? e.slice(0, -USER_DOMAIN.length - 1) : e || '');
 const SITE = new URL('../', location.href).href;
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
@@ -152,7 +155,14 @@ const Q = {
   cats: () => db('categories?select=*&order=sort.asc,id.asc'),
   products: () => db('products?select=*&order=sort.asc,code.asc'),
   priests: () => db('priests?select=*&order=name.asc.nullslast,email.asc'),
-  orders: () => db('orders?select=*&order=created_at.desc&limit=500'),
+  orders: async () => {
+    const all = [];
+    for (let from = 0; ; from += 1000) {
+      const page = await db(`orders?select=*&order=created_at.desc&limit=1000&offset=${from}`);
+      all.push(...page);
+      if (page.length < 1000) return all;
+    }
+  },
 };
 async function load(what, force = false) {
   if (!force && (ST[what] === 'ready' || ST[what] === 'loading')) return;
@@ -168,13 +178,16 @@ async function load(what, force = false) {
   draw();
 }
 const byCode = (code) => D.products.find((p) => p.code === code);
+// at or under its reorder point (or gone): time to order more
+const low = (p) => p.stock !== null && p.stock !== undefined && (p.stock === 0 || (p.min_stock !== null && p.min_stock !== undefined && p.stock <= p.min_stock));
+const ledgerCounts = (all) => ({ '': all.length, out: all.filter((p) => p.stock === 0).length, low: all.filter(low).length, hidden: all.filter((p) => !p.active).length });
 const catOf = (id) => D.cats.find((c) => c.id === id);
 const catName = (id) => { const c = catOf(id); return c ? c.name_sr || c.name_fr || c.id : id; };
 const nameOf = (p) => p.name_sr || p.name_fr || p.name_en || p.code;
 
 // ---------- routes: the tab and its filters live in the address ----------
-const TABS = ['artikli', 'kategorije', 'svestenstvo', 'porudzbine'];
-const NEEDS = { artikli: ['products', 'cats'], kategorije: ['cats', 'products'], svestenstvo: ['priests'], porudzbine: ['orders'] };
+const TABS = ['artikli', 'porudzbine', 'statistika', 'svestenstvo', 'kategorije'];
+const NEEDS = { artikli: ['products', 'cats'], kategorije: ['cats', 'products'], svestenstvo: ['priests'], porudzbine: ['orders'], statistika: ['orders', 'products', 'cats'] };
 function route() {
   const [tab, qs] = location.hash.slice(1).split('?');
   return { tab: TABS.includes(tab) ? tab : 'artikli', p: new URLSearchParams(qs || '') };
@@ -214,7 +227,7 @@ function draw() {
     if (row.scrollWidth > row.clientWidth) row.scrollLeft = Math.max(0, a.offsetLeft - row.offsetLeft - 16);
   }
   for (const w of NEEDS[r.tab]) if (ST[w] === 'idle') { load(w); return; }
-  ({ artikli: drawProducts, kategorije: drawCats, svestenstvo: drawPriests, porudzbine: drawOrders })[r.tab](r);
+  ({ artikli: drawProducts, kategorije: drawCats, svestenstvo: drawPriests, porudzbine: drawOrders, statistika: drawStats })[r.tab](r);
   drawBadge();
 }
 
@@ -248,7 +261,7 @@ function drawProducts(r) {
 
   const order = Object.fromEntries(D.cats.map((c, i) => [c.id, i]));
   const all = [...D.products].sort((a, b) => (order[a.category] ?? 99) - (order[b.category] ?? 99) || a.sort - b.sort || a.code.localeCompare(b.code));
-  const counts = { '': all.length, out: all.filter((p) => p.stock === 0).length, hidden: all.filter((p) => !p.active).length };
+  const counts = ledgerCounts(all);
   $$('[data-f] [data-n]', sc).forEach((s) => { s.textContent = counts[s.dataset.n]; });
 
   if (!all.length) {
@@ -256,9 +269,9 @@ function drawProducts(r) {
     return;
   }
   const nq = norm(q);
-  const list = all.filter((p) => (!k || p.category === k) && (!f || (f === 'out' ? p.stock === 0 : !p.active)) && (!nq || productKey(p).includes(nq)));
+  const list = all.filter((p) => (!k || p.category === k) && (!f || (f === 'out' ? p.stock === 0 : f === 'low' ? low(p) : !p.active)) && (!nq || productKey(p).includes(nq)));
   if (!list.length) {
-    box.innerHTML = empty('Nijedan artikal ne odgovara.', f === 'out' && !q && !k ? 'Svaki artikal čije se stanje prati ima bar jedan komad.' : 'Proverite šifru ili naziv, ili izaberite drugu kategoriju.',
+    box.innerHTML = empty('Nijedan artikal ne odgovara.', f === 'out' && !q && !k ? 'Svaki artikal čije se stanje prati ima bar jedan komad.' : f === 'low' && !q && !k ? 'Nijedan artikal nije pao na granicu za naručivanje. Granica se upisuje u artiklu.' : 'Proverite šifru ili naziv, ili izaberite drugu kategoriju.',
       '<button class="btn" type="button" data-clear>Prikaži sve artikle</button>');
     return;
   }
@@ -271,6 +284,7 @@ function drawProducts(r) {
 
 function stockTag(p) {
   if (p.stock === 0) return '<span class="tag tag--out">nema</span>';
+  if (low(p)) return `<span class="tag tag--low" title="Granica za naručivanje: ${p.min_stock}">poruči</span>`;
   return '';
 }
 function productRow(p) {
@@ -298,7 +312,7 @@ function refreshRow(code) {
   const inp = $('[data-stock]', tr);
   if (document.activeElement !== inp) inp.value = p.stock ?? '';
   const sc = $('[data-screen="artikli"]');
-  const counts = { '': D.products.length, out: D.products.filter((x) => x.stock === 0).length, hidden: D.products.filter((x) => !x.active).length };
+  const counts = ledgerCounts(D.products);
   $$('[data-f] [data-n]', sc).forEach((n) => { n.textContent = counts[n.dataset.n]; });
 }
 
@@ -461,6 +475,255 @@ function drawOrders(r) {
   </table>`;
 }
 
+// ----- statistics: what sells, what does not, what to order -----
+const DAY = 864e5;
+const PERIODS = { 30: '30 dana', 90: '90 dana', 365: '12 meseci', sve: 'od početka' };
+const whole = new Intl.NumberFormat('sr-Latn-RS', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+const qtyText = (n, unit) => (unit === 'kg' ? `${String(n).replace('.', ',')} kg` : String(n));
+const dayText = new Intl.DateTimeFormat('sr-Latn-RS', { dateStyle: 'medium', timeZone: 'Europe/Paris' });
+const monthLong = new Intl.DateTimeFormat('sr-Latn-RS', { month: 'long', year: 'numeric' });
+const monthShort = new Intl.DateTimeFormat('sr-Latn-RS', { month: 'short' });
+const counted = () => D.orders.filter((o) => o.status !== 'cancelled');
+
+// per article: quantity, value and number of orders, from the order lines
+function salesBy(orders) {
+  const by = new Map();
+  for (const o of orders) {
+    const at = Date.parse(o.created_at);
+    for (const l of o.items || []) {
+      const s = by.get(l.code) || { qty: 0, value: 0, orders: 0, unit: l.unit, name: l.name, last: 0 };
+      s.qty += l.qty; s.value += l.qty * l.price; s.orders++; s.last = Math.max(s.last, at);
+      by.set(l.code, s);
+    }
+  }
+  return by;
+}
+function periodOf(r) {
+  const v = r.p.get('p') || '90';
+  return v in PERIODS ? v : '90';
+}
+function statsModel(r) {
+  const per = periodOf(r);
+  const since = per === 'sve' ? 0 : Date.now() - Number(per) * DAY;
+  const live = counted();
+  const inPeriod = live.filter((o) => Date.parse(o.created_at) >= since);
+  const sales = salesBy(inPeriod);
+  const ever = salesBy(live);
+  const pace = salesBy(live.filter((o) => Date.parse(o.created_at) >= Date.now() - 90 * DAY));
+  return { per, live, inPeriod, sales, ever, pace };
+}
+
+function reorderList(m) {
+  return D.products.filter((p) => p.active && p.stock !== null && p.stock !== undefined).map((p) => {
+    const sold = m.pace.get(p.code)?.qty || 0;
+    const perDay = sold / 90;
+    const days = perDay > 0 ? Math.floor(p.stock / perDay) : null;
+    return { p, sold, days };
+  }).filter(({ p, days }) => low(p) || (days !== null && days <= 30))
+    .sort((a, b) => (a.p.stock === 0 ? -1 : 0) - (b.p.stock === 0 ? -1 : 0) || (a.days ?? 1e9) - (b.days ?? 1e9) || a.p.stock - b.p.stock);
+}
+
+function niceTop(v) {
+  if (v <= 0) return 1;
+  const e = 10 ** Math.floor(Math.log10(v));
+  return [1, 2, 2.5, 5, 10].map((f) => f * e).find((x) => x >= v);
+}
+function monthChart(live) {
+  const now = new Date();
+  const months = [];
+  for (let i = 11; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    months.push({ key: d.getFullYear() * 12 + d.getMonth(), date: d, value: 0, n: 0 });
+  }
+  const at = new Map(months.map((m, i) => [m.key, i]));
+  for (const o of live) {
+    const d = new Date(o.created_at);
+    const i = at.get(d.getFullYear() * 12 + d.getMonth());
+    if (i !== undefined) { months[i].value += Number(o.total); months[i].n++; }
+  }
+  const max = Math.max(...months.map((m) => m.value));
+  if (max <= 0) return '<p class="state__hint">U poslednjih 12 meseci nema porudžbina.</p>';
+  const top = niceTop(max);
+  const peak = months.findIndex((m) => m.value === max);
+  const ticks = [top, top / 2, 0];
+  return `<figure class="chart">
+    <div class="chart__plot">
+      ${ticks.map((v) => `<span class="chart__grid" style="bottom:${(v / top) * 100}%"><span>${esc(whole.format(v))}</span></span>`).join('')}
+      <div class="chart__cols" data-chart>
+        ${months.map((m, i) => `<div class="chart__col" tabindex="0" data-value="${esc(money.format(m.value))}" data-label="${esc(`${monthLong.format(m.date)} · ${plural(m.n, 'porudžbina', 'porudžbine', 'porudžbina')}`)}" aria-label="${esc(`${monthLong.format(m.date)}: ${money.format(m.value)}, ${plural(m.n, 'porudžbina', 'porudžbine', 'porudžbina')}`)}">
+          <span class="chart__bar" style="height:${(m.value / top) * 100}%">${i === peak ? `<span class="chart__cap">${esc(whole.format(m.value))}</span>` : ''}</span>
+          <span class="chart__x" aria-hidden="true">${esc(monthShort.format(m.date).replace('.', ''))}</span>
+        </div>`).join('')}
+      </div>
+      <div class="chart__tip" role="status" hidden><strong></strong><span></span></div>
+    </div>
+    <details class="chart__table">
+      <summary>Prikaži kao tabelu</summary>
+      <table class="tbl tbl--compact"><thead><tr><th scope="col">Mesec</th><th scope="col" class="num">Porudžbina</th><th scope="col" class="num">Iznos</th></tr></thead>
+      <tbody>${months.map((m) => `<tr><th scope="row">${esc(monthLong.format(m.date))}</th><td class="num">${m.n}</td><td class="num">${esc(money.format(m.value))}</td></tr>`).join('')}</tbody></table>
+    </details>
+  </figure>`;
+}
+
+function drawStats(r) {
+  const box = $('[data-region="stats"]');
+  const sc = $('[data-screen="statistika"]');
+  const per = periodOf(r);
+  const by = r.p.get('po') === 'iznos' ? 'iznos' : 'kol';
+  syncSeg($('[data-p]', sc), per);
+  const st = stateOf(NEEDS.statistika);
+  if (st === 'loading') { box.innerHTML = skeleton(6); return; }
+  if (st === 'error') { box.innerHTML = failed('Podaci za statistiku', NEEDS.statistika); return; }
+  const m = statsModel(r);
+  const name = (code, fallback) => { const p = byCode(code); return p ? nameOf(p) : fallback || code; };
+  const catIndex = Object.fromEntries(D.cats.map((c, i) => [c.id, i]));
+  const catOrder = (p) => catIndex[p.category] ?? 99;
+  const codeBtn = (code) => (byCode(code) ? `<button class="link" type="button" data-edit="${esc(code)}" aria-label="Uredi ${esc(code)}">${esc(code)}</button>` : esc(code));
+
+  // what to order
+  const re = reorderList(m);
+  const reorder = `<section class="panel" aria-labelledby="h-reorder">
+      <div class="panel__head"><h2 id="h-reorder">Za naručivanje</h2><p class="panel__sub">Artikli čije se stanje prati: nema ih, pali su na granicu, ili ih po prodaji poslednjih 90 dana ima za manje od mesec dana.</p></div>
+      ${re.length ? `<div class="tbl-wrap"><table class="tbl tbl--compact">
+        <thead><tr><th scope="col">Šifra</th><th scope="col">Naziv</th><th scope="col" class="num">Stanje</th><th scope="col" class="num opt">Granica</th><th scope="col" class="num">Prodato za 90 dana</th><th scope="col" class="num">Dovoljno za</th></tr></thead>
+        <tbody>${re.map(({ p, sold, days }) => `<tr><th scope="row" class="c-code">${codeBtn(p.code)}</th><td>${esc(nameOf(p))}</td>
+          <td class="num">${p.stock === 0 ? '<span class="tag tag--out">nema</span>' : p.stock}</td><td class="num opt">${p.min_stock ?? '—'}</td>
+          <td class="num">${esc(qtyText(sold, p.unit))}</td><td class="num">${p.stock === 0 ? '—' : days === null ? 'nema prodaje' : days < 1 ? 'manje od dana' : esc(plural(days, 'dan', 'dana', 'dana'))}</td></tr>`).join('')}</tbody>
+      </table></div>`
+    : `<p class="state__hint">${D.products.some((p) => p.stock !== null && p.stock !== undefined) ? 'Ništa ne treba naručiti: svega ima dovoljno.' : 'Stanje se još ne prati ni za jedan artikal. Upišite ga u tabeli Artikli i stanje, a u artiklu granicu „Poruči kad padne na“.'}</p>`}
+    </section>`;
+
+  if (!m.live.length) {
+    box.innerHTML = `${reorder}${empty('Još nema porudžbina.', 'Ostala statistika (šta se najviše i najmanje prodaje, promet, članovi) pravi se iz porudžbina sa sajta.')}`;
+    return;
+  }
+
+  const value = m.inPeriod.reduce((a, o) => a + Number(o.total), 0);
+  const members = new Set(m.inPeriod.map((o) => o.email)).size;
+  const figures = `<dl class="figures">
+      <div><dt>Porudžbine</dt><dd>${m.inPeriod.length}</dd></div>
+      <div><dt>Iznos</dt><dd>${esc(money.format(value))}</dd></div>
+      <div><dt>Prosečna porudžbina</dt><dd>${m.inPeriod.length ? esc(money.format(value / m.inPeriod.length)) : '—'}</dd></div>
+      <div><dt>Članova poručilo</dt><dd>${members}</dd></div>
+    </dl>
+    <p class="region__hint">${esc(PERIODS[per] === 'od početka' ? 'Od prve porudžbine.' : `Poslednjih ${PERIODS[per]}.`)} Računaju se sve porudžbine osim otkazanih.</p>`;
+
+  const ranked = [...m.sales].sort((a, b) => (by === 'iznos' ? b[1].value - a[1].value : b[1].qty - a[1].qty) || b[1].orders - a[1].orders).slice(0, 10);
+  const best = `<section class="panel" aria-labelledby="h-best">
+      <div class="panel__head panel__head--row"><h2 id="h-best">Najviše se prodaje</h2>
+        <div class="seg seg--s" role="group" aria-label="Poređaj" data-po><button type="button" data-v="kol" aria-pressed="${by === 'kol'}">po količini</button><button type="button" data-v="iznos" aria-pressed="${by === 'iznos'}">po iznosu</button></div></div>
+      ${ranked.length ? `<div class="tbl-wrap"><table class="tbl tbl--compact">
+        <thead><tr><th scope="col" class="num opt">#</th><th scope="col">Artikal</th><th scope="col" class="num">Količina</th><th scope="col" class="num">Iznos</th><th scope="col" class="num opt">Porudžbina</th></tr></thead>
+        <tbody>${ranked.map(([code, s], i) => `<tr><td class="num opt">${i + 1}</td><th scope="row"><span class="c-code">${codeBtn(code)}</span> <span class="sub">${esc(name(code, s.name))}</span></th>
+          <td class="num">${esc(qtyText(s.qty, s.unit))}</td><td class="num">${esc(money.format(s.value))}</td><td class="num opt">${s.orders}</td></tr>`).join('')}</tbody>
+      </table></div>` : '<p class="state__hint">U ovom periodu nema prodaje.</p>'}
+    </section>`;
+
+  const least = D.products.filter((p) => p.active).map((p) => ({ p, s: m.sales.get(p.code), last: m.ever.get(p.code)?.last || 0 }))
+    .sort((a, b) => (a.s?.qty || 0) - (b.s?.qty || 0) || a.last - b.last || catOrder(a.p) - catOrder(b.p) || a.p.sort - b.p.sort).slice(0, 10);
+  const never = D.products.filter((p) => p.active && !m.sales.has(p.code)).length;
+  const worst = `<section class="panel" aria-labelledby="h-least">
+      <div class="panel__head"><h2 id="h-least">Najmanje se prodaje</h2><p class="panel__sub">${esc(never ? `${plural(never, 'artikal nije poručen', 'artikla nisu poručena', 'artikala nije poručeno')} u ovom periodu; ovde su oni koji najduže čekaju.` : 'Svaki artikal je poručen bar jednom u ovom periodu.')}</p></div>
+      <div class="tbl-wrap"><table class="tbl tbl--compact">
+        <thead><tr><th scope="col">Artikal</th><th scope="col" class="num">Količina</th><th scope="col" class="num">Poslednji put poručen</th><th scope="col" class="num opt">Stanje</th></tr></thead>
+        <tbody>${least.map(({ p, s, last }) => `<tr><th scope="row"><span class="c-code">${codeBtn(p.code)}</span> <span class="sub">${esc(nameOf(p))}</span></th>
+          <td class="num">${s ? esc(qtyText(s.qty, p.unit)) : '0'}</td><td class="num">${last ? esc(dayText.format(new Date(last))) : 'nikad'}</td><td class="num opt">${p.stock ?? '—'}</td></tr>`).join('')}</tbody>
+      </table></div>
+    </section>`;
+
+  const people = new Map();
+  for (const o of m.inPeriod) {
+    const x = people.get(o.email) || { name: o.name || o.email, parish: o.parish || '', n: 0, value: 0, last: 0 };
+    x.n++; x.value += Number(o.total); x.last = Math.max(x.last, Date.parse(o.created_at));
+    people.set(o.email, x);
+  }
+  const topPeople = [...people.values()].sort((a, b) => b.value - a.value).slice(0, 10);
+  const who = `<section class="panel" aria-labelledby="h-people">
+      <div class="panel__head"><h2 id="h-people">Članovi koji najviše poručuju</h2></div>
+      <div class="tbl-wrap"><table class="tbl tbl--compact">
+        <thead><tr><th scope="col">Član</th><th scope="col" class="num">Porudžbina</th><th scope="col" class="num">Iznos</th><th scope="col" class="num">Poslednja</th></tr></thead>
+        <tbody>${topPeople.map((x) => `<tr><th scope="row">${esc(x.name)}<span class="sub">${esc(x.parish)}</span></th><td class="num">${x.n}</td><td class="num">${esc(money.format(x.value))}</td><td class="num">${esc(dayText.format(new Date(x.last)))}</td></tr>`).join('')}</tbody>
+      </table></div>
+    </section>`;
+
+  const months = `<section class="panel" aria-labelledby="h-months">
+      <div class="panel__head"><h2 id="h-months">Promet po mesecima</h2><p class="panel__sub">Iznos porudžbina, poslednjih 12 meseci.</p></div>
+      ${monthChart(m.live)}
+    </section>`;
+
+  box.innerHTML = `${figures}${reorder}<div class="pair">${best}${worst}</div>${months}${who}`;
+}
+
+// the chart's readout follows the pointer and the keyboard
+function chartTip(col) {
+  const plot = col.closest('.chart__plot');
+  const tip = $('.chart__tip', plot);
+  if (!tip) return;
+  $('strong', tip).textContent = col.dataset.value;
+  $('span', tip).textContent = col.dataset.label;
+  tip.hidden = false;
+  const bar = $('.chart__bar', col).getBoundingClientRect(), box = plot.getBoundingClientRect();
+  const x = Math.min(Math.max(bar.left + bar.width / 2 - box.left, tip.offsetWidth / 2), box.width - tip.offsetWidth / 2);
+  tip.style.left = `${x}px`;
+  tip.style.bottom = `${box.bottom - bar.top + 8}px`;
+}
+document.addEventListener('pointerover', (e) => { const c = e.target.closest?.('.chart__col'); if (c) chartTip(c); });
+document.addEventListener('focusin', (e) => { if (e.target.matches?.('.chart__col')) chartTip(e.target); });
+document.addEventListener('pointerout', (e) => { const c = e.target.closest?.('.chart__col'); if (c && !c.contains(e.relatedTarget)) { const t = $('.chart__tip', c.closest('.chart__plot')); if (t && document.activeElement !== c) t.hidden = true; } });
+document.addEventListener('focusout', (e) => { if (e.target.matches?.('.chart__col')) { const t = $('.chart__tip', e.target.closest('.chart__plot')); if (t) t.hidden = true; } });
+
+// ----- spreadsheets (CSV, opens in Excel) -----
+function csv(name, rows) {
+  const cell = (v) => { const x = v === null || v === undefined ? '' : String(v); return /[;"\n\r]/.test(x) ? `"${x.replace(/"/g, '""')}"` : x; };
+  const text = `﻿${rows.map((r) => r.map(cell).join(';')).join('\r\n')}`;
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([text], { type: 'text/csv;charset=utf-8' }));
+  a.download = name;
+  document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+const dec = (n) => (n === null || n === undefined || n === '' ? '' : String(Math.round(Number(n) * 100) / 100).replace('.', ','));
+const today = () => new Date().toISOString().slice(0, 10);
+function csvProducts() {
+  csv(`artikli-${today()}.csv`, [['Šifra', 'Kategorija', 'Naziv (srpski)', 'Naziv (francuski)', 'Naziv (engleski)', 'Cena (€)', 'Jedinica', 'Stanje', 'Poruči kad padne na', 'Na sajtu'],
+    ...D.products.map((p) => [p.code, catName(p.category), p.name_sr, p.name_fr, p.name_en, dec(p.price), p.unit === 'kg' ? 'kg' : 'komad', p.stock ?? '', p.min_stock ?? '', p.active ? 'da' : 'ne'])]);
+}
+function csvOrders() {
+  const rows = [['Broj', 'Datum', 'Status', 'Mejl', 'Ime', 'Parohija', 'Šifra', 'Artikal', 'Količina', 'Cena (€)', 'Iznos (€)']];
+  for (const o of D.orders) for (const l of o.items || []) rows.push([o.id, when.format(new Date(o.created_at)), STATUS[o.status], o.email, o.name || '', o.parish || '', l.code, l.name, dec(l.qty), dec(l.price), dec(l.qty * l.price)]);
+  csv(`porudzbine-${today()}.csv`, rows);
+}
+function csvStats() {
+  const m = statsModel(route());
+  csv(`prodaja-${m.per}-${today()}.csv`, [['Šifra', 'Naziv', 'Kategorija', 'Količina', 'Iznos (€)', 'Porudžbina', 'Stanje'],
+    ...D.products.map((p) => { const s = m.sales.get(p.code); return [p.code, nameOf(p), catName(p.category), dec(s?.qty || 0), dec(s?.value || 0), s?.orders || 0, p.stock ?? '']; })
+      .sort((a, b) => Number(String(b[4]).replace(',', '.')) - Number(String(a[4]).replace(',', '.')))]);
+}
+
+// ----- an order's PDF, made again by the server -----
+async function orderPdf(id, btn) {
+  const box = btn.closest('.sheet__inner');
+  const label = btn.textContent;
+  btn.disabled = true; btn.textContent = 'Pravi se…';
+  try {
+    const t = await token();
+    const j = await call(`${C.url}/functions/v1/order`, {
+      method: 'POST', headers: { apikey: C.key, Authorization: `Bearer ${t}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'pdf', id }),
+    });
+    const bytes = Uint8Array.from(atob(j.pdf), (c) => c.charCodeAt(0));
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }));
+    a.download = j.filename;
+    document.body.append(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  } catch (e) {
+    if (!e.signedOut) formError(box, `PDF nije napravljen. ${reason(e)}`);
+  } finally {
+    btn.disabled = false; btn.textContent = label;
+  }
+}
+
 // ---------- the side sheet ----------
 const sheet = $('[data-sheet]');
 let onSheetClose = null;
@@ -528,7 +791,7 @@ function productForm(p) {
   const isNew = !p;
   const cat = p?.category || route().p.get('k') || D.cats[0]?.id || '';
   const nextSort = Math.max(0, ...D.products.filter((x) => x.category === cat).map((x) => x.sort)) + 10;
-  p ??= { code: '', category: cat, name_sr: '', name_fr: '', name_en: '', note_sr: '', note_fr: '', note_en: '', price: '', unit: 'piece', stock: null, active: true, sort: nextSort, photos: [] };
+  p ??= { code: '', category: cat, name_sr: '', name_fr: '', name_en: '', note_sr: '', note_fr: '', note_en: '', price: '', unit: 'piece', stock: null, min_stock: null, active: true, sort: nextSort, photos: [] };
   edit = { code: isNew ? null : p.code, photos: [...(p.photos || [])], added: [], removed: [], saved: false };
   onSheetClose = () => { if (!edit?.saved && edit?.added.length) removeFiles(edit.added); edit = null; };
   const price = p.price === '' ? '' : String(p.price).replace('.', ',');
@@ -557,6 +820,9 @@ function productForm(p) {
       </div>
       <div class="row2">
         ${field({ id: 'f-stock', label: 'Stanje u magacinu', name: 'stock', value: p.stock ?? '', help: 'Prazno: ne prati se. 0: na sajtu piše da ga nema.', attrs: 'inputmode="numeric" autocomplete="off"' })}
+        ${field({ id: 'f-min', label: 'Poruči kad padne na', name: 'min_stock', value: p.min_stock ?? '', help: 'Na toj količini artikal ide na listu za naručivanje.', attrs: 'inputmode="numeric" autocomplete="off"' })}
+      </div>
+      <div class="row2">
         ${field({ id: 'f-sort', label: 'Redosled u kategoriji', name: 'sort', value: p.sort, help: 'Manji broj stoji pre.', attrs: 'inputmode="numeric" autocomplete="off"' })}
       </div>
       ${checkbox({ id: 'f-active', label: 'Prikaži na sajtu', name: 'active', checked: p.active, help: 'Sakriven artikal ostaje u bazi, ali se ne vidi u katalogu.' })}
@@ -633,6 +899,8 @@ async function submitProduct(form) {
   if (v('price') === '' || !Number.isFinite(price) || price < 0) errs.push(invalid(form, 'price', 'Upišite cenu, na primer 12,50.'));
   const stockRaw = v('stock');
   if (stockRaw !== '' && !/^\d{1,7}$/.test(stockRaw)) errs.push(invalid(form, 'stock', 'Ceo broj, 0 ili više, ili prazno.'));
+  const minRaw = v('min_stock');
+  if (minRaw !== '' && !/^\d{1,7}$/.test(minRaw)) errs.push(invalid(form, 'min_stock', 'Ceo broj, 0 ili više, ili prazno.'));
   const sortRaw = v('sort');
   if (sortRaw !== '' && !/^-?\d{1,6}$/.test(sortRaw)) errs.push(invalid(form, 'sort', 'Ceo broj, na primer 10.'));
   if (errs.length) { errs[0].focus(); return; }
@@ -642,7 +910,7 @@ async function submitProduct(form) {
     name_sr: v('name_sr'), name_fr: v('name_fr'), name_en: v('name_en'),
     note_sr: v('note_sr') || null, note_fr: v('note_fr') || null, note_en: v('note_en') || null,
     price: Math.round(price * 100) / 100, unit: v('unit'),
-    stock: stockRaw === '' ? null : Number(stockRaw), sort: sortRaw === '' ? 0 : Number(sortRaw),
+    stock: stockRaw === '' ? null : Number(stockRaw), min_stock: minRaw === '' ? null : Number(minRaw), sort: sortRaw === '' ? 0 : Number(sortRaw),
     active: form.elements.active.checked, photos: edit.photos,
   };
   busy(form, true, 'Čuvanje…');
@@ -781,7 +1049,7 @@ async function deleteCat() {
 let editPriest = null;
 function priestForm(p) {
   const isNew = !p;
-  p ??= { email: '', name: '', parish: '', phone: '', active: true };
+  p ??= { email: '', name: '', parish: '', phone: '', address: '', active: true };
   editPriest = isNew ? null : p.id;
   openSheet(`<form class="sheet__inner" novalidate data-form="priest">
     ${head(isNew ? 'Novi sveštenik' : esc(p.name || p.email), isNew ? 'Sa ovim mejlom vidi cene i šalje porudžbine.' : '')}
@@ -790,6 +1058,7 @@ function priestForm(p) {
       ${field({ id: 'p-name', label: 'Ime i prezime', name: 'name', value: p.name, help: 'Upisuje se u porudžbinu i PDF.', attrs: 'autocomplete="off"' })}
       ${field({ id: 'p-parish', label: 'Parohija ili crkva', name: 'parish', value: p.parish, attrs: 'autocomplete="off"' })}
       ${field({ id: 'p-phone', label: 'Telefon', name: 'phone', type: 'tel', value: p.phone, attrs: 'autocomplete="off" inputmode="tel"' })}
+      ${field({ id: 'p-address', label: 'Adresa za dostavu', name: 'address', value: p.address, help: 'Upisuje se sama u porudžbinu; član je može menjati u svom nalogu.', attrs: 'autocomplete="off"' })}
       ${checkbox({ id: 'p-active', label: 'Vidi cene i može da naruči', name: 'active', checked: p.active, help: 'Isključite umesto brisanja kad neko privremeno ne treba pristup.' })}
     </div>
     ${foot(isNew ? 'Dodaj sveštenika' : 'Sačuvaj izmene', isNew ? '' : '<button class="btn btn--danger" type="button" data-delete-priest>Obriši sa liste</button>')}
@@ -802,7 +1071,7 @@ async function submitPriest(form) {
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) errs.push(invalid(form, 'email', 'Upišite ceo mejl, na primer ime@parohija.fr.'));
   else if (D.priests.some((p) => p.email === email && p.id !== editPriest)) errs.push(invalid(form, 'email', 'Taj mejl je već na listi.'));
   if (errs.length) { errs[0].focus(); return; }
-  const row = { email, name: v('name') || null, parish: v('parish') || null, phone: v('phone') || null, active: form.elements.active.checked };
+  const row = { email, name: v('name') || null, parish: v('parish') || null, phone: v('phone') || null, address: v('address') || null, active: form.elements.active.checked };
   busy(form, true, 'Čuvanje…');
   formError(form, '');
   try {
@@ -860,7 +1129,7 @@ function orderSheet(o) {
     </div>
     <footer class="sheet__foot">
       <p class="sheet__msg" role="alert" data-form-msg hidden></p>
-      <div class="sheet__actions">${actions}<span class="spacer"></span><button class="btn" type="button" data-print>Štampaj</button></div>
+      <div class="sheet__actions">${actions}<span class="spacer"></span><button class="btn" type="button" data-order-pdf>PDF</button><button class="btn" type="button" data-print>Štampaj</button></div>
     </footer>
   </div>`);
 }
@@ -886,7 +1155,7 @@ async function setStatus(id, status, btn) {
 // ----- password -----
 function passwordForm() {
   openSheet(`<form class="sheet__inner" novalidate data-form="password">
-    ${head('Promena lozinke', esc(session?.email || ''))}
+    ${head('Promena lozinke', esc(shown(session?.email)))}
     <div class="sheet__body">
       <input type="email" name="username" autocomplete="username" value="${esc(session?.email || '')}" hidden>
       ${field({ id: 'w-new', label: 'Nova lozinka', name: 'password', type: 'password', req: true, help: 'Najmanje 10 znakova.', attrs: 'autocomplete="new-password" minlength="10" autofocus' })}
@@ -950,6 +1219,10 @@ document.addEventListener('click', (e) => {
   }
   if (t.matches('[data-status]')) { setStatus(Number(t.closest('[data-order-sheet]').dataset.orderSheet), t.dataset.status, t); return; }
   if (t.matches('[data-print]')) { window.print(); return; }
+  if (t.matches('[data-order-pdf]')) { orderPdf(Number(t.closest('[data-order-sheet]').dataset.orderSheet), t); return; }
+  if (t.matches('[data-csv]')) { ({ products: csvProducts, orders: csvOrders, stats: csvStats })[t.dataset.csv](); return; }
+  if (t.matches('[data-p] button')) { setParam('p', t.dataset.v === '90' ? '' : t.dataset.v); return; }
+  if (t.matches('[data-po] button')) { setParam('po', t.dataset.v === 'kol' ? '' : t.dataset.v); return; }
   if (t.matches('[data-ph-move]')) {
     const i = Number(t.dataset.phMove), j = i + Number(t.dataset.dir);
     [edit.photos[i], edit.photos[j]] = [edit.photos[j], edit.photos[i]];
@@ -1014,7 +1287,7 @@ function showApp() {
   $('#gate').hidden = true;
   $('[data-boot]').hidden = true;
   $('#app').hidden = false;
-  $('[data-me]').textContent = session.email;
+  $('[data-me]').textContent = shown(session.email);
   document.title = 'Administracija · Magacin Eparhije zapadnoevropske';
   for (const k of Object.keys(ST)) ST[k] = 'idle';
   draw();
@@ -1031,7 +1304,7 @@ async function enter() {
     const who = session?.email;
     await auth('logout', {}, session?.access_token).catch(() => {});
     keep(null);
-    showGate(`Nalog ${who} nema administratorska prava. Vlasnik sajta ga može dodati u tabelu admins.`);
+    showGate(`Nalog ${shown(who)} nema administratorska prava. Vlasnik sajta ga može dodati u tabelu admins.`);
     return;
   }
   showApp();
@@ -1047,13 +1320,14 @@ async function signOut() {
 $('[data-login]').addEventListener('submit', async (e) => {
   e.preventDefault();
   const f = e.target;
-  const email = f.elements.email.value.trim(), password = f.elements.password.value;
+  const login = f.elements.email.value.trim(), password = f.elements.password.value;
+  const email = !login || login.includes('@') ? login : `${login.toLowerCase()}@${USER_DOMAIN}`;
   $$('[aria-invalid]', f).forEach((el) => el.removeAttribute('aria-invalid'));
   const m = $('[data-login-msg]');
   if (!email || !password) {
     const el = !email ? f.elements.email : f.elements.password;
     el.setAttribute('aria-invalid', 'true');
-    m.textContent = !email ? 'Upišite mejl.' : 'Upišite lozinku.';
+    m.textContent = !email ? 'Upišite korisničko ime ili mejl.' : 'Upišite lozinku.';
     m.hidden = false;
     el.focus();
     return;
@@ -1069,7 +1343,7 @@ $('[data-login]').addEventListener('submit', async (e) => {
   } catch (err) {
     m.textContent = err.offline ? reason(err)
       : err.status === 429 ? 'Previše pokušaja. Sačekajte nekoliko minuta.'
-        : err.status === 400 || err.status === 401 ? (err.code === 'email_not_confirmed' ? 'Mejl naloga nije potvrđen. U Supabase-u otvorite korisnika i potvrdite ga.' : 'Mejl ili lozinka nisu tačni.')
+        : err.status === 400 || err.status === 401 ? (err.code === 'email_not_confirmed' ? 'Mejl naloga nije potvrđen. U Supabase-u otvorite korisnika i potvrdite ga.' : 'Korisničko ime ili lozinka nisu tačni.')
           : `Prijava nije uspela. ${reason(err)}`;
     m.hidden = false;
     if (!err.offline && (err.status === 400 || err.status === 401)) { f.elements.password.setAttribute('aria-invalid', 'true'); f.elements.password.select(); }

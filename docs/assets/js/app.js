@@ -151,7 +151,7 @@ import * as R from './render.js';
       prices = data.prices; priest = data.priest || {};
       store.set('ek-email', email);
       const form = store.get('ek-form', {});
-      store.set('ek-form', { name: form.name || priest.name || '', parish: form.parish || priest.parish || '', phone: form.phone || priest.phone || '', address: form.address || '' });
+      store.set('ek-form', { name: form.name || priest.name || '', parish: form.parish || priest.parish || '', phone: form.phone || priest.phone || '', address: form.address || priest.address || '' });
       paintPrices();
       return 'ok';
     }
@@ -446,6 +446,7 @@ import * as R from './render.js';
       const a = el('a', 'btn btn--primary', S.downloadPdf); a.href = url; a.download = o.filename; a.dataset.donePdf = '';
       row.append(a);
     }
+    if (D.account) { const a = el('a', 'btn btn--quiet', S.acLink); a.href = D.account; row.append(a); }
     const ok = el('button', 'btn btn--quiet', S.done); ok.type = 'button';
     if (!o.pdf) ok.dataset.donePdf = '';
     ok.addEventListener('click', () => { lastOrder = null; if (url) URL.revokeObjectURL(url); drawer.close(); });
@@ -573,5 +574,10 @@ import * as R from './render.js';
     } else if (!store.get('ek-welcome')) {
       openWelcome();
     }
+  }
+  // "Order again" on the account page comes back here with the list filled
+  if (location.hash === '#liste') {
+    history.replaceState(null, '', location.pathname + location.search);
+    if (!welcome.open) { renderList(); drawer.showModal(); }
   }
 })();
