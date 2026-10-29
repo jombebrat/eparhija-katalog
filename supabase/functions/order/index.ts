@@ -1,11 +1,11 @@
 // POST { email, lang, items: [{ code, qty }], name, parish, phone, address, note }
 // -> { number, total, emailed, pdf (base64), filename }
-// Only an email on the clergy list may order. Prices and names come from the database, never from the page.
-// When RESEND_API_KEY, ORDER_FROM and WAREHOUSE_EMAIL are set, the PDF is emailed to the priest and the warehouse
+// Only an email on the members' list (table priests) may order. Prices and names come from the database, never from the page.
+// When RESEND_API_KEY, ORDER_FROM and WAREHOUSE_EMAIL are set, the PDF is emailed to the member who ordered and the warehouse
 // (the warehouse's message is in WAREHOUSE_LANG: fr, en or sr, default sr).
 import { createClient } from '@supabase/supabase-js';
 import { orderPdf, type Line, type Assets } from './pdf.ts';
-import { T, LOCALE, fill, type Lang } from './i18n.ts';
+import { T, LOCALE, fill, type Lang, toCyrillic } from './i18n.ts';
 
 const CORS = {
   'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') ?? '*',
@@ -107,15 +107,17 @@ Deno.serve(async (req) => {
     .sort((a, b) => a.sort - b.sort)
     .map((p) => ({
       code: p.code,
-      name: String((p as Record<string, unknown>)[`name_${lang}`]),
+      name: String((p as Record<string, unknown>)[`name_${lang}`] || p.name_fr || p.name_sr || p.name_en || p.code),
       qty: wanted.get(p.code)!,
       price: Number(p.price),
       unit: p.unit as 'piece' | 'kg',
     }));
   const total = Math.round(lines.reduce((a, l) => a + l.price * l.qty, 0) * 100) / 100;
 
+  const name = clean(body.name, 120) || priest.name || '';
   const who = {
-    name: clean(body.name, 120) || priest.name || '',
+    // on the Serbian pages the order is written in Cyrillic: "P. Jovan Pavlović" → "о. Јован Павловић"
+    name: lang === 'sr' ? toCyrillic(name) : name,
     parish: clean(body.parish, 160) || priest.parish || '',
     phone: clean(body.phone, 40) || priest.phone || '',
     address: clean(body.address, 300),

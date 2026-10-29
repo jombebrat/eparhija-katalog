@@ -253,8 +253,10 @@ function page(lang, dir) {
         <h2 id="drawer-title">${t(lang, S.list)}</h2>
         <button class="iconbtn" type="button" data-close aria-label="${t(lang, S.close)}">${X}</button>
       </div>
-      <div class="drawer__body" data-list-body></div>
-      <div class="drawer__foot" data-list-foot></div>
+      <div class="drawer__scroll">
+        <div class="drawer__body" data-list-body></div>
+        <div class="drawer__foot" data-list-foot></div>
+      </div>
     </div>
   </dialog>
 

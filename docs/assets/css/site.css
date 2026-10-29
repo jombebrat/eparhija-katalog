@@ -228,9 +228,11 @@ dialog::backdrop { background: var(--color-scrim); }
 .drawer[open] { animation: drawer-in var(--dur-long) var(--ease-out); }
 @keyframes drawer-in { from { opacity: 0; transform: translateX(24px); } }
 .drawer__inner { display: flex; flex-direction: column; height: 100%; }
+/* the articles and the foot scroll together, so the order form never squeezes the articles out */
+.drawer__scroll { display: flex; flex-direction: column; flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
 .drawer__head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); padding: var(--space-md) var(--space-md) var(--space-md) var(--space-lg); border-bottom: var(--rule-hair) solid var(--color-ink); }
 .drawer__head h2 { font-size: var(--text-xl); }
-.drawer__body { flex: 1; overflow-y: auto; overscroll-behavior: contain; padding: 0 var(--space-lg); }
+.drawer__body { flex: 1 0 auto; padding: 0 var(--space-lg); }
 .drawer__empty { display: grid; gap: var(--space-sm); padding-block: var(--space-xl); }
 .drawer__empty b { font-size: var(--text-lg); }
 .drawer__empty p { color: var(--color-ink-2); }
@@ -269,7 +271,9 @@ dialog::backdrop { background: var(--color-scrim); }
 .line__remove:hover { color: var(--color-ink); }
 .line__remove:active { background: var(--color-paper-2); }
 .line__remove:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 0; }
-.drawer__foot { display: grid; gap: var(--space-sm); padding: var(--space-md) var(--space-lg) var(--space-lg); border-top: var(--rule-hair) solid var(--color-ink); background: var(--color-paper); }
+.drawer__foot { position: sticky; bottom: 0; display: grid; gap: var(--space-sm); padding: var(--space-md) var(--space-lg) var(--space-lg); border-top: var(--rule-hair) solid var(--color-ink); background: var(--color-paper); }
+/* with the order form the foot is taller than a phone: it follows the articles instead of covering them */
+.drawer__foot:has(.order-form) { position: static; }
 .drawer__foot:empty { display: none; }
 .drawer__total { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-md); }
 .drawer__total span { color: var(--color-ink-2); }

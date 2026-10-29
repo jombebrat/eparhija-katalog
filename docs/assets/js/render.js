@@ -150,3 +150,32 @@ export function clientData(m, { lang }) {
   }]));
   return { cats, p, total: m.products.length };
 }
+// A member's name for the Serbian pages and PDF: the French title in Serbian, the name in Cyrillic.
+// "P. Jovan Pavlović" → "о. Јован Павловић". A name with a word that is not Serbian Latin (Guilhem Bousquet, Paulo Brandão) stays as written.
+const TITLES = [
+  [/^mère higoumène(?=\s|$)/i, 'Игуманија'], [/^moine-prêtre(?=\s|$)/i, 'Јеромонах'], [/^archiprêtre(?=\s|$)/i, 'Протојереј'],
+  [/^archimandrite(?=\s|$)/i, 'Архимандрит'], [/^hiéromoine(?=\s|$)/i, 'Јеромонах'], [/^hiérodiacre(?=\s|$)/i, 'Јерођакон'],
+  [/^protodiacre(?=\s|$)/i, 'Протођакон'], [/^diacre(?=\s|$)/i, 'Ђакон'], [/^moniale(?=\s|$)/i, 'Монахиња'], [/^moine(?=\s|$)/i, 'Монах'],
+  [/^(?:p\.|père)(?=\s|$)/i, 'о.'],
+];
+const LAT = { a: 'а', b: 'б', c: 'ц', č: 'ч', ć: 'ћ', d: 'д', đ: 'ђ', e: 'е', f: 'ф', g: 'г', h: 'х', i: 'и', j: 'ј', k: 'к', l: 'л', m: 'м', n: 'н', o: 'о', p: 'п', r: 'р', s: 'с', š: 'ш', t: 'т', u: 'у', v: 'в', z: 'з', ž: 'ж' };
+const DIGRAPH = { lj: 'љ', nj: 'њ', dž: 'џ' };
+const serbian = (w) => /^[a-zčćđšž]+$/iu.test(w) && !/[qwxy]/i.test(w);
+const word = (w) => {
+  let out = '';
+  for (let i = 0; i < w.length; i++) {
+    const two = w.slice(i, i + 2), d = DIGRAPH[two.toLowerCase()];
+    const up = (c, src) => (src !== src.toLowerCase() ? c.toUpperCase() : c);
+    if (d) { out += up(d, two[0]); i++; continue; }
+    out += up(LAT[w[i].toLowerCase()], w[i]);
+  }
+  return out;
+};
+export function toCyrillic(name) {
+  let s = String(name ?? '').trim();
+  let title = '';
+  for (const [re, t] of TITLES) if (re.test(s)) { title = t; s = s.replace(re, '').trim(); break; }
+  const words = s.match(/\p{L}+/gu) || [];
+  if (words.every(serbian)) s = s.replace(/\p{L}+/gu, word);
+  return [title, s].filter(Boolean).join(' ');
+}

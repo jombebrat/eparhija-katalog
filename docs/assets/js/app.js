@@ -1,4 +1,4 @@
-// Catalogue: search, category chips, product detail, prices for the clergy and the order list.
+// Catalogue: search, category chips, product detail, prices for members and the order list.
 // Everything on the page works without this file; it only adds the tools.
 // The catalogue itself is reloaded from the database, so what the admin changes shows at once.
 import * as R from './render.js';
@@ -109,7 +109,7 @@ import * as R from './render.js';
     if (want && want !== D.lang && D.lang === 'fr' && !stay && !fromHere && !location.hash && D.langs[want]) location.replace(D.langs[want]);
   })();
 
-  // ---------- prices: only for an email on the clergy list, asked from the server ----------
+  // ---------- prices: only for an email on the members' list, asked from the server ----------
   let prices = null;
   let priest = null;
   const priceOf = (code) => (prices && code in prices ? prices[code] : null);
@@ -140,7 +140,7 @@ import * as R from './render.js';
       loginBtn.hidden = !!prices;
       logoutBtn.hidden = !prices;
       who.hidden = !prices;
-      who.textContent = prices ? fmt(S.pricesFor, { who: priest?.name || store.get('ek-email') || '' }) : '';
+      who.textContent = prices ? fmt(S.pricesFor, { who: (D.lang === 'sr' ? R.toCyrillic(priest?.name) : priest?.name) || store.get('ek-email') || '' }) : '';
     }
     if (drawer.open) renderList();
     if (detail.open && dCode) paintDetailPrice();
@@ -386,7 +386,7 @@ import * as R from './render.js';
       if (tag === 'textarea') input.rows = 2;
       if (auto) input.autocomplete = auto;
       input.maxLength = name === 'note' ? 1000 : name === 'address' ? 300 : 160;
-      input.value = saved[name] || '';
+      input.value = name === 'name' && D.lang === 'sr' ? R.toCyrillic(saved.name) : saved[name] || '';
       input.addEventListener('change', () => { const f = store.get('ek-form', {}); f[name] = input.value; store.set('ek-form', f); });
       wrap.append(lab, input);
       return wrap;
