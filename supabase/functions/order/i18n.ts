@@ -5,8 +5,8 @@ export const LOCALE: Record<Lang, string> = { fr: 'fr-FR', en: 'en-GB', sr: 'sr-
 
 export const T: Record<Lang, Record<string, string>> = {
   fr: {
-    org: 'Éparchie d’Europe occidentale',
-    sub: 'Catalogue de l’entrepôt',
+    org: 'Magasin de l’Éparchie d’Europe occidentale',
+    sub: 'Éparchie d’Europe occidentale, Église orthodoxe serbe',
     order: 'Commande n° {n}',
     date: 'Date',
     from: 'Commandé par',
@@ -25,14 +25,14 @@ export const T: Record<Lang, Record<string, string>> = {
     perKg: '/ kg',
     foot: 'Prix en euros selon le catalogue de l’entrepôt. L’entrepôt confirme la disponibilité et le total.',
     page: 'Page {i} sur {n}',
-    subject: 'Commande n° {n}, catalogue de l’entrepôt',
+    subject: 'Commande n° {n}, Magasin de l’Éparchie',
     mailPriest: 'Bonjour,\n\nVoici votre commande n° {n}, envoyée à l’entrepôt de l’Éparchie. Le détail est dans le PDF joint.\n\nTotal indicatif : {total}',
     mailWarehouse: 'Nouvelle commande n° {n} de {who}.\n\nTotal indicatif : {total}\n\nLe détail est dans le PDF joint. Répondre à ce message écrit directement à {email}.',
     file: 'commande-{n}.pdf',
   },
   en: {
-    org: 'Eparchy of Western Europe',
-    sub: 'Warehouse catalogue',
+    org: 'Warehouse of the Eparchy of Western Europe',
+    sub: 'Serbian Orthodox Eparchy of Western Europe',
     order: 'Order no. {n}',
     date: 'Date',
     from: 'Ordered by',
@@ -51,14 +51,14 @@ export const T: Record<Lang, Record<string, string>> = {
     perKg: '/ kg',
     foot: 'Prices in euros as in the warehouse catalogue. The warehouse confirms availability and the total.',
     page: 'Page {i} of {n}',
-    subject: 'Order no. {n}, warehouse catalogue',
+    subject: 'Order no. {n}, Eparchy warehouse',
     mailPriest: 'Hello,\n\nHere is your order no. {n}, sent to the Eparchy’s warehouse. The details are in the attached PDF.\n\nEstimated total: {total}',
     mailWarehouse: 'New order no. {n} from {who}.\n\nEstimated total: {total}\n\nThe details are in the attached PDF. Replying to this message writes to {email}.',
     file: 'order-{n}.pdf',
   },
   sr: {
-    org: 'Епархија западноевропска',
-    sub: 'Магацински каталог',
+    org: 'Магацин Епархије западноевропске',
+    sub: 'Епархија западноевропска, Српска православна црква',
     order: 'Поруџбина бр. {n}',
     date: 'Датум',
     from: 'Наручио',
@@ -77,12 +77,14 @@ export const T: Record<Lang, Record<string, string>> = {
     perKg: '/ kg',
     foot: 'Цене у еврима према магацинском каталогу. Магацин потврђује расположивост и збир.',
     page: 'Страна {i} од {n}',
-    subject: 'Поруџбина бр. {n}, магацински каталог',
+    subject: 'Поруџбина бр. {n}, Магацин Епархије',
     mailPriest: 'Добар дан,\n\nово је ваша поруџбина бр. {n}, послата магацину Епархије. Детаљи су у приложеном PDF-у.\n\nОквирни збир: {total}',
     mailWarehouse: 'Нова поруџбина бр. {n}: {who}.\n\nОквирни збир: {total}\n\nДетаљи су у приложеном PDF-у. Одговор на ову поруку иде директно на {email}.',
     file: 'porudzbina-{n}.pdf',
   },
 };
+
+export const ADDRESS = '23, rue du Simplon, 75018 Paris';
 
 export const fill = (s: string, v: Record<string, string | number>) =>
   Object.entries(v).reduce((a, [k, x]) => a.replaceAll(`{${k}}`, String(x)), s);

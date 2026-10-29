@@ -48,7 +48,7 @@ Deno.serve(async (req) => {
     return json({ error: 'unknown' }, 404);
   }
 
-  const { data: products, error: e2 } = await db.from('products').select('code, price');
+  const { data: products, error: e2 } = await db.from('products').select('code, price').eq('active', true);
   if (e2) return json({ error: 'server' }, 500);
   const prices = Object.fromEntries((products ?? []).map((p) => [p.code, Number(p.price)]));
   return json({ priest: { name: priest.name ?? '', parish: priest.parish ?? '', phone: priest.phone ?? '' }, prices });

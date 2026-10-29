@@ -1,30 +1,31 @@
-// Builds the order PDF (A4) with pdf-lib. Pure: data in, bytes out, so it runs in Deno and in Node.
+// Builds the order PDF (A4) with pdf-lib. Pure: data and the font/emblem bytes in, PDF bytes out,
+// so it runs in Deno and in Node. Fonts: Onest (OFL, assets/OFL.txt). Emblem: coat of arms of the SPC.
 import { PDFDocument, rgb, type PDFFont, type PDFPage } from 'pdf-lib';
 import fontkit from '@pdf-lib/fontkit';
-import { ONEST_REGULAR, ONEST_BOLD } from './font.ts';
-import { T, LOCALE, fill, type Lang } from './i18n.ts';
+import { T, LOCALE, ADDRESS, fill, type Lang } from './i18n.ts';
 
 export type Line = { code: string; name: string; qty: number; price: number; unit: 'piece' | 'kg' };
+export type Assets = { regular: Uint8Array; bold: Uint8Array; emblem: Uint8Array };
 export type Order = {
   number: number | string; date: Date; lang: Lang;
   email: string; name?: string; parish?: string; phone?: string; address?: string; note?: string;
   lines: Line[]; total: number;
 };
 
-const b64 = (s: string) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
 const INK = rgb(0.09, 0.09, 0.09);
 const INK2 = rgb(0.25, 0.25, 0.25);
 const MUTED = rgb(0.42, 0.42, 0.42);
 const RULE = rgb(0.86, 0.86, 0.85);
 const W = 595.28, H = 841.89, M = 48;
 
-export async function orderPdf(o: Order): Promise<Uint8Array> {
+export async function orderPdf(o: Order, a: Assets): Promise<Uint8Array> {
   const t = T[o.lang];
   const money = new Intl.NumberFormat(LOCALE[o.lang], { style: 'currency', currency: 'EUR' });
   const doc = await PDFDocument.create();
   doc.registerFontkit(fontkit);
-  const reg = await doc.embedFont(b64(ONEST_REGULAR), { subset: true });
-  const bold = await doc.embedFont(b64(ONEST_BOLD), { subset: true });
+  const reg = await doc.embedFont(a.regular, { subset: true });
+  const bold = await doc.embedFont(a.bold, { subset: true });
+  const emblem = await doc.embedPng(a.emblem);
   doc.setTitle(fill(t.order, { n: o.number }));
   doc.setAuthor(t.org);
   doc.setCreator(t.sub);
@@ -63,11 +64,15 @@ export async function orderPdf(o: Order): Promise<Uint8Array> {
   const newPage = (first: boolean) => {
     page = doc.addPage([W, H]); pages.push(page);
     y = H - M;
-    text(t.org, M, y - 4, 13, bold);
-    text(t.sub, M, y - 20, 9.5, reg, MUTED);
-    right(fill(t.order, { n: o.number }), W - M, y - 4, first ? 13 : 11, bold);
-    right(new Intl.DateTimeFormat(LOCALE[o.lang], { dateStyle: 'long', timeStyle: 'short', timeZone: 'Europe/Paris' }).format(o.date), W - M, y - 20, 9.5, reg, MUTED);
-    y -= 44; rule(y, INK, 0.9); y -= 26;
+    const eh = first ? 64 : 40, ew = eh * emblem.width / emblem.height;
+    page.drawImage(emblem, { x: M, y: y - eh + 6, width: ew, height: eh });
+    const tx = M + ew + 14;
+    text(t.org, tx, y - 6, first ? 13 : 11, bold);
+    text(t.sub, tx, y - 21, 9, reg, MUTED);
+    if (first) text(ADDRESS, tx, y - 34, 9, reg, MUTED);
+    right(fill(t.order, { n: o.number }), W - M, y - 6, first ? 13 : 11, bold);
+    right(new Intl.DateTimeFormat(LOCALE[o.lang], { dateStyle: 'long', timeStyle: 'short', timeZone: 'Europe/Paris' }).format(o.date), W - M, y - 21, 9, reg, MUTED);
+    y -= eh + 6; rule(y, INK, 0.9); y -= 26;
   };
 
   newPage(true);

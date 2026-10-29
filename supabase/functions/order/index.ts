@@ -4,7 +4,7 @@
 // When RESEND_API_KEY, ORDER_FROM and WAREHOUSE_EMAIL are set, the PDF is emailed to the priest and the warehouse
 // (the warehouse's message is in WAREHOUSE_LANG: fr, en or sr, default sr).
 import { createClient } from '@supabase/supabase-js';
-import { orderPdf, type Line } from './pdf.ts';
+import { orderPdf, type Line, type Assets } from './pdf.ts';
 import { T, LOCALE, fill, type Lang } from './i18n.ts';
 
 const CORS = {
@@ -20,6 +20,26 @@ const secret = (() => {
   try { return JSON.parse(Deno.env.get('SUPABASE_SECRET_KEYS') ?? '{}').default; } catch { return undefined; }
 })() ?? Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 const db = createClient(Deno.env.get('SUPABASE_URL')!, secret!, { auth: { persistSession: false } });
+
+// The PDF's font and coat of arms: kept in the private Storage bucket `assets`; on first use they are copied
+// there from this repository (PDF_ASSETS_URL can point elsewhere).
+const ASSETS_URL = Deno.env.get('PDF_ASSETS_URL') ?? 'https://raw.githubusercontent.com/jombebrat/eparhija-katalog/main/supabase/functions/order/assets/';
+let assetCache: Assets | null = null;
+async function pdfAssets(): Promise<Assets> {
+  if (assetCache) return assetCache;
+  const get = async (name: string, type: string) => {
+    const { data } = await db.storage.from('assets').download(name);
+    if (data) return new Uint8Array(await data.arrayBuffer());
+    const r = await fetch(ASSETS_URL + name);
+    if (!r.ok) throw new Error(`asset ${name}: ${r.status}`);
+    const bytes = new Uint8Array(await r.arrayBuffer());
+    await db.storage.from('assets').upload(name, bytes, { contentType: type, upsert: true });
+    return bytes;
+  };
+  const [regular, bold, emblem] = await Promise.all([get('onest-400.ttf', 'font/ttf'), get('onest-700.ttf', 'font/ttf'), get('emblem.png', 'image/png')]);
+  assetCache = { regular, bold, emblem };
+  return assetCache;
+}
 
 const clientIp = (req: Request) =>
   (req.headers.get('x-forwarded-for') ?? '').split(',')[0].trim() || req.headers.get('cf-connecting-ip') || 'unknown';
@@ -78,13 +98,15 @@ Deno.serve(async (req) => {
     if (!code || !Number.isFinite(qty) || qty < 1 || qty > 999) return json({ error: 'invalid' }, 400);
     wanted.set(code, (wanted.get(code) ?? 0) + qty);
   }
-  const { data: products, error } = await db.from('products').select('code, name_fr, name_en, name_sr, price, unit, sort').in('code', [...wanted.keys()]);
+  const { data: products, error } = await db.from('products').select('code, name_fr, name_en, name_sr, price, unit, sort, available').eq('active', true).in('code', [...wanted.keys()]);
   if (error) return json({ error: 'server' }, 500);
   if ((products ?? []).length !== wanted.size) return json({ error: 'unknown_item' }, 400);
+  const gone = products!.filter((p) => !p.available).map((p) => p.code);
+  if (gone.length) return json({ error: 'unavailable', codes: gone }, 409);
   const lines: Line[] = products!
     .sort((a, b) => a.sort - b.sort)
     .map((p) => ({
-      code: p.unit === 'kg' ? p.code.replace(/^bougie-/, '').replace('-', '/').replace('dikiri', 'D/T') : p.code,
+      code: p.code,
       name: String((p as Record<string, unknown>)[`name_${lang}`]),
       qty: wanted.get(p.code)!,
       price: Number(p.price),
@@ -104,8 +126,13 @@ Deno.serve(async (req) => {
     .select('id, created_at').single();
   if (e2 || !saved) return json({ error: 'server' }, 500);
 
-  const pdfBytes = await orderPdf({ number: saved.id, date: new Date(saved.created_at), lang, email, ...who, lines, total });
-  const pdf = toB64(pdfBytes);
+  let pdf = '';
+  try {
+    const pdfBytes = await orderPdf({ number: saved.id, date: new Date(saved.created_at), lang, email, ...who, lines, total }, await pdfAssets());
+    pdf = toB64(pdfBytes);
+  } catch (e) {
+    console.error('pdf', e); // the order is saved; the warehouse still sees it in the admin panel
+  }
   const t = T[lang];
   const money = new Intl.NumberFormat(LOCALE[lang], { style: 'currency', currency: 'EUR' }).format(total);
   const filename = fill(t.file, { n: saved.id });
@@ -114,7 +141,7 @@ Deno.serve(async (req) => {
   let emailed = false;
   const warehouse = Deno.env.get('WAREHOUSE_EMAIL');
   const wl = (['fr', 'en', 'sr'].includes(Deno.env.get('WAREHOUSE_LANG') ?? '') ? Deno.env.get('WAREHOUSE_LANG') : 'sr') as Lang;
-  if (warehouse) {
+  if (warehouse && pdf) {
     const [a, b] = await Promise.all([
       sendMail(email, warehouse, subject, fill(t.mailPriest, { n: saved.id, total: money }), filename, pdf),
       sendMail(warehouse, email, fill(T[wl].subject, { n: saved.id }), fill(T[wl].mailWarehouse, { n: saved.id, total: money, who: [who.name, who.parish].filter(Boolean).join(', ') || email, email }), filename, pdf),
