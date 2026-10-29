@@ -1,0 +1,25 @@
+/* Hallmark · shape: content page · genre: editorial · theme: Ink (the catalogue's own)
+ * nav: the catalogue's slab · signature: the company's register entry, read as a ledger of label and value · states: static
+ * axes: light/grotesk-sans/chromatic-gold · contrast: pass · v2.0.0 */
+@import url("./site.css?v=bd32fa888e");
+
+.legal { padding-block: var(--space-xl) var(--space-3xl); }
+.legal__inner { display: grid; gap: var(--space-2xl); }
+.legal__head, .legal__sec { max-width: 52rem; }
+.legal__head { display: grid; gap: var(--space-xs); }
+.legal h1 { max-width: 24ch; font-size: var(--text-2xl); letter-spacing: -0.02em; line-height: 1.15; }
+.legal__updated { color: var(--color-ink-2); font-size: var(--text-sm); }
+.legal__sec { display: grid; gap: var(--space-sm); }
+.legal__sec h2 { max-width: none; font-size: var(--text-lg); letter-spacing: -0.01em; line-height: 1.25; }
+.legal__sec p { max-width: 68ch; }
+.legal__dl { margin: var(--space-2xs) 0 0; border-top: var(--rule-hair) solid var(--color-ink); }
+.legal__dl div { display: grid; grid-template-columns: minmax(0, 13rem) minmax(0, 1fr); align-items: baseline; gap: var(--space-2xs) var(--space-lg); padding-block: var(--space-sm); border-bottom: var(--rule-hair) solid var(--color-rule); }
+.legal__dl dt { color: var(--color-ink-2); font-size: var(--text-sm); }
+.legal__dl dd { max-width: 68ch; margin: 0; }
+.legal__dl a { text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+a.listbtn { text-decoration: none; }
+
+@media (max-width: 40rem) {
+  .legal__dl div { grid-template-columns: minmax(0, 1fr); }
+  .legal-page .slab a.listbtn:not(.listbtn--login) { display: inline-flex; min-height: 40px; margin-left: auto; padding: 0 var(--space-sm); }
+}

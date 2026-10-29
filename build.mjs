@@ -15,6 +15,7 @@ const ROOT = dirname(fileURLToPath(import.meta.url));
 const read = (p) => JSON.parse(readFileSync(join(ROOT, p), 'utf8'));
 const site = read('data/site.json');
 const strings = read('data/strings.json');
+const legal = read('data/legal.json');
 
 const LANGS = [
   { id: 'fr', dir: '' },
@@ -71,6 +72,7 @@ const V = {
   adminCss: stamp('css/admin.css', css3),
 };
 V.accountCss = stamp('css/account.css', { 'site.css': V.site });
+V.legalCss = stamp('css/legal.css', { 'site.css': V.site });
 
 const raw = await loadCatalogue();
 const model = R.fromDb(raw.categories, raw.products);
@@ -105,6 +107,10 @@ const ICON = {
   person: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.6-4 4.6-6 8-6s6.4 2 8 6"/></svg>',
   search: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>',
 };
+
+// the company behind the site, and the way to its legal notice, at the foot of every page
+const legalPath = (l) => `${l.dir}${legal[l.id].slug}/`;
+const legalLine = (lang, root) => `<p>${t(lang, legal[lang].companyLine)} <a href="${root}${legalPath(LANGS.find((l) => l.id === lang))}">${t(lang, legal[lang].title)}</a></p>`;
 
 function page(lang, dir) {
   const S = strings[lang];
@@ -146,7 +152,13 @@ function page(lang, dir) {
   <meta property="og:title" content="${t(lang, S.title)}">
   <meta property="og:description" content="${t(lang, S.description)}">
   <meta property="og:locale" content="${S.ogLocale}">
-  ${site.url ? `<meta property="og:url" content="${absolute(thisLang)}">\n  <meta property="og:image" content="${site.url.replace(/\/?$/, '/')}assets/img/share.jpg">` : ''}
+  ${site.url ? `<meta property="og:url" content="${absolute(thisLang)}">
+  <meta property="og:site_name" content="${t(lang, S.brand)}">
+  <meta property="og:image" content="${site.url.replace(/\/?$/, '/')}assets/img/share-${lang}.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="${t(lang, S.brand)}">
+  <meta name="twitter:card" content="summary_large_image">` : ''}
   <link rel="icon" href="${root}favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="${root}apple-touch-icon.png">
   <link rel="preload" href="${root}assets/fonts/onest-${lang === 'sr' ? 'cyrillic' : 'latin'}-400-normal.woff2" as="font" type="font/woff2" crossorigin>
@@ -217,6 +229,7 @@ function page(lang, dir) {
       <div class="colophon__text">
         <p><b>${t(lang, S.brand)}.</b> ${t(lang, S.orgFull)}, ${t(lang, S.address)}.</p>
         <p>${t(lang, S.footerLine)} ${t(lang, S.footerPhotos)}</p>
+        ${legalLine(lang, root)}
         <p>${t(lang, S.otherLangs)} ${LANGS.filter((l) => l.id !== lang).map((l) => `<a href="${here(l)}" hreflang="${strings[l.id].htmlLang}" lang="${strings[l.id].htmlLang}" data-lang>${esc(strings[l.id].langName)}</a>`).join(` ${lang === 'fr' ? 'et' : lang === 'en' ? 'and' : 'и'} `)}. <a href="${root}${dir}${S.acSlug}/">${t(lang, S.acLink)}</a> · <a href="${root}admin/">${t(lang, S.admin)}</a></p>
       </div>
     </div>
@@ -551,6 +564,7 @@ function accountPage(lang) {
       <img class="colophon__grb" src="${root}assets/img/grb-112.webp" width="48" height="56" alt="">
       <div class="colophon__text">
         <p><b>${t(lang, S.brand)}.</b> ${t(lang, S.orgFull)}, ${t(lang, S.address)}.</p>
+        ${legalLine(lang, root)}
       </div>
     </div>
   </footer>
@@ -565,5 +579,81 @@ for (const l of LANGS) {
   const out = join(ROOT, 'docs', accountPath(l), 'index.html');
   mkdirSync(dirname(out), { recursive: true });
   writeFileSync(out, accountPage(l.id));
+  console.log('wrote', out.replace(ROOT + '/', ''));
+}
+
+// ---------- the legal notice and privacy page, one per language ----------
+function legalPage(lang) {
+  const S = strings[lang];
+  const L = legal[lang];
+  const me = LANGS.find((l) => l.id === lang);
+  const root = '../'.repeat(legalPath(me).split('/').filter(Boolean).length);
+  const catalogue = root + me.dir;
+  const contact = () => {
+    const parts = [];
+    const colon = lang === 'fr' ? '\u00a0:' : ':';
+    if (site.email) parts.push(`${t(lang, L.contactEmail)}${colon} <a href="mailto:${esc(site.email)}">${esc(site.email)}</a>`);
+    if (site.phone) parts.push(`${t(lang, L.contactPhone)}${colon} <a href="tel:${esc(site.phone.replace(/[^+\d]/g, ''))}">${esc(site.phone)}</a>`);
+    parts.push(t(lang, L.contactPost));
+    return parts.join('<br>');
+  };
+  const dl = (rows) => `<dl class="legal__dl">${rows.map(([k, v]) => `\n          <div><dt>${t(lang, k)}</dt><dd>${v === '{contact}' ? contact() : t(lang, v).replace(/(\d) (?=\d)/g, '$1\u00a0')}</dd></div>`).join('')}\n        </dl>`;
+  const sections = L.sections.map((s, i) => `
+      <section class="legal__sec" aria-labelledby="l-${i + 1}">
+        <h2 id="l-${i + 1}">${t(lang, s.h)}</h2>
+        ${(s.p || []).map((p) => `<p>${t(lang, p)}</p>`).join('\n        ')}
+        ${s.dl ? dl(s.dl) : ''}
+      </section>`).join('\n');
+  return `<!doctype html>
+<html lang="${S.htmlLang}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>${t(lang, L.title)} · ${t(lang, S.brand)}</title>
+  <meta name="description" content="${t(lang, L.description)}">
+  ${LANGS.map((l) => `<link rel="alternate" hreflang="${strings[l.id].htmlLang}" href="${root}${legalPath(l)}">`).join('\n  ')}
+  <link rel="icon" href="${root}favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="${root}apple-touch-icon.png">
+  <link rel="stylesheet" href="${root}assets/css/legal.css?v=${V.legalCss}">
+</head>
+<body class="legal-page">
+  <a class="skip" href="#main">${t(lang, S.skip)}</a>
+  <header class="slab">
+    <div class="container slab__inner">
+      <a class="wordmark" href="${catalogue}"><img class="wordmark__grb" src="${root}assets/img/grb-112.webp" width="48" height="56" alt=""><b>${t(lang, S.brand)}</b></a>
+      <nav class="langs" aria-label="${t(lang, S.langsLabel)}">
+        ${flagLinks(lang, (l) => `${root}${legalPath(l)}`)}
+      </nav>
+      <a class="listbtn" href="${catalogue}">${t(lang, S.acCatalogue)}</a>
+    </div>
+  </header>
+
+  <main id="main" class="legal">
+    <div class="container legal__inner">
+      <header class="legal__head">
+        <h1>${t(lang, L.title)}</h1>
+        <p class="legal__updated">${t(lang, L.updated)}</p>
+      </header>
+${sections}
+    </div>
+  </main>
+
+  <footer class="colophon">
+    <div class="container colophon__inner">
+      <img class="colophon__grb" src="${root}assets/img/grb-112.webp" width="48" height="56" alt="">
+      <div class="colophon__text">
+        <p><b>${t(lang, S.brand)}.</b> ${t(lang, S.orgFull)}, ${t(lang, S.address)}.</p>
+        <p>${t(lang, L.companyLine)}</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
+`;
+}
+for (const l of LANGS) {
+  const out = join(ROOT, 'docs', legalPath(l), 'index.html');
+  mkdirSync(dirname(out), { recursive: true });
+  writeFileSync(out, legalPage(l.id));
   console.log('wrote', out.replace(ROOT + '/', ''));
 }

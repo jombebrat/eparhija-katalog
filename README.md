@@ -68,6 +68,8 @@ Cene, stanje, sveštenici i porudžbine **nisu** u ovom repozitorijumu ni na str
 | `inquiries` | upiti za cene i ponude koje su poslate | samo administratori |
 | `attempts` | provere mejlova, kodovi i upiti (protiv zloupotrebe) | niko |
 
+Koliko se podaci čuvaju (piše i na pravnoj stranici), radi sama baza preko `pg_cron`: `attempts` (IP adrese) se brišu posle 24 sata (posao `sweep-attempts`, svakog sata), upiti koji nisu postali porudžbina posle 3 godine (`sweep-inquiries`, svake noći). Porudžbine se čuvaju 10 godina (knjigovodstvo) i ne brišu se same.
+
 Pristup čuva sama baza (RLS i prava po kolonama), ne stranica. Fotografije koje se otpreme iz administracije idu u Storage, u javni bucket `products`.
 
 Dve serverske funkcije:
@@ -86,7 +88,7 @@ WAREHOUSE_LANG   = sr        (jezik poruke magacinu: fr, en ili sr)
 
 Dok ovo nije podešeno, porudžbina se ipak čuva (vidi se u administraciji), član dobija PDF za preuzimanje, ali **prijava na „Moj nalog“ ne radi** (kod ne može da stigne). Za probu bez sopstvenog domena: u Resend-u `ORDER_FROM = onboarding@resend.dev`; tada mejlovi stižu samo na adresu Resend naloga.
 
-PDF je potvrda porudžbine, ne račun: francuska faktura traži i SIRET, PDV broj i druge obavezne podatke.
+Na dnu svake strane PDF-a su podaci firme (MAGACIN ZAPADNOEVROPSKI SASU, kapital, RCS, PDV broj). PDF je i dalje potvrda porudžbine ili ponuda, ne račun: račune pravi knjigovodstveni program (npr. Erplain).
 
 **Novi Supabase projekat:** primeni migracije iz `supabase/migrations/` po redu, objavi dve funkcije (`supabase functions deploy prices` i `order`, obe bez JWT provere, vidi `supabase/config.toml`), u `data/site.json` upiši `supabaseUrl` (`https://<ref>.supabase.co`) i `supabaseKey` (publishable ključ, `sb_publishable_…`, sme da bude javan), pokreni `node build.mjs` i dodaj prvog administratora (gore).
 
@@ -100,7 +102,13 @@ U `data/site.json` upiši adresu sajta, mejl i telefon magacina:
 "phone": "+33 1 23 45 67 89"
 ```
 
-Zatim pokreni `node build.mjs` i sačuvaj promene (commit). Dok je mejl prazan, na sajtu stoji isprekidano označeno polje „à compléter“.
+Zatim pokreni `node build.mjs` i sačuvaj promene (commit). Dok je mejl prazan, na sajtu stoji isprekidano označeno polje „à compléter“. Mejl i telefon se tada pojavljuju i na pravnoj stranici, kao kontakt.
+
+## Pravna stranica
+
+`/mentions-legales/`, `/en/legal/`, `/sr/pravno/`: podaci firme iz francuskog registra (izdavač), smeštaj sajta i baze, koji se lični podaci čuvaju, koliko i zašto, kolačići i prava posetilaca. Tekst je u `data/legal.json`, za sva tri jezika; link je u podnožju svake stranice. Kad se uključi slanje mejlova (Resend), dopiši ga među tehničke dobavljače („Qui y a accès“).
+
+Slike za deljenje linka (Viber, WhatsApp, Facebook) su `docs/assets/img/share-fr.jpg`, `share-en.jpg`, `share-sr.jpg` (1200 × 630, grb, naziv i četiri artikla); prikazuju se kad je u `data/site.json` upisan `url`.
 
 ## Za programera
 
@@ -112,12 +120,14 @@ Tekstovi stranice (naslovi, dugmad, poruke) su u `data/strings.json`, za sva tri
 build.mjs              pravi stranice iz podataka
 data/catalogue.json    snimak kataloga iz baze (bez cena)
 data/strings.json      tekstovi stranice na tri jezika
+data/legal.json        pravna stranica (mentions légales i privatnost) na tri jezika
 data/site.json         adresa baze, kontakt magacina, adresa sajta
 supabase/              baza (migrations/) i dve serverske funkcije (functions/prices, functions/order)
 docs/                  gotov sajt (ovo se objavljuje)
   admin/               administracija
   compte/, en/account/, sr/nalog/   nalog člana
-  assets/css/          tokens.css, base.css, fonts.css, site.css, admin.css, account.css
+  mentions-legales/, en/legal/, sr/pravno/   pravna stranica
+  assets/css/          tokens.css, base.css, fonts.css, site.css, admin.css, account.css, legal.css
   assets/js/           render.js (zajednički za build i pregledač), app.js (katalog), admin.js (administracija), account.js (nalog člana)
   assets/img/p/        fotografije artikala iz kataloga (WebP)
   assets/img/grb-*     grb SPC

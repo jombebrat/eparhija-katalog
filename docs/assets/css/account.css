@@ -72,7 +72,7 @@ a.listbtn { text-decoration: none; }
   .acct__cols { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 40rem) {
-  .acct-page .slab a.listbtn { display: inline-flex; min-height: 40px; margin-left: auto; padding: 0 var(--space-sm); }
+  .acct-page .slab a.listbtn:not(.listbtn--login) { display: inline-flex; min-height: 40px; margin-left: auto; padding: 0 var(--space-sm); }
   .acct { padding-top: var(--space-lg); }
   .myorder__head { grid-template-columns: auto minmax(0, 1fr) auto; }
   .myorder__date { grid-column: 1 / -1; grid-row: 2; }

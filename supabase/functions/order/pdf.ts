@@ -105,7 +105,7 @@ export async function orderPdf(o: Order, a: Assets): Promise<Uint8Array> {
     const names = wrap(l.name, reg, 10.5, itemW).slice(0, 3);
     const h = 14 * names.length + 8;
     if (y - h < M + 60) { newPage(false); tableHead(); }
-    const qty = l.unit === 'kg' ? `${l.qty} ${t.kg}` : String(l.qty);
+    const qty = l.unit === 'kg' ? `${l.qty}\u00a0${t.kg}` : String(l.qty);
     const unit = money.format(l.price) + (l.unit === 'kg' ? ` ${t.perKg}` : '');
     text(l.code, C.code, y, 10, reg, INK2);
     names.forEach((n, i) => text(n, C.item, y - i * 14, 10.5));
@@ -131,8 +131,11 @@ export async function orderPdf(o: Order, a: Assets): Promise<Uint8Array> {
     text(o.link, M, y - 13, 8, reg, INK2);
   }
 
+  // every page ends with the company that sells (left) and the page count (right)
   pages.forEach((p, i) => {
     page = p;
+    page.drawLine({ start: { x: M, y: M - 8 }, end: { x: W - M, y: M - 8 }, thickness: 0.5, color: RULE });
+    text(t.company, M, M - 20, 7.5, reg, MUTED);
     right(fill(t.page, { i: i + 1, n: pages.length }), W - M, M - 20, 8.5, reg, MUTED);
   });
   return await doc.save();
