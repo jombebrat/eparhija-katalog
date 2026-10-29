@@ -901,7 +901,7 @@ const TOWNS = {
   anvers: [51.219, 4.402], bruxelles: [50.85, 4.352], hasselt: [50.931, 5.338], rotterdam: [51.924, 4.478], 'amsterdam-zaandam': [52.44, 4.83],
   utrecht: [52.091, 5.122], nimegue: [51.842, 5.853], 'emmen-compascuum': [52.81, 7.05], breda: [51.589, 4.776], eindhoven: [51.441, 5.47],
   zelande: [51.45, 3.65], enschede: [52.222, 6.894], luxembourg: [49.612, 6.13], catalogne: [41.59, 1.52], barcelone: [41.385, 2.173],
-  madrid: [40.417, -3.704], valence: [39.47, -0.376], 'la corogne': [43.362, -8.412], tenerife: [28.29, -16.63], lisbonne: [38.722, -9.139],
+  'monastere de bois-salair': [48.31, -0.69], madrid: [40.417, -3.704], valence: [39.47, -0.376], 'la corogne': [43.362, -8.412], tenerife: [28.29, -16.63], lisbonne: [38.722, -9.139],
 };
 const townOf = (parish) => {
   for (const part of String(parish || '').split(/[,;()]/)) { const k = norm(part); if (TOWNS[k]) return k; }
