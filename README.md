@@ -52,7 +52,17 @@ Gotov sajt je u folderu **`docs/`**.
 
 **Netlify ili Vercel:** poveži repozitorijum, *Publish directory* = `docs`, *Build command* ostavi prazno (ili `node build.mjs`). Radi i sa privatnim repozitorijumom.
 
-**Sopstveni domen** (npr. `magacin.eparhija.fr`): podešava se u istim podešavanjima (*Custom domain*).
+**Domen `magacinzapadnoevropski.com`** (kupljen na Namecheap-u): fajl `docs/CNAME` kaže GitHub Pages-u koji je domen, a stara adresa `jombebrat.github.io/eparhija-katalog/` sama preusmerava na njega. U Namecheap-u, *Domain List → Manage → Advanced DNS*, stoje ovi zapisi (ništa drugo za `@` i `www`):
+
+```
+A      @    185.199.108.153
+A      @    185.199.109.153
+A      @    185.199.110.153
+A      @    185.199.111.153
+CNAME  www  jombebrat.github.io.
+```
+
+Kad GitHub izda sertifikat (do 24 sata), u *Settings → Pages* uključi *Enforce HTTPS*. Adresa za linkove u mejlovima je u funkciji `order` (`SITE_URL`, podrazumevano ovaj domen).
 
 ## Baza (Supabase)
 
@@ -97,7 +107,7 @@ Na dnu svake strane PDF-a su podaci firme (MAGACIN ZAPADNOEVROPSKI SASU, kapital
 U `data/site.json` upiši adresu sajta, mejl i telefon magacina:
 
 ```json
-"url": "https://jombebrat.github.io/eparhija-katalog/",
+"url": "https://magacinzapadnoevropski.com/",
 "email": "magacin@primer.fr",
 "phone": "+33 1 23 45 67 89"
 ```

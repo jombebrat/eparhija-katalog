@@ -233,7 +233,7 @@ async function pdfAgain(req: Request, body: Record<string, unknown>) {
 
 // ---------- price inquiries and quotes ----------
 
-const SITE = (Deno.env.get('SITE_URL') ?? 'https://jombebrat.github.io/eparhija-katalog/').replace(/\/?$/, '/');
+const SITE = (Deno.env.get('SITE_URL') ?? 'https://magacinzapadnoevropski.com/').replace(/\/?$/, '/');
 const langPath = (l: Lang) => (l === 'fr' ? '' : `${l}/`);
 const mailOn = () => !!(Deno.env.get('RESEND_API_KEY') && Deno.env.get('ORDER_FROM'));
 const pickLang = (v: unknown) => (['fr', 'en', 'sr'].includes(String(v)) ? v : 'fr') as Lang;
