@@ -1,9 +1,9 @@
 /* Hallmark · shape: app screen · genre: editorial · theme: Ink (the catalogue's own)
  * nav: top bar with four tabs · signature: the stock ledger, every article with its code and an editable stock figure · states: loading, empty, error, full
- * axes: light/grotesk-sans/chromatic-teal · contrast: pass · v2.0.0 */
+ * axes: light/grotesk-sans/chromatic-gold · contrast: pass · v2.0.0 */
 /* Hallmark · waive 22 · ink and greys at zero chroma, as the Ink theme sets them · the admin keeps the catalogue's plain black so each article's fotografija carries the colour */
 /* Hallmark · note · the admin speaks Serbian in Latin script; article names stay as the catalogue writes them, Serbian ones in Cyrillic */
-@import url("./tokens.css?v=fb5af6b8e2");
+@import url("./tokens.css?v=24ad87b54c");
 @import url("./base.css?v=3c92bcd680");
 @import url("./fonts.css?v=272f648b17");
 
@@ -15,7 +15,7 @@
   --color-success-soft: oklch(95% 0.03 150); --color-success-ink: oklch(36% 0.09 150);
   --bar-h: 64px;
   --color-on-ink-hover: oklch(100% 0 0 / 0.12);
-  --color-warn-soft: oklch(94% 0.05 80); --color-warn-ink: oklch(40% 0.09 70);
+  --color-warn-soft: oklch(94% 0.045 50); --color-warn-ink: oklch(43% 0.12 42);
   --color-chart: var(--color-ink-2); --color-chart-hover: var(--color-muted);
 }
 body.adm { font-size: var(--t-md); line-height: 1.5; background: var(--color-paper); }
