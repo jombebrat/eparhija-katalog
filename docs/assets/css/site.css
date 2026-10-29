@@ -85,7 +85,7 @@ h1, h2, h3 { color: var(--color-ink); }
 /* ---------- hero: the index ---------- */
 .hero { padding-block: var(--space-lg) var(--space-2xl); }
 .hero__grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--space-3xl); align-items: center; }
-.hero h1 { font-size: clamp(2.75rem, 3.6vw + 1rem, 5rem); line-height: 1.0; max-width: 11ch; }
+.hero h1 { font-size: clamp(2.125rem, 3.2vw + 1rem, 4.5rem); line-height: 1.02; max-width: 13ch; }
 .hero .lead { margin-top: var(--space-lg); max-width: 34ch; }
 .find { margin-top: var(--space-xl); max-width: 30rem; }
 .find label { display: block; margin-bottom: var(--space-xs); font-size: var(--text-sm); color: var(--color-ink-2); }
@@ -303,7 +303,7 @@ dialog::backdrop { background: var(--color-scrim); }
 .line__out { color: var(--color-error); font-weight: 600; }
 
 /* the coat of arms */
-.wordmark__grb { flex-shrink: 0; width: auto; height: 44px; }
+.wordmark__grb { flex-shrink: 0; width: auto; height: 48px; }
 .colophon__inner { grid-template-columns: auto minmax(0, 1fr); align-items: start; column-gap: var(--space-lg); }
 .colophon__grb { grid-row: span 3; width: auto; height: 56px; }
 .colophon__text { display: grid; gap: var(--space-sm); }
@@ -395,7 +395,6 @@ a.account__who:focus-visible { outline: 2px solid var(--color-accent-soft); outl
 }
 @media (max-width: 40rem) {
   .slab__inner { flex-wrap: wrap; min-height: 0; gap: var(--space-xs) var(--space-sm); padding-block: var(--space-sm); }
-  .wordmark { flex-basis: 100%; }
   .account { margin-left: auto; }
   .wordmark b { font-size: var(--text-md); }
   .wordmark__grb { height: 36px; }
@@ -432,6 +431,9 @@ a.account__who:focus-visible { outline: 2px solid var(--color-accent-soft); outl
   .candles__table tbody .price { grid-column: 2; grid-row: 1 / span 2; }
   .candles__table tbody .act { grid-column: 3; grid-row: 1 / span 2; width: auto; }
 }
+
+/* the narrowest phones keep one header row: the flags alone name the languages */
+@media (max-width: 23.5rem) { .langs .l-code { display: none; } .langs a { padding: 0 var(--space-xs); } }
 
 /* ---------- the floating cart ---------- */
 .fab { position: fixed; right: max(var(--space-md), env(safe-area-inset-right)); bottom: calc(var(--space-md) + env(safe-area-inset-bottom)); z-index: var(--z-sticky-nav); display: inline-grid; place-items: center; width: 60px; height: 60px; border: 0; border-radius: 50%; background: var(--color-ink); color: var(--color-paper); box-shadow: var(--shadow-fab); cursor: pointer; transition: transform var(--dur-micro) var(--ease-out), background-color var(--dur-micro) var(--ease-out); }

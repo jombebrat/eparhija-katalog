@@ -154,7 +154,8 @@ function page(lang, dir) {
   <meta property="og:locale" content="${S.ogLocale}">
   ${site.url ? `<meta property="og:url" content="${absolute(thisLang)}">
   <meta property="og:site_name" content="${t(lang, S.brand)}">
-  <meta property="og:image" content="${site.url.replace(/\/?$/, '/')}assets/img/share-${lang}.jpg">
+  <meta property="og:image" content="${site.url.replace(/\/?$/, '/')}assets/img/share-${lang}.jpg?v=${hashOf(`img/share-${lang}.jpg`)}">
+  <meta property="og:image:type" content="image/jpeg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="${t(lang, S.brand)}">
@@ -171,7 +172,7 @@ function page(lang, dir) {
   <a class="skip" href="#catalogue">${t(lang, S.skip)}</a>
   <header class="slab">
     <div class="container slab__inner">
-      <a class="wordmark" href="${root}${dir}"><img class="wordmark__grb" src="${root}assets/img/grb-112.webp" width="48" height="56" alt=""><b>${t(lang, S.brand)}</b></a>
+      <a class="wordmark" href="${root}${dir}"><img class="wordmark__grb" src="${root}assets/img/grb-112.webp" width="48" height="56" alt=""><span class="visually-hidden">${t(lang, S.brand)}</span></a>
       <nav class="langs" aria-label="${t(lang, S.langsLabel)}">
         ${flagLinks(lang, here)}
       </nav>
@@ -186,8 +187,7 @@ function page(lang, dir) {
     <section class="hero">
       <div class="container hero__grid">
         <div class="hero__text">
-          <h1>${t(lang, S.h1)}</h1>
-          <p class="lead">${t(lang, S.lead)}</p>
+          <h1>${t(lang, S.brand)}</h1>
           <form class="find" action="#catalogue" data-find hidden>
             <label for="q-hero">${t(lang, S.findLabel)}</label>
             <div class="find__row">
@@ -501,7 +501,7 @@ function accountPage(lang) {
   <a class="skip" href="#main">${t(lang, S.skip)}</a>
   <header class="slab">
     <div class="container slab__inner">
-      <a class="wordmark" href="${catalogue}"><img class="wordmark__grb" src="${root}assets/img/grb-112.webp" width="48" height="56" alt=""><b>${t(lang, S.brand)}</b></a>
+      <a class="wordmark" href="${catalogue}"><img class="wordmark__grb" src="${root}assets/img/grb-112.webp" width="48" height="56" alt=""><span class="visually-hidden">${t(lang, S.brand)}</span></a>
       <nav class="langs" aria-label="${t(lang, S.langsLabel)}">
         ${langLinks}
       </nav>
@@ -620,7 +620,7 @@ function legalPage(lang) {
   <a class="skip" href="#main">${t(lang, S.skip)}</a>
   <header class="slab">
     <div class="container slab__inner">
-      <a class="wordmark" href="${catalogue}"><img class="wordmark__grb" src="${root}assets/img/grb-112.webp" width="48" height="56" alt=""><b>${t(lang, S.brand)}</b></a>
+      <a class="wordmark" href="${catalogue}"><img class="wordmark__grb" src="${root}assets/img/grb-112.webp" width="48" height="56" alt=""><span class="visually-hidden">${t(lang, S.brand)}</span></a>
       <nav class="langs" aria-label="${t(lang, S.langsLabel)}">
         ${flagLinks(lang, (l) => `${root}${legalPath(l)}`)}
       </nav>

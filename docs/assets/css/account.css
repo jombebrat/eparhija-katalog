@@ -1,7 +1,7 @@
 /* Hallmark · shape: app screen · genre: editorial · theme: Ink (the catalogue's own)
  * nav: the catalogue's slab · signature: the member's orders, each with its PDF and "order again" · states: loading, empty, error, full
  * axes: light/grotesk-sans/chromatic-gold · contrast: pass · v2.0.0 */
-@import url("./site.css?v=bd32fa888e");
+@import url("./site.css?v=b73b8bb16a");
 
 /* the app's own scale, ratio 1.2 */
 :root { --color-success-soft: oklch(95% 0.03 150); --color-success-ink: oklch(36% 0.09 150); }
