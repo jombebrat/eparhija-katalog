@@ -378,18 +378,39 @@ import * as R from './render.js?v=c6dbe39cc4';
     return { help, row };
   }
 
-  // a visitor without prices sends the list to the warehouse, which answers with a quote
+  // two ways on from the list: a priest of the Eparchy types his email and sees the prices here;
+  // anyone else sends the list to the warehouse, which answers with a quote
   function renderGuestFoot() {
-    const p = el('p', 'drawer__guest', S.guestList);
-    const ask = el('button', 'btn btn--primary', S.askPrices); ask.type = 'button';
+    const gate = el('form', 'gate'); gate.noValidate = true;
+    const label = el('label', 'gate__label', S.gateLead); label.htmlFor = 'gate-email';
+    const input = el('input'); input.id = 'gate-email'; input.name = 'email'; input.type = 'email';
+    input.autocomplete = 'email'; input.inputMode = 'email'; input.spellcheck = false; input.placeholder = S.emailPlaceholder;
+    const go = el('button', 'btn btn--primary', S.showPrices); go.type = 'submit';
+    const gateHelp = el('p', 'drawer__help'); gateHelp.id = 'gate-help'; gateHelp.setAttribute('aria-live', 'polite');
+    gate.append(el('b', 'gate__title', S.gatePriest), label, input, go, gateHelp);
+    input.addEventListener('input', () => input.removeAttribute('aria-invalid'));
+    gate.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = input.value.trim().toLowerCase();
+      const wrong = (msg) => { input.setAttribute('aria-invalid', 'true'); input.setAttribute('aria-describedby', 'gate-help'); gateHelp.textContent = msg; input.focus(); };
+      if (!emailOk(email)) return wrong(email ? S.loginInvalid : S.emailMissing);
+      go.disabled = true; go.setAttribute('aria-busy', 'true'); gateHelp.textContent = S.checking;
+      let result = 'failed';
+      try { result = await checkEmail(email); } catch { result = 'failed'; }
+      if (result === 'ok') { store.set('ek-welcome', 1); $('input', foot)?.focus(); return; }
+      go.disabled = false; go.removeAttribute('aria-busy');
+      wrong({ unknown: S.gateUnknown, too_many: S.loginTooMany, invalid: S.loginInvalid }[result] || S.loginFailed);
+    });
+
+    const other = el('div', 'gate-other');
+    const ask = el('button', 'btn btn--quiet', S.askPrices); ask.type = 'button';
     ask.addEventListener('click', () => { foot.innerHTML = ''; renderInquiryForm(); $('#iq-email', foot)?.focus(); });
-    const member = el('p', 'drawer__member', `${S.memberHint} `);
-    const login = el('button', 'textbtn', S.memberHintLink); login.type = 'button';
-    login.addEventListener('click', () => { opener = $('.fab'); drawer.close(); openLogin(() => { renderList(); drawer.showModal(); }); });
-    member.append(login);
+    other.append(el('b', 'gate__title', S.gateOther), el('p', 'drawer__guest', S.gateOtherLead), ask);
+
     const { help, row } = listActions();
-    foot.append(p, ask, member, help, row);
-    if (!D.api) { ask.hidden = true; member.hidden = true; }
+    if (D.api) foot.append(gate, other);
+    else foot.append(el('p', 'drawer__guest', S.guestList));
+    foot.append(help, row);
   }
 
   const formField = (prefix, saved) => (name, label, type = 'text', opt = false, tag = 'input', auto = '') => {
