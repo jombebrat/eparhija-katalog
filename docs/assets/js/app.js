@@ -1,31 +1,31 @@
-// Catalogue: search, category chips, product detail and the order list.
+// Catalogue: search, category chips, product detail, prices for the clergy and the order list.
 // Everything on the page works without this file; it only adds the tools.
+// The catalogue itself is reloaded from the database, so what the admin changes shows at once.
+import * as R from './render.js';
+
 (() => {
   const D = JSON.parse(document.getElementById('catalogue-data').textContent);
   const S = D.s;
   const $ = (s, el = document) => el.querySelector(s);
   const $$ = (s, el = document) => [...el.querySelectorAll(s)];
-  const root = document.querySelector('link[rel="icon"]').getAttribute('href').replace('favicon.svg', '');
+  const root = new URL('../../', import.meta.url).href;
   const money = new Intl.NumberFormat(D.locale, { style: 'currency', currency: 'EUR' });
   const plural = new Intl.PluralRules(D.locale);
-  const countText = (n, forms = D.items) => `${n} ${forms[plural.select(n)] ?? forms.other}`;
+  const countText = (n, forms = D.items) => `${n} ${forms[plural.select(n)] ?? forms.other}`;
   const fmt = (s, v) => Object.entries(v).reduce((a, [k, x]) => a.replace(`{${k}}`, x), s);
-  const photo = (f, small = true) => `${root}assets/img/p/${f}${small ? '-s' : ''}.webp`;
+  const photo = (src, small = true) => R.photoUrl(root, src, small);
+  const norm = R.norm;
 
   // ---------- search ----------
-  const CYR = { а:'a',б:'b',в:'v',г:'g',д:'d',ђ:'dj',е:'e',ж:'z',з:'z',и:'i',ј:'j',к:'k',л:'l',љ:'lj',м:'m',н:'n',њ:'nj',о:'o',п:'p',р:'r',с:'s',т:'t',ћ:'c',у:'u',ф:'f',х:'h',ц:'c',ч:'c',џ:'dz',ш:'s',đ:'dj' };
-  const norm = (s) => String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[а-шђјљњћџđ]/g, (c) => CYR[c] ?? c).replace(/[’'`]/g, ' ').replace(/\s+/g, ' ').trim();
-
   const q = $('#q');
   const qHero = $('#q-hero');
   const clearBtn = $('[data-clear]');
   const status = $('[data-status]');
   const noMatch = $('[data-nomatch]');
-  const cats = $$('[data-cat]');
-  const items = $$('[data-search]');
-  const chips = $$('[data-chip]');
-  const total = $$('.card').length;
-  const defaultStatus = status.textContent;
+  let cats = [], items = [], chips = [];
+  let defaultStatus = status.textContent;
+  const collect = () => { cats = $$('[data-cat]'); items = $$('[data-search]'); chips = $$('[data-chip]'); };
+  collect();
 
   $$('[data-js], [data-find], [data-open-list]').forEach((el) => el.removeAttribute('hidden'));
 
@@ -35,8 +35,7 @@
     items.forEach((el) => {
       const hit = terms.every((t) => el.dataset.search.includes(t));
       el.hidden = !hit;
-      if (hit && el.classList.contains('card')) shown++;
-      if (hit && el.tagName === 'TR') shown++;
+      if (hit) shown++;
     });
     cats.forEach((c) => {
       const any = $$('[data-search]', c).some((el) => !el.hidden);
@@ -62,10 +61,12 @@
     q.focus({ preventScroll: true });
   });
   // a category link clears a search that would hide its section
-  $$('a[href^="#"]').forEach((a) => a.addEventListener('click', () => {
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a) return;
     const target = document.getElementById(a.getAttribute('href').slice(1));
     if (target && target.hidden && q.value) { q.value = ''; filter(''); }
-  }));
+  });
 
   // ---------- chips follow the scroll ----------
   const rail = $('[data-chips]');
@@ -85,7 +86,8 @@
     const visible = [...seen].filter(([, v]) => v !== null).sort((a, b) => a[1] - b[1]);
     if (visible.length) setCurrent(visible[0][0]);
   }, { rootMargin: '-140px 0px -55% 0px' });
-  cats.forEach((c) => io.observe(c));
+  const observe = () => { io.disconnect(); seen.clear(); current = null; cats.forEach((c) => io.observe(c)); };
+  observe();
 
   // ---------- small storage helpers (this browser only) ----------
   const store = {
@@ -318,6 +320,7 @@
       const sub = el('span', 'line__sub');
       if (!p.kg) sub.append(el('span', '', code));
       if (pr !== null) sub.append(el('span', '', `${money.format(pr)}${p.kg ? ` ${S.perKg}` : ''}`));
+      if (p.out) sub.append(el('span', 'line__out', S.outOfStock));
       name.append(sub);
       const lineTotal = $('.line__sum', row);
       lineTotal.textContent = pr === null ? '' : money.format(lineSum(code));
@@ -423,7 +426,9 @@
         return;
       }
       if (res && res.status === 404) { signOut(); help.textContent = S.loginUnknown; return; }
-      help.textContent = res && res.data?.error === 'unknown_item' ? S.orderUnknown : res && res.status === 429 ? S.loginTooMany : S.orderFailed;
+      help.textContent = res && res.data?.error === 'unknown_item' ? S.orderUnknown
+        : res && res.data?.error === 'unavailable' ? fmt(S.orderUnavailable, { codes: (res.data.codes || []).join(', ') })
+        : res && res.status === 429 ? S.loginTooMany : S.orderFailed;
     });
   }
 
@@ -433,12 +438,18 @@
     box.setAttribute('role', 'status');
     box.append(el('b', '', fmt(S.orderDone, { n: o.number })), el('p', '', o.emailed ? S.orderDoneMail : S.orderDoneNoMail));
     body.append(box);
-    const bytes = Uint8Array.from(atob(o.pdf), (c) => c.charCodeAt(0));
-    const url = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }));
-    const a = el('a', 'btn btn--primary', S.downloadPdf); a.href = url; a.download = o.filename; a.dataset.donePdf = '';
+    let url = '';
+    const row = el('div', 'drawer__actions');
+    if (o.pdf) {
+      const bytes = Uint8Array.from(atob(o.pdf), (c) => c.charCodeAt(0));
+      url = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }));
+      const a = el('a', 'btn btn--primary', S.downloadPdf); a.href = url; a.download = o.filename; a.dataset.donePdf = '';
+      row.append(a);
+    }
     const ok = el('button', 'btn btn--quiet', S.done); ok.type = 'button';
-    ok.addEventListener('click', () => { lastOrder = null; URL.revokeObjectURL(url); drawer.close(); });
-    const row = el('div', 'drawer__actions'); row.append(a, ok);
+    if (!o.pdf) ok.dataset.donePdf = '';
+    ok.addEventListener('click', () => { lastOrder = null; if (url) URL.revokeObjectURL(url); drawer.close(); });
+    row.append(ok);
     foot.append(row);
   }
 
@@ -494,8 +505,16 @@
       b.addEventListener('click', () => show(i));
       dThumbs.append(b);
     });
-    dAdd.dataset.add = code;
-    dAdd.setAttribute('aria-label', fmt(D.addLabel, { name: p.n }));
+    if (p.out) {
+      delete dAdd.dataset.add;
+      if (dAdd._step) dAdd._step.hidden = true;
+      dAdd.hidden = false; dAdd.disabled = true; dAdd.textContent = S.outOfStock;
+      dAdd.setAttribute('aria-label', `${S.outOfStock}: ${p.n}`);
+    } else {
+      dAdd.disabled = false;
+      dAdd.dataset.add = code;
+      dAdd.setAttribute('aria-label', fmt(D.addLabel, { name: p.n }));
+    }
     show(0); syncButtons();
     detail.showModal();
     return true;
@@ -514,10 +533,40 @@
     dlg.addEventListener('close', () => { if (opener && document.contains(opener) && !welcome.open && !drawer.open) opener.focus(); opener = null; });
   });
 
+  // ---------- the live catalogue: what the admin changed shows without a rebuild ----------
+  async function refreshCatalogue() {
+    const head = { apikey: D.api.key };
+    const cols = 'code,category,name_fr,name_en,name_sr,note_fr,note_en,note_sr,unit,available,photos,sort';
+    const [rc, rp] = await Promise.all([
+      fetch(`${D.api.url}/rest/v1/categories?select=*&order=sort`, { headers: head }),
+      fetch(`${D.api.url}/rest/v1/products?select=${cols}&active=eq.true&order=sort`, { headers: head }),
+    ]);
+    if (!rc.ok || !rp.ok) return;
+    const model = R.fromDb(await rc.json(), await rp.json());
+    if (!model.products.length) return;
+    const ctx = { lang: D.lang, S: { ...S, ...{ items: D.items, sizes: D.sizes, locale: D.locale } }, root };
+    const fresh = R.clientData(model, ctx);
+    const sig = (p) => JSON.stringify(p);
+    const same = sig(fresh.p) === sig(D.p) && sig(fresh.cats) === sig(D.cats) && Object.keys(fresh.p).join() === Object.keys(D.p).join();
+    if (same) return;
+    D.p = fresh.p; D.cats = fresh.cats;
+    $('[data-shelves]').innerHTML = R.shelves(model, ctx);
+    rail.innerHTML = R.chips(model, ctx);
+    const host = $('[data-sections]');
+    $$('[data-cat]', host).forEach((c) => c.remove());
+    host.insertAdjacentHTML('beforeend', R.sections(model, ctx));
+    defaultStatus = R.countText(ctx.S, model.products.length);
+    for (const k of Object.keys(list)) if (!D.p[k]) delete list[k];
+    save();
+    collect(); observe(); syncButtons(); paintPrices();
+    filter(q.value);
+  }
+
   // ---------- start ----------
   syncButtons();
   paintPrices();
   if (D.api) {
+    refreshCatalogue().catch(() => { /* offline: the page as built stays */ });
     const email = store.get('ek-email');
     if (email) {
       checkEmail(email).then((r) => { if (r === 'unknown') signOut(); }).catch(() => { /* offline: no prices this time */ });

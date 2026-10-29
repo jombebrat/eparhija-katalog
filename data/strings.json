@@ -5,7 +5,7 @@
     "ogLocale": "fr_FR",
     "langName": "Français",
     "langShort": "fr",
-    "title": "Catalogue de l'entrepôt, Éparchie d'Europe occidentale",
+    "title": "Magasin de l'Éparchie d'Europe occidentale",
     "description": "Encensoirs, icônes, chandeliers, veilleuses, croix, chapelets, livres et bougies en cire : tout l'entrepôt de l'Éparchie d'Europe occidentale, article par article, avec leurs codes.",
     "org": "Éparchie d'Europe occidentale",
     "orgFull": "Éparchie d'Europe occidentale de l'Église orthodoxe serbe",
@@ -83,8 +83,8 @@
       "Adresse :",
       "Téléphone :"
     ],
-    "footerLine": "Catalogue de l'entrepôt, prix en euros.",
-    "footerPhotos": "Photographies de l'entrepôt de l'Éparchie.",
+    "footerLine": "Prix en euros, réservés au clergé.",
+    "footerPhotos": "Photographies du magasin de l'Éparchie.",
     "otherLangs": "Aussi en",
     "thSize": "Hauteur × largeur",
     "barPlaceholder": "Nom ou code",
@@ -117,7 +117,14 @@
     "orderFailed": "La commande n'est pas partie. Réessayez dans un instant : votre liste est conservée.",
     "orderUnknown": "Un article de la liste n'existe plus au catalogue. Rechargez la page, puis renvoyez la commande.",
     "done": "Terminé",
-    "welcomeTitle": "Prix réservés au clergé"
+    "welcomeTitle": "Prix réservés au clergé",
+    "outOfStock": "Épuisé",
+    "thDetail": "Détail",
+    "thPriceUnit": "Prix",
+    "brand": "Magasin de l'Éparchie d'Europe occidentale",
+    "address": "23, rue du Simplon, 75018 Paris",
+    "admin": "Administration",
+    "orderUnavailable": "Un article de la liste vient d'être épuisé ({codes}). Retirez-le, puis renvoyez la commande."
   },
   "en": {
     "htmlLang": "en",
@@ -125,7 +132,7 @@
     "ogLocale": "en_GB",
     "langName": "English",
     "langShort": "en",
-    "title": "Warehouse catalogue, Eparchy of Western Europe",
+    "title": "Warehouse of the Eparchy of Western Europe",
     "description": "Censers, icons, candlesticks, oil lamps, crosses, prayer ropes, books and wax candles: the whole warehouse of the Eparchy of Western Europe, item by item, with their codes.",
     "org": "Eparchy of Western Europe",
     "orgFull": "Serbian Orthodox Eparchy of Western Europe",
@@ -203,7 +210,7 @@
       "Address:",
       "Phone:"
     ],
-    "footerLine": "Warehouse catalogue, prices in euros.",
+    "footerLine": "Prices in euros, for clergy only.",
     "footerPhotos": "Photographs by the Eparchy's warehouse.",
     "otherLangs": "Also in",
     "thSize": "Height × width",
@@ -237,7 +244,14 @@
     "orderFailed": "The order didn't go through. Try again in a moment: your list is kept.",
     "orderUnknown": "An item in the list is no longer in the catalogue. Reload the page, then send the order again.",
     "done": "Done",
-    "welcomeTitle": "Prices for clergy only"
+    "welcomeTitle": "Prices for clergy only",
+    "outOfStock": "Out of stock",
+    "thDetail": "Detail",
+    "thPriceUnit": "Price",
+    "brand": "Warehouse of the Eparchy of Western Europe",
+    "address": "23, rue du Simplon, 75018 Paris",
+    "admin": "Administration",
+    "orderUnavailable": "An item in the list has just run out ({codes}). Remove it, then send the order again."
   },
   "sr": {
     "htmlLang": "sr-Cyrl",
@@ -245,7 +259,7 @@
     "ogLocale": "sr_RS",
     "langName": "Српски",
     "langShort": "sr",
-    "title": "Магацински каталог, Епархија западноевропска",
+    "title": "Магацин Епархије западноевропске",
     "description": "Кадионице, иконе, чираци, кандила, крстови, бројанице, књиге и воштане свеће: цео магацин Епархије западноевропске, артикал по артикал, са шифрама.",
     "org": "Епархија западноевропска",
     "orgFull": "Епархија западноевропска Српске православне цркве",
@@ -325,7 +339,7 @@
       "Адреса:",
       "Телефон:"
     ],
-    "footerLine": "Магацински каталог, цене у еврима.",
+    "footerLine": "Цене у еврима, само за свештенство.",
     "footerPhotos": "Фотографије: магацин Епархије.",
     "otherLangs": "Такође на",
     "thSize": "Висина × ширина",
@@ -359,6 +373,13 @@
     "orderFailed": "Поруџбина није послата. Покушајте поново за тренутак: листа је сачувана.",
     "orderUnknown": "Један артикал из листе више није у каталогу. Освежите страницу и пошаљите поруџбину поново.",
     "done": "Готово",
-    "welcomeTitle": "Цене само за свештенство"
+    "welcomeTitle": "Цене само за свештенство",
+    "outOfStock": "Нема на стању",
+    "thDetail": "Детаљ",
+    "thPriceUnit": "Цена",
+    "brand": "Магацин Епархије западноевропске",
+    "address": "23, rue du Simplon, 75018 Paris",
+    "admin": "Администрација",
+    "orderUnavailable": "Један артикал из листе је управо распродат ({codes}). Уклоните га и пошаљите поруџбину поново."
   }
 }

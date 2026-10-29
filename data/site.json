@@ -4,10 +4,10 @@
   "email": "",
   "phone": "",
   "address": {
-    "fr": "",
-    "en": "",
-    "sr": ""
+    "fr": "23, rue du Simplon, 75018 Paris",
+    "en": "23, rue du Simplon, 75018 Paris",
+    "sr": "23, rue du Simplon, 75018 Paris"
   },
-  "supabaseUrl": "",
-  "supabaseKey": ""
+  "supabaseUrl": "https://ivzzhtaksdwbhhioilsn.supabase.co",
+  "supabaseKey": "sb_publishable_rxpulg5CJqz_TpV1brvBCQ_C2ioyLyW"
 }

@@ -60,9 +60,8 @@ h1, h2, h3 { color: var(--color-ink); }
 /* ---------- nav: the slab ---------- */
 .slab { background: var(--color-ink); color: var(--color-paper); }
 .slab__inner { display: flex; align-items: center; gap: var(--space-lg); min-height: 72px; }
-.wordmark { display: flex; align-items: baseline; flex-wrap: wrap; column-gap: var(--space-sm); min-width: 0; margin-right: auto; color: var(--color-paper); text-decoration: none; line-height: 1.2; }
+.wordmark { display: flex; align-items: center; gap: var(--space-sm); min-width: 0; margin-right: auto; color: var(--color-paper); text-decoration: none; line-height: 1.2; }
 .wordmark b { font-weight: 700; font-size: var(--text-lg); letter-spacing: -0.02em; }
-.wordmark span { color: var(--color-on-ink-2); font-size: var(--text-sm); }
 .wordmark:hover b { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
 .wordmark:focus-visible { outline: 2px solid var(--color-accent-soft); outline-offset: 4px; border-radius: 2px; }
 .langs { display: flex; gap: var(--space-2xs); }
@@ -283,6 +282,19 @@ dialog::backdrop { background: var(--color-scrim); }
 .drawer__clear:active { color: var(--color-ink-2); }
 .drawer__clear:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
 
+/* out of stock: the button says so and stays still */
+.add--out, .add--out:hover { border-color: var(--color-rule); background: transparent; color: var(--color-muted); cursor: not-allowed; }
+.card--out .card__img img { opacity: 0.55; }
+.row--out th, .row--out .note { color: var(--color-muted); }
+.line__out { color: var(--color-error); font-weight: 600; }
+
+/* the coat of arms */
+.wordmark__grb { flex-shrink: 0; width: auto; height: 44px; }
+.colophon__inner { grid-template-columns: auto minmax(0, 1fr); align-items: start; column-gap: var(--space-lg); }
+.colophon__grb { grid-row: span 3; width: auto; height: 56px; }
+.colophon__text { display: grid; gap: var(--space-sm); }
+.welcome__grb { width: auto; height: 96px; margin-bottom: var(--space-xs); }
+
 /* ---------- prices for the clergy ---------- */
 html:not(.priced) .candles__table .price { display: none; }
 .card__price:empty, .detail__price[hidden] { display: none; }
@@ -367,7 +379,8 @@ html:not(.priced) .candles__table .price { display: none; }
   .wordmark { flex-basis: 100%; }
   .account { margin-left: auto; }
   .wordmark b { font-size: var(--text-md); }
-  .wordmark span { display: none; }
+  .wordmark__grb { height: 36px; }
+  .welcome__grb { height: 72px; }
   .l-long { display: none; }
   .l-short { display: inline; }
   .langs a { padding: 0 var(--space-xs); }

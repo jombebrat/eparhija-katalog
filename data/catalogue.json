@@ -1,2702 +1,3410 @@
 {
+ "_about": "Snapshot of the catalogue (no prices), used when the database cannot be reached at build time. node build.mjs refreshes it from Supabase; edit articles in the admin panel, not here.",
  "categories": [
   {
    "id": "encensoirs",
-   "name": {
-    "fr": "Encensoirs",
-    "en": "Censers",
-    "sr": "Кадионице"
-   }
+   "name_fr": "Encensoirs",
+   "name_en": "Censers",
+   "name_sr": "Кадионице",
+   "layout": "grid",
+   "cover": "H004",
+   "sort": 1
   },
   {
    "id": "icones",
-   "name": {
-    "fr": "Icônes",
-    "en": "Icons",
-    "sr": "Иконе"
-   }
+   "name_fr": "Icônes",
+   "name_en": "Icons",
+   "name_sr": "Иконе",
+   "layout": "grid",
+   "cover": "P074",
+   "sort": 2
   },
   {
    "id": "chandeliers",
-   "name": {
-    "fr": "Chandeliers",
-    "en": "Candlesticks",
-    "sr": "Чираци"
-   }
+   "name_fr": "Chandeliers",
+   "name_en": "Candlesticks",
+   "name_sr": "Чираци",
+   "layout": "grid",
+   "cover": "A001",
+   "sort": 3
   },
   {
    "id": "veilleuses",
-   "name": {
-    "fr": "Veilleuses",
-    "en": "Oil lamps",
-    "sr": "Кандила"
-   }
+   "name_fr": "Veilleuses",
+   "name_en": "Oil lamps",
+   "name_sr": "Кандила",
+   "layout": "grid",
+   "cover": "P142",
+   "sort": 4
   },
   {
    "id": "croix",
-   "name": {
-    "fr": "Croix",
-    "en": "Crosses",
-    "sr": "Крстови"
-   }
+   "name_fr": "Croix",
+   "name_en": "Crosses",
+   "name_sr": "Крстови",
+   "layout": "grid",
+   "cover": "P020",
+   "sort": 5
   },
   {
    "id": "pendentifs",
-   "name": {
-    "fr": "Petites croix et pendentifs",
-    "en": "Small crosses and pendants",
-    "sr": "Крстићи и привесци"
-   }
+   "name_fr": "Petites croix et pendentifs",
+   "name_en": "Small crosses and pendants",
+   "name_sr": "Крстићи и привесци",
+   "layout": "grid",
+   "cover": "H016",
+   "sort": 6
   },
   {
    "id": "culte",
-   "name": {
-    "fr": "Articles de culte",
-    "en": "Church supplies",
-    "sr": "Црквени прибор"
-   }
+   "name_fr": "Articles de culte",
+   "name_en": "Church supplies",
+   "name_sr": "Црквени прибор",
+   "layout": "grid",
+   "cover": "H020",
+   "sort": 7
   },
   {
    "id": "encens",
-   "name": {
-    "fr": "Encens et charbon",
-    "en": "Incense and charcoal",
-    "sr": "Тамјан и брикет"
-   }
+   "name_fr": "Encens et charbon",
+   "name_en": "Incense and charcoal",
+   "name_sr": "Тамјан и брикет",
+   "layout": "grid",
+   "cover": "P146",
+   "sort": 8
   },
   {
    "id": "chapelets",
-   "name": {
-    "fr": "Chapelets",
-    "en": "Prayer ropes",
-    "sr": "Бројанице"
-   }
+   "name_fr": "Chapelets",
+   "name_en": "Prayer ropes",
+   "name_sr": "Бројанице",
+   "layout": "grid",
+   "cover": "P111",
+   "sort": 9
   },
   {
    "id": "enfants",
-   "name": {
-    "fr": "Coin enfants",
-    "en": "Children's corner",
-    "sr": "Дечији кутак"
-   }
+   "name_fr": "Coin enfants",
+   "name_en": "Children's corner",
+   "name_sr": "Дечији кутак",
+   "layout": "grid",
+   "cover": "N001",
+   "sort": 10
   },
   {
    "id": "livres",
-   "name": {
-    "fr": "Livres",
-    "en": "Books",
-    "sr": "Књиге"
-   }
+   "name_fr": "Livres",
+   "name_en": "Books",
+   "name_sr": "Књиге",
+   "layout": "grid",
+   "cover": "P084",
+   "sort": 11
   },
   {
    "id": "bougies",
-   "name": {
-    "fr": "Bougies en cire",
-    "en": "Wax candles",
-    "sr": "Воштане свеће"
-   }
+   "name_fr": "Bougies en cire",
+   "name_en": "Wax candles",
+   "name_sr": "Воштане свеће",
+   "layout": "table",
+   "cover": "1/1",
+   "sort": 12
   }
  ],
  "products": [
   {
    "code": "P011",
-   "cat": "encensoirs",
-   "name": {
-    "fr": "Encensoir",
-    "en": "Censer",
-    "sr": "Кадионица"
-   },
+   "category": "encensoirs",
+   "name_fr": "Encensoir",
+   "name_en": "Censer",
+   "name_sr": "Кадионица",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p011-1",
+     "src": "p011-1",
      "w": 640,
      "h": 274,
      "W": 763,
      "H": 327
     }
-   ]
+   ],
+   "sort": 10
   },
   {
    "code": "P014",
-   "cat": "encensoirs",
-   "name": {
-    "fr": "Encensoir",
-    "en": "Censer",
-    "sr": "Кадионица"
-   },
+   "category": "encensoirs",
+   "name_fr": "Encensoir",
+   "name_en": "Censer",
+   "name_sr": "Кадионица",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p014-1",
+     "src": "p014-1",
      "w": 504,
      "h": 369,
      "W": 504,
      "H": 369
     },
     {
-     "file": "p014-2",
+     "src": "p014-2",
      "w": 573,
      "h": 381,
      "W": 573,
      "H": 381
     }
-   ]
+   ],
+   "sort": 20
   },
   {
    "code": "P013",
-   "cat": "encensoirs",
-   "name": {
-    "fr": "Encensoir",
-    "en": "Censer",
-    "sr": "Кадионица"
-   },
+   "category": "encensoirs",
+   "name_fr": "Encensoir",
+   "name_en": "Censer",
+   "name_sr": "Кадионица",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p013-1",
+     "src": "p013-1",
      "w": 530,
      "h": 640,
      "W": 864,
      "H": 1043
     }
-   ]
+   ],
+   "sort": 30
   },
   {
    "code": "P012",
-   "cat": "encensoirs",
-   "name": {
-    "fr": "Encensoir",
-    "en": "Censer",
-    "sr": "Кадионица"
-   },
+   "category": "encensoirs",
+   "name_fr": "Encensoir",
+   "name_en": "Censer",
+   "name_sr": "Кадионица",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p012-1",
+     "src": "p012-1",
      "w": 404,
      "h": 364,
      "W": 404,
      "H": 364
     }
-   ]
+   ],
+   "sort": 40
   },
   {
    "code": "A006",
-   "cat": "encensoirs",
-   "name": {
-    "fr": "Encensoir",
-    "en": "Censer",
-    "sr": "Кадионица"
-   },
+   "category": "encensoirs",
+   "name_fr": "Encensoir",
+   "name_en": "Censer",
+   "name_sr": "Кадионица",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "a006-1",
+     "src": "a006-1",
      "w": 640,
      "h": 308,
      "W": 663,
      "H": 319
     }
-   ]
+   ],
+   "sort": 50
   },
   {
    "code": "H007",
-   "cat": "encensoirs",
-   "name": {
-    "fr": "Petit encensoir",
-    "en": "Small censer",
-    "sr": "Кадионица мања"
-   },
+   "category": "encensoirs",
+   "name_fr": "Petit encensoir",
+   "name_en": "Small censer",
+   "name_sr": "Кадионица мања",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "h007-1",
+     "src": "h007-1",
      "w": 640,
      "h": 361,
      "W": 846,
      "H": 477
     }
-   ]
+   ],
+   "sort": 60
   },
   {
    "code": "H006",
-   "cat": "encensoirs",
-   "name": {
-    "fr": "Grand encensoir",
-    "en": "Large censer",
-    "sr": "Кадионица већа"
-   },
+   "category": "encensoirs",
+   "name_fr": "Grand encensoir",
+   "name_en": "Large censer",
+   "name_sr": "Кадионица већа",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "h006-1",
+     "src": "h006-1",
      "w": 640,
      "h": 307,
      "W": 924,
      "H": 443
     }
-   ]
+   ],
+   "sort": 70
   },
   {
    "code": "H004",
-   "cat": "encensoirs",
-   "name": {
-    "fr": "Encensoir en métal, grand",
-    "en": "Metal censer, large",
-    "sr": "Кадионица метална, већа"
-   },
+   "category": "encensoirs",
+   "name_fr": "Encensoir en métal, grand",
+   "name_en": "Metal censer, large",
+   "name_sr": "Кадионица метална, већа",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "h004-1",
+     "src": "h004-1",
      "w": 369,
      "h": 640,
      "W": 468,
      "H": 812
     },
     {
-     "file": "h004-2",
+     "src": "h004-2",
      "w": 392,
      "h": 574,
      "W": 392,
      "H": 574
     },
     {
-     "file": "h004-3",
+     "src": "h004-3",
      "w": 381,
      "h": 640,
      "W": 492,
      "H": 826
     }
-   ]
+   ],
+   "sort": 80
   },
   {
    "code": "H005",
-   "cat": "encensoirs",
-   "name": {
-    "fr": "Encensoir en métal, petit",
-    "en": "Metal censer, small",
-    "sr": "Кадионица метална, мања"
-   },
+   "category": "encensoirs",
+   "name_fr": "Encensoir en métal, petit",
+   "name_en": "Metal censer, small",
+   "name_sr": "Кадионица метална, мања",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "h005-1",
+     "src": "h005-1",
      "w": 362,
      "h": 566,
      "W": 362,
      "H": 566
     },
     {
-     "file": "h005-2",
+     "src": "h005-2",
      "w": 467,
      "h": 640,
      "W": 864,
      "H": 1184
     },
     {
-     "file": "h005-3",
+     "src": "h005-3",
      "w": 638,
      "h": 592,
      "W": 638,
      "H": 592
     }
-   ]
+   ],
+   "sort": 90
   },
   {
    "code": "P064",
-   "cat": "icones",
-   "name": {
-    "fr": "Icône montée A4",
-    "en": "Mounted icon A4",
-    "sr": "Икона каширана А4"
-   },
+   "category": "icones",
+   "name_fr": "Icône montée A4",
+   "name_en": "Mounted icon A4",
+   "name_sr": "Икона каширана А4",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p064-1",
+     "src": "p064-1",
      "w": 499,
      "h": 640,
      "W": 662,
      "H": 849
     }
-   ]
+   ],
+   "sort": 100
   },
   {
    "code": "P074",
-   "cat": "icones",
-   "name": {
-    "fr": "Icône Nika, moyenne",
-    "en": "Nika icon, medium",
-    "sr": "Икона Ника, средња"
-   },
+   "category": "icones",
+   "name_fr": "Icône Nika, moyenne",
+   "name_en": "Nika icon, medium",
+   "name_sr": "Икона Ника, средња",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p074-1",
+     "src": "p074-1",
      "w": 447,
      "h": 640,
      "W": 712,
      "H": 1019
     },
     {
-     "file": "p074-2",
+     "src": "p074-2",
      "w": 640,
      "h": 436,
      "W": 864,
      "H": 589
     }
-   ]
+   ],
+   "sort": 110
   },
   {
    "code": "P128",
-   "cat": "icones",
-   "name": {
-    "fr": "Icône Nika, très petite",
-    "en": "Nika icon, smallest",
-    "sr": "Икона Ника, најмања"
-   },
+   "category": "icones",
+   "name_fr": "Icône Nika, très petite",
+   "name_en": "Nika icon, smallest",
+   "name_sr": "Икона Ника, најмања",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p074-2",
+     "src": "p074-2",
      "w": 640,
      "h": 436,
      "W": 864,
      "H": 589
     }
-   ]
+   ],
+   "sort": 120
   },
   {
    "code": "P127",
-   "cat": "icones",
-   "name": {
-    "fr": "Icône Nika, très grande",
-    "en": "Nika icon, largest",
-    "sr": "Икона Ника, највећа"
-   },
+   "category": "icones",
+   "name_fr": "Icône Nika, très grande",
+   "name_en": "Nika icon, largest",
+   "name_sr": "Икона Ника, највећа",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p074-2",
+     "src": "p074-2",
      "w": 640,
      "h": 436,
      "W": 864,
      "H": 589
     }
-   ]
+   ],
+   "sort": 130
   },
   {
    "code": "A007",
-   "cat": "icones",
-   "name": {
-    "fr": "Icône encadrée sous verre A4",
-    "en": "Glass-framed icon A4",
-    "sr": "Икона у раму са стаклом А4"
-   },
+   "category": "icones",
+   "name_fr": "Icône encadrée sous verre A4",
+   "name_en": "Glass-framed icon A4",
+   "name_sr": "Икона у раму са стаклом А4",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "a007-1",
+     "src": "a007-1",
      "w": 517,
      "h": 640,
      "W": 763,
      "H": 945
     }
-   ]
+   ],
+   "sort": 140
   },
   {
    "code": "P063",
-   "cat": "icones",
-   "name": {
-    "fr": "Bénédiction de la maison",
-    "en": "House blessing",
-    "sr": "Благослов за кућу"
-   },
+   "category": "icones",
+   "name_fr": "Bénédiction de la maison",
+   "name_en": "House blessing",
+   "name_sr": "Благослов за кућу",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p063-1",
+     "src": "p063-1",
      "w": 479,
      "h": 640,
      "W": 548,
      "H": 732
     }
-   ]
+   ],
+   "sort": 150
   },
   {
    "code": "P137",
-   "cat": "icones",
-   "name": {
-    "fr": "Icône Nika encadrée",
-    "en": "Framed Nika icon",
-    "sr": "Икона Ника у раму"
-   },
+   "category": "icones",
+   "name_fr": "Icône Nika encadrée",
+   "name_en": "Framed Nika icon",
+   "name_sr": "Икона Ника у раму",
+   "note_fr": "Inscription personnalisable sur l'icône.",
+   "note_en": "The inscription on the icon can be personalised.",
+   "note_sr": "Натпис на икони може да се персонализује.",
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p137-1",
+     "src": "p137-1",
      "w": 529,
      "h": 640,
      "W": 733,
      "H": 887
     }
    ],
-   "note": {
-    "fr": "Inscription personnalisable sur l'icône.",
-    "en": "The inscription on the icon can be personalised.",
-    "sr": "Натпис на икони може да се персонализује."
-   }
+   "sort": 160
   },
   {
    "code": "P069",
-   "cat": "icones",
-   "name": {
-    "fr": "Diptyque A4",
-    "en": "Diptych A4",
-    "sr": "Диптих А4"
-   },
+   "category": "icones",
+   "name_fr": "Diptyque A4",
+   "name_en": "Diptych A4",
+   "name_sr": "Диптих А4",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p069-1",
+     "src": "p069-1",
      "w": 640,
      "h": 543,
      "W": 830,
      "H": 704
     }
-   ]
+   ],
+   "sort": 170
   },
   {
    "code": "P073",
-   "cat": "icones",
-   "name": {
-    "fr": "Diptyque carte postale",
-    "en": "Postcard diptych",
-    "sr": "Диптих разгледница"
-   },
+   "category": "icones",
+   "name_fr": "Diptyque carte postale",
+   "name_en": "Postcard diptych",
+   "name_sr": "Диптих разгледница",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p073-1",
+     "src": "p073-1",
      "w": 382,
      "h": 299,
      "W": 382,
      "H": 299
     }
-   ]
+   ],
+   "sort": 180
   },
   {
    "code": "P070",
-   "cat": "icones",
-   "name": {
-    "fr": "Petite plaquette",
-    "en": "Small tile",
-    "sr": "Мала плочица"
-   },
+   "category": "icones",
+   "name_fr": "Petite plaquette",
+   "name_en": "Small tile",
+   "name_sr": "Мала плочица",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p070-1",
+     "src": "p070-1",
      "w": 442,
      "h": 209,
      "W": 442,
      "H": 209
     }
-   ]
+   ],
+   "sort": 190
   },
   {
    "code": "P072",
-   "cat": "icones",
-   "name": {
-    "fr": "Petit triptyque",
-    "en": "Small triptych",
-    "sr": "Триптих мали"
-   },
+   "category": "icones",
+   "name_fr": "Petit triptyque",
+   "name_en": "Small triptych",
+   "name_sr": "Триптих мали",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p072-1",
+     "src": "p072-1",
      "w": 640,
      "h": 313,
      "W": 854,
      "H": 418
     }
-   ]
+   ],
+   "sort": 200
   },
   {
    "code": "P071",
-   "cat": "icones",
-   "name": {
-    "fr": "Petit diptyque",
-    "en": "Small diptych",
-    "sr": "Диптих мали"
-   },
+   "category": "icones",
+   "name_fr": "Petit diptyque",
+   "name_en": "Small diptych",
+   "name_sr": "Диптих мали",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p071-1",
+     "src": "p071-1",
      "w": 640,
      "h": 424,
      "W": 941,
      "H": 623
     }
-   ]
+   ],
+   "sort": 210
   },
   {
    "code": "P066",
-   "cat": "icones",
-   "name": {
-    "fr": "Petite icône montée",
-    "en": "Small mounted icon",
-    "sr": "Икона каширана мања"
-   },
+   "category": "icones",
+   "name_fr": "Petite icône montée",
+   "name_en": "Small mounted icon",
+   "name_sr": "Икона каширана мања",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p066-1",
+     "src": "p066-1",
      "w": 416,
      "h": 640,
      "W": 704,
      "H": 1084
     }
-   ]
+   ],
+   "sort": 220
   },
   {
    "code": "P067",
-   "cat": "icones",
-   "name": {
-    "fr": "Petites icônes en PVC",
-    "en": "Small PVC icons",
-    "sr": "PVC иконице"
-   },
+   "category": "icones",
+   "name_fr": "Petites icônes en PVC",
+   "name_en": "Small PVC icons",
+   "name_sr": "PVC иконице",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p067-1",
+     "src": "p067-1",
      "w": 640,
      "h": 310,
      "W": 967,
      "H": 469
     }
-   ]
+   ],
+   "sort": 230
   },
   {
    "code": "P147",
-   "cat": "icones",
-   "name": {
-    "fr": "Icône ronde",
-    "en": "Round icon",
-    "sr": "Икона округла"
-   },
+   "category": "icones",
+   "name_fr": "Icône ronde",
+   "name_en": "Round icon",
+   "name_sr": "Икона округла",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p147-1",
+     "src": "p147-1",
      "w": 640,
      "h": 541,
      "W": 768,
      "H": 649
     }
-   ]
+   ],
+   "sort": 240
   },
   {
    "code": "H008",
-   "cat": "icones",
-   "name": {
-    "fr": "Petite icône",
-    "en": "Small icon",
-    "sr": "Икона мала"
-   },
+   "category": "icones",
+   "name_fr": "Petite icône",
+   "name_en": "Small icon",
+   "name_sr": "Икона мала",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "h008-1",
+     "src": "h008-1",
      "w": 640,
      "h": 416,
      "W": 771,
      "H": 501
     }
-   ]
+   ],
+   "sort": 250
   },
   {
    "code": "P010",
-   "cat": "chandeliers",
-   "name": {
-    "fr": "Grand chandelier",
-    "en": "Large candlestick",
-    "sr": "Чирак већи"
-   },
+   "category": "chandeliers",
+   "name_fr": "Grand chandelier",
+   "name_en": "Large candlestick",
+   "name_sr": "Чирак већи",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p010-1",
+     "src": "p010-1",
      "w": 311,
      "h": 640,
      "W": 337,
      "H": 693
     }
-   ]
+   ],
+   "sort": 260
   },
   {
    "code": "A001",
-   "cat": "chandeliers",
-   "name": {
-    "fr": "Chandelier nickelé",
-    "en": "Nickel candlestick",
-    "sr": "Чирак никл"
-   },
+   "category": "chandeliers",
+   "name_fr": "Chandelier nickelé",
+   "name_en": "Nickel candlestick",
+   "name_sr": "Чирак никл",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "a001-1",
+     "src": "a001-1",
      "w": 382,
      "h": 640,
      "W": 471,
      "H": 789
     }
-   ]
+   ],
+   "sort": 270
   },
   {
    "code": "A009",
-   "cat": "chandeliers",
-   "name": {
-    "fr": "Chandelier mat",
-    "en": "Matte candlestick",
-    "sr": "Чирак мат"
-   },
+   "category": "chandeliers",
+   "name_fr": "Chandelier mat",
+   "name_en": "Matte candlestick",
+   "name_sr": "Чирак мат",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "a009-1",
+     "src": "a009-1",
      "w": 411,
      "h": 640,
      "W": 432,
      "H": 672
     }
-   ]
+   ],
+   "sort": 280
   },
   {
    "code": "A008",
-   "cat": "chandeliers",
-   "name": {
-    "fr": "Chandelier doré",
-    "en": "Gold candlestick",
-    "sr": "Чирак злато"
-   },
+   "category": "chandeliers",
+   "name_fr": "Chandelier doré",
+   "name_en": "Gold candlestick",
+   "name_sr": "Чирак злато",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "a008-1",
+     "src": "a008-1",
      "w": 366,
      "h": 640,
      "W": 460,
      "H": 804
     }
-   ]
+   ],
+   "sort": 290
   },
   {
    "code": "P009",
-   "cat": "chandeliers",
-   "name": {
-    "fr": "Petit chandelier",
-    "en": "Small candlestick",
-    "sr": "Чирак мањи"
-   },
+   "category": "chandeliers",
+   "name_fr": "Petit chandelier",
+   "name_en": "Small candlestick",
+   "name_sr": "Чирак мањи",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p009-1",
+     "src": "p009-1",
      "w": 295,
      "h": 562,
      "W": 295,
      "H": 562
     }
-   ]
+   ],
+   "sort": 300
   },
   {
    "code": "P016",
-   "cat": "chandeliers",
-   "name": {
-    "fr": "Chandelier en céramique",
-    "en": "Ceramic candlestick",
-    "sr": "Чирак керамички"
-   },
+   "category": "chandeliers",
+   "name_fr": "Chandelier en céramique",
+   "name_en": "Ceramic candlestick",
+   "name_sr": "Чирак керамички",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p016-1",
+     "src": "p016-1",
      "w": 640,
      "h": 558,
      "W": 1179,
      "H": 1028
     }
-   ]
+   ],
+   "sort": 310
   },
   {
    "code": "P015",
-   "cat": "chandeliers",
-   "name": {
-    "fr": "Chandelier en céramique",
-    "en": "Ceramic candlestick",
-    "sr": "Чирак керамички"
-   },
+   "category": "chandeliers",
+   "name_fr": "Chandelier en céramique",
+   "name_en": "Ceramic candlestick",
+   "name_sr": "Чирак керамички",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p015-1",
+     "src": "p015-1",
      "w": 287,
      "h": 640,
      "W": 369,
      "H": 822
     }
-   ]
+   ],
+   "sort": 320
   },
   {
    "code": "P004",
-   "cat": "veilleuses",
-   "name": {
-    "fr": "Veilleuse Knjaz Miloš",
-    "en": "Knjaz Miloš oil lamp",
-    "sr": "Кандило Књаз Милош"
-   },
+   "category": "veilleuses",
+   "name_fr": "Veilleuse Knjaz Miloš",
+   "name_en": "Knjaz Miloš oil lamp",
+   "name_sr": "Кандило Књаз Милош",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p004-1",
+     "src": "p004-1",
      "w": 640,
      "h": 405,
      "W": 881,
      "H": 558
     }
-   ]
+   ],
+   "sort": 330
   },
   {
    "code": "P003",
-   "cat": "veilleuses",
-   "name": {
-    "fr": "Veilleuse suspendue",
-    "en": "Hanging oil lamp",
-    "sr": "Кандило висеће"
-   },
+   "category": "veilleuses",
+   "name_fr": "Veilleuse suspendue",
+   "name_en": "Hanging oil lamp",
+   "name_sr": "Кандило висеће",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p003-1",
+     "src": "p003-1",
      "w": 640,
      "h": 511,
      "W": 747,
      "H": 597
     }
-   ]
+   ],
+   "sort": 340
   },
   {
    "code": "A003",
-   "cat": "veilleuses",
-   "name": {
-    "fr": "Veilleuse suspendue",
-    "en": "Hanging oil lamp",
-    "sr": "Кандило висеће"
-   },
+   "category": "veilleuses",
+   "name_fr": "Veilleuse suspendue",
+   "name_en": "Hanging oil lamp",
+   "name_sr": "Кандило висеће",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "a003-1",
+     "src": "a003-1",
      "w": 640,
      "h": 433,
      "W": 926,
      "H": 627
     }
-   ]
+   ],
+   "sort": 350
   },
   {
    "code": "P142",
-   "cat": "veilleuses",
-   "name": {
-    "fr": "Veilleuse dorée russe",
-    "en": "Russian gilt oil lamp",
-    "sr": "Кандило руска позлата"
-   },
+   "category": "veilleuses",
+   "name_fr": "Veilleuse dorée russe",
+   "name_en": "Russian gilt oil lamp",
+   "name_sr": "Кандило руска позлата",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p142-1",
+     "src": "p142-1",
      "w": 640,
      "h": 536,
      "W": 799,
      "H": 669
     }
-   ]
+   ],
+   "sort": 360
   },
   {
    "code": "A002",
-   "cat": "veilleuses",
-   "name": {
-    "fr": "Veilleuse suspendue, mate",
-    "en": "Hanging oil lamp, matte",
-    "sr": "Кандило висеће, мат"
-   },
+   "category": "veilleuses",
+   "name_fr": "Veilleuse suspendue, mate",
+   "name_en": "Hanging oil lamp, matte",
+   "name_sr": "Кандило висеће, мат",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "a002-1",
+     "src": "a002-1",
      "w": 640,
      "h": 520,
      "W": 896,
      "H": 728
     }
-   ]
+   ],
+   "sort": 370
   },
   {
    "code": "A004",
-   "cat": "veilleuses",
-   "name": {
-    "fr": "Veilleuse suspendue",
-    "en": "Hanging oil lamp",
-    "sr": "Кандило висеће"
-   },
+   "category": "veilleuses",
+   "name_fr": "Veilleuse suspendue",
+   "name_en": "Hanging oil lamp",
+   "name_sr": "Кандило висеће",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "a004-1",
+     "src": "a004-1",
      "w": 640,
      "h": 483,
      "W": 928,
      "H": 701
     }
-   ]
+   ],
+   "sort": 380
   },
   {
    "code": "P005",
-   "cat": "veilleuses",
-   "name": {
-    "fr": "Veilleuse de table aux aigles",
-    "en": "Table oil lamp with eagles",
-    "sr": "Кандило стоно орлови"
-   },
+   "category": "veilleuses",
+   "name_fr": "Veilleuse de table aux aigles",
+   "name_en": "Table oil lamp with eagles",
+   "name_sr": "Кандило стоно орлови",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p005-1",
+     "src": "p005-1",
      "w": 272,
      "h": 490,
      "W": 272,
      "H": 490
     }
-   ]
+   ],
+   "sort": 390
   },
   {
    "code": "P002",
-   "cat": "veilleuses",
-   "name": {
-    "fr": "Veilleuse de table dentelle",
-    "en": "Lace table oil lamp",
-    "sr": "Кандило стоно чипка"
-   },
+   "category": "veilleuses",
+   "name_fr": "Veilleuse de table dentelle",
+   "name_en": "Lace table oil lamp",
+   "name_sr": "Кандило стоно чипка",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p002-1",
+     "src": "p002-1",
      "w": 434,
      "h": 636,
      "W": 434,
      "H": 636
     }
-   ]
+   ],
+   "sort": 400
   },
   {
    "code": "H001",
-   "cat": "veilleuses",
-   "name": {
-    "fr": "Veilleuse de table",
-    "en": "Table oil lamp",
-    "sr": "Кандило стоно"
-   },
+   "category": "veilleuses",
+   "name_fr": "Veilleuse de table",
+   "name_en": "Table oil lamp",
+   "name_sr": "Кандило стоно",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "h001-1",
+     "src": "h001-1",
      "w": 364,
      "h": 550,
      "W": 364,
      "H": 550
     },
     {
-     "file": "h001-2",
+     "src": "h001-2",
      "w": 387,
      "h": 579,
      "W": 387,
      "H": 579
     }
-   ]
+   ],
+   "sort": 410
   },
   {
    "code": "P141",
-   "cat": "veilleuses",
-   "name": {
-    "fr": "Veilleuse de table combinée",
-    "en": "Combined table oil lamp",
-    "sr": "Кандило стоно комбиновано"
-   },
+   "category": "veilleuses",
+   "name_fr": "Veilleuse de table combinée",
+   "name_en": "Combined table oil lamp",
+   "name_sr": "Кандило стоно комбиновано",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p141-1",
+     "src": "p141-1",
      "w": 618,
      "h": 640,
      "W": 721,
      "H": 747
     }
-   ]
+   ],
+   "sort": 420
   },
   {
    "code": "H017",
-   "cat": "veilleuses",
-   "name": {
-    "fr": "Veilleuse de table",
-    "en": "Table oil lamp",
-    "sr": "Кандило стоно"
-   },
+   "category": "veilleuses",
+   "name_fr": "Veilleuse de table",
+   "name_en": "Table oil lamp",
+   "name_sr": "Кандило стоно",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "h017-1",
+     "src": "h017-1",
      "w": 289,
      "h": 640,
      "W": 576,
      "H": 1277
     }
-   ]
+   ],
+   "sort": 430
   },
   {
    "code": "P132",
-   "cat": "veilleuses",
-   "name": {
-    "fr": "Veilleuse de table",
-    "en": "Table oil lamp",
-    "sr": "Кандило стоно"
-   },
+   "category": "veilleuses",
+   "name_fr": "Veilleuse de table",
+   "name_en": "Table oil lamp",
+   "name_sr": "Кандило стоно",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p132-1",
+     "src": "p132-1",
      "w": 438,
      "h": 565,
      "W": 438,
      "H": 565
     }
-   ]
+   ],
+   "sort": 440
   },
   {
    "code": "A005",
-   "cat": "veilleuses",
-   "name": {
-    "fr": "Veilleuse de table nickelée",
-    "en": "Nickel table oil lamp",
-    "sr": "Кандило стоно никл"
-   },
+   "category": "veilleuses",
+   "name_fr": "Veilleuse de table nickelée",
+   "name_en": "Nickel table oil lamp",
+   "name_sr": "Кандило стоно никл",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "a005-1",
+     "src": "a005-1",
      "w": 640,
      "h": 593,
      "W": 741,
      "H": 687
     }
-   ]
+   ],
+   "sort": 450
   },
   {
    "code": "A010",
-   "cat": "veilleuses",
-   "name": {
-    "fr": "Veilleuse de table dorée",
-    "en": "Gilded table oil lamp",
-    "sr": "Кандило стоно позлата"
-   },
+   "category": "veilleuses",
+   "name_fr": "Veilleuse de table dorée",
+   "name_en": "Gilded table oil lamp",
+   "name_sr": "Кандило стоно позлата",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "a010-1",
+     "src": "a010-1",
      "w": 640,
      "h": 619,
      "W": 749,
      "H": 725
     }
-   ]
+   ],
+   "sort": 460
   },
   {
    "code": "A011",
-   "cat": "veilleuses",
-   "name": {
-    "fr": "Veilleuse de table M.R.",
-    "en": "Table oil lamp M.R.",
-    "sr": "Кандило стоно М.Р."
-   },
+   "category": "veilleuses",
+   "name_fr": "Veilleuse de table M.R.",
+   "name_en": "Table oil lamp M.R.",
+   "name_sr": "Кандило стоно М.Р.",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "a011-1",
+     "src": "a011-1",
      "w": 640,
      "h": 561,
      "W": 767,
      "H": 672
     }
-   ]
+   ],
+   "sort": 470
   },
   {
    "code": "A012",
-   "cat": "veilleuses",
-   "name": {
-    "fr": "Veilleuse de table N.P.",
-    "en": "Table oil lamp N.P.",
-    "sr": "Кандило стоно N.P."
-   },
+   "category": "veilleuses",
+   "name_fr": "Veilleuse de table N.P.",
+   "name_en": "Table oil lamp N.P.",
+   "name_sr": "Кандило стоно N.P.",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "a012-1",
+     "src": "a012-1",
      "w": 640,
      "h": 560,
      "W": 765,
      "H": 669
     }
-   ]
+   ],
+   "sort": 480
   },
   {
    "code": "H012",
-   "cat": "croix",
-   "name": {
-    "fr": "Croix de table",
-    "en": "Table cross",
-    "sr": "Крст стони"
-   },
+   "category": "croix",
+   "name_fr": "Croix de table",
+   "name_en": "Table cross",
+   "name_sr": "Крст стони",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "h012-1",
+     "src": "h012-1",
      "w": 368,
      "h": 565,
      "W": 368,
      "H": 565
     },
     {
-     "file": "h012-2",
+     "src": "h012-2",
      "w": 368,
      "h": 563,
      "W": 368,
      "H": 563
     }
-   ]
+   ],
+   "sort": 490
   },
   {
    "code": "P022",
-   "cat": "croix",
-   "name": {
-    "fr": "Petite croix en résine",
-    "en": "Small resin cross",
-    "sr": "Крст мали смола"
-   },
+   "category": "croix",
+   "name_fr": "Petite croix en résine",
+   "name_en": "Small resin cross",
+   "name_sr": "Крст мали смола",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p022-1",
+     "src": "p022-1",
      "w": 308,
      "h": 516,
      "W": 308,
      "H": 516
     },
     {
-     "file": "p022-2",
+     "src": "p022-2",
      "w": 640,
      "h": 495,
      "W": 843,
      "H": 652
     }
-   ]
+   ],
+   "sort": 500
   },
   {
    "code": "P020",
-   "cat": "croix",
-   "name": {
-    "fr": "Grande croix de table",
-    "en": "Large table cross",
-    "sr": "Крст стони са стопом, већи"
-   },
+   "category": "croix",
+   "name_fr": "Grande croix de table",
+   "name_en": "Large table cross",
+   "name_sr": "Крст стони са стопом, већи",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p020-1",
+     "src": "p020-1",
      "w": 358,
      "h": 640,
      "W": 436,
      "H": 780
     }
-   ]
+   ],
+   "sort": 510
   },
   {
    "code": "P021",
-   "cat": "croix",
-   "name": {
-    "fr": "Petite croix de table",
-    "en": "Small table cross",
-    "sr": "Крст стони са стопом, мањи"
-   },
+   "category": "croix",
+   "name_fr": "Petite croix de table",
+   "name_en": "Small table cross",
+   "name_sr": "Крст стони са стопом, мањи",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p021-1",
+     "src": "p021-1",
      "w": 640,
      "h": 625,
      "W": 695,
      "H": 679
     }
-   ]
+   ],
+   "sort": 520
   },
   {
    "code": "P131",
-   "cat": "croix",
-   "name": {
-    "fr": "Croix de table en résine",
-    "en": "Resin table cross",
-    "sr": "Крст стони са стопом, смола"
-   },
+   "category": "croix",
+   "name_fr": "Croix de table en résine",
+   "name_en": "Resin table cross",
+   "name_sr": "Крст стони са стопом, смола",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p131-1",
+     "src": "p131-1",
      "w": 509,
      "h": 640,
      "W": 847,
      "H": 1065
     }
-   ]
+   ],
+   "sort": 530
   },
   {
    "code": "P136",
-   "cat": "croix",
-   "name": {
-    "fr": "Croix de bénédiction en résine",
-    "en": "Resin hand cross",
-    "sr": "Крст ручни смола"
-   },
+   "category": "croix",
+   "name_fr": "Croix de bénédiction en résine",
+   "name_en": "Resin hand cross",
+   "name_sr": "Крст ручни смола",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p136-1",
+     "src": "p136-1",
      "w": 467,
      "h": 640,
      "W": 864,
      "H": 1184
     }
-   ]
+   ],
+   "sort": 540
   },
   {
    "code": "P024",
-   "cat": "croix",
-   "name": {
-    "fr": "Croix de bénédiction",
-    "en": "Hand cross",
-    "sr": "Крст ручни"
-   },
+   "category": "croix",
+   "name_fr": "Croix de bénédiction",
+   "name_en": "Hand cross",
+   "name_sr": "Крст ручни",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p024-1",
+     "src": "p024-1",
      "w": 317,
      "h": 640,
      "W": 433,
      "H": 873
     }
-   ]
+   ],
+   "sort": 550
   },
   {
    "code": "P028",
-   "cat": "pendentifs",
-   "name": {
-    "fr": "Petite croix en bois",
-    "en": "Small wooden cross",
-    "sr": "Крстић дрвени"
-   },
+   "category": "pendentifs",
+   "name_fr": "Petite croix en bois",
+   "name_en": "Small wooden cross",
+   "name_sr": "Крстић дрвени",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p028-1",
+     "src": "p028-1",
      "w": 640,
      "h": 205,
      "W": 992,
      "H": 317
     }
-   ]
+   ],
+   "sort": 560
   },
   {
    "code": "P135",
-   "cat": "pendentifs",
-   "name": {
-    "fr": "Petite croix parfumée",
-    "en": "Scented small cross",
-    "sr": "Крстић милодух"
-   },
+   "category": "pendentifs",
+   "name_fr": "Petite croix parfumée",
+   "name_en": "Scented small cross",
+   "name_sr": "Крстић милодух",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p135-1",
+     "src": "p135-1",
      "w": 640,
      "h": 325,
      "W": 1037,
      "H": 527
     }
-   ]
+   ],
+   "sort": 570
   },
   {
    "code": "H009",
-   "cat": "pendentifs",
-   "name": {
-    "fr": "Pendentif croix",
-    "en": "Cross pendant",
-    "sr": "Крстић привезак"
-   },
+   "category": "pendentifs",
+   "name_fr": "Pendentif croix",
+   "name_en": "Cross pendant",
+   "name_sr": "Крстић привезак",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "h009-1",
+     "src": "h009-1",
      "w": 640,
      "h": 552,
      "W": 860,
      "H": 742
     }
-   ]
+   ],
+   "sort": 580
   },
   {
    "code": "H010",
-   "cat": "pendentifs",
-   "name": {
-    "fr": "Petite croix",
-    "en": "Small cross",
-    "sr": "Крстић"
-   },
+   "category": "pendentifs",
+   "name_fr": "Petite croix",
+   "name_en": "Small cross",
+   "name_sr": "Крстић",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "h010-1",
+     "src": "h010-1",
      "w": 577,
      "h": 640,
      "W": 645,
      "H": 716
     }
-   ]
+   ],
+   "sort": 590
   },
   {
    "code": "H018",
-   "cat": "culte",
-   "name": {
-    "fr": "Pince",
-    "en": "Clip",
-    "sr": "Штипаљка"
-   },
+   "category": "culte",
+   "name_fr": "Pince",
+   "name_en": "Clip",
+   "name_sr": "Штипаљка",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "h018-1",
+     "src": "h018-1",
      "w": 640,
      "h": 339,
      "W": 768,
      "H": 407
     }
-   ]
+   ],
+   "sort": 600
   },
   {
    "code": "P031",
-   "cat": "pendentifs",
-   "name": {
-    "fr": "Médaillons",
-    "en": "Medallions",
-    "sr": "Медаљони"
-   },
+   "category": "pendentifs",
+   "name_fr": "Médaillons",
+   "name_en": "Medallions",
+   "name_sr": "Медаљони",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p031-1",
+     "src": "p031-1",
      "w": 640,
      "h": 177,
      "W": 1020,
      "H": 282
     }
-   ]
+   ],
+   "sort": 610
   },
   {
    "code": "P035",
-   "cat": "pendentifs",
-   "name": {
-    "fr": "Pendentif croix",
-    "en": "Cross pendant",
-    "sr": "Крстић привезак"
-   },
+   "category": "pendentifs",
+   "name_fr": "Pendentif croix",
+   "name_en": "Cross pendant",
+   "name_sr": "Крстић привезак",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p035-1",
+     "src": "p035-1",
      "w": 640,
      "h": 596,
      "W": 661,
      "H": 616
     }
-   ]
+   ],
+   "sort": 620
   },
   {
    "code": "P120",
-   "cat": "pendentifs",
-   "name": {
-    "fr": "Pendentif croix",
-    "en": "Cross pendant",
-    "sr": "Крстић привезак"
-   },
+   "category": "pendentifs",
+   "name_fr": "Pendentif croix",
+   "name_en": "Cross pendant",
+   "name_sr": "Крстић привезак",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p120-1",
+     "src": "p120-1",
      "w": 618,
      "h": 640,
      "W": 768,
      "H": 795
     }
-   ]
+   ],
+   "sort": 630
   },
   {
    "code": "H016",
-   "cat": "pendentifs",
-   "name": {
-    "fr": "Croix en boîte",
-    "en": "Cross in a box",
-    "sr": "Крст у кутијици"
-   },
+   "category": "pendentifs",
+   "name_fr": "Croix en boîte",
+   "name_en": "Cross in a box",
+   "name_sr": "Крст у кутијици",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "h016-1",
+     "src": "h016-1",
      "w": 565,
      "h": 640,
      "W": 960,
      "H": 1088
     }
-   ]
+   ],
+   "sort": 640
   },
   {
    "code": "H016-1",
-   "cat": "pendentifs",
-   "name": {
-    "fr": "Croix en boîte",
-    "en": "Cross in a box",
-    "sr": "Крст у кутијици"
-   },
+   "category": "pendentifs",
+   "name_fr": "Croix en boîte",
+   "name_en": "Cross in a box",
+   "name_sr": "Крст у кутијици",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "h016-1-1",
+     "src": "h016-1-1",
      "w": 467,
      "h": 640,
      "W": 864,
      "H": 1184
     }
-   ]
+   ],
+   "sort": 650
   },
   {
    "code": "H016-2",
-   "cat": "pendentifs",
-   "name": {
-    "fr": "Croix en boîte",
-    "en": "Cross in a box",
-    "sr": "Крст у кутијици"
-   },
+   "category": "pendentifs",
+   "name_fr": "Croix en boîte",
+   "name_en": "Cross in a box",
+   "name_sr": "Крст у кутијици",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "h016-2-1",
+     "src": "h016-2-1",
      "w": 640,
      "h": 563,
      "W": 777,
      "H": 684
     }
-   ]
+   ],
+   "sort": 660
   },
   {
    "code": "H015",
-   "cat": "pendentifs",
-   "name": {
-    "fr": "Croix en boîte",
-    "en": "Cross in a box",
-    "sr": "Крст у кутијици"
-   },
+   "category": "pendentifs",
+   "name_fr": "Croix en boîte",
+   "name_en": "Cross in a box",
+   "name_sr": "Крст у кутијици",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "h015-1",
+     "src": "h015-1",
      "w": 640,
      "h": 513,
      "W": 929,
      "H": 744
     }
-   ]
+   ],
+   "sort": 670
   },
   {
    "code": "P117",
-   "cat": "pendentifs",
-   "name": {
-    "fr": "Croix de voiture en résine",
-    "en": "Resin car cross",
-    "sr": "Крст за ауто, смола"
-   },
+   "category": "pendentifs",
+   "name_fr": "Croix de voiture en résine",
+   "name_en": "Resin car cross",
+   "name_sr": "Крст за ауто, смола",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p117-1",
+     "src": "p117-1",
      "w": 640,
      "h": 528,
      "W": 768,
      "H": 633
     },
     {
-     "file": "p117-2",
+     "src": "p117-2",
      "w": 640,
      "h": 318,
      "W": 749,
      "H": 372
     }
-   ]
+   ],
+   "sort": 680
   },
   {
    "code": "H002",
-   "cat": "pendentifs",
-   "name": {
-    "fr": "Croix en boîte",
-    "en": "Cross in a box",
-    "sr": "Крст у кутијици"
-   },
+   "category": "pendentifs",
+   "name_fr": "Croix en boîte",
+   "name_en": "Cross in a box",
+   "name_sr": "Крст у кутијици",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "h002-1",
+     "src": "h002-1",
      "w": 546,
      "h": 411,
      "W": 546,
      "H": 411
     }
-   ]
+   ],
+   "sort": 690
   },
   {
    "code": "H011",
-   "cat": "culte",
-   "name": {
-    "fr": "Serviette (ubrus)",
-    "en": "Cloth (ubrus)",
-    "sr": "Убрус"
-   },
+   "category": "culte",
+   "name_fr": "Serviette (ubrus)",
+   "name_en": "Cloth (ubrus)",
+   "name_sr": "Убрус",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "h011-1",
+     "src": "h011-1",
      "w": 563,
      "h": 640,
      "W": 864,
      "H": 983
     }
-   ]
+   ],
+   "sort": 700
   },
   {
    "code": "H020",
-   "cat": "culte",
-   "name": {
-    "fr": "Éteignoir à bougies",
-    "en": "Candle snuffer",
-    "sr": "Звоно за свеће"
-   },
+   "category": "culte",
+   "name_fr": "Éteignoir à bougies",
+   "name_en": "Candle snuffer",
+   "name_sr": "Звоно за свеће",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "h020-1",
+     "src": "h020-1",
      "w": 517,
      "h": 640,
      "W": 754,
      "H": 934
     }
-   ]
+   ],
+   "sort": 710
   },
   {
    "code": "P032",
-   "cat": "pendentifs",
-   "name": {
-    "fr": "Médaillon en métal",
-    "en": "Metal medallion",
-    "sr": "Медаљон метал"
-   },
+   "category": "pendentifs",
+   "name_fr": "Médaillon en métal",
+   "name_en": "Metal medallion",
+   "name_sr": "Медаљон метал",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p032-1",
+     "src": "p032-1",
      "w": 608,
      "h": 640,
      "W": 807,
      "H": 849
     }
-   ]
+   ],
+   "sort": 720
   },
   {
    "code": "P051",
-   "cat": "culte",
-   "name": {
-    "fr": "Rose blanche",
-    "en": "White rose",
-    "sr": "Ружа бела"
-   },
+   "category": "culte",
+   "name_fr": "Rose blanche",
+   "name_en": "White rose",
+   "name_sr": "Ружа бела",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p051-1",
+     "src": "p051-1",
      "w": 640,
      "h": 421,
      "W": 768,
      "H": 505
     }
-   ]
+   ],
+   "sort": 730
   },
   {
    "code": "P052",
-   "cat": "culte",
-   "name": {
-    "fr": "Rose tricolore",
-    "en": "Tricolour rose",
-    "sr": "Ружа тробојка"
-   },
+   "category": "culte",
+   "name_fr": "Rose tricolore",
+   "name_en": "Tricolour rose",
+   "name_sr": "Ружа тробојка",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p052-1",
+     "src": "p052-1",
      "w": 640,
      "h": 402,
      "W": 757,
      "H": 475
     }
-   ]
+   ],
+   "sort": 740
   },
   {
    "code": "P112",
-   "cat": "culte",
-   "name": {
-    "fr": "Rose",
-    "en": "Rose",
-    "sr": "Ружа"
-   },
+   "category": "culte",
+   "name_fr": "Rose",
+   "name_en": "Rose",
+   "name_sr": "Ружа",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p112-1",
+     "src": "p112-1",
      "w": 640,
      "h": 408,
      "W": 1046,
      "H": 667
     }
-   ]
+   ],
+   "sort": 750
   },
   {
    "code": "P019",
-   "cat": "culte",
-   "name": {
-    "fr": "Sceau à pain, grand",
-    "en": "Bread seal, large",
-    "sr": "Печат велики"
-   },
+   "category": "culte",
+   "name_fr": "Sceau à pain, grand",
+   "name_en": "Bread seal, large",
+   "name_sr": "Печат велики",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p019-1",
+     "src": "p019-1",
      "w": 640,
      "h": 395,
      "W": 744,
      "H": 459
     }
-   ]
+   ],
+   "sort": 760
   },
   {
    "code": "P017",
-   "cat": "culte",
-   "name": {
-    "fr": "Sceau à pain, petit",
-    "en": "Bread seal, small",
-    "sr": "Печат мали"
-   },
+   "category": "culte",
+   "name_fr": "Sceau à pain, petit",
+   "name_en": "Bread seal, small",
+   "name_sr": "Печат мали",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p019-1",
+     "src": "p019-1",
      "w": 640,
      "h": 395,
      "W": 744,
      "H": 459
     }
-   ]
+   ],
+   "sort": 770
   },
   {
    "code": "P018",
-   "cat": "culte",
-   "name": {
-    "fr": "Sceau à pain, moyen",
-    "en": "Bread seal, medium",
-    "sr": "Печат средњи"
-   },
+   "category": "culte",
+   "name_fr": "Sceau à pain, moyen",
+   "name_en": "Bread seal, medium",
+   "name_sr": "Печат средњи",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p019-1",
+     "src": "p019-1",
      "w": 640,
      "h": 395,
      "W": 744,
      "H": 459
     }
-   ]
+   ],
+   "sort": 780
   },
   {
    "code": "P023",
-   "cat": "culte",
-   "name": {
-    "fr": "Sceau à pain, cube",
-    "en": "Bread seal, cube",
-    "sr": "Печат коцка"
-   },
+   "category": "culte",
+   "name_fr": "Sceau à pain, cube",
+   "name_en": "Bread seal, cube",
+   "name_sr": "Печат коцка",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p023-1",
+     "src": "p023-1",
      "w": 426,
      "h": 294,
      "W": 426,
      "H": 294
     }
-   ]
+   ],
+   "sort": 790
   },
   {
    "code": "L003",
-   "cat": "culte",
-   "name": {
-    "fr": "Aimants",
-    "en": "Magnets",
-    "sr": "Магнети"
-   },
+   "category": "culte",
+   "name_fr": "Aimants",
+   "name_en": "Magnets",
+   "name_sr": "Магнети",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "l003-1",
+     "src": "l003-1",
      "w": 495,
      "h": 640,
      "W": 864,
      "H": 1116
     }
-   ]
+   ],
+   "sort": 800
   },
   {
    "code": "P059",
-   "cat": "culte",
-   "name": {
-    "fr": "Myron",
-    "en": "Holy ointment",
-    "sr": "Миро"
-   },
+   "category": "culte",
+   "name_fr": "Myron",
+   "name_en": "Holy ointment",
+   "name_sr": "Миро",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p059-1",
+     "src": "p059-1",
      "w": 373,
      "h": 640,
      "W": 388,
      "H": 665
     }
-   ]
+   ],
+   "sort": 810
   },
   {
    "code": "P025",
-   "cat": "culte",
-   "name": {
-    "fr": "Moules pour pain de slava",
-    "en": "Slava bread moulds",
-    "sr": "Славске модле"
-   },
+   "category": "culte",
+   "name_fr": "Moules pour pain de slava",
+   "name_en": "Slava bread moulds",
+   "name_sr": "Славске модле",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p025-1",
+     "src": "p025-1",
      "w": 587,
      "h": 402,
      "W": 587,
      "H": 402
     }
-   ]
+   ],
+   "sort": 820
   },
   {
    "code": "P026",
-   "cat": "culte",
-   "name": {
-    "fr": "Pochoir",
-    "en": "Stencil",
-    "sr": "Шаблон"
-   },
+   "category": "culte",
+   "name_fr": "Pochoir",
+   "name_en": "Stencil",
+   "name_sr": "Шаблон",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p026-1",
+     "src": "p026-1",
      "w": 640,
      "h": 395,
      "W": 847,
      "H": 523
     }
-   ]
+   ],
+   "sort": 830
   },
   {
    "code": "P033",
-   "cat": "pendentifs",
-   "name": {
-    "fr": "Pendentif en bois",
-    "en": "Wooden pendant",
-    "sr": "Привезак од дрвета"
-   },
+   "category": "pendentifs",
+   "name_fr": "Pendentif en bois",
+   "name_en": "Wooden pendant",
+   "name_sr": "Привезак од дрвета",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p033-1",
+     "src": "p033-1",
      "w": 640,
      "h": 546,
      "W": 843,
      "H": 719
     }
-   ]
+   ],
+   "sort": 840
   },
   {
    "code": "P062",
-   "cat": "culte",
-   "name": {
-    "fr": "Grand aspersoir en basilic",
-    "en": "Large basil sprinkler",
-    "sr": "Босиљкача велика"
-   },
+   "category": "culte",
+   "name_fr": "Grand aspersoir en basilic",
+   "name_en": "Large basil sprinkler",
+   "name_sr": "Босиљкача велика",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p062-1",
+     "src": "p062-1",
      "w": 640,
      "h": 495,
      "W": 896,
      "H": 693
     }
-   ]
+   ],
+   "sort": 850
   },
   {
    "code": "P098",
-   "cat": "culte",
-   "name": {
-    "fr": "Petit aspersoir en basilic",
-    "en": "Small basil sprinkler",
-    "sr": "Босиљкача мала"
-   },
+   "category": "culte",
+   "name_fr": "Petit aspersoir en basilic",
+   "name_en": "Small basil sprinkler",
+   "name_sr": "Босиљкача мала",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p098-1",
+     "src": "p098-1",
      "w": 487,
      "h": 640,
      "W": 768,
      "H": 1010
     }
-   ]
+   ],
+   "sort": 860
   },
   {
    "code": "P119",
-   "cat": "culte",
-   "name": {
-    "fr": "Boîte Mola",
-    "en": "Mola box",
-    "sr": "Кутија мола"
-   },
+   "category": "culte",
+   "name_fr": "Boîte Mola",
+   "name_en": "Mola box",
+   "name_sr": "Кутија мола",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p119-1",
+     "src": "p119-1",
      "w": 640,
      "h": 619,
      "W": 768,
      "H": 743
     }
-   ]
+   ],
+   "sort": 870
   },
   {
    "code": "P133",
-   "cat": "culte",
-   "name": {
-    "fr": "Coffret de baptême",
-    "en": "Baptism set",
-    "sr": "Комплет за крштење"
-   },
+   "category": "culte",
+   "name_fr": "Coffret de baptême",
+   "name_en": "Baptism set",
+   "name_sr": "Комплет за крштење",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p133-1",
+     "src": "p133-1",
      "w": 337,
      "h": 640,
      "W": 605,
      "H": 1150
     }
-   ]
+   ],
+   "sort": 880
   },
   {
    "code": "P140",
-   "cat": "culte",
-   "name": {
-    "fr": "Bague",
-    "en": "Ring",
-    "sr": "Прстен"
-   },
+   "category": "culte",
+   "name_fr": "Bague",
+   "name_en": "Ring",
+   "name_sr": "Прстен",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p140-1",
+     "src": "p140-1",
      "w": 374,
      "h": 378,
      "W": 374,
      "H": 378
     }
-   ]
+   ],
+   "sort": 890
   },
   {
    "code": "P118",
-   "cat": "pendentifs",
-   "name": {
-    "fr": "Croix de voiture gravée",
-    "en": "Engraved car cross",
-    "sr": "Крст за ауто, гравура"
-   },
+   "category": "pendentifs",
+   "name_fr": "Croix de voiture gravée",
+   "name_en": "Engraved car cross",
+   "name_sr": "Крст за ауто, гравура",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p118-1",
+     "src": "p118-1",
      "w": 640,
      "h": 492,
      "W": 800,
      "H": 615
     }
-   ]
+   ],
+   "sort": 900
   },
   {
    "code": "P034",
-   "cat": "pendentifs",
-   "name": {
-    "fr": "Croix de voiture",
-    "en": "Car cross",
-    "sr": "Крст за ауто"
-   },
+   "category": "pendentifs",
+   "name_fr": "Croix de voiture",
+   "name_en": "Car cross",
+   "name_sr": "Крст за ауто",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p034-1",
+     "src": "p034-1",
      "w": 531,
      "h": 640,
      "W": 744,
      "H": 897
     }
-   ]
+   ],
+   "sort": 910
   },
   {
    "code": "P055",
-   "cat": "encens",
-   "name": {
-    "fr": "Charbon pour encensoir",
-    "en": "Censer charcoal",
-    "sr": "Брикет"
-   },
+   "category": "encens",
+   "name_fr": "Charbon pour encensoir",
+   "name_en": "Censer charcoal",
+   "name_sr": "Брикет",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p055-1",
+     "src": "p055-1",
      "w": 640,
      "h": 542,
      "W": 766,
      "H": 649
     }
-   ]
+   ],
+   "sort": 920
   },
   {
    "code": "P054",
-   "cat": "encens",
-   "name": {
-    "fr": "Charbon liturgique",
-    "en": "Liturgical charcoal",
-    "sr": "Литургијски брикет"
-   },
+   "category": "encens",
+   "name_fr": "Charbon liturgique",
+   "name_en": "Liturgical charcoal",
+   "name_sr": "Литургијски брикет",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p054-1",
+     "src": "p054-1",
      "w": 470,
      "h": 640,
      "W": 768,
      "H": 1046
     }
-   ]
+   ],
+   "sort": 930
   },
   {
    "code": "P056",
-   "cat": "encens",
-   "name": {
-    "fr": "Mèches pour veilleuse",
-    "en": "Oil lamp wicks",
-    "sr": "Фитиљ"
-   },
+   "category": "encens",
+   "name_fr": "Mèches pour veilleuse",
+   "name_en": "Oil lamp wicks",
+   "name_sr": "Фитиљ",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p056-1",
+     "src": "p056-1",
      "w": 640,
      "h": 599,
      "W": 691,
      "H": 647
     }
-   ]
+   ],
+   "sort": 940
   },
   {
    "code": "P146",
-   "cat": "encens",
-   "name": {
-    "fr": "Encens de Vatopédi",
-    "en": "Vatopedi incense",
-    "sr": "Ватопедски тамјан"
-   },
+   "category": "encens",
+   "name_fr": "Encens de Vatopédi",
+   "name_en": "Vatopedi incense",
+   "name_sr": "Ватопедски тамјан",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p146-1",
+     "src": "p146-1",
      "w": 640,
      "h": 588,
      "W": 761,
      "H": 699
     }
-   ]
+   ],
+   "sort": 950
   },
   {
    "code": "P057",
-   "cat": "encens",
-   "name": {
-    "fr": "Encens en tube, ordinaire",
-    "en": "Tube incense, plain",
-    "sr": "Тамјан у туби, обичан"
-   },
-   "photos": []
+   "category": "encens",
+   "name_fr": "Encens en tube, ordinaire",
+   "name_en": "Tube incense, plain",
+   "name_sr": "Тамјан у туби, обичан",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
+   "photos": [],
+   "sort": 960
   },
   {
    "code": "P099",
-   "cat": "encens",
-   "name": {
-    "fr": "Encens en tube, parfumé",
-    "en": "Tube incense, scented",
-    "sr": "Тамјан у туби, мирисни"
-   },
-   "photos": []
+   "category": "encens",
+   "name_fr": "Encens en tube, parfumé",
+   "name_en": "Tube incense, scented",
+   "name_sr": "Тамјан у туби, мирисни",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
+   "photos": [],
+   "sort": 970
   },
   {
    "code": "P130",
-   "cat": "culte",
-   "name": {
-    "fr": "Clochettes",
-    "en": "Little bells",
-    "sr": "Звончићи"
-   },
+   "category": "culte",
+   "name_fr": "Clochettes",
+   "name_en": "Little bells",
+   "name_sr": "Звончићи",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p130-1",
+     "src": "p130-1",
      "w": 640,
      "h": 458,
      "W": 682,
      "H": 488
     }
-   ]
+   ],
+   "sort": 980
   },
   {
    "code": "H013",
-   "cat": "chapelets",
-   "name": {
-    "fr": "Chapelet en perles",
-    "en": "Pearl prayer rope",
-    "sr": "Бројаница перла"
-   },
+   "category": "chapelets",
+   "name_fr": "Chapelet en perles",
+   "name_en": "Pearl prayer rope",
+   "name_sr": "Бројаница перла",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "h013-1",
+     "src": "h013-1",
      "w": 640,
      "h": 387,
      "W": 904,
      "H": 546
     }
-   ]
+   ],
+   "sort": 990
   },
   {
    "code": "H014",
-   "cat": "chapelets",
-   "name": {
-    "fr": "Chapelets pour enfants",
-    "en": "Children's prayer ropes",
-    "sr": "Бројанице дечије"
-   },
+   "category": "chapelets",
+   "name_fr": "Chapelets pour enfants",
+   "name_en": "Children's prayer ropes",
+   "name_sr": "Бројанице дечије",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "h014-1",
+     "src": "h014-1",
      "w": 640,
      "h": 310,
      "W": 1114,
      "H": 540
     }
-   ]
+   ],
+   "sort": 1000
   },
   {
    "code": "P103",
-   "cat": "chapelets",
-   "name": {
-    "fr": "Chapelet ajustable",
-    "en": "Adjustable prayer rope",
-    "sr": "Бројаница подесива"
-   },
+   "category": "chapelets",
+   "name_fr": "Chapelet ajustable",
+   "name_en": "Adjustable prayer rope",
+   "name_sr": "Бројаница подесива",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p103-1",
+     "src": "p103-1",
      "w": 640,
      "h": 229,
      "W": 817,
      "H": 292
     }
-   ]
+   ],
+   "sort": 1010
   },
   {
    "code": "P037",
-   "cat": "chapelets",
-   "name": {
-    "fr": "Petite croix tressée",
-    "en": "Braided small cross",
-    "sr": "Крстић плетени"
-   },
+   "category": "chapelets",
+   "name_fr": "Petite croix tressée",
+   "name_en": "Braided small cross",
+   "name_sr": "Крстић плетени",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p037-1",
+     "src": "p037-1",
      "w": 416,
      "h": 640,
      "W": 562,
      "H": 864
     }
-   ]
+   ],
+   "sort": 1020
   },
   {
    "code": "P040",
-   "cat": "chapelets",
-   "name": {
-    "fr": "Chapelet en pierres semi-précieuses",
-    "en": "Semi-precious stone prayer rope",
-    "sr": "Бројанице полудраги камен"
-   },
+   "category": "chapelets",
+   "name_fr": "Chapelet en pierres semi-précieuses",
+   "name_en": "Semi-precious stone prayer rope",
+   "name_sr": "Бројанице полудраги камен",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p040-1",
+     "src": "p040-1",
      "w": 640,
      "h": 289,
      "W": 1155,
      "H": 521
     }
-   ]
+   ],
+   "sort": 1030
   },
   {
    "code": "P041",
-   "cat": "chapelets",
-   "name": {
-    "fr": "Chapelet enfant en plastique",
-    "en": "Children's plastic prayer rope",
-    "sr": "Бројаница дечија пластична"
-   },
+   "category": "chapelets",
+   "name_fr": "Chapelet enfant en plastique",
+   "name_en": "Children's plastic prayer rope",
+   "name_sr": "Бројаница дечија пластична",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p041-1",
+     "src": "p041-1",
      "w": 640,
      "h": 203,
      "W": 985,
      "H": 313
     }
-   ]
+   ],
+   "sort": 1040
   },
   {
    "code": "P043",
-   "cat": "chapelets",
-   "name": {
-    "fr": "Chapelets tressés",
-    "en": "Braided prayer ropes",
-    "sr": "Бројанице плетене"
-   },
+   "category": "chapelets",
+   "name_fr": "Chapelets tressés",
+   "name_en": "Braided prayer ropes",
+   "name_sr": "Бројанице плетене",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p043-1",
+     "src": "p043-1",
      "w": 640,
      "h": 289,
      "W": 753,
      "H": 340
     }
-   ]
+   ],
+   "sort": 1050
   },
   {
    "code": "P044",
-   "cat": "chapelets",
-   "name": {
-    "fr": "Chapelet tricolore",
-    "en": "Tricolour prayer rope",
-    "sr": "Бројаница тробојка"
-   },
+   "category": "chapelets",
+   "name_fr": "Chapelet tricolore",
+   "name_en": "Tricolour prayer rope",
+   "name_sr": "Бројаница тробојка",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p044-1",
+     "src": "p044-1",
      "w": 353,
      "h": 640,
      "W": 440,
      "H": 798
     }
-   ]
+   ],
+   "sort": 1060
   },
   {
    "code": "P047",
-   "cat": "chapelets",
-   "name": {
-    "fr": "Chapelet en verre",
-    "en": "Glass prayer rope",
-    "sr": "Бројаница стаклена"
-   },
+   "category": "chapelets",
+   "name_fr": "Chapelet en verre",
+   "name_en": "Glass prayer rope",
+   "name_sr": "Бројаница стаклена",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p047-1",
+     "src": "p047-1",
      "w": 329,
      "h": 640,
      "W": 427,
      "H": 831
     }
-   ]
+   ],
+   "sort": 1070
   },
   {
    "code": "P050",
-   "cat": "chapelets",
-   "name": {
-    "fr": "Larmes de la Vierge",
-    "en": "Tears of the Virgin",
-    "sr": "Богородичине сузе"
-   },
+   "category": "chapelets",
+   "name_fr": "Larmes de la Vierge",
+   "name_en": "Tears of the Virgin",
+   "name_sr": "Богородичине сузе",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p050-1",
+     "src": "p050-1",
      "w": 640,
      "h": 532,
      "W": 897,
      "H": 745
     }
-   ]
+   ],
+   "sort": 1080
   },
   {
    "code": "P049",
-   "cat": "chapelets",
-   "name": {
-    "fr": "Larmes de la Vierge",
-    "en": "Tears of the Virgin",
-    "sr": "Богородичине сузе"
-   },
+   "category": "chapelets",
+   "name_fr": "Larmes de la Vierge",
+   "name_en": "Tears of the Virgin",
+   "name_sr": "Богородичине сузе",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p049-1",
+     "src": "p049-1",
      "w": 591,
      "h": 640,
      "W": 864,
      "H": 936
     }
-   ]
+   ],
+   "sort": 1090
   },
   {
    "code": "P046",
-   "cat": "chapelets",
-   "name": {
-    "fr": "Colliers en bois",
-    "en": "Wooden necklaces",
-    "sr": "Дрвене огрлице"
-   },
+   "category": "chapelets",
+   "name_fr": "Colliers en bois",
+   "name_en": "Wooden necklaces",
+   "name_sr": "Дрвене огрлице",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p046-1",
+     "src": "p046-1",
      "w": 640,
      "h": 555,
      "W": 970,
      "H": 841
     }
-   ]
+   ],
+   "sort": 1100
   },
   {
    "code": "P107",
-   "cat": "chapelets",
-   "name": {
-    "fr": "Chapelet en bois",
-    "en": "Wooden prayer rope",
-    "sr": "Бројаница дрвена"
-   },
+   "category": "chapelets",
+   "name_fr": "Chapelet en bois",
+   "name_en": "Wooden prayer rope",
+   "name_sr": "Бројаница дрвена",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p107-1",
+     "src": "p107-1",
      "w": 467,
      "h": 640,
      "W": 864,
      "H": 1184
     }
-   ]
+   ],
+   "sort": 1110
   },
   {
    "code": "P104",
-   "cat": "chapelets",
-   "name": {
-    "fr": "Chapelets fins ajustables",
-    "en": "Thin adjustable prayer ropes",
-    "sr": "Бројанице тање, подесиве"
-   },
+   "category": "chapelets",
+   "name_fr": "Chapelets fins ajustables",
+   "name_en": "Thin adjustable prayer ropes",
+   "name_sr": "Бројанице тање, подесиве",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p104-1",
+     "src": "p104-1",
      "w": 640,
      "h": 210,
      "W": 864,
      "H": 284
     }
-   ]
+   ],
+   "sort": 1120
   },
   {
    "code": "P105",
-   "cat": "chapelets",
-   "name": {
-    "fr": "Chapelet en plastique",
-    "en": "Plastic prayer rope",
-    "sr": "Бројаница пластична"
-   },
+   "category": "chapelets",
+   "name_fr": "Chapelet en plastique",
+   "name_en": "Plastic prayer rope",
+   "name_sr": "Бројаница пластична",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p105-1",
+     "src": "p105-1",
      "w": 640,
      "h": 363,
      "W": 818,
      "H": 464
     }
-   ]
+   ],
+   "sort": 1130
   },
   {
    "code": "P106",
-   "cat": "chapelets",
-   "name": {
-    "fr": "Chapelet en cristal",
-    "en": "Crystal prayer rope",
-    "sr": "Бројаница кристал"
-   },
+   "category": "chapelets",
+   "name_fr": "Chapelet en cristal",
+   "name_en": "Crystal prayer rope",
+   "name_sr": "Бројаница кристал",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p106-1",
+     "src": "p106-1",
      "w": 640,
      "h": 382,
      "W": 781,
      "H": 466
     }
-   ]
+   ],
+   "sort": 1140
   },
   {
    "code": "P126",
-   "cat": "chapelets",
-   "name": {
-    "fr": "Chapelet fin en cristal",
-    "en": "Thin crystal prayer rope",
-    "sr": "Бројаница, танки кристал"
-   },
+   "category": "chapelets",
+   "name_fr": "Chapelet fin en cristal",
+   "name_en": "Thin crystal prayer rope",
+   "name_sr": "Бројаница, танки кристал",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p126-1",
+     "src": "p126-1",
      "w": 640,
      "h": 259,
      "W": 852,
      "H": 345
     }
-   ]
+   ],
+   "sort": 1150
   },
   {
    "code": "P121",
-   "cat": "chapelets",
-   "name": {
-    "fr": "Chapelet enfant ajustable",
-    "en": "Children's adjustable prayer rope",
-    "sr": "Бројанице дечије, подесиве"
-   },
+   "category": "chapelets",
+   "name_fr": "Chapelet enfant ajustable",
+   "name_en": "Children's adjustable prayer rope",
+   "name_sr": "Бројанице дечије, подесиве",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p121-1",
+     "src": "p121-1",
      "w": 640,
      "h": 278,
      "W": 1069,
      "H": 464
     }
-   ]
+   ],
+   "sort": 1160
   },
   {
    "code": "P109",
-   "cat": "chapelets",
-   "name": {
-    "fr": "Chapelet à pompon",
-    "en": "Tassel prayer rope",
-    "sr": "Бројаница кићанка"
-   },
+   "category": "chapelets",
+   "name_fr": "Chapelet à pompon",
+   "name_en": "Tassel prayer rope",
+   "name_sr": "Бројаница кићанка",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p109-1",
+     "src": "p109-1",
      "w": 636,
      "h": 640,
      "W": 802,
      "H": 807
     }
-   ]
+   ],
+   "sort": 1170
   },
   {
    "code": "P111",
-   "cat": "chapelets",
-   "name": {
-    "fr": "Chapelet en soie",
-    "en": "Silk prayer rope",
-    "sr": "Бројаница свила"
-   },
+   "category": "chapelets",
+   "name_fr": "Chapelet en soie",
+   "name_en": "Silk prayer rope",
+   "name_sr": "Бројаница свила",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p111-1",
+     "src": "p111-1",
      "w": 511,
      "h": 640,
      "W": 808,
      "H": 1011
     }
-   ]
+   ],
+   "sort": 1180
   },
   {
    "code": "P045",
-   "cat": "chapelets",
-   "name": {
-    "fr": "Grands chapelets",
-    "en": "Large prayer ropes",
-    "sr": "Бројанице велике"
-   },
+   "category": "chapelets",
+   "name_fr": "Grands chapelets",
+   "name_en": "Large prayer ropes",
+   "name_sr": "Бројанице велике",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p045-1",
+     "src": "p045-1",
      "w": 438,
      "h": 640,
      "W": 768,
      "H": 1121
     }
-   ]
+   ],
+   "sort": 1190
   },
   {
    "code": "P150",
-   "cat": "chapelets",
-   "name": {
-    "fr": "Chapelet nœud doré 100",
-    "en": "Golden knot prayer rope 100",
-    "sr": "Златни чвор 100"
-   },
+   "category": "chapelets",
+   "name_fr": "Chapelet nœud doré 100",
+   "name_en": "Golden knot prayer rope 100",
+   "name_sr": "Златни чвор 100",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p150-1",
+     "src": "p150-1",
      "w": 379,
      "h": 640,
      "W": 730,
      "H": 1234
     }
-   ]
+   ],
+   "sort": 1200
   },
   {
    "code": "P149",
-   "cat": "chapelets",
-   "name": {
-    "fr": "Chapelet nœud doré 50",
-    "en": "Golden knot prayer rope 50",
-    "sr": "Златни чвор 50"
-   },
+   "category": "chapelets",
+   "name_fr": "Chapelet nœud doré 50",
+   "name_en": "Golden knot prayer rope 50",
+   "name_sr": "Златни чвор 50",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p149-1",
+     "src": "p149-1",
      "w": 402,
      "h": 640,
      "W": 768,
      "H": 1222
     }
-   ]
+   ],
+   "sort": 1210
   },
   {
    "code": "P152",
-   "cat": "chapelets",
-   "name": {
-    "fr": "Chapelet à capuche",
-    "en": "Hood prayer rope",
-    "sr": "Бројаница капица"
-   },
+   "category": "chapelets",
+   "name_fr": "Chapelet à capuche",
+   "name_en": "Hood prayer rope",
+   "name_sr": "Бројаница капица",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p152-1",
+     "src": "p152-1",
      "w": 455,
      "h": 640,
      "W": 768,
      "H": 1080
     }
-   ]
+   ],
+   "sort": 1220
   },
   {
    "code": "P108",
-   "cat": "chapelets",
-   "name": {
-    "fr": "Grande croix en cristal",
-    "en": "Large crystal cross",
-    "sr": "Кристал крст велики"
-   },
+   "category": "chapelets",
+   "name_fr": "Grande croix en cristal",
+   "name_en": "Large crystal cross",
+   "name_sr": "Кристал крст велики",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p108-1",
+     "src": "p108-1",
      "w": 484,
      "h": 640,
      "W": 768,
      "H": 1016
     }
-   ]
+   ],
+   "sort": 1230
   },
   {
    "code": "P151",
-   "cat": "chapelets",
-   "name": {
-    "fr": "Bracelet en boîte",
-    "en": "Bracelet in a box",
-    "sr": "Наруквица у кутији"
-   },
+   "category": "chapelets",
+   "name_fr": "Bracelet en boîte",
+   "name_en": "Bracelet in a box",
+   "name_sr": "Наруквица у кутији",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p151-1",
+     "src": "p151-1",
      "w": 521,
      "h": 640,
      "W": 768,
      "H": 944
     }
-   ]
+   ],
+   "sort": 1240
   },
   {
    "code": "N002",
-   "cat": "enfants",
-   "name": {
-    "fr": "Puzzle",
-    "en": "Puzzle",
-    "sr": "Слагалица"
-   },
+   "category": "enfants",
+   "name_fr": "Puzzle",
+   "name_en": "Puzzle",
+   "name_sr": "Слагалица",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "n002-1",
+     "src": "n002-1",
      "w": 501,
      "h": 640,
      "W": 582,
      "H": 743
     }
-   ]
+   ],
+   "sort": 1250
   },
   {
    "code": "N001",
-   "cat": "enfants",
-   "name": {
-    "fr": "Cube Saint-Sava",
-    "en": "Saint Sava cube",
-    "sr": "Коцка Св. Сава"
-   },
+   "category": "enfants",
+   "name_fr": "Cube Saint-Sava",
+   "name_en": "Saint Sava cube",
+   "name_sr": "Коцка Св. Сава",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "n001-1",
+     "src": "n001-1",
      "w": 505,
      "h": 619,
      "W": 505,
      "H": 619
     },
     {
-     "file": "n001-2",
+     "src": "n001-2",
      "w": 582,
      "h": 640,
      "W": 698,
      "H": 768
     }
-   ]
+   ],
+   "sort": 1260
   },
   {
    "code": "P084",
-   "cat": "livres",
-   "name": {
-    "fr": "Sainte Écriture",
-    "en": "Holy Scripture",
-    "sr": "Свето писмо"
-   },
+   "category": "livres",
+   "name_fr": "Sainte Écriture",
+   "name_en": "Holy Scripture",
+   "name_sr": "Свето писмо",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p084-1",
+     "src": "p084-1",
      "w": 555,
      "h": 640,
      "W": 556,
      "H": 641
     }
-   ]
+   ],
+   "sort": 1270
   },
   {
    "code": "P081",
-   "cat": "livres",
-   "name": {
-    "fr": "Bible pour enfants",
-    "en": "Children's Bible",
-    "sr": "Библија за децу"
-   },
+   "category": "livres",
+   "name_fr": "Bible pour enfants",
+   "name_en": "Children's Bible",
+   "name_sr": "Библија за децу",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p081-1",
+     "src": "p081-1",
      "w": 549,
      "h": 640,
      "W": 556,
      "H": 648
     }
-   ]
+   ],
+   "sort": 1280
   },
   {
    "code": "P079",
-   "cat": "livres",
-   "name": {
-    "fr": "Sainte Écriture (A5)",
-    "en": "Holy Scripture (A5)",
-    "sr": "Свето писмо (А5)"
-   },
+   "category": "livres",
+   "name_fr": "Sainte Écriture (A5)",
+   "name_en": "Holy Scripture (A5)",
+   "name_sr": "Свето писмо (А5)",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p079-1",
+     "src": "p079-1",
      "w": 482,
      "h": 640,
      "W": 567,
      "H": 753
     }
-   ]
+   ],
+   "sort": 1290
   },
   {
    "code": "P082",
-   "cat": "livres",
-   "name": {
-    "fr": "Petit psautier",
-    "en": "Small psalter",
-    "sr": "Псалтир мали"
-   },
+   "category": "livres",
+   "name_fr": "Petit psautier",
+   "name_en": "Small psalter",
+   "name_sr": "Псалтир мали",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p082-1",
+     "src": "p082-1",
      "w": 523,
      "h": 565,
      "W": 523,
      "H": 565
     }
-   ]
+   ],
+   "sort": 1300
   },
   {
    "code": "P083",
-   "cat": "livres",
-   "name": {
-    "fr": "Grand psautier",
-    "en": "Large psalter",
-    "sr": "Псалтир велики"
-   },
+   "category": "livres",
+   "name_fr": "Grand psautier",
+   "name_en": "Large psalter",
+   "name_sr": "Псалтир велики",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p083-1",
+     "src": "p083-1",
      "w": 574,
      "h": 598,
      "W": 574,
      "H": 598
     }
-   ]
+   ],
+   "sort": 1310
   },
   {
    "code": "P086",
-   "cat": "livres",
-   "name": {
-    "fr": "Livre de prières pour enfants",
-    "en": "Children's prayer book",
-    "sr": "Дечији молитвеник"
-   },
+   "category": "livres",
+   "name_fr": "Livre de prières pour enfants",
+   "name_en": "Children's prayer book",
+   "name_sr": "Дечији молитвеник",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p086-1",
+     "src": "p086-1",
      "w": 585,
      "h": 639,
      "W": 585,
      "H": 639
     }
-   ]
+   ],
+   "sort": 1320
   },
   {
    "code": "P075",
-   "cat": "livres",
-   "name": {
-    "fr": "Nouveau Testament",
-    "en": "New Testament",
-    "sr": "Нови завет"
-   },
+   "category": "livres",
+   "name_fr": "Nouveau Testament",
+   "name_en": "New Testament",
+   "name_sr": "Нови завет",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p075-1",
+     "src": "p075-1",
      "w": 543,
      "h": 598,
      "W": 543,
      "H": 598
     }
-   ]
+   ],
+   "sort": 1330
   },
   {
    "code": "P085",
-   "cat": "livres",
-   "name": {
-    "fr": "Livre de prières orthodoxe",
-    "en": "Orthodox prayer book",
-    "sr": "Православни молитвеник"
-   },
+   "category": "livres",
+   "name_fr": "Livre de prières orthodoxe",
+   "name_en": "Orthodox prayer book",
+   "name_sr": "Православни молитвеник",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p085-1",
+     "src": "p085-1",
      "w": 527,
      "h": 604,
      "W": 527,
      "H": 604
     }
-   ]
+   ],
+   "sort": 1340
   },
   {
    "code": "P080",
-   "cat": "livres",
-   "name": {
-    "fr": "Répons de la liturgie",
-    "en": "Responses to the Liturgy",
-    "sr": "Одговарање на литургији"
-   },
+   "category": "livres",
+   "name_fr": "Répons de la liturgie",
+   "name_en": "Responses to the Liturgy",
+   "name_sr": "Одговарање на литургији",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p080-1",
+     "src": "p080-1",
      "w": 553,
      "h": 640,
      "W": 764,
      "H": 884
     }
-   ]
+   ],
+   "sort": 1350
   },
   {
    "code": "P134",
-   "cat": "livres",
-   "name": {
-    "fr": "Livre de prières",
-    "en": "Prayer book",
-    "sr": "Молитвеник"
-   },
+   "category": "livres",
+   "name_fr": "Livre de prières",
+   "name_en": "Prayer book",
+   "name_sr": "Молитвеник",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p134-1",
+     "src": "p134-1",
      "w": 491,
      "h": 640,
      "W": 594,
      "H": 774
     }
-   ]
+   ],
+   "sort": 1360
   },
   {
    "code": "P138",
-   "cat": "livres",
-   "name": {
-    "fr": "Répons de la liturgie",
-    "en": "Responses to the Liturgy",
-    "sr": "Одговарање на литургији"
-   },
+   "category": "livres",
+   "name_fr": "Répons de la liturgie",
+   "name_en": "Responses to the Liturgy",
+   "name_sr": "Одговарање на литургији",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
    "photos": [
     {
-     "file": "p138-1",
+     "src": "p138-1",
      "w": 410,
      "h": 640,
      "W": 629,
      "H": 981
     }
-   ]
-  }
- ],
- "candles": {
-  "rows": [
-   {
-    "fmt": "1/1",
-    "h": "72",
-    "w": "4,5"
-   },
-   {
-    "fmt": "2/1",
-    "h": "56",
-    "w": "3,5"
-   },
-   {
-    "fmt": "3/1",
-    "h": "50,05",
-    "w": "3"
-   },
-   {
-    "fmt": "5/1",
-    "h": "45",
-    "w": "2,6"
-   },
-   {
-    "fmt": "10/1",
-    "h": "42",
-    "w": "1,8"
-   },
-   {
-    "fmt": "30/1",
-    "h": "29",
-    "w": "1,2"
-   },
-   {
-    "fmt": "50/1",
-    "h": "26",
-    "w": "1"
-   },
-   {
-    "fmt": "100/1",
-    "h": "23",
-    "w": "0,8"
-   },
-   {
-    "fmt": "200/1",
-    "h": "24",
-    "w": "0,4"
-   }
-  ],
-  "dikiri": {
-   "per_kilo": 10
+   ],
+   "sort": 1370
   },
-  "photos": [
-   {
-    "file": "bougies-1",
-    "w": 467,
-    "h": 640,
-    "W": 768,
-    "H": 1052
-   },
-   {
-    "file": "bougies-2",
-    "w": 269,
-    "h": 640,
-    "W": 573,
-    "H": 1364
-   }
-  ]
- }
+  {
+   "code": "1/1",
+   "category": "bougies",
+   "name_fr": "Bougies 1/1",
+   "name_en": "Candles 1/1",
+   "name_sr": "Свеће 1/1",
+   "note_fr": "72 × 4,5 cm",
+   "note_en": "72 × 4,5 cm",
+   "note_sr": "72 × 4,5 cm",
+   "unit": "kg",
+   "available": true,
+   "photos": [
+    {
+     "src": "bougies-1",
+     "w": 467,
+     "h": 640,
+     "W": 768,
+     "H": 1052
+    }
+   ],
+   "sort": 1380
+  },
+  {
+   "code": "2/1",
+   "category": "bougies",
+   "name_fr": "Bougies 2/1",
+   "name_en": "Candles 2/1",
+   "name_sr": "Свеће 2/1",
+   "note_fr": "56 × 3,5 cm",
+   "note_en": "56 × 3,5 cm",
+   "note_sr": "56 × 3,5 cm",
+   "unit": "kg",
+   "available": true,
+   "photos": [
+    {
+     "src": "bougies-1",
+     "w": 467,
+     "h": 640,
+     "W": 768,
+     "H": 1052
+    }
+   ],
+   "sort": 1390
+  },
+  {
+   "code": "3/1",
+   "category": "bougies",
+   "name_fr": "Bougies 3/1",
+   "name_en": "Candles 3/1",
+   "name_sr": "Свеће 3/1",
+   "note_fr": "50,05 × 3 cm",
+   "note_en": "50,05 × 3 cm",
+   "note_sr": "50,05 × 3 cm",
+   "unit": "kg",
+   "available": true,
+   "photos": [
+    {
+     "src": "bougies-1",
+     "w": 467,
+     "h": 640,
+     "W": 768,
+     "H": 1052
+    }
+   ],
+   "sort": 1400
+  },
+  {
+   "code": "5/1",
+   "category": "bougies",
+   "name_fr": "Bougies 5/1",
+   "name_en": "Candles 5/1",
+   "name_sr": "Свеће 5/1",
+   "note_fr": "45 × 2,6 cm",
+   "note_en": "45 × 2,6 cm",
+   "note_sr": "45 × 2,6 cm",
+   "unit": "kg",
+   "available": true,
+   "photos": [
+    {
+     "src": "bougies-1",
+     "w": 467,
+     "h": 640,
+     "W": 768,
+     "H": 1052
+    }
+   ],
+   "sort": 1410
+  },
+  {
+   "code": "10/1",
+   "category": "bougies",
+   "name_fr": "Bougies 10/1",
+   "name_en": "Candles 10/1",
+   "name_sr": "Свеће 10/1",
+   "note_fr": "42 × 1,8 cm",
+   "note_en": "42 × 1,8 cm",
+   "note_sr": "42 × 1,8 cm",
+   "unit": "kg",
+   "available": true,
+   "photos": [
+    {
+     "src": "bougies-1",
+     "w": 467,
+     "h": 640,
+     "W": 768,
+     "H": 1052
+    }
+   ],
+   "sort": 1420
+  },
+  {
+   "code": "30/1",
+   "category": "bougies",
+   "name_fr": "Bougies 30/1",
+   "name_en": "Candles 30/1",
+   "name_sr": "Свеће 30/1",
+   "note_fr": "29 × 1,2 cm",
+   "note_en": "29 × 1,2 cm",
+   "note_sr": "29 × 1,2 cm",
+   "unit": "kg",
+   "available": true,
+   "photos": [
+    {
+     "src": "bougies-1",
+     "w": 467,
+     "h": 640,
+     "W": 768,
+     "H": 1052
+    }
+   ],
+   "sort": 1430
+  },
+  {
+   "code": "50/1",
+   "category": "bougies",
+   "name_fr": "Bougies 50/1",
+   "name_en": "Candles 50/1",
+   "name_sr": "Свеће 50/1",
+   "note_fr": "26 × 1 cm",
+   "note_en": "26 × 1 cm",
+   "note_sr": "26 × 1 cm",
+   "unit": "kg",
+   "available": true,
+   "photos": [
+    {
+     "src": "bougies-1",
+     "w": 467,
+     "h": 640,
+     "W": 768,
+     "H": 1052
+    }
+   ],
+   "sort": 1440
+  },
+  {
+   "code": "100/1",
+   "category": "bougies",
+   "name_fr": "Bougies 100/1",
+   "name_en": "Candles 100/1",
+   "name_sr": "Свеће 100/1",
+   "note_fr": "23 × 0,8 cm",
+   "note_en": "23 × 0,8 cm",
+   "note_sr": "23 × 0,8 cm",
+   "unit": "kg",
+   "available": true,
+   "photos": [
+    {
+     "src": "bougies-1",
+     "w": 467,
+     "h": 640,
+     "W": 768,
+     "H": 1052
+    }
+   ],
+   "sort": 1450
+  },
+  {
+   "code": "200/1",
+   "category": "bougies",
+   "name_fr": "Bougies 200/1",
+   "name_en": "Candles 200/1",
+   "name_sr": "Свеће 200/1",
+   "note_fr": "24 × 0,4 cm",
+   "note_en": "24 × 0,4 cm",
+   "note_sr": "24 × 0,4 cm",
+   "unit": "kg",
+   "available": true,
+   "photos": [
+    {
+     "src": "bougies-1",
+     "w": 467,
+     "h": 640,
+     "W": 768,
+     "H": 1052
+    }
+   ],
+   "sort": 1460
+  },
+  {
+   "code": "D/T",
+   "category": "bougies",
+   "name_fr": "Bougies pour dikiri et trikiri",
+   "name_en": "Candles for dikiri and trikiri",
+   "name_sr": "Свеће за дикирије и трикирије",
+   "note_fr": "10 pièces au kilo",
+   "note_en": "10 pieces per kilo",
+   "note_sr": "10 комада у килограму",
+   "unit": "kg",
+   "available": true,
+   "photos": [
+    {
+     "src": "bougies-2",
+     "w": 269,
+     "h": 640,
+     "W": 573,
+     "H": 1364
+    }
+   ],
+   "sort": 1470
+  }
+ ]
 }

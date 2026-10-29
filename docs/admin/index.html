@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="sr-Latn">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Administracija · Magacin Eparhije zapadnoevropske</title>
+  <meta name="description" content="Administracija magacina: artikli i stanje, kategorije, sveštenstvo i porudžbine.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="../favicon.png" type="image/png">
+  <link rel="preload" href="../assets/fonts/onest-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body class="adm">
+  <a class="skip" href="#main">Preskoči na sadržaj</a>
+  <p class="boot" data-boot>Učitavanje…</p>
+
+  <main class="gate" id="gate" hidden>
+    <form class="gate__form" data-login novalidate>
+      <img class="gate__grb" src="../assets/img/grb-240.webp" width="82" height="96" alt="">
+      <p class="gate__org">Magacin Eparhije zapadnoevropske</p>
+      <h1>Prijava za administratore</h1>
+      <div class="field">
+          <label for="l-email">Mejl</label>
+          <input class="input" id="l-email" name="email" type="email" autocomplete="username" required aria-required="true" inputmode="email" spellcheck="false">
+        </div>
+      <div class="field">
+          <label for="l-pass">Lozinka</label>
+          <input class="input" id="l-pass" name="password" type="password" autocomplete="current-password" required aria-required="true">
+        </div>
+      <p class="gate__msg" role="alert" data-login-msg hidden></p>
+      <button class="btn btn--primary btn--block" type="submit">Prijavi se</button>
+      <p class="gate__note">Nalog otvara vlasnik sajta. <a href="../">Nazad na katalog</a></p>
+    </form>
+  </main>
+
+  <div class="app" id="app" hidden>
+    <header class="bar">
+      <a class="bar__brand" href="#artikli" aria-label="Administracija magacina, artikli">
+        <img src="../assets/img/grb-112.webp" width="34" height="40" alt="">
+        <span class="bar__name">Magacin <span class="bar__sub">administracija</span></span>
+      </a>
+      <nav class="tabs" aria-label="Odeljci">
+        <a href="#artikli" data-tab="artikli">Artikli</a>
+        <a href="#kategorije" data-tab="kategorije">Kategorije</a>
+        <a href="#svestenstvo" data-tab="svestenstvo">Sveštenstvo</a>
+        <a href="#porudzbine" data-tab="porudzbine">Porudžbine <span class="tabs__n" data-new-orders hidden></span></a>
+      </nav>
+      <div class="bar__me">
+        <span class="bar__email" data-me></span>
+        <a class="btn btn--quiet btn--s" href="../" target="_blank" rel="noopener">Sajt</a>
+        <button class="btn btn--quiet btn--s" type="button" data-password>Lozinka</button>
+        <button class="btn btn--quiet btn--s" type="button" data-signout>Odjava</button>
+      </div>
+    </header>
+
+    <main id="main" class="screens" tabindex="-1">
+      <section class="screen" data-screen="artikli" aria-labelledby="h-artikli">
+        <div class="screen__head">
+          <h1 id="h-artikli">Artikli i stanje</h1>
+          <button class="btn btn--primary" type="button" data-new="product">Novi artikal</button>
+        </div>
+        <div class="toolbar" role="search">
+          <div class="field field--grow"><label for="q-artikli">Pretraga</label><input class="input" id="q-artikli" type="search" name="q" autocomplete="off" spellcheck="false" placeholder="P011, кадионица" data-q></div>
+          <div class="field"><label for="k-artikli">Kategorija</label><span class="select"><select class="input" id="k-artikli" name="k" data-k><option value="">Sve kategorije</option></select></span></div>
+          <div class="field"><span class="field__label" id="f-l">Prikaz</span><div class="seg" role="group" aria-labelledby="f-l" data-f>
+          <button type="button" data-v="" aria-pressed="false">Svi <span class="seg__n" data-n=""></span></button>
+          <button type="button" data-v="out" aria-pressed="false">Nema na stanju <span class="seg__n" data-n="out"></span></button>
+          <button type="button" data-v="hidden" aria-pressed="false">Sakriveni <span class="seg__n" data-n="hidden"></span></button>
+        </div></div>
+        </div>
+        <div class="region" data-region="products"></div>
+      </section>
+
+      <section class="screen" data-screen="kategorije" aria-labelledby="h-kategorije" hidden>
+        <div class="screen__head">
+          <h1 id="h-kategorije">Kategorije</h1>
+          <button class="btn btn--primary" type="button" data-new="cat">Nova kategorija</button>
+        </div>
+        <div class="region" data-region="cats"></div>
+      </section>
+
+      <section class="screen" data-screen="svestenstvo" aria-labelledby="h-svestenstvo" hidden>
+        <div class="screen__head">
+          <div><h1 id="h-svestenstvo">Sveštenstvo</h1><p class="screen__sub" data-priest-count></p></div>
+          <button class="btn btn--primary" type="button" data-new="priest">Dodaj sveštenika</button>
+        </div>
+        <div class="toolbar" role="search">
+          <div class="field field--grow"><label for="q-svestenstvo">Pretraga</label><input class="input" id="q-svestenstvo" type="search" name="q" autocomplete="off" spellcheck="false" placeholder="ime, parohija ili mejl" data-q></div>
+        </div>
+        <div class="region" data-region="priests"></div>
+      </section>
+
+      <section class="screen" data-screen="porudzbine" aria-labelledby="h-porudzbine" hidden>
+        <div class="screen__head">
+          <h1 id="h-porudzbine">Porudžbine</h1>
+        </div>
+        <div class="toolbar">
+          <div class="field"><span class="field__label" id="s-l">Status</span><div class="seg" role="group" aria-labelledby="s-l" data-s>
+          <button type="button" data-v="new" aria-pressed="false">Nove <span class="seg__n" data-n="new"></span></button>
+          <button type="button" data-v="done" aria-pressed="false">Izvršene <span class="seg__n" data-n="done"></span></button>
+          <button type="button" data-v="cancelled" aria-pressed="false">Otkazane <span class="seg__n" data-n="cancelled"></span></button>
+          <button type="button" data-v="all" aria-pressed="false">Sve <span class="seg__n" data-n="all"></span></button>
+        </div></div>
+        </div>
+        <div class="region" data-region="orders"></div>
+      </section>
+    </main>
+  </div>
+
+  <div class="undo" data-undo role="status" hidden>
+    <span data-undo-text></span>
+    <button class="btn btn--s btn--on-ink" type="button" data-undo-btn hidden>Poništi</button>
+    <button class="icon-btn icon-btn--on-ink" type="button" data-undo-close aria-label="Zatvori obaveštenje"><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg></button>
+  </div>
+  <dialog class="sheet" data-sheet aria-labelledby="sheet-title"></dialog>
+  <noscript><p class="boot">Administracija radi samo sa uključenim JavaScriptom.</p></noscript>
+
+  <script type="application/json" id="admin-config">{"url":"https://ivzzhtaksdwbhhioilsn.supabase.co","key":"sb_publishable_rxpulg5CJqz_TpV1brvBCQ_C2ioyLyW"}</script>
+  <script type="module" src="../assets/js/admin.js"></script>
+</body>
+</html>
