@@ -8,7 +8,7 @@
   <meta name="robots" content="noindex, nofollow">
   <link rel="icon" href="../favicon.png" type="image/png">
   <link rel="preload" href="../assets/fonts/onest-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="../assets/css/admin.css">
+  <link rel="stylesheet" href="../assets/css/admin.css?v=6d103bee6c">
 </head>
 <body class="adm">
   <a class="skip" href="#main">Preskoči na sadržaj</a>
@@ -35,13 +35,15 @@
 
   <div class="app" id="app" hidden>
     <header class="bar">
-      <a class="bar__brand" href="#artikli" aria-label="Administracija magacina, artikli">
+      <a class="bar__brand" href="#pregled" aria-label="Administracija magacina, pregled">
         <img src="../assets/img/grb-112.webp" width="34" height="40" alt="">
         <span class="bar__name">Magacin <span class="bar__sub">administracija</span></span>
       </a>
       <nav class="tabs" aria-label="Odeljci">
-        <a href="#artikli" data-tab="artikli">Artikli</a>
+        <a href="#pregled" data-tab="pregled">Pregled</a>
+        <a href="#upiti" data-tab="upiti">Upiti <span class="tabs__n" data-new-inquiries hidden></span></a>
         <a href="#porudzbine" data-tab="porudzbine">Porudžbine <span class="tabs__n" data-new-orders hidden></span></a>
+        <a href="#artikli" data-tab="artikli">Artikli</a>
         <a href="#statistika" data-tab="statistika">Statistika</a>
         <a href="#svestenstvo" data-tab="svestenstvo">Sveštenstvo</a>
         <a href="#kategorije" data-tab="kategorije">Kategorije</a>
@@ -55,7 +57,30 @@
     </header>
 
     <main id="main" class="screens" tabindex="-1">
-      <section class="screen" data-screen="artikli" aria-labelledby="h-artikli">
+      <section class="screen" data-screen="pregled" aria-labelledby="h-pregled">
+        <div class="screen__head">
+          <div><h1 id="h-pregled">Pregled</h1><p class="screen__sub" data-today></p></div>
+        </div>
+        <div class="region ov" data-region="overview"></div>
+      </section>
+
+      <section class="screen" data-screen="upiti" aria-labelledby="h-upiti" hidden>
+        <div class="screen__head">
+          <div><h1 id="h-upiti">Upiti za cene</h1><p class="screen__sub">Posetioci bez naloga šalju listu; vi im šaljete ponudu sa cenama.</p></div>
+        </div>
+        <div class="toolbar">
+          <div class="field"><span class="field__label" id="s-l">Status</span><div class="seg" role="group" aria-labelledby="s-l" data-s>
+          <button type="button" data-v="new" aria-pressed="false">Novi <span class="seg__n" data-n="new"></span></button>
+          <button type="button" data-v="sent" aria-pressed="false">Ponuda poslata <span class="seg__n" data-n="sent"></span></button>
+          <button type="button" data-v="ordered" aria-pressed="false">Poručeno <span class="seg__n" data-n="ordered"></span></button>
+          <button type="button" data-v="closed" aria-pressed="false">Zatvoreni <span class="seg__n" data-n="closed"></span></button>
+          <button type="button" data-v="all" aria-pressed="false">Svi <span class="seg__n" data-n="all"></span></button>
+        </div></div>
+        </div>
+        <div class="region" data-region="inquiries"></div>
+      </section>
+
+      <section class="screen" data-screen="artikli" aria-labelledby="h-artikli" hidden>
         <div class="screen__head">
           <h1 id="h-artikli">Artikli i stanje</h1>
           <div class="screen__actions"><button class="btn" type="button" data-csv="products">Izvezi u Excel (CSV)</button><button class="btn btn--primary" type="button" data-new="product">Novi artikal</button></div>
@@ -135,6 +160,6 @@
   <noscript><p class="boot">Administracija radi samo sa uključenim JavaScriptom.</p></noscript>
 
   <script type="application/json" id="admin-config">{"url":"https://ivzzhtaksdwbhhioilsn.supabase.co","key":"sb_publishable_rxpulg5CJqz_TpV1brvBCQ_C2ioyLyW","userDomain":"magacin.example.com"}</script>
-  <script type="module" src="../assets/js/admin.js"></script>
+  <script type="module" src="../assets/js/admin.js?v=56b7b37065"></script>
 </body>
 </html>

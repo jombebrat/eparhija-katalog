@@ -8,6 +8,7 @@ export type Line = { code: string; name: string; qty: number; price: number; uni
 export type Assets = { regular: Uint8Array; bold: Uint8Array; emblem: Uint8Array };
 export type Order = {
   number: number | string; date: Date; lang: Lang;
+  kind?: 'order' | 'quote'; link?: string;
   email: string; name?: string; parish?: string; phone?: string; address?: string; note?: string;
   lines: Line[]; total: number;
 };
@@ -20,13 +21,15 @@ const W = 595.28, H = 841.89, M = 48;
 
 export async function orderPdf(o: Order, a: Assets): Promise<Uint8Array> {
   const t = T[o.lang];
+  const quote = o.kind === 'quote';
+  const title = quote ? t.quote : t.order;
   const money = new Intl.NumberFormat(LOCALE[o.lang], { style: 'currency', currency: 'EUR' });
   const doc = await PDFDocument.create();
   doc.registerFontkit(fontkit);
   const reg = await doc.embedFont(a.regular, { subset: true });
   const bold = await doc.embedFont(a.bold, { subset: true });
   const emblem = await doc.embedPng(a.emblem);
-  doc.setTitle(fill(t.order, { n: o.number }));
+  doc.setTitle(fill(title, { n: o.number }));
   doc.setAuthor(t.org);
   doc.setCreator(t.sub);
   doc.setLanguage(LOCALE[o.lang]);
@@ -70,7 +73,7 @@ export async function orderPdf(o: Order, a: Assets): Promise<Uint8Array> {
     text(t.org, tx, y - 6, first ? 13 : 11, bold);
     text(t.sub, tx, y - 21, 9, reg, MUTED);
     if (first) text(ADDRESS, tx, y - 34, 9, reg, MUTED);
-    right(fill(t.order, { n: o.number }), W - M, y - 6, first ? 13 : 11, bold);
+    right(fill(title, { n: o.number }), W - M, y - 6, first ? 13 : 11, bold);
     right(new Intl.DateTimeFormat(LOCALE[o.lang], { dateStyle: 'long', timeStyle: 'short', timeZone: 'Europe/Paris' }).format(o.date), W - M, y - 21, 9, reg, MUTED);
     y -= eh + 6; rule(y, INK, 0.9); y -= 26;
   };
@@ -79,13 +82,13 @@ export async function orderPdf(o: Order, a: Assets): Promise<Uint8Array> {
 
   // who ordered
   const facts: [string, string | undefined][] = [
-    [t.from, o.name], [t.parish, o.parish], [t.email, o.email], [t.phone, o.phone], [t.address, o.address],
+    [quote ? t.quoteFor : t.from, o.name], [t.parish, o.parish], [t.email, o.email], [t.phone, o.phone], [t.address, o.address],
   ];
   for (const [label, value] of facts) {
     if (!value) continue;
     const lines = wrap(value, reg, 10.5, W - M - (M + 110));
     text(label, M, y, 9, reg, MUTED);
-    lines.forEach((l, i) => text(l, M + 110, y - i * 14, 10.5, i === 0 && label === t.from ? bold : reg));
+    lines.forEach((l, i) => text(l, M + 110, y - i * 14, 10.5, i === 0 && (label === t.from || label === t.quoteFor) ? bold : reg));
     y -= 14 * lines.length + 4;
   }
   if (o.note) {
@@ -119,7 +122,14 @@ export async function orderPdf(o: Order, a: Assets): Promise<Uint8Array> {
   text(t.total, C.item, y, 12, bold);
   right(money.format(o.total), C.line, y, 15, bold);
   y -= 30;
-  wrap(t.foot, reg, 9, W - 2 * M).forEach((l, i) => text(l, M, y - i * 12, 9, reg, MUTED));
+  const foot = wrap(quote ? t.quoteFoot : t.foot, reg, 9, W - 2 * M);
+  foot.forEach((l, i) => text(l, M, y - i * 12, 9, reg, MUTED));
+  if (o.link) {
+    y -= 12 * foot.length + 14;
+    if (y < M + 20) { newPage(false); }
+    text(t.quoteLink, M, y, 9.5, bold);
+    text(o.link, M, y - 13, 8, reg, INK2);
+  }
 
   pages.forEach((p, i) => {
     page = p;

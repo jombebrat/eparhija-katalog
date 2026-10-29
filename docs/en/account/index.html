@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>My account · Warehouse of the Eparchy of Western Europe</title>
+  <title>My profile · Warehouse of the Eparchy of Western Europe</title>
   <meta name="description" content="Your orders at the Eparchy warehouse and their PDFs.">
   <meta name="robots" content="noindex">
   <link rel="alternate" hreflang="fr" href="../../compte/">
@@ -11,7 +11,7 @@
   <link rel="alternate" hreflang="sr-Cyrl" href="../../sr/nalog/">
   <link rel="icon" href="../../favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
-  <link rel="stylesheet" href="../../assets/css/account.css">
+  <link rel="stylesheet" href="../../assets/css/account.css?v=7679f742a3">
   <script>document.documentElement.className = 'js';</script>
 </head>
 <body class="acct-page">
@@ -20,9 +20,9 @@
     <div class="container slab__inner">
       <a class="wordmark" href="../../en/"><img class="wordmark__grb" src="../../assets/img/grb-112.webp" width="48" height="56" alt=""><b>Warehouse of the Eparchy of Western Europe</b></a>
       <nav class="langs" aria-label="Language">
-        <a href="../../compte/" hreflang="fr" lang="fr" aria-label="Français" data-lang><span class="l-long">Français</span><span class="l-short" aria-hidden="true">fr</span></a>
-        <a href="../../en/account/" hreflang="en" lang="en" aria-label="English" data-lang aria-current="page"><span class="l-long">English</span><span class="l-short" aria-hidden="true">en</span></a>
-        <a href="../../sr/nalog/" hreflang="sr-Cyrl" lang="sr-Cyrl" aria-label="Српски" data-lang><span class="l-long">Српски</span><span class="l-short" aria-hidden="true">sr</span></a>
+        <a href="../../compte/" hreflang="fr" lang="fr" aria-label="Français" data-lang><span class="flag"><svg viewBox="0 0 3 2" aria-hidden="true"><rect width="1" height="2" fill="#002654"/><rect x="1" width="1" height="2" fill="#fff"/><rect x="2" width="1" height="2" fill="#CE1126"/></svg></span><span class="l-code" aria-hidden="true">FR</span></a>
+        <a href="../../en/account/" hreflang="en" lang="en" aria-label="English" data-lang aria-current="page"><span class="flag"><svg viewBox="0 0 60 30" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><clipPath id="uk8"><path d="M30,15h30v15zv15h-30zh-30v-15zv-15h30z"/></clipPath><path d="M0,0v30h60v-30z" fill="#012169"/><path d="M0,0L60,30M60,0L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0L60,30M60,0L0,30" clip-path="url(#uk8)" stroke="#C8102E" stroke-width="4"/><path d="M30,0v30M0,15h60" stroke="#fff" stroke-width="10"/><path d="M30,0v30M0,15h60" stroke="#C8102E" stroke-width="6"/></svg></span><span class="l-code" aria-hidden="true">EN</span></a>
+        <a href="../../sr/nalog/" hreflang="sr-Cyrl" lang="sr-Cyrl" aria-label="Српски" data-lang><span class="flag"><svg viewBox="0 0 3 2" aria-hidden="true"><rect width="3" height="2" fill="#fff"/><rect width="3" height="1.3333" fill="#0C4076"/><rect width="3" height="0.6667" fill="#C6363C"/></svg></span><span class="l-code" aria-hidden="true">SR</span></a>
       </nav>
       <a class="listbtn" href="../../en/">Catalogue</a>
     </div>
@@ -30,7 +30,7 @@
 
   <main id="main" class="acct">
     <div class="container acct__inner">
-      <h1>My account</h1>
+      <h1>My profile</h1>
       <p class="acct__boot" data-boot>…</p>
       <noscript><p>Your orders and their PDFs. For members on the list.</p></noscript>
 
@@ -48,6 +48,7 @@
           <p class="acct__links"><button class="textbtn" type="button" data-again>Send the code again</button><button class="textbtn" type="button" data-other>Use another address</button></p>
         </form>
         <p class="acct__help" id="ac-help" data-help>We send a 6-digit code to this address.</p>
+        <p class="acct__prices" data-prices-for hidden><span data-prices-who></span> <button class="textbtn" type="button" data-forget>Sign out</button></p>
       </section>
 
       <section class="acct__in" data-in hidden aria-labelledby="h-orders">
@@ -86,7 +87,7 @@
     </div>
   </footer>
 
-  <script type="application/json" id="account-data">{"lang":"en","locale":"en-GB","catalogue":"../../en/","api":{"url":"https://ivzzhtaksdwbhhioilsn.supabase.co","key":"sb_publishable_rxpulg5CJqz_TpV1brvBCQ_C2ioyLyW"},"s":{"acTitle":"My account","acEmail":"Your email","acSend":"Get a code","acSendHelp":"We send a 6-digit code to this address.","acSending":"Sending…","acSent":"Code sent to {email}. It works for one hour; check the spam folder too.","acCode":"Code from the email","acSignIn":"Sign in","acSigningIn":"Signing in…","acAgain":"Send the code again","acOther":"Use another address","acWrongCode":"That code doesn’t match or has expired. Ask for a new one.","acNoCode":"Enter the code from the email.","acMailOff":"The warehouse hasn’t switched on sending codes yet. Prices and ordering still work in the catalogue.","acMailFailed":"The email didn’t go out. Try again in a moment.","acSignedOut":"Your session ended. Ask for a new code.","acOrders":"Your orders","acOrdersEmpty":"No orders yet.","acOrdersEmptyText":"Orders sent from the catalogue show up here, with their PDF.","acOrdersError":"Your orders didn’t load.","acRetry":"Try again","acOrder":"Order no. {n}","acStatusNew":"Received","acStatusDone":"Completed","acStatusCancelled":"Cancelled","acLines":"See the items","acPdf":"PDF","acPdfMaking":"Preparing…","acPdfFailed":"The PDF couldn’t be prepared. Try again.","acReorder":"Order again","acReorderSome":"No longer available, not added: {codes}.","acSave":"Save","acSaving":"Saving…","acSaved":"Saved.","acSaveFailed":"Not saved. Try again.","acItem":"Item","acQty":"Qty","acAmount":"Amount","acCatalogue":"Catalogue","code":"Code","total":"Estimated total","kg":"kg","signOut":"Sign out","loginUnknown":"This address isn’t on the members’ list. Check it, or continue without prices.","loginTooMany":"Too many tries. Try again in fifteen minutes.","loginInvalid":"Write the address as name@example.com.","loginFailed":"The check didn’t go through. Try again in a moment.","formName":"Name","formParish":"Parish","formPhone":"Phone","formAddress":"Delivery address","optional":"optional"},"items":{"one":"item","other":"items"}}</script>
-  <script type="module" src="../../assets/js/account.js"></script>
+  <script type="application/json" id="account-data">{"lang":"en","locale":"en-GB","catalogue":"../../en/","api":{"url":"https://ivzzhtaksdwbhhioilsn.supabase.co","key":"sb_publishable_rxpulg5CJqz_TpV1brvBCQ_C2ioyLyW"},"s":{"acTitle":"My profile","acEmail":"Your email","acSend":"Get a code","acSendHelp":"We send a 6-digit code to this address.","acSending":"Sending…","acSent":"Code sent to {email}. It works for one hour; check the spam folder too.","acCode":"Code from the email","acSignIn":"Sign in","acSigningIn":"Signing in…","acAgain":"Send the code again","acOther":"Use another address","acWrongCode":"That code doesn’t match or has expired. Ask for a new one.","acNoCode":"Enter the code from the email.","acMailOff":"The warehouse hasn’t switched on sending codes yet. Prices and ordering still work in the catalogue.","acMailFailed":"The email didn’t go out. Try again in a moment.","acSignedOut":"Your session ended. Ask for a new code.","acOrders":"Your orders","acOrdersEmpty":"No orders yet.","acOrdersEmptyText":"Orders sent from the catalogue show up here, with their PDF.","acOrdersError":"Your orders didn’t load.","acRetry":"Try again","acOrder":"Order no. {n}","acStatusNew":"Received","acStatusDone":"Completed","acStatusCancelled":"Cancelled","acLines":"See the items","acPdf":"PDF","acPdfMaking":"Preparing…","acPdfFailed":"The PDF couldn’t be prepared. Try again.","acReorder":"Order again","acReorderSome":"No longer available, not added: {codes}.","acSave":"Save","acSaving":"Saving…","acSaved":"Saved.","acSaveFailed":"Not saved. Try again.","acItem":"Item","acQty":"Qty","acAmount":"Amount","acCatalogue":"Catalogue","code":"Code","total":"Estimated total","kg":"kg","signOut":"Sign out","loginUnknown":"This address isn’t on the members’ list. Check it, or continue without prices.","loginTooMany":"Too many tries. Try again in fifteen minutes.","loginInvalid":"Write the address as name@example.com.","loginFailed":"The check didn’t go through. Try again in a moment.","formName":"Name","formParish":"Parish","formPhone":"Phone","formAddress":"Delivery address","optional":"optional","pricesFor":"Prices for {who}"},"items":{"one":"item","other":"items"}}</script>
+  <script type="module" src="../../assets/js/account.js?v=8ca8fe75a7"></script>
 </body>
 </html>

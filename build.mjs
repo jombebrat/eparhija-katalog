@@ -6,6 +6,7 @@
 // the build only keeps the first paint, search engines and visitors without JavaScript up to date.
 
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import * as R from './docs/assets/js/render.js';
@@ -46,6 +47,31 @@ async function loadCatalogue() {
   return snapshot;
 }
 
+// Every stylesheet and script is linked with ?v=<its content hash>, and so are the files they import,
+// so a phone never keeps an old copy after an update.
+const ASSETS = join(ROOT, 'docs/assets');
+const hashOf = (rel) => createHash('sha256').update(readFileSync(join(ASSETS, rel))).digest('hex').slice(0, 10);
+function stamp(rel, deps) {
+  const file = join(ASSETS, rel);
+  const before = readFileSync(file, 'utf8');
+  let after = before;
+  for (const [ref, v] of Object.entries(deps)) {
+    after = after.replace(new RegExp(`(['"(]\\./${ref.replace(/\./g, '\\.')})(\\?v=[0-9a-f]+)?(['")])`, 'g'), `$1?v=${v}$3`);
+  }
+  if (after !== before) writeFileSync(file, after);
+  return hashOf(rel);
+}
+const leaf = { 'render.js': hashOf('js/render.js'), 'tokens.css': hashOf('css/tokens.css'), 'base.css': hashOf('css/base.css'), 'fonts.css': hashOf('css/fonts.css') };
+const css3 = { 'tokens.css': leaf['tokens.css'], 'base.css': leaf['base.css'], 'fonts.css': leaf['fonts.css'] };
+const V = {
+  app: stamp('js/app.js', { 'render.js': leaf['render.js'] }),
+  admin: stamp('js/admin.js', { 'render.js': leaf['render.js'] }),
+  account: stamp('js/account.js', { 'render.js': leaf['render.js'] }),
+  site: stamp('css/site.css', css3),
+  adminCss: stamp('css/admin.css', css3),
+};
+V.accountCss = stamp('css/account.css', { 'site.css': V.site });
+
 const raw = await loadCatalogue();
 const model = R.fromDb(raw.categories, raw.products);
 
@@ -61,16 +87,30 @@ const t = (lang, s) => esc(typo(lang, s));
 const CLIENT_STRINGS = ['add', 'added', 'noMatch', 'matches', 'photoOf', 'emptyTitle', 'emptyText', 'qty', 'less', 'more', 'remove', 'total', 'copy', 'copied', 'copyFailed', 'clearList', 'mailHello', 'kg', 'perKg', 'close', 'code', 'browse',
   'loginUnknown', 'loginTooMany', 'loginFailed', 'loginInvalid', 'checking', 'showPrices', 'signOut', 'pricesFor', 'guestList', 'formName', 'formParish', 'formPhone', 'formAddress', 'formNote', 'optional', 'nameMissing',
   'sendOrder', 'sending', 'orderDone', 'orderDoneMail', 'orderDoneNoMail', 'downloadPdf', 'orderFailed', 'orderUnknown', 'orderUnavailable', 'done', 'outOfStock',
-  'noPhoto', 'addLabel', 'acLink', 'candlesLead', 'candlesCaption', 'thFormat', 'thSize', 'thDetail', 'thPrice', 'thPriceUnit', 'thList'];
+  'noPhoto', 'addLabel', 'acLink', 'list', 'cartLabel', 'askPrices', 'memberHint', 'memberHintLink', 'inqSend', 'inqDone', 'inqDoneText', 'inqFailed', 'inqTooMany',
+  'emailMissing', 'emailLabel', 'quoteTitle', 'quoteLead', 'quoteOrder', 'quoteGone', 'quoteFor', 'cancel', 'candlesLead', 'candlesCaption', 'thFormat', 'thSize', 'thDetail', 'thPrice', 'thPriceUnit', 'thList'];
 
 const X = '<svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>';
+// national flags, drawn small: France, the United Kingdom (for English), Serbia (the civil flag)
+let flagN = 0;
+const FLAG = {
+  fr: () => '<svg viewBox="0 0 3 2" aria-hidden="true"><rect width="1" height="2" fill="#002654"/><rect x="1" width="1" height="2" fill="#fff"/><rect x="2" width="1" height="2" fill="#CE1126"/></svg>',
+  en: () => { const n = ++flagN; return `<svg viewBox="0 0 60 30" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><clipPath id="uk${n}"><path d="M30,15h30v15zv15h-30zh-30v-15zv-15h30z"/></clipPath><path d="M0,0v30h60v-30z" fill="#012169"/><path d="M0,0L60,30M60,0L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0L60,30M60,0L0,30" clip-path="url(#uk${n})" stroke="#C8102E" stroke-width="4"/><path d="M30,0v30M0,15h60" stroke="#fff" stroke-width="10"/><path d="M30,0v30M0,15h60" stroke="#C8102E" stroke-width="6"/></svg>`; },
+  sr: () => '<svg viewBox="0 0 3 2" aria-hidden="true"><rect width="3" height="2" fill="#fff"/><rect width="3" height="1.3333" fill="#0C4076"/><rect width="3" height="0.6667" fill="#C6363C"/></svg>',
+};
+// the header's language links: a flag and the short code; the full name is the link's accessible name
+const flagLinks = (lang, hrefOf) => LANGS.map((l) => `<a href="${hrefOf(l)}" hreflang="${strings[l.id].htmlLang}" lang="${strings[l.id].htmlLang}" aria-label="${esc(strings[l.id].langName)}" data-lang${l.id === lang ? ' aria-current="page"' : ''}><span class="flag">${FLAG[l.id]()}</span><span class="l-code" aria-hidden="true">${l.id.toUpperCase()}</span></a>`).join('\n        ');
+const ICON = {
+  cart: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 3.5h2.2l2.5 11.4a1.6 1.6 0 0 0 1.6 1.3h8.5a1.6 1.6 0 0 0 1.6-1.2l1.8-7.5H6"/><circle cx="9.5" cy="20" r="1.4"/><circle cx="17.5" cy="20" r="1.4"/></svg>',
+  person: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.6-4 4.6-6 8-6s6.4 2 8 6"/></svg>',
+  search: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>',
+};
 
 function page(lang, dir) {
   const S = strings[lang];
   const root = dir ? '../' : './';
   const here = (l) => (l.dir ? root + l.dir : root);
   const absolute = (l) => (site.url ? site.url.replace(/\/?$/, '/') + l.dir : '');
-  const fill = (key, text) => `<span class="fill" data-fill="${key}">${t(lang, text)}</span>`;
   const ctx = { lang, S, root };
   const cd = R.clientData(model, ctx);
 
@@ -86,13 +126,6 @@ function page(lang, dir) {
     cats: cd.cats, p: cd.p,
     account: `${root}${dir}${S.acSlug}/`,
   };
-
-  const contactRows = [
-    `<div class="facts__row"><dt>${t(lang, S.rowEmail)}</dt><dd>${site.email ? `<a href="mailto:${esc(site.email)}">${esc(site.email)}</a>` : fill('email', S.fillEmail)}</dd></div>`,
-    site.phone ? `<div class="facts__row"><dt>${t(lang, S.rowPhone)}</dt><dd><a href="tel:${esc(site.phone.replace(/[^+\d]/g, ''))}">${esc(site.phone)}</a></dd></div>` : '',
-    `<div class="facts__row"><dt>${t(lang, S.rowAddress)}</dt><dd>${site.address?.[lang] ? t(lang, site.address[lang]).replace(/\n/g, '<br>') : fill('address', S.fillAddress)}</dd></div>`,
-    `<div class="facts__row"><dt>${t(lang, S.rowPrices)}</dt><dd>${t(lang, S.pricesNote)}</dd></div>`,
-  ].filter(Boolean).join('\n            ');
 
   const alternates = LANGS.map((l) => `<link rel="alternate" hreflang="${strings[l.id].htmlLang}" href="${site.url ? absolute(l) : here(l)}">`).join('\n  ')
     + `\n  <link rel="alternate" hreflang="x-default" href="${site.url ? absolute(LANGS[0]) : here(LANGS[0])}">`;
@@ -118,7 +151,7 @@ function page(lang, dir) {
   <link rel="apple-touch-icon" href="${root}apple-touch-icon.png">
   <link rel="preload" href="${root}assets/fonts/onest-${lang === 'sr' ? 'cyrillic' : 'latin'}-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="${root}assets/fonts/onest-${lang === 'sr' ? 'cyrillic' : 'latin'}-700-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="${root}assets/css/site.css">
+  <link rel="stylesheet" href="${root}assets/css/site.css?v=${V.site}">
   ${apiUrl ? `<link rel="preconnect" href="${esc(apiUrl)}" crossorigin>` : ''}
   <script>document.documentElement.className = 'js';</script>
 </head>
@@ -128,14 +161,12 @@ function page(lang, dir) {
     <div class="container slab__inner">
       <a class="wordmark" href="${root}${dir}"><img class="wordmark__grb" src="${root}assets/img/grb-112.webp" width="48" height="56" alt=""><b>${t(lang, S.brand)}</b></a>
       <nav class="langs" aria-label="${t(lang, S.langsLabel)}">
-        ${langLinks()}
+        ${flagLinks(lang, here)}
       </nav>
       <div class="account" data-account hidden>
-        <button class="listbtn listbtn--login" type="button" data-login>${t(lang, S.showPrices)}</button>
-        <a class="account__who" data-who hidden href="${root}${thisLang.dir}${S.acSlug}/"></a>
-        <button class="account__out" type="button" data-logout hidden>${t(lang, S.signOut)}</button>
+        <button class="listbtn listbtn--login" type="button" data-login>${t(lang, S.memberLogin)}</button>
+        <a class="listbtn listbtn--profile" data-profile hidden href="${root}${thisLang.dir}${S.acSlug}/">${ICON.person}${t(lang, S.acLink)}</a>
       </div>
-      <button class="listbtn" type="button" data-open-list hidden>${t(lang, S.list)} <span class="listbtn__n" data-count>0</span></button>
     </div>
   </header>
 
@@ -152,9 +183,10 @@ function page(lang, dir) {
               <button class="btn btn--primary" type="submit">${t(lang, S.findButton)}</button>
             </div>
           </form>
-          <p class="hero__links"><a class="btn btn--primary" href="#catalogue" data-nojs>${t(lang, S.browse)}</a><a class="textlink" href="#commander">${t(lang, S.how)}</a></p>
+          <p class="hero__links" data-nojs><a class="btn btn--primary" href="#catalogue">${t(lang, S.browse)}</a></p>
         </div>
-        <nav class="shelves" aria-label="${t(lang, S.catsLabel)}">
+        <nav class="shelves" aria-labelledby="h-shelves">
+          <h2 class="shelves__title" id="h-shelves">${t(lang, S.catsTitle)}</h2>
           <ul role="list" data-shelves>
         ${R.shelves(model, ctx)}
           </ul>
@@ -165,14 +197,10 @@ function page(lang, dir) {
     <section class="catalogue" id="catalogue" aria-label="${t(lang, S.sub)}">
       <div class="bar">
         <div class="container bar__inner">
-          <div class="bar__find" data-js hidden>
-            <label class="visually-hidden" for="q">${t(lang, S.findLabel)}</label>
-            <input id="q" type="search" placeholder="${t(lang, S.barPlaceholder)}" autocomplete="off" spellcheck="false">
-            <button class="bar__clear" type="button" data-clear hidden>${t(lang, S.clear)}</button>
-          </div>
+          <button class="bar__search" type="button" data-to-search data-js hidden aria-label="${t(lang, S.searchJump)}">${ICON.search}</button>
           <nav class="chips" aria-label="${t(lang, S.catsLabel)}" data-chips>${R.chips(model, ctx)}</nav>
           <p class="bar__status" role="status" data-status>${esc(R.countText(S, model.products.length))}</p>
-          <button class="listbtn listbtn--bar" type="button" data-open-list hidden>${t(lang, S.list)} <span class="listbtn__n" data-count>0</span></button>
+          <button class="bar__clear" type="button" data-clear hidden>${t(lang, S.clear)}</button>
         </div>
       </div>
       <div class="container" data-sections>
@@ -181,23 +209,6 @@ function page(lang, dir) {
       </div>
     </section>
 
-    <section class="order" id="commander" aria-labelledby="h-order">
-      <div class="container order__grid">
-        <div class="order__text">
-          <h2 id="h-order">${t(lang, S.orderH2)}</h2>
-          <p class="lead">${t(lang, S.orderLead)}</p>
-          <ol class="steps">
-            ${S.steps.map((s) => `<li>${t(lang, s)}</li>`).join('\n            ')}
-          </ol>
-        </div>
-        <div class="order__facts">
-          <dl class="facts">
-            ${contactRows}
-          </dl>
-          <button class="btn btn--primary" type="button" data-open-list hidden>${t(lang, S.openList)}</button>
-        </div>
-      </div>
-    </section>
   </main>
 
   <footer class="colophon">
@@ -229,21 +240,27 @@ function page(lang, dir) {
   </dialog>
 
   <dialog class="welcome" data-welcome aria-labelledby="welcome-title">
+    <div class="welcome__inner">
+      <img class="welcome__grb" src="${root}assets/img/grb-240.webp" width="82" height="96" alt="">
+      <h2 id="welcome-title">${esc(S.langPick)}</h2>
+      <p class="welcome__lead">${t(lang, S.langPickLead)}</p>
+      <div class="welcome__langs">
+        ${LANGS.map((l) => `<a class="welcome__lang" href="${here(l)}" hreflang="${strings[l.id].htmlLang}" lang="${strings[l.id].htmlLang}" data-lang data-pick="${l.id}"${l.id === lang ? ' aria-current="page"' : ''}><span class="flag flag--big">${FLAG[l.id]()}</span><span>${esc(strings[l.id].langName)}</span></a>`).join('\n        ')}
+      </div>
+    </div>
+  </dialog>
+
+  <dialog class="welcome" data-login-dialog aria-labelledby="login-title">
     <form class="welcome__inner" data-login-form novalidate>
       <img class="welcome__grb" src="${root}assets/img/grb-240.webp" width="82" height="96" alt="">
-      <h2 id="welcome-title">${t(lang, S.welcomeTitle)}</h2>
-      <fieldset class="welcome__langs">
-        <legend class="visually-hidden">${t(lang, S.welcomeLang)}</legend>
-        <div class="welcome__seg">
-        ${LANGS.map((l) => `<a href="${here(l)}" hreflang="${strings[l.id].htmlLang}" lang="${strings[l.id].htmlLang}" data-lang${l.id === lang ? ' aria-current="page"' : ''}>${esc(strings[l.id].langName)}</a>`).join('\n        ')}
-        </div>
-      </fieldset>
+      <h2 id="login-title">${t(lang, S.welcomeTitle)}</h2>
+      <p class="welcome__lead">${t(lang, S.loginLead)}</p>
       <label for="login-email">${t(lang, S.emailLabel)}</label>
       <input id="login-email" name="email" type="email" autocomplete="email" inputmode="email" spellcheck="false" placeholder="${t(lang, S.emailPlaceholder)}" required>
       <p class="welcome__help" id="login-help" data-login-help aria-live="polite"></p>
       <div class="welcome__actions">
         <button class="btn btn--primary" type="submit" data-login-submit>${t(lang, S.showPrices)}</button>
-        <button class="textbtn" type="button" data-login-skip>${t(lang, S.continueWithout)}</button>
+        <button class="textbtn" type="button" data-login-skip>${t(lang, S.cancel)}</button>
       </div>
     </form>
   </dialog>
@@ -261,8 +278,10 @@ function page(lang, dir) {
     </div>
   </dialog>
 
+  <button class="fab" type="button" data-open-list hidden aria-label="${t(lang, S.list)}">${ICON.cart}<span class="fab__n" data-count>0</span></button>
+
   <script type="application/json" id="catalogue-data">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>
-  <script type="module" src="${root}assets/js/app.js"></script>
+  <script type="module" src="${root}assets/js/app.js?v=${V.app}"></script>
 </body>
 </html>
 `;
@@ -296,7 +315,7 @@ function adminPage() {
   <meta name="robots" content="noindex, nofollow">
   <link rel="icon" href="../favicon.png" type="image/png">
   <link rel="preload" href="../assets/fonts/onest-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="../assets/css/admin.css">
+  <link rel="stylesheet" href="../assets/css/admin.css?v=${V.adminCss}">
 </head>
 <body class="adm">
   <a class="skip" href="#main">Preskoči na sadržaj</a>
@@ -317,13 +336,15 @@ function adminPage() {
 
   <div class="app" id="app" hidden>
     <header class="bar">
-      <a class="bar__brand" href="#artikli" aria-label="Administracija magacina, artikli">
+      <a class="bar__brand" href="#pregled" aria-label="Administracija magacina, pregled">
         <img src="../assets/img/grb-112.webp" width="34" height="40" alt="">
         <span class="bar__name">Magacin <span class="bar__sub">administracija</span></span>
       </a>
       <nav class="tabs" aria-label="Odeljci">
-        <a href="#artikli" data-tab="artikli">Artikli</a>
+        <a href="#pregled" data-tab="pregled">Pregled</a>
+        <a href="#upiti" data-tab="upiti">Upiti <span class="tabs__n" data-new-inquiries hidden></span></a>
         <a href="#porudzbine" data-tab="porudzbine">Porudžbine <span class="tabs__n" data-new-orders hidden></span></a>
+        <a href="#artikli" data-tab="artikli">Artikli</a>
         <a href="#statistika" data-tab="statistika">Statistika</a>
         <a href="#svestenstvo" data-tab="svestenstvo">Sveštenstvo</a>
         <a href="#kategorije" data-tab="kategorije">Kategorije</a>
@@ -337,7 +358,24 @@ function adminPage() {
     </header>
 
     <main id="main" class="screens" tabindex="-1">
-      <section class="screen" data-screen="artikli" aria-labelledby="h-artikli">
+      <section class="screen" data-screen="pregled" aria-labelledby="h-pregled">
+        <div class="screen__head">
+          <div><h1 id="h-pregled">Pregled</h1><p class="screen__sub" data-today></p></div>
+        </div>
+        <div class="region ov" data-region="overview"></div>
+      </section>
+
+      <section class="screen" data-screen="upiti" aria-labelledby="h-upiti" hidden>
+        <div class="screen__head">
+          <div><h1 id="h-upiti">Upiti za cene</h1><p class="screen__sub">Posetioci bez naloga šalju listu; vi im šaljete ponudu sa cenama.</p></div>
+        </div>
+        <div class="toolbar">
+          ${seg('s', 'Status', [['new', 'Novi', 'new'], ['sent', 'Ponuda poslata', 'sent'], ['ordered', 'Poručeno', 'ordered'], ['closed', 'Zatvoreni', 'closed'], ['all', 'Svi', 'all']])}
+        </div>
+        <div class="region" data-region="inquiries"></div>
+      </section>
+
+      <section class="screen" data-screen="artikli" aria-labelledby="h-artikli" hidden>
         <div class="screen__head">
           <h1 id="h-artikli">Artikli i stanje</h1>
           <div class="screen__actions"><button class="btn" type="button" data-csv="products">Izvezi u Excel (CSV)</button><button class="btn btn--primary" type="button" data-new="product">Novi artikal</button></div>
@@ -402,7 +440,7 @@ function adminPage() {
   <noscript><p class="boot">Administracija radi samo sa uključenim JavaScriptom.</p></noscript>
 
   <script type="application/json" id="admin-config">${JSON.stringify(config).replace(/</g, '\\u003c')}</script>
-  <script type="module" src="../assets/js/admin.js"></script>
+  <script type="module" src="../assets/js/admin.js?v=${V.admin}"></script>
 </body>
 </html>
 `;
@@ -416,7 +454,7 @@ const ACCOUNT_STRINGS = ['acTitle', 'acEmail', 'acSend', 'acSendHelp', 'acSendin
   'acWrongCode', 'acNoCode', 'acMailOff', 'acMailFailed', 'acSignedOut', 'acOrders', 'acOrdersEmpty', 'acOrdersEmptyText', 'acOrdersError', 'acRetry',
   'acOrder', 'acStatusNew', 'acStatusDone', 'acStatusCancelled', 'acLines', 'acPdf', 'acPdfMaking', 'acPdfFailed', 'acReorder', 'acReorderSome',
   'acSave', 'acSaving', 'acSaved', 'acSaveFailed', 'acItem', 'acQty', 'acAmount', 'acCatalogue', 'code', 'total', 'kg', 'signOut',
-  'loginUnknown', 'loginTooMany', 'loginInvalid', 'loginFailed', 'formName', 'formParish', 'formPhone', 'formAddress', 'optional'];
+  'loginUnknown', 'loginTooMany', 'loginInvalid', 'loginFailed', 'formName', 'formParish', 'formPhone', 'formAddress', 'optional', 'pricesFor'];
 const accountPath = (l) => `${l.dir}${strings[l.id].acSlug}/`;
 function accountPage(lang) {
   const S = strings[lang];
@@ -429,7 +467,7 @@ function accountPage(lang) {
     api: apiUrl ? { url: apiUrl, key: site.supabaseKey || '' } : null,
     s: Object.fromEntries(ACCOUNT_STRINGS.map((k) => [k, T(lang, k)])), items: S.items,
   };
-  const langLinks = LANGS.map((l) => `<a href="${root}${accountPath(l)}" hreflang="${strings[l.id].htmlLang}" lang="${strings[l.id].htmlLang}" aria-label="${esc(strings[l.id].langName)}" data-lang${l.id === lang ? ' aria-current="page"' : ''}><span class="l-long">${esc(strings[l.id].langName)}</span><span class="l-short" aria-hidden="true">${esc(strings[l.id].langShort)}</span></a>`).join('\n        ');
+  const langLinks = flagLinks(lang, (l) => `${root}${accountPath(l)}`);
   const opt = ` <span class="field__opt">(${t(lang, S.optional)})</span>`;
   const input = (id, name, label, type, auto, optional = true) => `<div class="field"><label for="${id}">${t(lang, label)}${optional ? opt : ''}</label><input id="${id}" name="${name}" type="${type}" autocomplete="${auto}"></div>`;
   return `<!doctype html>
@@ -443,7 +481,7 @@ function accountPage(lang) {
   ${LANGS.map((l) => `<link rel="alternate" hreflang="${strings[l.id].htmlLang}" href="${root}${accountPath(l)}">`).join('\n  ')}
   <link rel="icon" href="${root}favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="${root}apple-touch-icon.png">
-  <link rel="stylesheet" href="${root}assets/css/account.css">
+  <link rel="stylesheet" href="${root}assets/css/account.css?v=${V.accountCss}">
   <script>document.documentElement.className = 'js';</script>
 </head>
 <body class="acct-page">
@@ -478,6 +516,7 @@ function accountPage(lang) {
           <p class="acct__links"><button class="textbtn" type="button" data-again>${t(lang, S.acAgain)}</button><button class="textbtn" type="button" data-other>${t(lang, S.acOther)}</button></p>
         </form>
         <p class="acct__help" id="ac-help" data-help>${t(lang, S.acSendHelp)}</p>
+        <p class="acct__prices" data-prices-for hidden><span data-prices-who></span> <button class="textbtn" type="button" data-forget>${t(lang, S.signOut)}</button></p>
       </section>
 
       <section class="acct__in" data-in hidden aria-labelledby="h-orders">
@@ -517,7 +556,7 @@ function accountPage(lang) {
   </footer>
 
   <script type="application/json" id="account-data">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>
-  <script type="module" src="${root}assets/js/account.js"></script>
+  <script type="module" src="${root}assets/js/account.js?v=${V.account}"></script>
 </body>
 </html>
 `;

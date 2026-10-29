@@ -9,6 +9,12 @@
 //     The page then signs in with Supabase Auth (verify, type email) and reads its own orders.
 //   POST { action: 'pdf', id } with Authorization: Bearer <session>
 //     -> { pdf, filename } for an order of the signed-in member, or any order for an admin.
+//   POST { action: 'inquiry', email, name, parish, phone, note, lang, items } -> { ok, number }
+//     A visitor who is not a member asks for prices; the warehouse is told by email (when mail is set up).
+//   POST { action: 'quote', id, lines: [{ code, qty, price }], send } with an admin's session
+//     -> { pdf, filename, emailed, link }: the quote for an inquiry, emailed to the visitor when send is true.
+//   POST { action: 'quote-get', token } -> the quote behind the link in its email and PDF
+//   POST { action: 'quote-order', token, name, parish, phone, address, note } -> like an order, at the quote's prices
 import { createClient } from '@supabase/supabase-js';
 import { orderPdf, type Line, type Assets } from './pdf.ts';
 import { T, LOCALE, fill, type Lang, toCyrillic } from './i18n.ts';
@@ -82,6 +88,10 @@ Deno.serve(async (req) => {
   try { body = await req.json(); } catch { return json({ error: 'invalid' }, 400); }
   if (body.action === 'pdf') return pdfAgain(req, body);
   if (body.action === 'code') return sendCode(req, body);
+  if (body.action === 'inquiry') return inquiry(req, body);
+  if (body.action === 'quote') return quoteFor(req, body);
+  if (body.action === 'quote-get') return quoteGet(body);
+  if (body.action === 'quote-order') return quoteOrder(req, body);
   const email = clean(body.email, 200).toLowerCase();
   const lang = (['fr', 'en', 'sr'].includes(String(body.lang)) ? body.lang : 'fr') as Lang;
   const items = Array.isArray(body.items) ? body.items.slice(0, 300) : [];
@@ -135,7 +145,12 @@ Deno.serve(async (req) => {
     .insert({ priest_id: priest.id, email, lang, items: lines, total, ...who })
     .select('id, created_at').single();
   if (e2 || !saved) return json({ error: 'server' }, 500);
+  return json(await finishOrder(saved, lang, email, who, lines, total));
+});
 
+type Who = { name: string; parish: string; phone: string; address: string; note: string };
+// the PDF of a saved order, and the emails to the member and the warehouse
+async function finishOrder(saved: { id: number; created_at: string }, lang: Lang, email: string, who: Who, lines: Line[], total: number) {
   let pdf = '';
   try {
     const pdfBytes = await orderPdf({ number: saved.id, date: new Date(saved.created_at), lang, email, ...who, lines, total }, await pdfAssets());
@@ -159,9 +174,8 @@ Deno.serve(async (req) => {
     emailed = a && b;
     if (emailed) await db.from('orders').update({ emailed: true }).eq('id', saved.id);
   }
-
-  return json({ number: saved.id, total, emailed, pdf, filename });
-});
+  return { number: saved.id, total, emailed, pdf, filename };
+}
 
 // ---------- the member's account ----------
 
@@ -215,4 +229,136 @@ async function pdfAgain(req: Request, body: Record<string, unknown>) {
     console.error('pdf again', e);
     return json({ error: 'server' }, 500);
   }
+}
+
+// ---------- price inquiries and quotes ----------
+
+const SITE = (Deno.env.get('SITE_URL') ?? 'https://jombebrat.github.io/eparhija-katalog/').replace(/\/?$/, '/');
+const langPath = (l: Lang) => (l === 'fr' ? '' : `${l}/`);
+const mailOn = () => !!(Deno.env.get('RESEND_API_KEY') && Deno.env.get('ORDER_FROM'));
+const pickLang = (v: unknown) => (['fr', 'en', 'sr'].includes(String(v)) ? v : 'fr') as Lang;
+const nameIn = (p: Record<string, unknown>, lang: Lang) => String(p[`name_${lang}`] || p.name_fr || p.name_sr || p.name_en || p.code);
+
+async function adminOf(req: Request) {
+  const jwt = (req.headers.get('authorization') ?? '').replace(/^Bearer\s+/i, '');
+  if (!jwt) return null;
+  const { data: u } = await db.auth.getUser(jwt);
+  if (!u?.user) return null;
+  const { data: admin } = await db.from('admins').select('user_id').eq('user_id', u.user.id).maybeSingle();
+  return admin ? u.user : null;
+}
+
+// a visitor's list, for the warehouse to price
+async function inquiry(req: Request, body: Record<string, unknown>) {
+  if (clean(body.website, 200)) return json({ ok: true }); // the hidden field: only robots fill it
+  const email = clean(body.email, 200).toLowerCase();
+  const lang = pickLang(body.lang);
+  const items = Array.isArray(body.items) ? body.items.slice(0, 300) : [];
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) || !items.length) return json({ error: 'invalid' }, 400);
+  const ip = clientIp(req);
+  const hour = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+  const { count } = await db.from('attempts').select('id', { count: 'exact', head: true }).eq('ip', ip).eq('kind', 'inquiry').gte('at', hour);
+  if ((count ?? 0) >= 5) return json({ error: 'too_many' }, 429);
+  const wanted = new Map<string, number>();
+  for (const it of items as { code?: unknown; qty?: unknown }[]) {
+    const code = clean(it?.code, 40);
+    const qty = Math.round(Number(it?.qty));
+    if (!code || !Number.isFinite(qty) || qty < 1 || qty > 999) return json({ error: 'invalid' }, 400);
+    wanted.set(code, (wanted.get(code) ?? 0) + qty);
+  }
+  const { data: known } = await db.from('products').select('code').eq('active', true).in('code', [...wanted.keys()]);
+  const asked = (known ?? []).map((p) => ({ code: p.code, qty: wanted.get(p.code)! }));
+  if (!asked.length) return json({ error: 'invalid' }, 400);
+  const who = { name: clean(body.name, 120), parish: clean(body.parish, 160), phone: clean(body.phone, 40), note: clean(body.note, 1000) };
+  const { data: saved, error } = await db.from('inquiries').insert({ email, lang, items: asked, ...who }).select('id').single();
+  if (error || !saved) { console.error('inquiry', error); return json({ error: 'server' }, 500); }
+  await db.from('attempts').insert({ ip, ok: true, kind: 'inquiry' });
+  const warehouse = Deno.env.get('WAREHOUSE_EMAIL');
+  if (warehouse && mailOn()) {
+    const wl = pickLang(Deno.env.get('WAREHOUSE_LANG') ?? 'sr');
+    const ok = await sendMail(warehouse, email, fill(T[wl].inqSubject, { n: saved.id }),
+      fill(T[wl].inqMail, { n: saved.id, who: who.name || email, email, count: asked.length, admin: `${SITE}admin/#upiti` }));
+    if (ok) await db.from('inquiries').update({ emailed: true }).eq('id', saved.id);
+  }
+  return json({ ok: true, number: saved.id });
+}
+
+// the admin prices an inquiry in one click: the quote as a PDF, emailed to the visitor (or downloaded)
+async function quoteFor(req: Request, body: Record<string, unknown>) {
+  if (!(await adminOf(req))) return json({ error: 'signed_out' }, 401);
+  const id = Number(body.id);
+  const { data: inq } = await db.from('inquiries').select('*').eq('id', id).maybeSingle();
+  if (!inq) return json({ error: 'not_found' }, 404);
+  const lang = pickLang(inq.lang);
+  const asked = (Array.isArray(body.lines) ? body.lines : []).slice(0, 300) as { code?: unknown; qty?: unknown; price?: unknown }[];
+  const { data: products } = await db.from('products').select('code, name_fr, name_en, name_sr, unit').in('code', asked.map((l) => clean(l.code, 40)));
+  const by = new Map((products ?? []).map((p) => [p.code, p]));
+  const lines: Line[] = [];
+  for (const l of asked) {
+    const p = by.get(clean(l.code, 40));
+    const qty = Math.round(Number(l.qty));
+    const price = Math.round(Number(l.price) * 100) / 100;
+    if (!p || !Number.isFinite(qty) || qty < 1 || qty > 999 || !Number.isFinite(price) || price < 0) return json({ error: 'invalid' }, 400);
+    lines.push({ code: p.code, name: nameIn(p, lang), qty, price, unit: p.unit as 'piece' | 'kg' });
+  }
+  if (!lines.length) return json({ error: 'invalid' }, 400);
+  const total = Math.round(lines.reduce((a, l) => a + l.price * l.qty, 0) * 100) / 100;
+  const link = `${SITE}${langPath(lang)}?ponuda=${inq.token}`;
+  const now = new Date();
+  const name = lang === 'sr' ? toCyrillic(inq.name) : inq.name ?? '';
+  const bytes = await orderPdf({ number: inq.id, date: now, lang, kind: 'quote', link, email: inq.email, name, parish: inq.parish ?? '', phone: inq.phone ?? '', lines, total }, await pdfAssets());
+  const pdf = toB64(bytes);
+  const t = T[lang];
+  const filename = fill(t.quoteFile, { n: inq.id });
+  let emailed = false;
+  if (body.send) {
+    if (!mailOn()) return json({ error: 'mail_off' }, 503);
+    const money = new Intl.NumberFormat(LOCALE[lang], { style: 'currency', currency: 'EUR' }).format(total);
+    emailed = await sendMail(inq.email, Deno.env.get('WAREHOUSE_EMAIL') || inq.email, fill(t.quoteSubject, { n: inq.id }), fill(t.quoteMail, { n: inq.id, total: money, link }), filename, pdf);
+    if (!emailed) return json({ error: 'mail_failed' }, 502);
+  }
+  const { data: row } = await db.from('inquiries').update({
+    quote: lines, quote_total: total, quoted_at: now.toISOString(),
+    status: inq.status === 'ordered' ? 'ordered' : 'sent', emailed: emailed || inq.emailed,
+  }).eq('id', inq.id).select('*').single();
+  return json({ pdf, filename, emailed, link, inquiry: row });
+}
+
+// the quote behind its link, for 30 days, until it is ordered
+async function openQuote(token: unknown) {
+  const tk = clean(token, 60);
+  if (!/^[0-9a-f-]{36}$/i.test(tk)) return { error: 'not_found', status: 404 } as const;
+  const { data: q } = await db.from('inquiries').select('*').eq('token', tk).maybeSingle();
+  if (!q || !q.quote) return { error: 'not_found', status: 404 } as const;
+  if (q.status !== 'sent' || Date.now() - Date.parse(q.quoted_at) > 30 * 86400000) return { error: 'gone', status: 410 } as const;
+  return { q };
+}
+async function quoteGet(body: Record<string, unknown>) {
+  const r = await openQuote(body.token);
+  if (!('q' in r)) return json({ error: r.error }, r.status);
+  const q = r.q;
+  return json({ number: q.id, lang: q.lang, lines: q.quote, total: Number(q.quote_total), email: q.email, name: q.name ?? '', parish: q.parish ?? '', phone: q.phone ?? '' });
+}
+async function quoteOrder(req: Request, body: Record<string, unknown>) {
+  const r = await openQuote(body.token);
+  if (!('q' in r)) return json({ error: r.error }, r.status);
+  const q = r.q;
+  const lines = q.quote as Line[];
+  const { data: products } = await db.from('products').select('code, available').eq('active', true).in('code', lines.map((l) => l.code));
+  const ok = new Map((products ?? []).map((p) => [p.code, p.available]));
+  const gone = lines.filter((l) => !ok.get(l.code)).map((l) => l.code);
+  if (gone.length) return json({ error: 'unavailable', codes: gone }, 409);
+  const lang = pickLang(q.lang);
+  const name = clean(body.name, 120) || q.name || '';
+  const who = {
+    name: lang === 'sr' ? toCyrillic(name) : name,
+    parish: clean(body.parish, 160) || q.parish || '', phone: clean(body.phone, 40) || q.phone || '',
+    address: clean(body.address, 300), note: clean(body.note, 1000),
+  };
+  const total = Number(q.quote_total);
+  const { data: saved, error } = await db.from('orders').insert({ priest_id: null, email: q.email, lang, items: lines, total, ...who }).select('id, created_at').single();
+  if (error || !saved) return json({ error: 'server' }, 500);
+  await db.from('inquiries').update({ status: 'ordered', order_id: saved.id }).eq('id', q.id);
+  void req;
+  return json(await finishOrder(saved, lang, q.email, who, lines, total));
 }

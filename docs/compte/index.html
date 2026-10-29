@@ -3,26 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Mon compte · Magasin de l’Éparchie d’Europe occidentale</title>
-  <meta name="description" content="Vos commandes au magasin de l’Éparchie et leurs PDF.">
+  <title>Mon profil · Magasin du Diocèse d’Europe occidentale</title>
+  <meta name="description" content="Vos commandes au magasin du Diocèse et leurs PDF.">
   <meta name="robots" content="noindex">
   <link rel="alternate" hreflang="fr" href="../compte/">
   <link rel="alternate" hreflang="en" href="../en/account/">
   <link rel="alternate" hreflang="sr-Cyrl" href="../sr/nalog/">
   <link rel="icon" href="../favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="../apple-touch-icon.png">
-  <link rel="stylesheet" href="../assets/css/account.css">
+  <link rel="stylesheet" href="../assets/css/account.css?v=7679f742a3">
   <script>document.documentElement.className = 'js';</script>
 </head>
 <body class="acct-page">
   <a class="skip" href="#main">Aller au catalogue</a>
   <header class="slab">
     <div class="container slab__inner">
-      <a class="wordmark" href="../"><img class="wordmark__grb" src="../assets/img/grb-112.webp" width="48" height="56" alt=""><b>Magasin de l’Éparchie d’Europe occidentale</b></a>
+      <a class="wordmark" href="../"><img class="wordmark__grb" src="../assets/img/grb-112.webp" width="48" height="56" alt=""><b>Magasin du Diocèse d’Europe occidentale</b></a>
       <nav class="langs" aria-label="Langue">
-        <a href="../compte/" hreflang="fr" lang="fr" aria-label="Français" data-lang aria-current="page"><span class="l-long">Français</span><span class="l-short" aria-hidden="true">fr</span></a>
-        <a href="../en/account/" hreflang="en" lang="en" aria-label="English" data-lang><span class="l-long">English</span><span class="l-short" aria-hidden="true">en</span></a>
-        <a href="../sr/nalog/" hreflang="sr-Cyrl" lang="sr-Cyrl" aria-label="Српски" data-lang><span class="l-long">Српски</span><span class="l-short" aria-hidden="true">sr</span></a>
+        <a href="../compte/" hreflang="fr" lang="fr" aria-label="Français" data-lang aria-current="page"><span class="flag"><svg viewBox="0 0 3 2" aria-hidden="true"><rect width="1" height="2" fill="#002654"/><rect x="1" width="1" height="2" fill="#fff"/><rect x="2" width="1" height="2" fill="#CE1126"/></svg></span><span class="l-code" aria-hidden="true">FR</span></a>
+        <a href="../en/account/" hreflang="en" lang="en" aria-label="English" data-lang><span class="flag"><svg viewBox="0 0 60 30" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><clipPath id="uk7"><path d="M30,15h30v15zv15h-30zh-30v-15zv-15h30z"/></clipPath><path d="M0,0v30h60v-30z" fill="#012169"/><path d="M0,0L60,30M60,0L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0L60,30M60,0L0,30" clip-path="url(#uk7)" stroke="#C8102E" stroke-width="4"/><path d="M30,0v30M0,15h60" stroke="#fff" stroke-width="10"/><path d="M30,0v30M0,15h60" stroke="#C8102E" stroke-width="6"/></svg></span><span class="l-code" aria-hidden="true">EN</span></a>
+        <a href="../sr/nalog/" hreflang="sr-Cyrl" lang="sr-Cyrl" aria-label="Српски" data-lang><span class="flag"><svg viewBox="0 0 3 2" aria-hidden="true"><rect width="3" height="2" fill="#fff"/><rect width="3" height="1.3333" fill="#0C4076"/><rect width="3" height="0.6667" fill="#C6363C"/></svg></span><span class="l-code" aria-hidden="true">SR</span></a>
       </nav>
       <a class="listbtn" href="../">Catalogue</a>
     </div>
@@ -30,7 +30,7 @@
 
   <main id="main" class="acct">
     <div class="container acct__inner">
-      <h1>Mon compte</h1>
+      <h1>Mon profil</h1>
       <p class="acct__boot" data-boot>…</p>
       <noscript><p>Vos commandes et leurs PDF. Réservé aux membres de la liste.</p></noscript>
 
@@ -48,6 +48,7 @@
           <p class="acct__links"><button class="textbtn" type="button" data-again>Renvoyer le code</button><button class="textbtn" type="button" data-other>Changer d’adresse</button></p>
         </form>
         <p class="acct__help" id="ac-help" data-help>Nous envoyons un code à 6 chiffres à cette adresse.</p>
+        <p class="acct__prices" data-prices-for hidden><span data-prices-who></span> <button class="textbtn" type="button" data-forget>Se déconnecter</button></p>
       </section>
 
       <section class="acct__in" data-in hidden aria-labelledby="h-orders">
@@ -81,12 +82,12 @@
     <div class="container colophon__inner">
       <img class="colophon__grb" src="../assets/img/grb-112.webp" width="48" height="56" alt="">
       <div class="colophon__text">
-        <p><b>Magasin de l’Éparchie d’Europe occidentale.</b> Éparchie d’Europe occidentale de l’Église orthodoxe serbe, 23, rue du Simplon, 75018 Paris.</p>
+        <p><b>Magasin du Diocèse d’Europe occidentale.</b> Diocèse orthodoxe serbe d’Europe occidentale, 23, rue du Simplon, 75018 Paris.</p>
       </div>
     </div>
   </footer>
 
-  <script type="application/json" id="account-data">{"lang":"fr","locale":"fr-FR","catalogue":"../","api":{"url":"https://ivzzhtaksdwbhhioilsn.supabase.co","key":"sb_publishable_rxpulg5CJqz_TpV1brvBCQ_C2ioyLyW"},"s":{"acTitle":"Mon compte","acEmail":"Votre e-mail","acSend":"Recevoir un code","acSendHelp":"Nous envoyons un code à 6 chiffres à cette adresse.","acSending":"Envoi…","acSent":"Code envoyé à {email}. Il est valable une heure ; regardez aussi dans les indésirables.","acCode":"Code reçu par e-mail","acSignIn":"Se connecter","acSigningIn":"Connexion…","acAgain":"Renvoyer le code","acOther":"Changer d’adresse","acWrongCode":"Ce code ne correspond pas ou a expiré. Demandez-en un nouveau.","acNoCode":"Entrez le code reçu par e-mail.","acMailOff":"L’envoi des codes n’est pas encore activé par l’entrepôt. Les prix et la commande restent disponibles dans le catalogue.","acMailFailed":"L’e-mail n’est pas parti. Réessayez dans un instant.","acSignedOut":"Session terminée. Demandez un nouveau code.","acOrders":"Vos commandes","acOrdersEmpty":"Aucune commande pour l’instant.","acOrdersEmptyText":"Les commandes envoyées depuis le catalogue apparaissent ici, avec leur PDF.","acOrdersError":"Vos commandes ne se sont pas chargées.","acRetry":"Réessayer","acOrder":"Commande n° {n}","acStatusNew":"Reçue","acStatusDone":"Traitée","acStatusCancelled":"Annulée","acLines":"Voir les articles","acPdf":"PDF","acPdfMaking":"Préparation…","acPdfFailed":"Le PDF n’a pas pu être préparé. Réessayez.","acReorder":"Commander à nouveau","acReorderSome":"Plus disponibles, non ajoutés : {codes}.","acSave":"Enregistrer","acSaving":"Enregistrement…","acSaved":"Enregistré.","acSaveFailed":"Non enregistré. Réessayez.","acItem":"Article","acQty":"Qté","acAmount":"Montant","acCatalogue":"Catalogue","code":"Code","total":"Total indicatif","kg":"kg","signOut":"Se déconnecter","loginUnknown":"Cette adresse n’est pas sur la liste des membres. Vérifiez-la, ou continuez sans les prix.","loginTooMany":"Trop d’essais. Réessayez dans un quart d’heure.","loginInvalid":"Écrivez l’adresse sous la forme nom@exemple.fr.","loginFailed":"La vérification n’a pas abouti. Réessayez dans un instant.","formName":"Nom","formParish":"Paroisse","formPhone":"Téléphone","formAddress":"Adresse de livraison","optional":"facultatif"},"items":{"one":"article","other":"articles"}}</script>
-  <script type="module" src="../assets/js/account.js"></script>
+  <script type="application/json" id="account-data">{"lang":"fr","locale":"fr-FR","catalogue":"../","api":{"url":"https://ivzzhtaksdwbhhioilsn.supabase.co","key":"sb_publishable_rxpulg5CJqz_TpV1brvBCQ_C2ioyLyW"},"s":{"acTitle":"Mon profil","acEmail":"Votre e-mail","acSend":"Recevoir un code","acSendHelp":"Nous envoyons un code à 6 chiffres à cette adresse.","acSending":"Envoi…","acSent":"Code envoyé à {email}. Il est valable une heure ; regardez aussi dans les indésirables.","acCode":"Code reçu par e-mail","acSignIn":"Se connecter","acSigningIn":"Connexion…","acAgain":"Renvoyer le code","acOther":"Changer d’adresse","acWrongCode":"Ce code ne correspond pas ou a expiré. Demandez-en un nouveau.","acNoCode":"Entrez le code reçu par e-mail.","acMailOff":"L’envoi des codes n’est pas encore activé par l’entrepôt. Les prix et la commande restent disponibles dans le catalogue.","acMailFailed":"L’e-mail n’est pas parti. Réessayez dans un instant.","acSignedOut":"Session terminée. Demandez un nouveau code.","acOrders":"Vos commandes","acOrdersEmpty":"Aucune commande pour l’instant.","acOrdersEmptyText":"Les commandes envoyées depuis le catalogue apparaissent ici, avec leur PDF.","acOrdersError":"Vos commandes ne se sont pas chargées.","acRetry":"Réessayer","acOrder":"Commande n° {n}","acStatusNew":"Reçue","acStatusDone":"Traitée","acStatusCancelled":"Annulée","acLines":"Voir les articles","acPdf":"PDF","acPdfMaking":"Préparation…","acPdfFailed":"Le PDF n’a pas pu être préparé. Réessayez.","acReorder":"Commander à nouveau","acReorderSome":"Plus disponibles, non ajoutés : {codes}.","acSave":"Enregistrer","acSaving":"Enregistrement…","acSaved":"Enregistré.","acSaveFailed":"Non enregistré. Réessayez.","acItem":"Article","acQty":"Qté","acAmount":"Montant","acCatalogue":"Catalogue","code":"Code","total":"Total indicatif","kg":"kg","signOut":"Se déconnecter","loginUnknown":"Cette adresse n’est pas sur la liste des membres. Vérifiez-la, ou continuez sans les prix.","loginTooMany":"Trop d’essais. Réessayez dans un quart d’heure.","loginInvalid":"Écrivez l’adresse sous la forme nom@exemple.fr.","loginFailed":"La vérification n’a pas abouti. Réessayez dans un instant.","formName":"Nom","formParish":"Paroisse","formPhone":"Téléphone","formAddress":"Adresse de livraison","optional":"facultatif","pricesFor":"Prix pour {who}"},"items":{"one":"article","other":"articles"}}</script>
+  <script type="module" src="../assets/js/account.js?v=8ca8fe75a7"></script>
 </body>
 </html>

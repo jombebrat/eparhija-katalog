@@ -1,7 +1,7 @@
 // The member's account: sign in with a code sent by email, see past orders and their PDFs,
 // order the same again, keep the details that fill in the order form.
 // The database shows a signed-in member only their own row and their own orders.
-import { esc, toCyrillic } from './render.js';
+import { esc, toCyrillic } from './render.js?v=c6dbe39cc4';
 
 const D = JSON.parse(document.getElementById('account-data').textContent);
 const S = D.s;
@@ -73,7 +73,12 @@ function showOut(msg = '') {
   verify.hidden = true;
   send.elements.email.value = session?.email || store.get('ek-email') || '';
   say(msg || S.acSendHelp, !!msg);
+  // signed in for prices only (email checked on the catalogue): that can be undone here too
+  const priced = store.get('ek-email');
+  $('[data-prices-for]').hidden = !priced;
+  if (priced) $('[data-prices-who]').textContent = fill(S.pricesFor, { who: priced });
 }
+$('[data-forget]').addEventListener('click', () => { store.del('ek-email'); showOut(); });
 async function sendCode() {
   const r = await call(`${D.api.url}/functions/v1/order`, { method: 'POST', headers: headers(), body: JSON.stringify({ action: 'code', email, lang: D.lang }) });
   return r;
@@ -281,6 +286,7 @@ $('[data-details]').addEventListener('submit', async (e) => {
 $('[data-signout]').addEventListener('click', () => {
   const t = session?.access_token;
   keep(null);
+  store.del('ek-email');
   me = null; orders = null;
   showOut();
   if (t) call(`${D.api.url}/auth/v1/logout`, { method: 'POST', headers: headers({ Authorization: `Bearer ${t}` }) }).catch(() => {});

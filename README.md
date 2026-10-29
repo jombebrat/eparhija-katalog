@@ -1,10 +1,12 @@
-# Magacin Eparhije zapadnoevropske
+# Magacin Eparhije zapadnoevropske · Magasin du Diocèse d'Europe occidentale
 
 Katalog magacina Eparhije zapadnoevropske (23, rue du Simplon, 75018 Paris): 147 artikala u 12 kategorija, sa šiframa i fotografijama iz kataloga `CATALOGUE_SR_FR_EN.pptx`. **Cene vide samo članovi** čiji je mejl na listi, a porudžbina stiže kao PDF sa grbom. Članovi imaju **svoj nalog** sa svim porudžbinama, a magacin sve vodi iz **administracije** na `/admin/`, sa statistikom i listom za naručivanje.
 
 - **Jezici:** francuski (glavni, `/`), engleski (`/en/`), srpski ćirilicom (`/sr/`).
 - **Pretraga** po šifri (`P074`, radi i ćirilično `Р074`) i po nazivu na sva tri jezika, latinicom ili ćirilicom (`brojanica` nalazi `бројаница`).
-- **Na ulazu** iskoči prozor: izbor jezika i mejl. Ako je mejl na listi članova, vide se cene (sajt pamti mejl na tom uređaju). „Continuer sans les prix“ vodi na katalog bez cena.
+- **Na ulazu** iskoči prozor samo za izbor jezika (zastavice). Jezik se menja i zastavicama u zaglavlju.
+- **Članovi** se prijavljuju dugmetom „Connexion membres“ (mejl sa liste) i odmah vide cene; posle toga u zaglavlju stoji „Mon profil“.
+- **Upit za cene:** posetilac bez naloga napuni listu (okrugla korpa dole desno) i klikne „Demander les prix“, upiše ime i mejl. Upit stiže magacinu u administraciju (i na mejl, kad je podešen). Magacin jednim klikom šalje **ponudu** (PDF sa cenama); u ponudi je link „Poruči po ovoj ponudi“ kojim posetilac poručuje bez naloga. Ponuda važi 30 dana.
 - **Količina** se bira odmah na kartici (− 1 +), u tabeli sveća i u detaljima artikla.
 - **Porudžbina:** član upiše ime, parohiju, telefon, adresu i napomenu i klikne „Envoyer la commande“. Server proveri mejl, uzme cene iz baze, sačuva porudžbinu, napravi PDF na jeziku sajta i pošalje ga članu i magacinu (kad je podešeno slanje mejlova). PDF može i odmah da se preuzme. Na srpskoj strani ime naručioca ide ćirilicom („P. Jovan Pavlović“ → „о. Јован Павловић“).
 - **Moj nalog** (`/compte/`, `/en/account/`, `/sr/nalog/`): član se prijavljuje kodom od 6 cifara koji mu stiže mejlom. Vidi sve svoje porudžbine sa statusom i stavkama, preuzima PDF svake porudžbine, jednim klikom poručuje isto ponovo i čuva svoje podatke (ime, parohija, telefon, adresa za dostavu) koji se sami upisuju u porudžbinu. Radi kad je podešeno slanje mejlova (vidi dole).
@@ -17,13 +19,15 @@ Prijava korisničkim imenom (ili mejlom) i lozinkom. U administraciji:
 
 | Odeljak | Šta se radi |
 | --- | --- |
+| **Pregled** (prvi ekran) | šta čeka (novi upiti, nove porudžbine, roba za naručivanje), promet, porudžbine i zarada ovog meseca u odnosu na isti deo prošlog meseca, vrednost robe na stanju, promet po mesecima, najprodavaniji artikli sa slikama, mapa parohija sa prometom, poslednje porudžbine i upiti. |
+| **Upiti** | upiti za cene od posetilaca bez naloga: cene i količine se mogu promeniti pre slanja; „Pošalji ponudu mejlom“ ili „Preuzmi PDF ponude“ (dok mejl nije podešen); „Dodaj kao člana“ stavlja posetioca na listu članova. |
 | **Artikli i stanje** | tabela svih artikala: pretraga po šifri ili nazivu, filter po kategoriji, „Nema na stanju“, „Sakriveni“. **Stanje se upisuje direktno u tabeli** (broj + Enter). Prazno polje: stanje se ne prati. Kvačica „Na sajtu“ sakriva ili prikazuje artikal. „Uredi“: šifra, kategorija, nazivi i napomene na 3 jezika, cena, jedinica (komad/kg), stanje, redosled, **fotografije** (otpremanje sa računara ili telefona, sajt ih sam smanjuje; prva je naslovna). Novi artikal: dugme „Novi artikal“. |
 | **Porudžbine** | sve porudžbine sa sajta, sa stavkama. **„Označi kao izvršenu“ skida naručene količine sa stanja**; „Vrati u nove“ ih vraća. „PDF“ i „Štampaj“. Izvoz u Excel (CSV). |
 | **Statistika** | za 30 dana, 90 dana, 12 meseci ili od početka: broj porudžbina, iznos, prosečna porudžbina, broj članova koji su poručili; **Za naručivanje** (artikli kojih nema, koji su pali na granicu „Poruči kad padne na“, ili kojih po prodaji poslednjih 90 dana ima za manje od mesec dana); **najviše se prodaje** (po količini ili iznosu); **najmanje se prodaje** (i šta nije poručeno nikad); promet po mesecima; članovi koji najviše poručuju. Izvoz prodaje u CSV. |
 | **Sveštenstvo** | lista mejlova članova koji vide cene: dodavanje, izmena, adresa za dostavu, isključivanje pristupa. |
 | **Kategorije** | nazivi na 3 jezika, redosled, prikaz (kartice ili tabela kao sveće), naslovna fotografija na početnoj. |
 
-U artiklu se upisuje i **„Poruči kad padne na“**: kad stanje padne na taj broj, artikal dobije oznaku „poruči“ u tabeli i ide na listu za naručivanje (filter „Za naručivanje“ i Statistika). Artikli, porudžbine i prodaja se izvoze u CSV koji se otvara u Excel-u.
+U artiklu se upisuju i **nabavna cena** (ne vidi se na sajtu; od nje se računa zarada u Pregledu) i **„Poruči kad padne na“**: kad stanje padne na taj broj, artikal dobije oznaku „poruči“ u tabeli i ide na listu za naručivanje (filter „Za naručivanje“ i Statistika). Artikli, porudžbine i prodaja se izvoze u CSV koji se otvara u Excel-u.
 
 Izmene se na sajtu vide čim se stranica ponovo otvori (sajt čita katalog iz baze); nije potrebno ponovo objavljivati sajt.
 
@@ -61,14 +65,15 @@ Cene, stanje, sveštenici i porudžbine **nisu** u ovom repozitorijumu ni na str
 | `priests` | lista članova: mejl, ime, parohija, telefon, adresa, `active` | administratori; član samo svoj red |
 | `orders` | svaka porudžbina sa stavkama, zbirom i statusom | administratori; član samo svoje porudžbine |
 | `admins` | nalozi administracije | samo administratori |
-| `attempts` | provere mejlova (protiv nagađanja adresa) | niko |
+| `inquiries` | upiti za cene i ponude koje su poslate | samo administratori |
+| `attempts` | provere mejlova, kodovi i upiti (protiv zloupotrebe) | niko |
 
 Pristup čuva sama baza (RLS i prava po kolonama), ne stranica. Fotografije koje se otpreme iz administracije idu u Storage, u javni bucket `products`.
 
 Dve serverske funkcije:
 
 - `supabase/functions/prices`: mejl → cene (posle 10 pogrešnih pokušaja sa iste adrese u 15 minuta odgovara „previše pokušaja“).
-- `supabase/functions/order`: mejl + stavke → porudžbina u bazi, PDF sa grbom, mejlovi; uz to šalje članu kod za prijavu na nalog i ponovo pravi PDF stare porudžbine (članu za njegove, administratoru za sve).
+- `supabase/functions/order`: mejl + stavke → porudžbina u bazi, PDF sa grbom, mejlovi; uz to šalje članu kod za prijavu na nalog, ponovo pravi PDF stare porudžbine, prima upite za cene, pravi i šalje ponude i prima porudžbine po ponudi. `SITE_URL` (nije obavezno) je adresa sajta za linkove u mejlovima, ako sajt pređe na sopstveni domen.
 
 **Slanje mejlova** (PDF svešteniku i magacinu) radi preko servisa [Resend](https://resend.com): u Resend-u potvrdi domen magacina (DNS zapis), napravi API ključ, pa u Supabase-u (*Edge Functions → Secrets*) dodaj:
 
@@ -99,7 +104,7 @@ Zatim pokreni `node build.mjs` i sačuvaj promene (commit). Dok je mejl prazan, 
 
 ## Za programera
 
-`node build.mjs` (Node 18+, bez paketa) čita katalog iz baze, čuva ga u `data/catalogue.json` (bez cena i stanja) i pravi `docs/index.html`, `docs/en/`, `docs/sr/` i `docs/admin/`. Bez interneta (ili sa `OFFLINE=1`) koristi `data/catalogue.json`. Prvi prikaz stranice je iz tog snimka; u pregledaču se katalog odmah osvežava iz baze.
+`node build.mjs` (Node 18+, bez paketa) svakom CSS i JS fajlu dodaje `?v=<otisak sadržaja>`, da telefoni posle izmene ne drže staru verziju, čita katalog iz baze, čuva ga u `data/catalogue.json` (bez cena i stanja) i pravi `docs/index.html`, `docs/en/`, `docs/sr/` i `docs/admin/`. Bez interneta (ili sa `OFFLINE=1`) koristi `data/catalogue.json`. Prvi prikaz stranice je iz tog snimka; u pregledaču se katalog odmah osvežava iz baze.
 
 Tekstovi stranice (naslovi, dugmad, poruke) su u `data/strings.json`, za sva tri jezika.
 
@@ -116,6 +121,7 @@ docs/                  gotov sajt (ovo se objavljuje)
   assets/js/           render.js (zajednički za build i pregledač), app.js (katalog), admin.js (administracija), account.js (nalog člana)
   assets/img/p/        fotografije artikala iz kataloga (WebP)
   assets/img/grb-*     grb SPC
+  assets/img/europa.svg  obrisi zapadne Evrope za mapu u Pregledu (Natural Earth, javno dobro)
   assets/fonts/        Onest (SIL Open Font License), lokalno
 tools/                 skripte za izvlačenje podataka iz .pptx kataloga
 ```

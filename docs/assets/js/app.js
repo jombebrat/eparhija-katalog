@@ -1,7 +1,7 @@
 // Catalogue: search, category chips, product detail, prices for members and the order list.
 // Everything on the page works without this file; it only adds the tools.
 // The catalogue itself is reloaded from the database, so what the admin changes shows at once.
-import * as R from './render.js';
+import * as R from './render.js?v=c6dbe39cc4';
 
 (() => {
   const D = JSON.parse(document.getElementById('catalogue-data').textContent);
@@ -17,8 +17,7 @@ import * as R from './render.js';
   const norm = R.norm;
 
   // ---------- search ----------
-  const q = $('#q');
-  const qHero = $('#q-hero');
+  const q = $('#q-hero');
   const clearBtn = $('[data-clear]');
   const status = $('[data-status]');
   const noMatch = $('[data-nomatch]');
@@ -52,12 +51,17 @@ import * as R from './render.js';
   let timer;
   q.addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(() => filter(q.value), 80); });
   q.addEventListener('keydown', (e) => { if (e.key === 'Escape' && q.value) { q.value = ''; filter(''); } });
-  clearBtn.addEventListener('click', () => { q.value = ''; filter(''); q.focus(); });
+  const smooth = () => (matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth');
+  clearBtn.addEventListener('click', () => { q.value = ''; filter(''); $('[data-to-search]')?.focus(); });
   $('[data-find]').addEventListener('submit', (e) => {
     e.preventDefault();
-    q.value = qHero.value;
     filter(q.value);
-    document.getElementById('catalogue').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    q.blur();
+    document.getElementById('catalogue').scrollIntoView({ behavior: smooth() });
+  });
+  // the magnifier in the category bar goes back up to the search
+  $('[data-to-search]')?.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: smooth() });
     q.focus({ preventScroll: true });
   });
   // a category link clears a search that would hide its section
@@ -125,9 +129,8 @@ import * as R from './render.js';
   };
 
   const account = $('[data-account]');
-  const who = $('[data-who]');
   const loginBtn = $('[data-login]');
-  const logoutBtn = $('[data-logout]');
+  const profile = $('[data-profile]');
   function paintPrices() {
     document.documentElement.classList.toggle('priced', !!prices);
     $$('[data-price]').forEach((el) => {
@@ -138,9 +141,7 @@ import * as R from './render.js';
     if (account) {
       account.hidden = !D.api;
       loginBtn.hidden = !!prices;
-      logoutBtn.hidden = !prices;
-      who.hidden = !prices;
-      who.textContent = prices ? fmt(S.pricesFor, { who: (D.lang === 'sr' ? R.toCyrillic(priest?.name) : priest?.name) || store.get('ek-email') || '' }) : '';
+      profile.hidden = !prices;
     }
     if (drawer.open) renderList();
     if (detail.open && dCode) paintDetailPrice();
@@ -165,22 +166,32 @@ import * as R from './render.js';
     store.del('ek-email');
     paintPrices();
   }
-  logoutBtn?.addEventListener('click', () => { signOut(); loginBtn.focus(); });
 
-  // ---------- the welcome: language, email, or carry on without prices ----------
+  // ---------- the welcome asks for the language, once ----------
   const welcome = $('[data-welcome]');
+  function openWelcome() { welcome.showModal(); $('[aria-current="page"]', welcome)?.focus(); }
+  welcome.addEventListener('click', (e) => {
+    const a = e.target.closest('[data-pick]');
+    if (!a) return;
+    store.set('ek-welcome', 1);
+    if (a.dataset.pick === D.lang) { e.preventDefault(); welcome.close(); }
+  });
+  welcome.addEventListener('close', () => store.set('ek-welcome', 1));
+
+  // ---------- members sign in with their email to see prices ----------
+  const loginDialog = $('[data-login-dialog]');
   const loginForm = $('[data-login-form]');
   const loginInput = $('#login-email');
   const loginHelp = $('[data-login-help]');
   const loginSubmit = $('[data-login-submit]');
   let afterLogin = null;
-  function openWelcome(then = null) {
+  function openLogin(then = null) {
     if (!D.api) return;
     afterLogin = then;
     loginHelp.textContent = '';
     loginInput.removeAttribute('aria-invalid');
-    loginInput.value = store.get('ek-email') || '';
-    welcome.showModal();
+    loginInput.value = store.get('ek-email') || store.get('ek-inq-email') || '';
+    loginDialog.showModal();
     loginInput.focus();
   }
   loginForm.addEventListener('submit', async (e) => {
@@ -202,7 +213,7 @@ import * as R from './render.js';
     loginSubmit.disabled = false;
     if (result === 'ok') {
       store.set('ek-welcome', 1);
-      welcome.close();
+      loginDialog.close();
       const then = afterLogin; afterLogin = null;
       if (then) then();
       return;
@@ -211,9 +222,8 @@ import * as R from './render.js';
     loginHelp.textContent = { unknown: S.loginUnknown, too_many: S.loginTooMany, invalid: S.loginInvalid }[result] || S.loginFailed;
     loginInput.focus();
   });
-  $('[data-login-skip]').addEventListener('click', () => { store.set('ek-welcome', 1); welcome.close(); });
-  welcome.addEventListener('cancel', () => store.set('ek-welcome', 1));
-  loginBtn?.addEventListener('click', () => { opener = loginBtn; openWelcome(); });
+  $('[data-login-skip]').addEventListener('click', () => loginDialog.close());
+  loginBtn?.addEventListener('click', () => { opener = loginBtn; openLogin(); });
 
   // ---------- the list ----------
   const KEY = 'eparhija-katalog-liste';
@@ -272,6 +282,7 @@ import * as R from './render.js';
     const n = Object.keys(list).length;
     $$('[data-count]').forEach((c) => { c.textContent = n; });
     $$('[data-open-list]').forEach((b) => b.toggleAttribute('data-has', n > 0));
+    $$('.fab').forEach((b) => b.setAttribute('aria-label', fmt(S.cartLabel, { n: countText(n) })));
   }
   document.addEventListener('click', (e) => {
     const b = e.target.closest('[data-add]');
@@ -289,7 +300,10 @@ import * as R from './render.js';
     const codes = Object.keys(list);
     body.innerHTML = '';
     foot.innerHTML = '';
+    $('#drawer-title').textContent = quote && !quote.gone ? fmt(S.quoteTitle, { n: quote.number }) : S.list;
     if (lastOrder) return renderDone();
+    if (quote) return renderQuote();
+    if (lastInquiry) return renderInquiryDone();
     if (!codes.length) {
       const box = el('div', 'drawer__empty');
       box.append(el('b', '', S.emptyTitle), el('p', '', S.emptyText));
@@ -364,33 +378,155 @@ import * as R from './render.js';
     return { help, row };
   }
 
+  // a visitor without prices sends the list to the warehouse, which answers with a quote
   function renderGuestFoot() {
     const p = el('p', 'drawer__guest', S.guestList);
-    const go = el('button', 'btn btn--primary', S.showPrices); go.type = 'button';
-    go.addEventListener('click', () => { opener = $('.bar [data-open-list]'); drawer.close(); openWelcome(() => { renderList(); drawer.showModal(); }); });
+    const ask = el('button', 'btn btn--primary', S.askPrices); ask.type = 'button';
+    ask.addEventListener('click', () => { foot.innerHTML = ''; renderInquiryForm(); $('#iq-email', foot)?.focus(); });
+    const member = el('p', 'drawer__member', `${S.memberHint} `);
+    const login = el('button', 'textbtn', S.memberHintLink); login.type = 'button';
+    login.addEventListener('click', () => { opener = $('.fab'); drawer.close(); openLogin(() => { renderList(); drawer.showModal(); }); });
+    member.append(login);
     const { help, row } = listActions();
-    foot.append(p, go, help, row);
-    if (!D.api) go.hidden = true;
+    foot.append(p, ask, member, help, row);
+    if (!D.api) { ask.hidden = true; member.hidden = true; }
+  }
+
+  const formField = (prefix, saved) => (name, label, type = 'text', opt = false, tag = 'input', auto = '') => {
+    const wrap = el('div', 'field');
+    const id = `${prefix}-${name}`;
+    const lab = el('label', '', label); lab.htmlFor = id;
+    if (opt) lab.append(el('span', 'field__opt', ` (${S.optional})`));
+    const input = el(tag); input.id = id; input.name = name;
+    if (tag === 'input') input.type = type;
+    if (tag === 'textarea') input.rows = 2;
+    if (auto) input.autocomplete = auto;
+    if (type === 'email') { input.inputMode = 'email'; input.spellcheck = false; }
+    input.maxLength = name === 'note' ? 1000 : name === 'address' ? 300 : 160;
+    input.value = name === 'name' && D.lang === 'sr' ? R.toCyrillic(saved.name) : saved[name] || '';
+    wrap.append(lab, input);
+    return wrap;
+  };
+  const emailOk = (v) => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v);
+
+  let lastInquiry = null;
+  function renderInquiryForm() {
+    const form = el('form', 'order-form'); form.noValidate = true;
+    const saved = { ...store.get('ek-form', {}), email: store.get('ek-inq-email') || '' };
+    const field = formField('iq', saved);
+    const grid = el('div', 'order-form__grid');
+    grid.append(field('name', S.formName, 'text', false, 'input', 'name'), field('email', S.emailLabel, 'email', false, 'input', 'email'),
+      field('parish', S.formParish, 'text', true, 'input', 'organization'), field('phone', S.formPhone, 'tel', true, 'input', 'tel'));
+    const note = field('note', S.formNote, 'text', true, 'textarea');
+    // left empty by people; filled by robots
+    const trap = el('div', 'trap'); trap.setAttribute('aria-hidden', 'true');
+    const hp = el('input'); hp.name = 'website'; hp.tabIndex = -1; hp.autocomplete = 'off'; trap.append(hp);
+    const send = el('button', 'btn btn--primary', S.inqSend); send.type = 'submit';
+    const help = el('p', 'drawer__help'); help.setAttribute('aria-live', 'polite'); help.id = 'inq-help';
+    const back = el('button', 'textbtn', S.cancel); back.type = 'button';
+    back.addEventListener('click', () => renderList());
+    form.append(el('p', 'drawer__guest', S.guestList), grid, note, trap, send, help, back);
+    foot.append(form);
+    form.addEventListener('input', (e) => e.target.removeAttribute('aria-invalid'));
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(form));
+      const email = String(data.email || '').trim().toLowerCase();
+      const input = $('#iq-email', form);
+      if (!emailOk(email)) {
+        input.setAttribute('aria-invalid', 'true'); input.setAttribute('aria-describedby', 'inq-help');
+        help.textContent = email ? S.loginInvalid : S.emailMissing; input.focus(); return;
+      }
+      input.removeAttribute('aria-invalid');
+      store.set('ek-inq-email', email);
+      store.set('ek-form', { ...store.get('ek-form', {}), name: data.name, parish: data.parish, phone: data.phone });
+      send.disabled = true; send.setAttribute('aria-busy', 'true'); send.textContent = S.sending; help.textContent = '';
+      let res = null;
+      try {
+        res = await api('order', { action: 'inquiry', lang: D.lang, items: Object.entries(list).map(([code, qty]) => ({ code, qty })), ...data, email });
+      } catch { res = null; }
+      send.disabled = false; send.removeAttribute('aria-busy'); send.textContent = S.inqSend;
+      if (res && res.status === 200 && res.data.ok) { lastInquiry = res.data; renderList(); $('[data-done-close]', foot)?.focus(); return; }
+      help.textContent = res && res.status === 429 ? S.inqTooMany : res && res.status === 400 ? S.loginInvalid : S.inqFailed;
+    });
+  }
+  function renderInquiryDone() {
+    const box = el('div', 'drawer__done');
+    box.setAttribute('role', 'status');
+    box.append(el('b', '', S.inqDone), el('p', '', S.inqDoneText));
+    body.append(box);
+    const row = el('div', 'drawer__actions');
+    const ok = el('button', 'btn btn--quiet', S.done); ok.type = 'button'; ok.dataset.doneClose = '';
+    ok.addEventListener('click', () => { lastInquiry = null; drawer.close(); });
+    row.append(ok);
+    foot.append(row);
+  }
+
+  // ---------- a quote from the warehouse, opened from its email: order it as it is ----------
+  let quote = null;
+  async function loadQuote(token) {
+    let r = null;
+    try { r = await api('order', { action: 'quote-get', token }); } catch { r = null; }
+    quote = r && r.status === 200 && r.data.lines ? { ...r.data, token } : { gone: true };
+    renderList();
+    drawer.showModal();
+  }
+  function renderQuote() {
+    if (quote.gone) {
+      const box = el('div', 'drawer__empty');
+      box.append(el('p', '', S.quoteGone));
+      body.append(box);
+      return;
+    }
+    const lead = el('p', 'drawer__guest', S.quoteLead);
+    body.append(lead);
+    for (const l of quote.lines) {
+      const row = el('div', 'line line--quote');
+      const p = D.p[l.code];
+      row.innerHTML = `<span class="line__img">${p?.ph?.[0] ? `<img src="${photo(p.ph[0][0])}" alt="" width="56" height="56">` : ''}</span><span class="line__name"></span><span class="line__sum"></span>`;
+      const name = $('.line__name', row);
+      name.textContent = l.name;
+      const sub = el('span', 'line__sub');
+      sub.append(el('span', '', l.code), el('span', '', `${l.qty}${l.unit === 'kg' ? ` ${S.kg}` : ''} × ${money.format(l.price)}${l.unit === 'kg' ? ` ${S.perKg}` : ''}`));
+      name.append(sub);
+      $('.line__sum', row).textContent = money.format(l.price * l.qty);
+      body.append(row);
+    }
+    const form = el('form', 'order-form'); form.noValidate = true;
+    const field = formField('qf', { name: quote.name, parish: quote.parish, phone: quote.phone, address: store.get('ek-form', {}).address });
+    const total = el('p', 'drawer__total');
+    total.append(el('span', '', S.total), el('b', '', money.format(quote.total)));
+    const grid = el('div', 'order-form__grid');
+    grid.append(field('name', S.formName, 'text', false, 'input', 'name'), field('parish', S.formParish, 'text', true, 'input', 'organization'),
+      field('phone', S.formPhone, 'tel', true, 'input', 'tel'), field('address', S.formAddress, 'text', true, 'input', 'street-address'));
+    const note = field('note', S.formNote, 'text', true, 'textarea');
+    const send = el('button', 'btn btn--primary', S.quoteOrder); send.type = 'submit';
+    const help = el('p', 'drawer__help'); help.setAttribute('aria-live', 'polite'); help.id = 'quote-help';
+    form.append(total, el('p', 'drawer__member', `${S.quoteFor}: ${quote.email}`), grid, note, send, help);
+    foot.append(form);
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(form));
+      const nameInput = $('#qf-name', form);
+      if (String(data.name || '').trim().length < 2) {
+        nameInput.setAttribute('aria-invalid', 'true'); nameInput.setAttribute('aria-describedby', 'quote-help');
+        help.textContent = S.nameMissing; nameInput.focus(); return;
+      }
+      send.disabled = true; send.setAttribute('aria-busy', 'true'); send.textContent = S.sending; help.textContent = '';
+      let res = null;
+      try { res = await api('order', { action: 'quote-order', token: quote.token, ...data }); } catch { res = null; }
+      send.disabled = false; send.removeAttribute('aria-busy'); send.textContent = S.quoteOrder;
+      if (res && res.status === 200 && res.data.number) { lastOrder = res.data; quote = null; renderList(); $('[data-done-pdf]', foot)?.focus(); return; }
+      if (res && (res.status === 404 || res.status === 410)) { quote = { gone: true }; renderList(); return; }
+      help.textContent = res && res.data?.error === 'unavailable' ? fmt(S.orderUnavailable, { codes: (res.data.codes || []).join(', ') }) : S.orderFailed;
+    });
   }
 
   function renderOrderForm() {
     const form = el('form', 'order-form'); form.noValidate = true;
-    const saved = store.get('ek-form', {});
-    const field = (name, label, type = 'text', opt = false, tag = 'input', auto = '') => {
-      const wrap = el('div', 'field');
-      const id = `of-${name}`;
-      const lab = el('label', '', label); lab.htmlFor = id;
-      if (opt) lab.append(el('span', 'field__opt', ` (${S.optional})`));
-      const input = el(tag); input.id = id; input.name = name;
-      if (tag === 'input') input.type = type;
-      if (tag === 'textarea') input.rows = 2;
-      if (auto) input.autocomplete = auto;
-      input.maxLength = name === 'note' ? 1000 : name === 'address' ? 300 : 160;
-      input.value = name === 'name' && D.lang === 'sr' ? R.toCyrillic(saved.name) : saved[name] || '';
-      input.addEventListener('change', () => { const f = store.get('ek-form', {}); f[name] = input.value; store.set('ek-form', f); });
-      wrap.append(lab, input);
-      return wrap;
-    };
+    const field = formField('of', store.get('ek-form', {}));
+    form.addEventListener('change', (e) => { const f = store.get('ek-form', {}); f[e.target.name] = e.target.value; store.set('ek-form', f); });
+    form.addEventListener('input', (e) => e.target.removeAttribute('aria-invalid'));
     const total = el('p', 'drawer__total');
     total.append(el('span', '', S.total));
     const tb = el('b', '', money.format(sum())); tb.dataset.total = '';
@@ -446,7 +582,7 @@ import * as R from './render.js';
       const a = el('a', 'btn btn--primary', S.downloadPdf); a.href = url; a.download = o.filename; a.dataset.donePdf = '';
       row.append(a);
     }
-    if (D.account) { const a = el('a', 'btn btn--quiet', S.acLink); a.href = D.account; row.append(a); }
+    if (D.account && prices) { const a = el('a', 'btn btn--quiet', S.acLink); a.href = D.account; row.append(a); }
     const ok = el('button', 'btn btn--quiet', S.done); ok.type = 'button';
     if (!o.pdf) ok.dataset.donePdf = '';
     ok.addEventListener('click', () => { lastOrder = null; if (url) URL.revokeObjectURL(url); drawer.close(); });
@@ -466,7 +602,7 @@ import * as R from './render.js';
 
   let opener = null;
   $$('[data-open-list]').forEach((b) => b.addEventListener('click', () => { opener = b; renderList(); drawer.showModal(); }));
-  drawer.addEventListener('close', () => { if (lastOrder) { lastOrder = null; } });
+  drawer.addEventListener('close', () => { lastOrder = null; lastInquiry = null; quote = null; });
 
   // ---------- product detail ----------
   const detail = $('[data-detail-dialog]');
@@ -531,7 +667,7 @@ import * as R from './render.js';
     dlg.addEventListener('click', (e) => {
       if (e.target === dlg || e.target.closest('[data-close]')) dlg.close();
     });
-    dlg.addEventListener('close', () => { if (opener && document.contains(opener) && !welcome.open && !drawer.open) opener.focus(); opener = null; });
+    dlg.addEventListener('close', () => { if (opener && document.contains(opener) && !welcome.open && !loginDialog.open && !drawer.open) opener.focus(); opener = null; });
   });
 
   // ---------- the live catalogue: what the admin changed shows without a rebuild ----------
@@ -571,6 +707,12 @@ import * as R from './render.js';
     const email = store.get('ek-email');
     if (email) {
       checkEmail(email).then((r) => { if (r === 'unknown') signOut(); }).catch(() => { /* offline: no prices this time */ });
+    }
+    const token = new URLSearchParams(location.search).get('ponuda');
+    if (token) {
+      store.set('ek-welcome', 1);
+      history.replaceState(null, '', location.pathname + location.hash);
+      loadQuote(token);
     } else if (!store.get('ek-welcome')) {
       openWelcome();
     }

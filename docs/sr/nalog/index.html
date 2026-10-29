@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Мој налог · Магацин Епархије западноевропске</title>
+  <title>Мој профил · Магацин Епархије западноевропске</title>
   <meta name="description" content="Ваше поруџбине у магацину Епархије и њихови PDF-ови.">
   <meta name="robots" content="noindex">
   <link rel="alternate" hreflang="fr" href="../../compte/">
@@ -11,7 +11,7 @@
   <link rel="alternate" hreflang="sr-Cyrl" href="../../sr/nalog/">
   <link rel="icon" href="../../favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
-  <link rel="stylesheet" href="../../assets/css/account.css">
+  <link rel="stylesheet" href="../../assets/css/account.css?v=7679f742a3">
   <script>document.documentElement.className = 'js';</script>
 </head>
 <body class="acct-page">
@@ -20,9 +20,9 @@
     <div class="container slab__inner">
       <a class="wordmark" href="../../sr/"><img class="wordmark__grb" src="../../assets/img/grb-112.webp" width="48" height="56" alt=""><b>Магацин Епархије западноевропске</b></a>
       <nav class="langs" aria-label="Језик">
-        <a href="../../compte/" hreflang="fr" lang="fr" aria-label="Français" data-lang><span class="l-long">Français</span><span class="l-short" aria-hidden="true">fr</span></a>
-        <a href="../../en/account/" hreflang="en" lang="en" aria-label="English" data-lang><span class="l-long">English</span><span class="l-short" aria-hidden="true">en</span></a>
-        <a href="../../sr/nalog/" hreflang="sr-Cyrl" lang="sr-Cyrl" aria-label="Српски" data-lang aria-current="page"><span class="l-long">Српски</span><span class="l-short" aria-hidden="true">sr</span></a>
+        <a href="../../compte/" hreflang="fr" lang="fr" aria-label="Français" data-lang><span class="flag"><svg viewBox="0 0 3 2" aria-hidden="true"><rect width="1" height="2" fill="#002654"/><rect x="1" width="1" height="2" fill="#fff"/><rect x="2" width="1" height="2" fill="#CE1126"/></svg></span><span class="l-code" aria-hidden="true">FR</span></a>
+        <a href="../../en/account/" hreflang="en" lang="en" aria-label="English" data-lang><span class="flag"><svg viewBox="0 0 60 30" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><clipPath id="uk9"><path d="M30,15h30v15zv15h-30zh-30v-15zv-15h30z"/></clipPath><path d="M0,0v30h60v-30z" fill="#012169"/><path d="M0,0L60,30M60,0L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0L60,30M60,0L0,30" clip-path="url(#uk9)" stroke="#C8102E" stroke-width="4"/><path d="M30,0v30M0,15h60" stroke="#fff" stroke-width="10"/><path d="M30,0v30M0,15h60" stroke="#C8102E" stroke-width="6"/></svg></span><span class="l-code" aria-hidden="true">EN</span></a>
+        <a href="../../sr/nalog/" hreflang="sr-Cyrl" lang="sr-Cyrl" aria-label="Српски" data-lang aria-current="page"><span class="flag"><svg viewBox="0 0 3 2" aria-hidden="true"><rect width="3" height="2" fill="#fff"/><rect width="3" height="1.3333" fill="#0C4076"/><rect width="3" height="0.6667" fill="#C6363C"/></svg></span><span class="l-code" aria-hidden="true">SR</span></a>
       </nav>
       <a class="listbtn" href="../../sr/">Каталог</a>
     </div>
@@ -30,7 +30,7 @@
 
   <main id="main" class="acct">
     <div class="container acct__inner">
-      <h1>Мој налог</h1>
+      <h1>Мој профил</h1>
       <p class="acct__boot" data-boot>…</p>
       <noscript><p>Ваше поруџбине и њихови PDF-ови. За чланове са списка.</p></noscript>
 
@@ -48,6 +48,7 @@
           <p class="acct__links"><button class="textbtn" type="button" data-again>Пошаљи код поново</button><button class="textbtn" type="button" data-other>Друга адреса</button></p>
         </form>
         <p class="acct__help" id="ac-help" data-help>Шаљемо код од 6 цифара на ову адресу.</p>
+        <p class="acct__prices" data-prices-for hidden><span data-prices-who></span> <button class="textbtn" type="button" data-forget>Одјави се</button></p>
       </section>
 
       <section class="acct__in" data-in hidden aria-labelledby="h-orders">
@@ -86,7 +87,7 @@
     </div>
   </footer>
 
-  <script type="application/json" id="account-data">{"lang":"sr","locale":"sr-RS","catalogue":"../../sr/","api":{"url":"https://ivzzhtaksdwbhhioilsn.supabase.co","key":"sb_publishable_rxpulg5CJqz_TpV1brvBCQ_C2ioyLyW"},"s":{"acTitle":"Мој налог","acEmail":"Ваша е-пошта","acSend":"Пошаљи код","acSendHelp":"Шаљемо код од 6 цифара на ову адресу.","acSending":"Слање…","acSent":"Код је послат на {email}. Важи један сат; погледајте и нежељену пошту.","acCode":"Код из е-поруке","acSignIn":"Пријави се","acSigningIn":"Пријављивање…","acAgain":"Пошаљи код поново","acOther":"Друга адреса","acWrongCode":"Код није тачан или је истекао. Затражите нови.","acNoCode":"Унесите код из е-поруке.","acMailOff":"Магацин још није укључио слање кодова. Цене и поручивање и даље раде у каталогу.","acMailFailed":"Порука није послата. Покушајте поново за тренутак.","acSignedOut":"Сесија је истекла. Затражите нови код.","acOrders":"Ваше поруџбине","acOrdersEmpty":"Још нема поруџбина.","acOrdersEmptyText":"Поруџбине послате из каталога појављују се овде, са PDF-ом.","acOrdersError":"Поруџбине се нису учитале.","acRetry":"Покушај поново","acOrder":"Поруџбина бр. {n}","acStatusNew":"Примљена","acStatusDone":"Извршена","acStatusCancelled":"Отказана","acLines":"Погледај артикле","acPdf":"PDF","acPdfMaking":"Припрема…","acPdfFailed":"PDF није припремљен. Покушајте поново.","acReorder":"Поручи поново","acReorderSome":"Више нису доступни, нису додати: {codes}.","acSave":"Сачувај","acSaving":"Чување…","acSaved":"Сачувано.","acSaveFailed":"Није сачувано. Покушајте поново.","acItem":"Артикал","acQty":"Кол.","acAmount":"Износ","acCatalogue":"Каталог","code":"Шифра","total":"Оквирни збир","kg":"kg","signOut":"Одјави се","loginUnknown":"Ова адреса није на списку чланова. Проверите је или наставите без цена.","loginTooMany":"Превише покушаја. Покушајте поново за петнаест минута.","loginInvalid":"Упишите адресу у облику ime@primer.rs.","loginFailed":"Провера није успела. Покушајте поново за тренутак.","formName":"Име и презиме","formParish":"Парохија","formPhone":"Телефон","formAddress":"Адреса за испоруку","optional":"није обавезно"},"items":{"one":"артикал","few":"артикла","other":"артикала"}}</script>
-  <script type="module" src="../../assets/js/account.js"></script>
+  <script type="application/json" id="account-data">{"lang":"sr","locale":"sr-RS","catalogue":"../../sr/","api":{"url":"https://ivzzhtaksdwbhhioilsn.supabase.co","key":"sb_publishable_rxpulg5CJqz_TpV1brvBCQ_C2ioyLyW"},"s":{"acTitle":"Мој профил","acEmail":"Ваша е-пошта","acSend":"Пошаљи код","acSendHelp":"Шаљемо код од 6 цифара на ову адресу.","acSending":"Слање…","acSent":"Код је послат на {email}. Важи један сат; погледајте и нежељену пошту.","acCode":"Код из е-поруке","acSignIn":"Пријави се","acSigningIn":"Пријављивање…","acAgain":"Пошаљи код поново","acOther":"Друга адреса","acWrongCode":"Код није тачан или је истекао. Затражите нови.","acNoCode":"Унесите код из е-поруке.","acMailOff":"Магацин још није укључио слање кодова. Цене и поручивање и даље раде у каталогу.","acMailFailed":"Порука није послата. Покушајте поново за тренутак.","acSignedOut":"Сесија је истекла. Затражите нови код.","acOrders":"Ваше поруџбине","acOrdersEmpty":"Још нема поруџбина.","acOrdersEmptyText":"Поруџбине послате из каталога појављују се овде, са PDF-ом.","acOrdersError":"Поруџбине се нису учитале.","acRetry":"Покушај поново","acOrder":"Поруџбина бр. {n}","acStatusNew":"Примљена","acStatusDone":"Извршена","acStatusCancelled":"Отказана","acLines":"Погледај артикле","acPdf":"PDF","acPdfMaking":"Припрема…","acPdfFailed":"PDF није припремљен. Покушајте поново.","acReorder":"Поручи поново","acReorderSome":"Више нису доступни, нису додати: {codes}.","acSave":"Сачувај","acSaving":"Чување…","acSaved":"Сачувано.","acSaveFailed":"Није сачувано. Покушајте поново.","acItem":"Артикал","acQty":"Кол.","acAmount":"Износ","acCatalogue":"Каталог","code":"Шифра","total":"Оквирни збир","kg":"kg","signOut":"Одјави се","loginUnknown":"Ова адреса није на списку чланова. Проверите је или наставите без цена.","loginTooMany":"Превише покушаја. Покушајте поново за петнаест минута.","loginInvalid":"Упишите адресу у облику ime@primer.rs.","loginFailed":"Провера није успела. Покушајте поново за тренутак.","formName":"Име и презиме","formParish":"Парохија","formPhone":"Телефон","formAddress":"Адреса за испоруку","optional":"није обавезно","pricesFor":"Цене за: {who}"},"items":{"one":"артикал","few":"артикла","other":"артикала"}}</script>
+  <script type="module" src="../../assets/js/account.js?v=8ca8fe75a7"></script>
 </body>
 </html>
