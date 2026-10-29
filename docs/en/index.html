@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Warehouse catalogue, Eparchy of Western Europe</title>
-  <meta name="description" content="Censers, icons, candlesticks, oil lamps, crosses, prayer ropes, books and wax candles: the whole warehouse of the Eparchy of Western Europe, with codes and prices.">
+  <meta name="description" content="Censers, icons, candlesticks, oil lamps, crosses, prayer ropes, books and wax candles: the whole warehouse of the Eparchy of Western Europe, item by item, with their codes.">
   <meta name="theme-color" content="#232323">
   
   <link rel="alternate" hreflang="fr" href="../">
@@ -13,7 +13,7 @@
   <link rel="alternate" hreflang="x-default" href="../">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Warehouse catalogue, Eparchy of Western Europe">
-  <meta property="og:description" content="Censers, icons, candlesticks, oil lamps, crosses, prayer ropes, books and wax candles: the whole warehouse of the Eparchy of Western Europe, with codes and prices.">
+  <meta property="og:description" content="Censers, icons, candlesticks, oil lamps, crosses, prayer ropes, books and wax candles: the whole warehouse of the Eparchy of Western Europe, item by item, with their codes.">
   <meta property="og:locale" content="en_GB">
   
   <link rel="icon" href="../favicon.svg" type="image/svg+xml">
@@ -32,6 +32,11 @@
         <a href="../en/" hreflang="en" lang="en" aria-label="English" data-lang aria-current="page"><span class="l-long">English</span><span class="l-short" aria-hidden="true">en</span></a>
         <a href="../sr/" hreflang="sr-Cyrl" lang="sr-Cyrl" aria-label="Српски" data-lang><span class="l-long">Српски</span><span class="l-short" aria-hidden="true">sr</span></a>
       </nav>
+      <div class="account" data-account hidden>
+        <button class="listbtn listbtn--login" type="button" data-login>See prices</button>
+        <span class="account__who" data-who hidden></span>
+        <button class="account__out" type="button" data-logout hidden>Sign out</button>
+      </div>
       <button class="listbtn" type="button" data-open-list hidden>My list <span class="listbtn__n" data-count>0</span></button>
     </div>
   </header>
@@ -41,9 +46,9 @@
       <div class="container hero__grid">
         <div class="hero__text">
           <h1>From censer to candle</h1>
-          <p class="lead">Every item in the Eparchy’s warehouse, with its code and price.</p>
+          <p class="lead">Every item in the Eparchy’s warehouse; prices for clergy only.</p>
           <form class="find" action="#catalogue" data-find hidden>
-            <label for="q-hero">Find an item or a code</label>
+            <label for="q-hero">Item or code</label>
             <div class="find__row">
               <input id="q-hero" type="search" name="q" placeholder="P074, prayer rope" autocomplete="off" spellcheck="false">
               <button class="btn btn--primary" type="submit">Search</button>
@@ -56,62 +61,62 @@
         <li class="shelf"><a href="#encensoirs">
           <span class="shelf__img"><img src="../assets/img/p/h004-1-s.webp" width="369" height="640" alt="" fetchpriority="high" decoding="async"></span>
           <span class="shelf__name">Censers</span>
-          <span class="shelf__count">9 items</span>
+          <span class="shelf__count">9<span class="visually-hidden"> items</span></span>
         </a></li>
         <li class="shelf"><a href="#icones">
           <span class="shelf__img"><img src="../assets/img/p/p074-1-s.webp" width="447" height="640" alt="" fetchpriority="high" decoding="async"></span>
           <span class="shelf__name">Icons</span>
-          <span class="shelf__count">16 items</span>
+          <span class="shelf__count">16<span class="visually-hidden"> items</span></span>
         </a></li>
         <li class="shelf"><a href="#chandeliers">
           <span class="shelf__img"><img src="../assets/img/p/a001-1-s.webp" width="382" height="640" alt="" fetchpriority="high" decoding="async"></span>
           <span class="shelf__name">Candlesticks</span>
-          <span class="shelf__count">7 items</span>
+          <span class="shelf__count">7<span class="visually-hidden"> items</span></span>
         </a></li>
         <li class="shelf"><a href="#veilleuses">
           <span class="shelf__img"><img src="../assets/img/p/p142-1-s.webp" width="640" height="536" alt="" fetchpriority="high" decoding="async"></span>
           <span class="shelf__name">Oil lamps</span>
-          <span class="shelf__count">16 items</span>
+          <span class="shelf__count">16<span class="visually-hidden"> items</span></span>
         </a></li>
         <li class="shelf"><a href="#croix">
           <span class="shelf__img"><img src="../assets/img/p/p020-1-s.webp" width="358" height="640" alt="" fetchpriority="auto" decoding="async"></span>
           <span class="shelf__name">Crosses</span>
-          <span class="shelf__count">7 items</span>
+          <span class="shelf__count">7<span class="visually-hidden"> items</span></span>
         </a></li>
         <li class="shelf"><a href="#pendentifs">
           <span class="shelf__img"><img src="../assets/img/p/h016-1-s.webp" width="565" height="640" alt="" fetchpriority="auto" decoding="async"></span>
           <span class="shelf__name">Small crosses and pendants</span>
-          <span class="shelf__count">17 items</span>
+          <span class="shelf__count">17<span class="visually-hidden"> items</span></span>
         </a></li>
         <li class="shelf"><a href="#culte">
           <span class="shelf__img"><img src="../assets/img/p/h020-1-s.webp" width="517" height="640" alt="" fetchpriority="auto" decoding="async"></span>
           <span class="shelf__name">Church supplies</span>
-          <span class="shelf__count">20 items</span>
+          <span class="shelf__count">20<span class="visually-hidden"> items</span></span>
         </a></li>
         <li class="shelf"><a href="#encens">
           <span class="shelf__img"><img src="../assets/img/p/p146-1-s.webp" width="640" height="588" alt="" fetchpriority="auto" decoding="async"></span>
           <span class="shelf__name">Incense and charcoal</span>
-          <span class="shelf__count">6 items</span>
+          <span class="shelf__count">6<span class="visually-hidden"> items</span></span>
         </a></li>
         <li class="shelf"><a href="#chapelets">
           <span class="shelf__img"><img src="../assets/img/p/p111-1-s.webp" width="511" height="640" alt="" loading="lazy" decoding="async"></span>
           <span class="shelf__name">Prayer ropes</span>
-          <span class="shelf__count">26 items</span>
+          <span class="shelf__count">26<span class="visually-hidden"> items</span></span>
         </a></li>
         <li class="shelf"><a href="#enfants">
           <span class="shelf__img"><img src="../assets/img/p/n001-1-s.webp" width="505" height="619" alt="" loading="lazy" decoding="async"></span>
           <span class="shelf__name">Children’s corner</span>
-          <span class="shelf__count">2 items</span>
+          <span class="shelf__count">2<span class="visually-hidden"> items</span></span>
         </a></li>
         <li class="shelf"><a href="#livres">
           <span class="shelf__img"><img src="../assets/img/p/p084-1-s.webp" width="555" height="640" alt="" loading="lazy" decoding="async"></span>
           <span class="shelf__name">Books</span>
-          <span class="shelf__count">11 items</span>
+          <span class="shelf__count">11<span class="visually-hidden"> items</span></span>
         </a></li>
         <li class="shelf"><a href="#bougies">
           <span class="shelf__img"><img src="../assets/img/p/bougies-1-s.webp" width="467" height="640" alt="" loading="lazy" decoding="async"></span>
           <span class="shelf__name">Wax candles</span>
-          <span class="shelf__count">10 sizes</span>
+          <span class="shelf__count">10<span class="visually-hidden"> sizes</span></span>
         </a></li>
           </ul>
         </nav>
@@ -122,7 +127,7 @@
       <div class="bar">
         <div class="container bar__inner">
           <div class="bar__find" data-js hidden>
-            <label class="visually-hidden" for="q">Find an item or a code</label>
+            <label class="visually-hidden" for="q">Item or code</label>
             <input id="q" type="search" placeholder="Name or code" autocomplete="off" spellcheck="false">
             <button class="bar__clear" type="button" data-clear hidden>Clear</button>
           </div>
@@ -139,55 +144,55 @@
         <li class="card" data-code="P011" data-search="encensoir censer kadionica p011 r011">
           <a class="card__img" href="../assets/img/p/p011-1.webp" data-detail="P011" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p011-1-s.webp" width="640" height="274" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p011-1.webp" data-detail="P011">Censer</a></h3>
-          <p class="card__meta"><span class="card__code">P011</span><span class="card__price">€2.26</span></p>
+          <p class="card__meta"><span class="card__code">P011</span><span class="card__price" data-price="P011"></span></p>
           <button class="add" type="button" data-add="P011" aria-pressed="false" aria-label="Add to list: Censer">Add</button>
         </li>
         <li class="card" data-code="P014" data-search="encensoir censer kadionica p014 r014">
           <a class="card__img" href="../assets/img/p/p014-1.webp" data-detail="P014" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p014-1-s.webp" width="504" height="369" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p014-1.webp" data-detail="P014">Censer</a></h3>
-          <p class="card__meta"><span class="card__code">P014</span><span class="card__price">€3.08</span></p>
+          <p class="card__meta"><span class="card__code">P014</span><span class="card__price" data-price="P014"></span></p>
           <button class="add" type="button" data-add="P014" aria-pressed="false" aria-label="Add to list: Censer">Add</button>
         </li>
         <li class="card" data-code="P013" data-search="encensoir censer kadionica p013 r013">
           <a class="card__img" href="../assets/img/p/p013-1.webp" data-detail="P013" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p013-1-s.webp" width="530" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p013-1.webp" data-detail="P013">Censer</a></h3>
-          <p class="card__meta"><span class="card__code">P013</span><span class="card__price">€4.12</span></p>
+          <p class="card__meta"><span class="card__code">P013</span><span class="card__price" data-price="P013"></span></p>
           <button class="add" type="button" data-add="P013" aria-pressed="false" aria-label="Add to list: Censer">Add</button>
         </li>
         <li class="card" data-code="P012" data-search="encensoir censer kadionica p012 r012">
           <a class="card__img" href="../assets/img/p/p012-1.webp" data-detail="P012" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p012-1-s.webp" width="404" height="364" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p012-1.webp" data-detail="P012">Censer</a></h3>
-          <p class="card__meta"><span class="card__code">P012</span><span class="card__price">€4.12</span></p>
+          <p class="card__meta"><span class="card__code">P012</span><span class="card__price" data-price="P012"></span></p>
           <button class="add" type="button" data-add="P012" aria-pressed="false" aria-label="Add to list: Censer">Add</button>
         </li>
         <li class="card" data-code="A006" data-search="encensoir censer kadionica a006 a006">
           <a class="card__img" href="../assets/img/p/a006-1.webp" data-detail="A006" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/a006-1-s.webp" width="640" height="308" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/a006-1.webp" data-detail="A006">Censer</a></h3>
-          <p class="card__meta"><span class="card__code">A006</span><span class="card__price">€6.18</span></p>
+          <p class="card__meta"><span class="card__code">A006</span><span class="card__price" data-price="A006"></span></p>
           <button class="add" type="button" data-add="A006" aria-pressed="false" aria-label="Add to list: Censer">Add</button>
         </li>
         <li class="card" data-code="H007" data-search="petit encensoir small censer kadionica manja h007 n007">
           <a class="card__img" href="../assets/img/p/h007-1.webp" data-detail="H007" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/h007-1-s.webp" width="640" height="361" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/h007-1.webp" data-detail="H007">Small censer</a></h3>
-          <p class="card__meta"><span class="card__code">H007</span><span class="card__price">€4.00</span></p>
+          <p class="card__meta"><span class="card__code">H007</span><span class="card__price" data-price="H007"></span></p>
           <button class="add" type="button" data-add="H007" aria-pressed="false" aria-label="Add to list: Small censer">Add</button>
         </li>
         <li class="card" data-code="H006" data-search="grand encensoir large censer kadionica veca h006 n006">
           <a class="card__img" href="../assets/img/p/h006-1.webp" data-detail="H006" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/h006-1-s.webp" width="640" height="307" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/h006-1.webp" data-detail="H006">Large censer</a></h3>
-          <p class="card__meta"><span class="card__code">H006</span><span class="card__price">€6.18</span></p>
+          <p class="card__meta"><span class="card__code">H006</span><span class="card__price" data-price="H006"></span></p>
           <button class="add" type="button" data-add="H006" aria-pressed="false" aria-label="Add to list: Large censer">Add</button>
         </li>
         <li class="card" data-code="H004" data-search="encensoir en metal, grand metal censer, large kadionica metalna, veca h004 n004">
           <a class="card__img" href="../assets/img/p/h004-1.webp" data-detail="H004" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/h004-1-s.webp" width="369" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/h004-1.webp" data-detail="H004">Metal censer, large</a></h3>
-          <p class="card__meta"><span class="card__code">H004</span><span class="card__price">€12.83</span></p>
+          <p class="card__meta"><span class="card__code">H004</span><span class="card__price" data-price="H004"></span></p>
           <button class="add" type="button" data-add="H004" aria-pressed="false" aria-label="Add to list: Metal censer, large">Add</button>
         </li>
         <li class="card" data-code="H005" data-search="encensoir en metal, petit metal censer, small kadionica metalna, manja h005 n005">
           <a class="card__img" href="../assets/img/p/h005-1.webp" data-detail="H005" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/h005-1-s.webp" width="362" height="566" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/h005-1.webp" data-detail="H005">Metal censer, small</a></h3>
-          <p class="card__meta"><span class="card__code">H005</span><span class="card__price">€10.30</span></p>
+          <p class="card__meta"><span class="card__code">H005</span><span class="card__price" data-price="H005"></span></p>
           <button class="add" type="button" data-add="H005" aria-pressed="false" aria-label="Add to list: Metal censer, small">Add</button>
         </li>
         </ul>
@@ -198,97 +203,97 @@
         <li class="card" data-code="P064" data-search="icone montee a4 mounted icon a4 ikona kasirana a4 p064 r064">
           <a class="card__img" href="../assets/img/p/p064-1.webp" data-detail="P064" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p064-1-s.webp" width="499" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p064-1.webp" data-detail="P064">Mounted icon A4</a></h3>
-          <p class="card__meta"><span class="card__code">P064</span><span class="card__price">€11.33</span></p>
+          <p class="card__meta"><span class="card__code">P064</span><span class="card__price" data-price="P064"></span></p>
           <button class="add" type="button" data-add="P064" aria-pressed="false" aria-label="Add to list: Mounted icon A4">Add</button>
         </li>
         <li class="card" data-code="P074" data-search="icone nika, moyenne nika icon, medium ikona nika, srednja p074 r074">
           <a class="card__img" href="../assets/img/p/p074-1.webp" data-detail="P074" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p074-1-s.webp" width="447" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p074-1.webp" data-detail="P074">Nika icon, medium</a></h3>
-          <p class="card__meta"><span class="card__code">P074</span><span class="card__price">€24.72</span></p>
+          <p class="card__meta"><span class="card__code">P074</span><span class="card__price" data-price="P074"></span></p>
           <button class="add" type="button" data-add="P074" aria-pressed="false" aria-label="Add to list: Nika icon, medium">Add</button>
         </li>
         <li class="card" data-code="P128" data-search="icone nika, tres petite nika icon, smallest ikona nika, najmanja p128 r128">
           <a class="card__img" href="../assets/img/p/p074-2.webp" data-detail="P128" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p074-2-s.webp" width="640" height="436" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p074-2.webp" data-detail="P128">Nika icon, smallest</a></h3>
-          <p class="card__meta"><span class="card__code">P128</span><span class="card__price">€12.36</span></p>
+          <p class="card__meta"><span class="card__code">P128</span><span class="card__price" data-price="P128"></span></p>
           <button class="add" type="button" data-add="P128" aria-pressed="false" aria-label="Add to list: Nika icon, smallest">Add</button>
         </li>
         <li class="card" data-code="P127" data-search="icone nika, tres grande nika icon, largest ikona nika, najveca p127 r127">
           <a class="card__img" href="../assets/img/p/p074-2.webp" data-detail="P127" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p074-2-s.webp" width="640" height="436" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p074-2.webp" data-detail="P127">Nika icon, largest</a></h3>
-          <p class="card__meta"><span class="card__code">P127</span><span class="card__price">€41.20</span></p>
+          <p class="card__meta"><span class="card__code">P127</span><span class="card__price" data-price="P127"></span></p>
           <button class="add" type="button" data-add="P127" aria-pressed="false" aria-label="Add to list: Nika icon, largest">Add</button>
         </li>
         <li class="card" data-code="A007" data-search="icone encadree sous verre a4 glass-framed icon a4 ikona u ramu sa staklom a4 a007 a007">
           <a class="card__img" href="../assets/img/p/a007-1.webp" data-detail="A007" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/a007-1-s.webp" width="517" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/a007-1.webp" data-detail="A007">Glass-framed icon A4</a></h3>
-          <p class="card__meta"><span class="card__code">A007</span><span class="card__price">€32.96</span></p>
+          <p class="card__meta"><span class="card__code">A007</span><span class="card__price" data-price="A007"></span></p>
           <button class="add" type="button" data-add="A007" aria-pressed="false" aria-label="Add to list: Glass-framed icon A4">Add</button>
         </li>
         <li class="card" data-code="P063" data-search="benediction de la maison house blessing blagoslov za kucu p063 r063">
           <a class="card__img" href="../assets/img/p/p063-1.webp" data-detail="P063" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p063-1-s.webp" width="479" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p063-1.webp" data-detail="P063">House blessing</a></h3>
-          <p class="card__meta"><span class="card__code">P063</span><span class="card__price">€4.73</span></p>
+          <p class="card__meta"><span class="card__code">P063</span><span class="card__price" data-price="P063"></span></p>
           <button class="add" type="button" data-add="P063" aria-pressed="false" aria-label="Add to list: House blessing">Add</button>
         </li>
         <li class="card" data-code="P137" data-search="icone nika encadree framed nika icon ikona nika u ramu p137 r137">
           <a class="card__img" href="../assets/img/p/p137-1.webp" data-detail="P137" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p137-1-s.webp" width="529" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p137-1.webp" data-detail="P137">Framed Nika icon</a></h3>
-          <p class="card__meta"><span class="card__code">P137</span><span class="card__price">€20.60</span></p>
+          <p class="card__meta"><span class="card__code">P137</span><span class="card__price" data-price="P137"></span></p>
           <button class="add" type="button" data-add="P137" aria-pressed="false" aria-label="Add to list: Framed Nika icon">Add</button>
         </li>
         <li class="card" data-code="P069" data-search="diptyque a4 diptych a4 diptih a4 p069 r069">
           <a class="card__img" href="../assets/img/p/p069-1.webp" data-detail="P069" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p069-1-s.webp" width="640" height="543" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p069-1.webp" data-detail="P069">Diptych A4</a></h3>
-          <p class="card__meta"><span class="card__code">P069</span><span class="card__price">€17.51</span></p>
+          <p class="card__meta"><span class="card__code">P069</span><span class="card__price" data-price="P069"></span></p>
           <button class="add" type="button" data-add="P069" aria-pressed="false" aria-label="Add to list: Diptych A4">Add</button>
         </li>
         <li class="card" data-code="P073" data-search="diptyque carte postale postcard diptych diptih razglednica p073 r073">
           <a class="card__img" href="../assets/img/p/p073-1.webp" data-detail="P073" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p073-1-s.webp" width="382" height="299" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p073-1.webp" data-detail="P073">Postcard diptych</a></h3>
-          <p class="card__meta"><span class="card__code">P073</span><span class="card__price">€5.24</span></p>
+          <p class="card__meta"><span class="card__code">P073</span><span class="card__price" data-price="P073"></span></p>
           <button class="add" type="button" data-add="P073" aria-pressed="false" aria-label="Add to list: Postcard diptych">Add</button>
         </li>
         <li class="card" data-code="P070" data-search="petite plaquette small tile mala plocica p070 r070">
           <a class="card__img" href="../assets/img/p/p070-1.webp" data-detail="P070" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p070-1-s.webp" width="442" height="209" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p070-1.webp" data-detail="P070">Small tile</a></h3>
-          <p class="card__meta"><span class="card__code">P070</span><span class="card__price">€1.44</span></p>
+          <p class="card__meta"><span class="card__code">P070</span><span class="card__price" data-price="P070"></span></p>
           <button class="add" type="button" data-add="P070" aria-pressed="false" aria-label="Add to list: Small tile">Add</button>
         </li>
         <li class="card" data-code="P072" data-search="petit triptyque small triptych triptih mali p072 r072">
           <a class="card__img" href="../assets/img/p/p072-1.webp" data-detail="P072" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p072-1-s.webp" width="640" height="313" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p072-1.webp" data-detail="P072">Small triptych</a></h3>
-          <p class="card__meta"><span class="card__code">P072</span><span class="card__price">€4.02</span></p>
+          <p class="card__meta"><span class="card__code">P072</span><span class="card__price" data-price="P072"></span></p>
           <button class="add" type="button" data-add="P072" aria-pressed="false" aria-label="Add to list: Small triptych">Add</button>
         </li>
         <li class="card" data-code="P071" data-search="petit diptyque small diptych diptih mali p071 r071">
           <a class="card__img" href="../assets/img/p/p071-1.webp" data-detail="P071" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p071-1-s.webp" width="640" height="424" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p071-1.webp" data-detail="P071">Small diptych</a></h3>
-          <p class="card__meta"><span class="card__code">P071</span><span class="card__price">€3.19</span></p>
+          <p class="card__meta"><span class="card__code">P071</span><span class="card__price" data-price="P071"></span></p>
           <button class="add" type="button" data-add="P071" aria-pressed="false" aria-label="Add to list: Small diptych">Add</button>
         </li>
         <li class="card" data-code="P066" data-search="petite icone montee small mounted icon ikona kasirana manja p066 r066">
           <a class="card__img" href="../assets/img/p/p066-1.webp" data-detail="P066" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p066-1-s.webp" width="416" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p066-1.webp" data-detail="P066">Small mounted icon</a></h3>
-          <p class="card__meta"><span class="card__code">P066</span><span class="card__price">€1.63</span></p>
+          <p class="card__meta"><span class="card__code">P066</span><span class="card__price" data-price="P066"></span></p>
           <button class="add" type="button" data-add="P066" aria-pressed="false" aria-label="Add to list: Small mounted icon">Add</button>
         </li>
         <li class="card" data-code="P067" data-search="petites icones en pvc small pvc icons pvc ikonice p067 r067">
           <a class="card__img" href="../assets/img/p/p067-1.webp" data-detail="P067" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p067-1-s.webp" width="640" height="310" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p067-1.webp" data-detail="P067">Small PVC icons</a></h3>
-          <p class="card__meta"><span class="card__code">P067</span><span class="card__price">€0.10</span></p>
+          <p class="card__meta"><span class="card__code">P067</span><span class="card__price" data-price="P067"></span></p>
           <button class="add" type="button" data-add="P067" aria-pressed="false" aria-label="Add to list: Small PVC icons">Add</button>
         </li>
         <li class="card" data-code="P147" data-search="icone ronde round icon ikona okrugla p147 r147">
           <a class="card__img" href="../assets/img/p/p147-1.webp" data-detail="P147" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p147-1-s.webp" width="640" height="541" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p147-1.webp" data-detail="P147">Round icon</a></h3>
-          <p class="card__meta"><span class="card__code">P147</span><span class="card__price">€23.69</span></p>
+          <p class="card__meta"><span class="card__code">P147</span><span class="card__price" data-price="P147"></span></p>
           <button class="add" type="button" data-add="P147" aria-pressed="false" aria-label="Add to list: Round icon">Add</button>
         </li>
         <li class="card" data-code="H008" data-search="petite icone small icon ikona mala h008 n008">
           <a class="card__img" href="../assets/img/p/h008-1.webp" data-detail="H008" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/h008-1-s.webp" width="640" height="416" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/h008-1.webp" data-detail="H008">Small icon</a></h3>
-          <p class="card__meta"><span class="card__code">H008</span><span class="card__price">€2.99</span></p>
+          <p class="card__meta"><span class="card__code">H008</span><span class="card__price" data-price="H008"></span></p>
           <button class="add" type="button" data-add="H008" aria-pressed="false" aria-label="Add to list: Small icon">Add</button>
         </li>
         </ul>
@@ -299,43 +304,43 @@
         <li class="card" data-code="P010" data-search="grand chandelier large candlestick cirak veci p010 r010">
           <a class="card__img" href="../assets/img/p/p010-1.webp" data-detail="P010" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p010-1-s.webp" width="311" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p010-1.webp" data-detail="P010">Large candlestick</a></h3>
-          <p class="card__meta"><span class="card__code">P010</span><span class="card__price">€26.78</span></p>
+          <p class="card__meta"><span class="card__code">P010</span><span class="card__price" data-price="P010"></span></p>
           <button class="add" type="button" data-add="P010" aria-pressed="false" aria-label="Add to list: Large candlestick">Add</button>
         </li>
         <li class="card" data-code="A001" data-search="chandelier nickele nickel candlestick cirak nikl a001 a001">
           <a class="card__img" href="../assets/img/p/a001-1.webp" data-detail="A001" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/a001-1-s.webp" width="382" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/a001-1.webp" data-detail="A001">Nickel candlestick</a></h3>
-          <p class="card__meta"><span class="card__code">A001</span><span class="card__price">€20.60</span></p>
+          <p class="card__meta"><span class="card__code">A001</span><span class="card__price" data-price="A001"></span></p>
           <button class="add" type="button" data-add="A001" aria-pressed="false" aria-label="Add to list: Nickel candlestick">Add</button>
         </li>
         <li class="card" data-code="A009" data-search="chandelier mat matte candlestick cirak mat a009 a009">
           <a class="card__img" href="../assets/img/p/a009-1.webp" data-detail="A009" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/a009-1-s.webp" width="411" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/a009-1.webp" data-detail="A009">Matte candlestick</a></h3>
-          <p class="card__meta"><span class="card__code">A009</span><span class="card__price">€20.60</span></p>
+          <p class="card__meta"><span class="card__code">A009</span><span class="card__price" data-price="A009"></span></p>
           <button class="add" type="button" data-add="A009" aria-pressed="false" aria-label="Add to list: Matte candlestick">Add</button>
         </li>
         <li class="card" data-code="A008" data-search="chandelier dore gold candlestick cirak zlato a008 a008">
           <a class="card__img" href="../assets/img/p/a008-1.webp" data-detail="A008" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/a008-1-s.webp" width="366" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/a008-1.webp" data-detail="A008">Gold candlestick</a></h3>
-          <p class="card__meta"><span class="card__code">A008</span><span class="card__price">€20.60</span></p>
+          <p class="card__meta"><span class="card__code">A008</span><span class="card__price" data-price="A008"></span></p>
           <button class="add" type="button" data-add="A008" aria-pressed="false" aria-label="Add to list: Gold candlestick">Add</button>
         </li>
         <li class="card" data-code="P009" data-search="petit chandelier small candlestick cirak manji p009 r009">
           <a class="card__img" href="../assets/img/p/p009-1.webp" data-detail="P009" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p009-1-s.webp" width="295" height="562" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p009-1.webp" data-detail="P009">Small candlestick</a></h3>
-          <p class="card__meta"><span class="card__code">P009</span><span class="card__price">€20.60</span></p>
+          <p class="card__meta"><span class="card__code">P009</span><span class="card__price" data-price="P009"></span></p>
           <button class="add" type="button" data-add="P009" aria-pressed="false" aria-label="Add to list: Small candlestick">Add</button>
         </li>
         <li class="card" data-code="P016" data-search="chandelier en ceramique ceramic candlestick cirak keramicki p016 r016">
           <a class="card__img" href="../assets/img/p/p016-1.webp" data-detail="P016" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p016-1-s.webp" width="640" height="558" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p016-1.webp" data-detail="P016">Ceramic candlestick</a></h3>
-          <p class="card__meta"><span class="card__code">P016</span><span class="card__price">€4.02</span></p>
+          <p class="card__meta"><span class="card__code">P016</span><span class="card__price" data-price="P016"></span></p>
           <button class="add" type="button" data-add="P016" aria-pressed="false" aria-label="Add to list: Ceramic candlestick">Add</button>
         </li>
         <li class="card" data-code="P015" data-search="chandelier en ceramique ceramic candlestick cirak keramicki p015 r015">
           <a class="card__img" href="../assets/img/p/p015-1.webp" data-detail="P015" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p015-1-s.webp" width="287" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p015-1.webp" data-detail="P015">Ceramic candlestick</a></h3>
-          <p class="card__meta"><span class="card__code">P015</span><span class="card__price">€4.42</span></p>
+          <p class="card__meta"><span class="card__code">P015</span><span class="card__price" data-price="P015"></span></p>
           <button class="add" type="button" data-add="P015" aria-pressed="false" aria-label="Add to list: Ceramic candlestick">Add</button>
         </li>
         </ul>
@@ -346,97 +351,97 @@
         <li class="card" data-code="P004" data-search="veilleuse knjaz milos knjaz milos oil lamp kandilo knjaz milos p004 r004">
           <a class="card__img" href="../assets/img/p/p004-1.webp" data-detail="P004" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p004-1-s.webp" width="640" height="405" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p004-1.webp" data-detail="P004">Knjaz Miloš oil lamp</a></h3>
-          <p class="card__meta"><span class="card__code">P004</span><span class="card__price">€23.69</span></p>
+          <p class="card__meta"><span class="card__code">P004</span><span class="card__price" data-price="P004"></span></p>
           <button class="add" type="button" data-add="P004" aria-pressed="false" aria-label="Add to list: Knjaz Miloš oil lamp">Add</button>
         </li>
         <li class="card" data-code="P003" data-search="veilleuse suspendue hanging oil lamp kandilo visece p003 r003">
           <a class="card__img" href="../assets/img/p/p003-1.webp" data-detail="P003" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p003-1-s.webp" width="640" height="511" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p003-1.webp" data-detail="P003">Hanging oil lamp</a></h3>
-          <p class="card__meta"><span class="card__code">P003</span><span class="card__price">€30.90</span></p>
+          <p class="card__meta"><span class="card__code">P003</span><span class="card__price" data-price="P003"></span></p>
           <button class="add" type="button" data-add="P003" aria-pressed="false" aria-label="Add to list: Hanging oil lamp">Add</button>
         </li>
         <li class="card" data-code="A003" data-search="veilleuse suspendue hanging oil lamp kandilo visece a003 a003">
           <a class="card__img" href="../assets/img/p/a003-1.webp" data-detail="A003" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/a003-1-s.webp" width="640" height="433" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/a003-1.webp" data-detail="A003">Hanging oil lamp</a></h3>
-          <p class="card__meta"><span class="card__code">A003</span><span class="card__price">€27.80</span></p>
+          <p class="card__meta"><span class="card__code">A003</span><span class="card__price" data-price="A003"></span></p>
           <button class="add" type="button" data-add="A003" aria-pressed="false" aria-label="Add to list: Hanging oil lamp">Add</button>
         </li>
         <li class="card" data-code="P142" data-search="veilleuse doree russe russian gilt oil lamp kandilo ruska pozlata p142 r142">
           <a class="card__img" href="../assets/img/p/p142-1.webp" data-detail="P142" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p142-1-s.webp" width="640" height="536" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p142-1.webp" data-detail="P142">Russian gilt oil lamp</a></h3>
-          <p class="card__meta"><span class="card__code">P142</span><span class="card__price">€39.14</span></p>
+          <p class="card__meta"><span class="card__code">P142</span><span class="card__price" data-price="P142"></span></p>
           <button class="add" type="button" data-add="P142" aria-pressed="false" aria-label="Add to list: Russian gilt oil lamp">Add</button>
         </li>
         <li class="card" data-code="A002" data-search="veilleuse suspendue, mate hanging oil lamp, matte kandilo visece, mat a002 a002">
           <a class="card__img" href="../assets/img/p/a002-1.webp" data-detail="A002" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/a002-1-s.webp" width="640" height="520" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/a002-1.webp" data-detail="A002">Hanging oil lamp, matte</a></h3>
-          <p class="card__meta"><span class="card__code">A002</span><span class="card__price">€27.80</span></p>
+          <p class="card__meta"><span class="card__code">A002</span><span class="card__price" data-price="A002"></span></p>
           <button class="add" type="button" data-add="A002" aria-pressed="false" aria-label="Add to list: Hanging oil lamp, matte">Add</button>
         </li>
         <li class="card" data-code="A004" data-search="veilleuse suspendue hanging oil lamp kandilo visece a004 a004">
           <a class="card__img" href="../assets/img/p/a004-1.webp" data-detail="A004" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/a004-1-s.webp" width="640" height="483" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/a004-1.webp" data-detail="A004">Hanging oil lamp</a></h3>
-          <p class="card__meta"><span class="card__code">A004</span><span class="card__price">€27.80</span></p>
+          <p class="card__meta"><span class="card__code">A004</span><span class="card__price" data-price="A004"></span></p>
           <button class="add" type="button" data-add="A004" aria-pressed="false" aria-label="Add to list: Hanging oil lamp">Add</button>
         </li>
         <li class="card" data-code="P005" data-search="veilleuse de table aux aigles table oil lamp with eagles kandilo stono orlovi p005 r005">
           <a class="card__img" href="../assets/img/p/p005-1.webp" data-detail="P005" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p005-1-s.webp" width="272" height="490" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p005-1.webp" data-detail="P005">Table oil lamp with eagles</a></h3>
-          <p class="card__meta"><span class="card__code">P005</span><span class="card__price">€23.69</span></p>
+          <p class="card__meta"><span class="card__code">P005</span><span class="card__price" data-price="P005"></span></p>
           <button class="add" type="button" data-add="P005" aria-pressed="false" aria-label="Add to list: Table oil lamp with eagles">Add</button>
         </li>
         <li class="card" data-code="P002" data-search="veilleuse de table dentelle lace table oil lamp kandilo stono cipka p002 r002">
           <a class="card__img" href="../assets/img/p/p002-1.webp" data-detail="P002" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p002-1-s.webp" width="434" height="636" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p002-1.webp" data-detail="P002">Lace table oil lamp</a></h3>
-          <p class="card__meta"><span class="card__code">P002</span><span class="card__price">€23.69</span></p>
+          <p class="card__meta"><span class="card__code">P002</span><span class="card__price" data-price="P002"></span></p>
           <button class="add" type="button" data-add="P002" aria-pressed="false" aria-label="Add to list: Lace table oil lamp">Add</button>
         </li>
         <li class="card" data-code="H001" data-search="veilleuse de table table oil lamp kandilo stono h001 n001">
           <a class="card__img" href="../assets/img/p/h001-1.webp" data-detail="H001" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/h001-1-s.webp" width="364" height="550" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/h001-1.webp" data-detail="H001">Table oil lamp</a></h3>
-          <p class="card__meta"><span class="card__code">H001</span><span class="card__price">€20.60</span></p>
+          <p class="card__meta"><span class="card__code">H001</span><span class="card__price" data-price="H001"></span></p>
           <button class="add" type="button" data-add="H001" aria-pressed="false" aria-label="Add to list: Table oil lamp">Add</button>
         </li>
         <li class="card" data-code="P141" data-search="veilleuse de table combinee combined table oil lamp kandilo stono kombinovano p141 r141">
           <a class="card__img" href="../assets/img/p/p141-1.webp" data-detail="P141" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p141-1-s.webp" width="618" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p141-1.webp" data-detail="P141">Combined table oil lamp</a></h3>
-          <p class="card__meta"><span class="card__code">P141</span><span class="card__price">€32.96</span></p>
+          <p class="card__meta"><span class="card__code">P141</span><span class="card__price" data-price="P141"></span></p>
           <button class="add" type="button" data-add="P141" aria-pressed="false" aria-label="Add to list: Combined table oil lamp">Add</button>
         </li>
         <li class="card" data-code="H017" data-search="veilleuse de table table oil lamp kandilo stono h017 n017">
           <a class="card__img" href="../assets/img/p/h017-1.webp" data-detail="H017" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/h017-1-s.webp" width="289" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/h017-1.webp" data-detail="H017">Table oil lamp</a></h3>
-          <p class="card__meta"><span class="card__code">H017</span><span class="card__price">€24.72</span></p>
+          <p class="card__meta"><span class="card__code">H017</span><span class="card__price" data-price="H017"></span></p>
           <button class="add" type="button" data-add="H017" aria-pressed="false" aria-label="Add to list: Table oil lamp">Add</button>
         </li>
         <li class="card" data-code="P132" data-search="veilleuse de table table oil lamp kandilo stono p132 r132">
           <a class="card__img" href="../assets/img/p/p132-1.webp" data-detail="P132" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p132-1-s.webp" width="438" height="565" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p132-1.webp" data-detail="P132">Table oil lamp</a></h3>
-          <p class="card__meta"><span class="card__code">P132</span><span class="card__price">€13.38</span></p>
+          <p class="card__meta"><span class="card__code">P132</span><span class="card__price" data-price="P132"></span></p>
           <button class="add" type="button" data-add="P132" aria-pressed="false" aria-label="Add to list: Table oil lamp">Add</button>
         </li>
         <li class="card" data-code="A005" data-search="veilleuse de table nickelee nickel table oil lamp kandilo stono nikl a005 a005">
           <a class="card__img" href="../assets/img/p/a005-1.webp" data-detail="A005" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/a005-1-s.webp" width="640" height="593" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/a005-1.webp" data-detail="A005">Nickel table oil lamp</a></h3>
-          <p class="card__meta"><span class="card__code">A005</span><span class="card__price">€25.74</span></p>
+          <p class="card__meta"><span class="card__code">A005</span><span class="card__price" data-price="A005"></span></p>
           <button class="add" type="button" data-add="A005" aria-pressed="false" aria-label="Add to list: Nickel table oil lamp">Add</button>
         </li>
         <li class="card" data-code="A010" data-search="veilleuse de table doree gilded table oil lamp kandilo stono pozlata a010 a010">
           <a class="card__img" href="../assets/img/p/a010-1.webp" data-detail="A010" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/a010-1-s.webp" width="640" height="619" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/a010-1.webp" data-detail="A010">Gilded table oil lamp</a></h3>
-          <p class="card__meta"><span class="card__code">A010</span><span class="card__price">€25.74</span></p>
+          <p class="card__meta"><span class="card__code">A010</span><span class="card__price" data-price="A010"></span></p>
           <button class="add" type="button" data-add="A010" aria-pressed="false" aria-label="Add to list: Gilded table oil lamp">Add</button>
         </li>
         <li class="card" data-code="A011" data-search="veilleuse de table m.r. table oil lamp m.r. kandilo stono m.r. a011 a011">
           <a class="card__img" href="../assets/img/p/a011-1.webp" data-detail="A011" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/a011-1-s.webp" width="640" height="561" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/a011-1.webp" data-detail="A011">Table oil lamp M.R.</a></h3>
-          <p class="card__meta"><span class="card__code">A011</span><span class="card__price">€25.74</span></p>
+          <p class="card__meta"><span class="card__code">A011</span><span class="card__price" data-price="A011"></span></p>
           <button class="add" type="button" data-add="A011" aria-pressed="false" aria-label="Add to list: Table oil lamp M.R.">Add</button>
         </li>
         <li class="card" data-code="A012" data-search="veilleuse de table n.p. table oil lamp n.p. kandilo stono n.p. a012 a012">
           <a class="card__img" href="../assets/img/p/a012-1.webp" data-detail="A012" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/a012-1-s.webp" width="640" height="560" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/a012-1.webp" data-detail="A012">Table oil lamp N.P.</a></h3>
-          <p class="card__meta"><span class="card__code">A012</span><span class="card__price">€25.74</span></p>
+          <p class="card__meta"><span class="card__code">A012</span><span class="card__price" data-price="A012"></span></p>
           <button class="add" type="button" data-add="A012" aria-pressed="false" aria-label="Add to list: Table oil lamp N.P.">Add</button>
         </li>
         </ul>
@@ -447,43 +452,43 @@
         <li class="card" data-code="H012" data-search="croix de table table cross krst stoni h012 n012">
           <a class="card__img" href="../assets/img/p/h012-1.webp" data-detail="H012" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/h012-1-s.webp" width="368" height="565" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/h012-1.webp" data-detail="H012">Table cross</a></h3>
-          <p class="card__meta"><span class="card__code">H012</span><span class="card__price">€7.20</span></p>
+          <p class="card__meta"><span class="card__code">H012</span><span class="card__price" data-price="H012"></span></p>
           <button class="add" type="button" data-add="H012" aria-pressed="false" aria-label="Add to list: Table cross">Add</button>
         </li>
         <li class="card" data-code="P022" data-search="petite croix en resine small resin cross krst mali smola p022 r022">
           <a class="card__img" href="../assets/img/p/p022-1.webp" data-detail="P022" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p022-1-s.webp" width="308" height="516" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p022-1.webp" data-detail="P022">Small resin cross</a></h3>
-          <p class="card__meta"><span class="card__code">P022</span><span class="card__price">€5.04</span></p>
+          <p class="card__meta"><span class="card__code">P022</span><span class="card__price" data-price="P022"></span></p>
           <button class="add" type="button" data-add="P022" aria-pressed="false" aria-label="Add to list: Small resin cross">Add</button>
         </li>
         <li class="card" data-code="P020" data-search="grande croix de table large table cross krst stoni sa stopom, veci p020 r020">
           <a class="card__img" href="../assets/img/p/p020-1.webp" data-detail="P020" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p020-1-s.webp" width="358" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p020-1.webp" data-detail="P020">Large table cross</a></h3>
-          <p class="card__meta"><span class="card__code">P020</span><span class="card__price">€8.34</span></p>
+          <p class="card__meta"><span class="card__code">P020</span><span class="card__price" data-price="P020"></span></p>
           <button class="add" type="button" data-add="P020" aria-pressed="false" aria-label="Add to list: Large table cross">Add</button>
         </li>
         <li class="card" data-code="P021" data-search="petite croix de table small table cross krst stoni sa stopom, manji p021 r021">
           <a class="card__img" href="../assets/img/p/p021-1.webp" data-detail="P021" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p021-1-s.webp" width="640" height="625" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p021-1.webp" data-detail="P021">Small table cross</a></h3>
-          <p class="card__meta"><span class="card__code">P021</span><span class="card__price">€5.26</span></p>
+          <p class="card__meta"><span class="card__code">P021</span><span class="card__price" data-price="P021"></span></p>
           <button class="add" type="button" data-add="P021" aria-pressed="false" aria-label="Add to list: Small table cross">Add</button>
         </li>
         <li class="card" data-code="P131" data-search="croix de table en resine resin table cross krst stoni sa stopom, smola p131 r131">
           <a class="card__img" href="../assets/img/p/p131-1.webp" data-detail="P131" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p131-1-s.webp" width="509" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p131-1.webp" data-detail="P131">Resin table cross</a></h3>
-          <p class="card__meta"><span class="card__code">P131</span><span class="card__price">€9.58</span></p>
+          <p class="card__meta"><span class="card__code">P131</span><span class="card__price" data-price="P131"></span></p>
           <button class="add" type="button" data-add="P131" aria-pressed="false" aria-label="Add to list: Resin table cross">Add</button>
         </li>
         <li class="card" data-code="P136" data-search="croix de benediction en resine resin hand cross krst rucni smola p136 r136">
           <a class="card__img" href="../assets/img/p/p136-1.webp" data-detail="P136" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p136-1-s.webp" width="467" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p136-1.webp" data-detail="P136">Resin hand cross</a></h3>
-          <p class="card__meta"><span class="card__code">P136</span><span class="card__price">€12.25</span></p>
+          <p class="card__meta"><span class="card__code">P136</span><span class="card__price" data-price="P136"></span></p>
           <button class="add" type="button" data-add="P136" aria-pressed="false" aria-label="Add to list: Resin hand cross">Add</button>
         </li>
         <li class="card" data-code="P024" data-search="croix de benediction hand cross krst rucni p024 r024">
           <a class="card__img" href="../assets/img/p/p024-1.webp" data-detail="P024" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p024-1-s.webp" width="317" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p024-1.webp" data-detail="P024">Hand cross</a></h3>
-          <p class="card__meta"><span class="card__code">P024</span><span class="card__price">€5.04</span></p>
+          <p class="card__meta"><span class="card__code">P024</span><span class="card__price" data-price="P024"></span></p>
           <button class="add" type="button" data-add="P024" aria-pressed="false" aria-label="Add to list: Hand cross">Add</button>
         </li>
         </ul>
@@ -494,103 +499,103 @@
         <li class="card" data-code="P028" data-search="petite croix en bois small wooden cross krstic drveni p028 r028">
           <a class="card__img" href="../assets/img/p/p028-1.webp" data-detail="P028" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p028-1-s.webp" width="640" height="205" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p028-1.webp" data-detail="P028">Small wooden cross</a></h3>
-          <p class="card__meta"><span class="card__code">P028</span><span class="card__price">€1.02</span></p>
+          <p class="card__meta"><span class="card__code">P028</span><span class="card__price" data-price="P028"></span></p>
           <button class="add" type="button" data-add="P028" aria-pressed="false" aria-label="Add to list: Small wooden cross">Add</button>
         </li>
         <li class="card" data-code="P135" data-search="petite croix parfumee scented small cross krstic miloduh p135 r135">
           <a class="card__img" href="../assets/img/p/p135-1.webp" data-detail="P135" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p135-1-s.webp" width="640" height="325" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p135-1.webp" data-detail="P135">Scented small cross</a></h3>
-          <p class="card__meta"><span class="card__code">P135</span><span class="card__price">€1.54</span></p>
+          <p class="card__meta"><span class="card__code">P135</span><span class="card__price" data-price="P135"></span></p>
           <button class="add" type="button" data-add="P135" aria-pressed="false" aria-label="Add to list: Scented small cross">Add</button>
         </li>
         <li class="card" data-code="H009" data-search="pendentif croix cross pendant krstic privezak h009 n009">
           <a class="card__img" href="../assets/img/p/h009-1.webp" data-detail="H009" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/h009-1-s.webp" width="640" height="552" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/h009-1.webp" data-detail="H009">Cross pendant</a></h3>
-          <p class="card__meta"><span class="card__code">H009</span><span class="card__price">€1.75</span></p>
+          <p class="card__meta"><span class="card__code">H009</span><span class="card__price" data-price="H009"></span></p>
           <button class="add" type="button" data-add="H009" aria-pressed="false" aria-label="Add to list: Cross pendant">Add</button>
         </li>
         <li class="card" data-code="H010" data-search="petite croix small cross krstic h010 n010">
           <a class="card__img" href="../assets/img/p/h010-1.webp" data-detail="H010" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/h010-1-s.webp" width="577" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/h010-1.webp" data-detail="H010">Small cross</a></h3>
-          <p class="card__meta"><span class="card__code">H010</span><span class="card__price">€1.96</span></p>
+          <p class="card__meta"><span class="card__code">H010</span><span class="card__price" data-price="H010"></span></p>
           <button class="add" type="button" data-add="H010" aria-pressed="false" aria-label="Add to list: Small cross">Add</button>
         </li>
         <li class="card" data-code="P031" data-search="medaillons medallions medaljoni p031 r031">
           <a class="card__img" href="../assets/img/p/p031-1.webp" data-detail="P031" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p031-1-s.webp" width="640" height="177" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p031-1.webp" data-detail="P031">Medallions</a></h3>
-          <p class="card__meta"><span class="card__code">P031</span><span class="card__price">€1.55</span></p>
+          <p class="card__meta"><span class="card__code">P031</span><span class="card__price" data-price="P031"></span></p>
           <button class="add" type="button" data-add="P031" aria-pressed="false" aria-label="Add to list: Medallions">Add</button>
         </li>
         <li class="card" data-code="P035" data-search="pendentif croix cross pendant krstic privezak p035 r035">
           <a class="card__img" href="../assets/img/p/p035-1.webp" data-detail="P035" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p035-1-s.webp" width="640" height="596" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p035-1.webp" data-detail="P035">Cross pendant</a></h3>
-          <p class="card__meta"><span class="card__code">P035</span><span class="card__price">€1.64</span></p>
+          <p class="card__meta"><span class="card__code">P035</span><span class="card__price" data-price="P035"></span></p>
           <button class="add" type="button" data-add="P035" aria-pressed="false" aria-label="Add to list: Cross pendant">Add</button>
         </li>
         <li class="card" data-code="P120" data-search="pendentif croix cross pendant krstic privezak p120 r120">
           <a class="card__img" href="../assets/img/p/p120-1.webp" data-detail="P120" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p120-1-s.webp" width="618" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p120-1.webp" data-detail="P120">Cross pendant</a></h3>
-          <p class="card__meta"><span class="card__code">P120</span><span class="card__price">€2.78</span></p>
+          <p class="card__meta"><span class="card__code">P120</span><span class="card__price" data-price="P120"></span></p>
           <button class="add" type="button" data-add="P120" aria-pressed="false" aria-label="Add to list: Cross pendant">Add</button>
         </li>
         <li class="card" data-code="H016" data-search="croix en boite cross in a box krst u kutijici h016 n016">
           <a class="card__img" href="../assets/img/p/h016-1.webp" data-detail="H016" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/h016-1-s.webp" width="565" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/h016-1.webp" data-detail="H016">Cross in a box</a></h3>
-          <p class="card__meta"><span class="card__code">H016</span><span class="card__price">€8.24</span></p>
+          <p class="card__meta"><span class="card__code">H016</span><span class="card__price" data-price="H016"></span></p>
           <button class="add" type="button" data-add="H016" aria-pressed="false" aria-label="Add to list: Cross in a box">Add</button>
         </li>
         <li class="card" data-code="H016-1" data-search="croix en boite cross in a box krst u kutijici h016-1 n016-1">
           <a class="card__img" href="../assets/img/p/h016-1-1.webp" data-detail="H016-1" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/h016-1-1-s.webp" width="467" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/h016-1-1.webp" data-detail="H016-1">Cross in a box</a></h3>
-          <p class="card__meta"><span class="card__code">H016-1</span><span class="card__price">€8.24</span></p>
+          <p class="card__meta"><span class="card__code">H016-1</span><span class="card__price" data-price="H016-1"></span></p>
           <button class="add" type="button" data-add="H016-1" aria-pressed="false" aria-label="Add to list: Cross in a box">Add</button>
         </li>
         <li class="card" data-code="H016-2" data-search="croix en boite cross in a box krst u kutijici h016-2 n016-2">
           <a class="card__img" href="../assets/img/p/h016-2-1.webp" data-detail="H016-2" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/h016-2-1-s.webp" width="640" height="563" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/h016-2-1.webp" data-detail="H016-2">Cross in a box</a></h3>
-          <p class="card__meta"><span class="card__code">H016-2</span><span class="card__price">€8.24</span></p>
+          <p class="card__meta"><span class="card__code">H016-2</span><span class="card__price" data-price="H016-2"></span></p>
           <button class="add" type="button" data-add="H016-2" aria-pressed="false" aria-label="Add to list: Cross in a box">Add</button>
         </li>
         <li class="card" data-code="H015" data-search="croix en boite cross in a box krst u kutijici h015 n015">
           <a class="card__img" href="../assets/img/p/h015-1.webp" data-detail="H015" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/h015-1-s.webp" width="640" height="513" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/h015-1.webp" data-detail="H015">Cross in a box</a></h3>
-          <p class="card__meta"><span class="card__code">H015</span><span class="card__price">€7.72</span></p>
+          <p class="card__meta"><span class="card__code">H015</span><span class="card__price" data-price="H015"></span></p>
           <button class="add" type="button" data-add="H015" aria-pressed="false" aria-label="Add to list: Cross in a box">Add</button>
         </li>
         <li class="card" data-code="P117" data-search="croix de voiture en resine resin car cross krst za auto, smola p117 r117">
           <a class="card__img" href="../assets/img/p/p117-1.webp" data-detail="P117" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p117-1-s.webp" width="640" height="528" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p117-1.webp" data-detail="P117">Resin car cross</a></h3>
-          <p class="card__meta"><span class="card__code">P117</span><span class="card__price">€2.26</span></p>
+          <p class="card__meta"><span class="card__code">P117</span><span class="card__price" data-price="P117"></span></p>
           <button class="add" type="button" data-add="P117" aria-pressed="false" aria-label="Add to list: Resin car cross">Add</button>
         </li>
         <li class="card" data-code="H002" data-search="croix en boite cross in a box krst u kutijici h002 n002">
           <a class="card__img" href="../assets/img/p/h002-1.webp" data-detail="H002" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/h002-1-s.webp" width="546" height="411" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/h002-1.webp" data-detail="H002">Cross in a box</a></h3>
-          <p class="card__meta"><span class="card__code">H002</span><span class="card__price">€2.06</span></p>
+          <p class="card__meta"><span class="card__code">H002</span><span class="card__price" data-price="H002"></span></p>
           <button class="add" type="button" data-add="H002" aria-pressed="false" aria-label="Add to list: Cross in a box">Add</button>
         </li>
         <li class="card" data-code="P032" data-search="medaillon en metal metal medallion medaljon metal p032 r032">
           <a class="card__img" href="../assets/img/p/p032-1.webp" data-detail="P032" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p032-1-s.webp" width="608" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p032-1.webp" data-detail="P032">Metal medallion</a></h3>
-          <p class="card__meta"><span class="card__code">P032</span><span class="card__price">€4.32</span></p>
+          <p class="card__meta"><span class="card__code">P032</span><span class="card__price" data-price="P032"></span></p>
           <button class="add" type="button" data-add="P032" aria-pressed="false" aria-label="Add to list: Metal medallion">Add</button>
         </li>
         <li class="card" data-code="P033" data-search="pendentif en bois wooden pendant privezak od drveta p033 r033">
           <a class="card__img" href="../assets/img/p/p033-1.webp" data-detail="P033" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p033-1-s.webp" width="640" height="546" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p033-1.webp" data-detail="P033">Wooden pendant</a></h3>
-          <p class="card__meta"><span class="card__code">P033</span><span class="card__price">€2.57</span></p>
+          <p class="card__meta"><span class="card__code">P033</span><span class="card__price" data-price="P033"></span></p>
           <button class="add" type="button" data-add="P033" aria-pressed="false" aria-label="Add to list: Wooden pendant">Add</button>
         </li>
         <li class="card" data-code="P118" data-search="croix de voiture gravee engraved car cross krst za auto, gravura p118 r118">
           <a class="card__img" href="../assets/img/p/p118-1.webp" data-detail="P118" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p118-1-s.webp" width="640" height="492" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p118-1.webp" data-detail="P118">Engraved car cross</a></h3>
-          <p class="card__meta"><span class="card__code">P118</span><span class="card__price">€2.06</span></p>
+          <p class="card__meta"><span class="card__code">P118</span><span class="card__price" data-price="P118"></span></p>
           <button class="add" type="button" data-add="P118" aria-pressed="false" aria-label="Add to list: Engraved car cross">Add</button>
         </li>
         <li class="card" data-code="P034" data-search="croix de voiture car cross krst za auto p034 r034">
           <a class="card__img" href="../assets/img/p/p034-1.webp" data-detail="P034" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p034-1-s.webp" width="531" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p034-1.webp" data-detail="P034">Car cross</a></h3>
-          <p class="card__meta"><span class="card__code">P034</span><span class="card__price">€2.68</span></p>
+          <p class="card__meta"><span class="card__code">P034</span><span class="card__price" data-price="P034"></span></p>
           <button class="add" type="button" data-add="P034" aria-pressed="false" aria-label="Add to list: Car cross">Add</button>
         </li>
         </ul>
@@ -601,121 +606,121 @@
         <li class="card" data-code="H018" data-search="pince clip stipaljka h018 n018">
           <a class="card__img" href="../assets/img/p/h018-1.webp" data-detail="H018" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/h018-1-s.webp" width="640" height="339" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/h018-1.webp" data-detail="H018">Clip</a></h3>
-          <p class="card__meta"><span class="card__code">H018</span><span class="card__price">€9.26</span></p>
+          <p class="card__meta"><span class="card__code">H018</span><span class="card__price" data-price="H018"></span></p>
           <button class="add" type="button" data-add="H018" aria-pressed="false" aria-label="Add to list: Clip">Add</button>
         </li>
         <li class="card" data-code="H011" data-search="serviette (ubrus) cloth (ubrus) ubrus h011 n011">
           <a class="card__img" href="../assets/img/p/h011-1.webp" data-detail="H011" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/h011-1-s.webp" width="563" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/h011-1.webp" data-detail="H011">Cloth (ubrus)</a></h3>
-          <p class="card__meta"><span class="card__code">H011</span><span class="card__price">€11.33</span></p>
+          <p class="card__meta"><span class="card__code">H011</span><span class="card__price" data-price="H011"></span></p>
           <button class="add" type="button" data-add="H011" aria-pressed="false" aria-label="Add to list: Cloth (ubrus)">Add</button>
         </li>
         <li class="card" data-code="H020" data-search="eteignoir a bougies candle snuffer zvono za svece h020 n020">
           <a class="card__img" href="../assets/img/p/h020-1.webp" data-detail="H020" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/h020-1-s.webp" width="517" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/h020-1.webp" data-detail="H020">Candle snuffer</a></h3>
-          <p class="card__meta"><span class="card__code">H020</span><span class="card__price">€12.36</span></p>
+          <p class="card__meta"><span class="card__code">H020</span><span class="card__price" data-price="H020"></span></p>
           <button class="add" type="button" data-add="H020" aria-pressed="false" aria-label="Add to list: Candle snuffer">Add</button>
         </li>
         <li class="card" data-code="P051" data-search="rose blanche white rose ruza bela p051 r051">
           <a class="card__img" href="../assets/img/p/p051-1.webp" data-detail="P051" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p051-1-s.webp" width="640" height="421" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p051-1.webp" data-detail="P051">White rose</a></h3>
-          <p class="card__meta"><span class="card__code">P051</span><span class="card__price">€1.85</span></p>
+          <p class="card__meta"><span class="card__code">P051</span><span class="card__price" data-price="P051"></span></p>
           <button class="add" type="button" data-add="P051" aria-pressed="false" aria-label="Add to list: White rose">Add</button>
         </li>
         <li class="card" data-code="P052" data-search="rose tricolore tricolour rose ruza trobojka p052 r052">
           <a class="card__img" href="../assets/img/p/p052-1.webp" data-detail="P052" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p052-1-s.webp" width="640" height="402" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p052-1.webp" data-detail="P052">Tricolour rose</a></h3>
-          <p class="card__meta"><span class="card__code">P052</span><span class="card__price">€1.96</span></p>
+          <p class="card__meta"><span class="card__code">P052</span><span class="card__price" data-price="P052"></span></p>
           <button class="add" type="button" data-add="P052" aria-pressed="false" aria-label="Add to list: Tricolour rose">Add</button>
         </li>
         <li class="card" data-code="P112" data-search="rose rose ruza p112 r112">
           <a class="card__img" href="../assets/img/p/p112-1.webp" data-detail="P112" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p112-1-s.webp" width="640" height="408" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p112-1.webp" data-detail="P112">Rose</a></h3>
-          <p class="card__meta"><span class="card__code">P112</span><span class="card__price">€1.94</span></p>
+          <p class="card__meta"><span class="card__code">P112</span><span class="card__price" data-price="P112"></span></p>
           <button class="add" type="button" data-add="P112" aria-pressed="false" aria-label="Add to list: Rose">Add</button>
         </li>
         <li class="card" data-code="P019" data-search="sceau a pain, grand bread seal, large pecat veliki p019 r019">
           <a class="card__img" href="../assets/img/p/p019-1.webp" data-detail="P019" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p019-1-s.webp" width="640" height="395" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p019-1.webp" data-detail="P019">Bread seal, large</a></h3>
-          <p class="card__meta"><span class="card__code">P019</span><span class="card__price">€8.24</span></p>
+          <p class="card__meta"><span class="card__code">P019</span><span class="card__price" data-price="P019"></span></p>
           <button class="add" type="button" data-add="P019" aria-pressed="false" aria-label="Add to list: Bread seal, large">Add</button>
         </li>
         <li class="card" data-code="P017" data-search="sceau a pain, petit bread seal, small pecat mali p017 r017">
           <a class="card__img" href="../assets/img/p/p019-1.webp" data-detail="P017" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p019-1-s.webp" width="640" height="395" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p019-1.webp" data-detail="P017">Bread seal, small</a></h3>
-          <p class="card__meta"><span class="card__code">P017</span><span class="card__price">€1.75</span></p>
+          <p class="card__meta"><span class="card__code">P017</span><span class="card__price" data-price="P017"></span></p>
           <button class="add" type="button" data-add="P017" aria-pressed="false" aria-label="Add to list: Bread seal, small">Add</button>
         </li>
         <li class="card" data-code="P018" data-search="sceau a pain, moyen bread seal, medium pecat srednji p018 r018">
           <a class="card__img" href="../assets/img/p/p019-1.webp" data-detail="P018" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p019-1-s.webp" width="640" height="395" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p019-1.webp" data-detail="P018">Bread seal, medium</a></h3>
-          <p class="card__meta"><span class="card__code">P018</span><span class="card__price">€2.16</span></p>
+          <p class="card__meta"><span class="card__code">P018</span><span class="card__price" data-price="P018"></span></p>
           <button class="add" type="button" data-add="P018" aria-pressed="false" aria-label="Add to list: Bread seal, medium">Add</button>
         </li>
         <li class="card" data-code="P023" data-search="sceau a pain, cube bread seal, cube pecat kocka p023 r023">
           <a class="card__img" href="../assets/img/p/p023-1.webp" data-detail="P023" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p023-1-s.webp" width="426" height="294" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p023-1.webp" data-detail="P023">Bread seal, cube</a></h3>
-          <p class="card__meta"><span class="card__code">P023</span><span class="card__price">€2.99</span></p>
+          <p class="card__meta"><span class="card__code">P023</span><span class="card__price" data-price="P023"></span></p>
           <button class="add" type="button" data-add="P023" aria-pressed="false" aria-label="Add to list: Bread seal, cube">Add</button>
         </li>
         <li class="card" data-code="L003" data-search="aimants magnets magneti l003 l003">
           <a class="card__img" href="../assets/img/p/l003-1.webp" data-detail="L003" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/l003-1-s.webp" width="495" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/l003-1.webp" data-detail="L003">Magnets</a></h3>
-          <p class="card__meta"><span class="card__code">L003</span><span class="card__price">€2.06</span></p>
+          <p class="card__meta"><span class="card__code">L003</span><span class="card__price" data-price="L003"></span></p>
           <button class="add" type="button" data-add="L003" aria-pressed="false" aria-label="Add to list: Magnets">Add</button>
         </li>
         <li class="card" data-code="P059" data-search="myron holy ointment miro p059 r059">
           <a class="card__img" href="../assets/img/p/p059-1.webp" data-detail="P059" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p059-1-s.webp" width="373" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p059-1.webp" data-detail="P059">Holy ointment</a></h3>
-          <p class="card__meta"><span class="card__code">P059</span><span class="card__price">€3.19</span></p>
+          <p class="card__meta"><span class="card__code">P059</span><span class="card__price" data-price="P059"></span></p>
           <button class="add" type="button" data-add="P059" aria-pressed="false" aria-label="Add to list: Holy ointment">Add</button>
         </li>
         <li class="card" data-code="P025" data-search="moules pour pain de slava slava bread moulds slavske modle p025 r025">
           <a class="card__img" href="../assets/img/p/p025-1.webp" data-detail="P025" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p025-1-s.webp" width="587" height="402" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p025-1.webp" data-detail="P025">Slava bread moulds</a></h3>
-          <p class="card__meta"><span class="card__code">P025</span><span class="card__price">€24.72</span></p>
+          <p class="card__meta"><span class="card__code">P025</span><span class="card__price" data-price="P025"></span></p>
           <button class="add" type="button" data-add="P025" aria-pressed="false" aria-label="Add to list: Slava bread moulds">Add</button>
         </li>
         <li class="card" data-code="P026" data-search="pochoir stencil sablon p026 r026">
           <a class="card__img" href="../assets/img/p/p026-1.webp" data-detail="P026" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p026-1-s.webp" width="640" height="395" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p026-1.webp" data-detail="P026">Stencil</a></h3>
-          <p class="card__meta"><span class="card__code">P026</span><span class="card__price">€8.24</span></p>
+          <p class="card__meta"><span class="card__code">P026</span><span class="card__price" data-price="P026"></span></p>
           <button class="add" type="button" data-add="P026" aria-pressed="false" aria-label="Add to list: Stencil">Add</button>
         </li>
         <li class="card" data-code="P062" data-search="grand aspersoir en basilic large basil sprinkler bosiljkaca velika p062 r062">
           <a class="card__img" href="../assets/img/p/p062-1.webp" data-detail="P062" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p062-1-s.webp" width="640" height="495" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p062-1.webp" data-detail="P062">Large basil sprinkler</a></h3>
-          <p class="card__meta"><span class="card__code">P062</span><span class="card__price">€2.88</span></p>
+          <p class="card__meta"><span class="card__code">P062</span><span class="card__price" data-price="P062"></span></p>
           <button class="add" type="button" data-add="P062" aria-pressed="false" aria-label="Add to list: Large basil sprinkler">Add</button>
         </li>
         <li class="card" data-code="P098" data-search="petit aspersoir en basilic small basil sprinkler bosiljkaca mala p098 r098">
           <a class="card__img" href="../assets/img/p/p098-1.webp" data-detail="P098" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p098-1-s.webp" width="487" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p098-1.webp" data-detail="P098">Small basil sprinkler</a></h3>
-          <p class="card__meta"><span class="card__code">P098</span><span class="card__price">€2.16</span></p>
+          <p class="card__meta"><span class="card__code">P098</span><span class="card__price" data-price="P098"></span></p>
           <button class="add" type="button" data-add="P098" aria-pressed="false" aria-label="Add to list: Small basil sprinkler">Add</button>
         </li>
         <li class="card" data-code="P119" data-search="boite mola mola box kutija mola p119 r119">
           <a class="card__img" href="../assets/img/p/p119-1.webp" data-detail="P119" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p119-1-s.webp" width="640" height="619" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p119-1.webp" data-detail="P119">Mola box</a></h3>
-          <p class="card__meta"><span class="card__code">P119</span><span class="card__price">€4.63</span></p>
+          <p class="card__meta"><span class="card__code">P119</span><span class="card__price" data-price="P119"></span></p>
           <button class="add" type="button" data-add="P119" aria-pressed="false" aria-label="Add to list: Mola box">Add</button>
         </li>
         <li class="card" data-code="P133" data-search="coffret de bapteme baptism set komplet za krstenje p133 r133">
           <a class="card__img" href="../assets/img/p/p133-1.webp" data-detail="P133" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p133-1-s.webp" width="337" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p133-1.webp" data-detail="P133">Baptism set</a></h3>
-          <p class="card__meta"><span class="card__code">P133</span><span class="card__price">€15.44</span></p>
+          <p class="card__meta"><span class="card__code">P133</span><span class="card__price" data-price="P133"></span></p>
           <button class="add" type="button" data-add="P133" aria-pressed="false" aria-label="Add to list: Baptism set">Add</button>
         </li>
         <li class="card" data-code="P140" data-search="bague ring prsten p140 r140">
           <a class="card__img" href="../assets/img/p/p140-1.webp" data-detail="P140" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p140-1-s.webp" width="374" height="378" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p140-1.webp" data-detail="P140">Ring</a></h3>
-          <p class="card__meta"><span class="card__code">P140</span><span class="card__price">€2.16</span></p>
+          <p class="card__meta"><span class="card__code">P140</span><span class="card__price" data-price="P140"></span></p>
           <button class="add" type="button" data-add="P140" aria-pressed="false" aria-label="Add to list: Ring">Add</button>
         </li>
         <li class="card" data-code="P130" data-search="clochettes little bells zvoncici p130 r130">
           <a class="card__img" href="../assets/img/p/p130-1.webp" data-detail="P130" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p130-1-s.webp" width="640" height="458" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p130-1.webp" data-detail="P130">Little bells</a></h3>
-          <p class="card__meta"><span class="card__code">P130</span><span class="card__price">€0.50</span></p>
+          <p class="card__meta"><span class="card__code">P130</span><span class="card__price" data-price="P130"></span></p>
           <button class="add" type="button" data-add="P130" aria-pressed="false" aria-label="Add to list: Little bells">Add</button>
         </li>
         </ul>
@@ -726,37 +731,37 @@
         <li class="card" data-code="P055" data-search="charbon pour encensoir censer charcoal briket p055 r055">
           <a class="card__img" href="../assets/img/p/p055-1.webp" data-detail="P055" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p055-1-s.webp" width="640" height="542" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p055-1.webp" data-detail="P055">Censer charcoal</a></h3>
-          <p class="card__meta"><span class="card__code">P055</span><span class="card__price">€0.83</span></p>
+          <p class="card__meta"><span class="card__code">P055</span><span class="card__price" data-price="P055"></span></p>
           <button class="add" type="button" data-add="P055" aria-pressed="false" aria-label="Add to list: Censer charcoal">Add</button>
         </li>
         <li class="card" data-code="P054" data-search="charbon liturgique liturgical charcoal liturgijski briket p054 r054">
           <a class="card__img" href="../assets/img/p/p054-1.webp" data-detail="P054" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p054-1-s.webp" width="470" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p054-1.webp" data-detail="P054">Liturgical charcoal</a></h3>
-          <p class="card__meta"><span class="card__code">P054</span><span class="card__price">€2.57</span></p>
+          <p class="card__meta"><span class="card__code">P054</span><span class="card__price" data-price="P054"></span></p>
           <button class="add" type="button" data-add="P054" aria-pressed="false" aria-label="Add to list: Liturgical charcoal">Add</button>
         </li>
         <li class="card" data-code="P056" data-search="meches pour veilleuse oil lamp wicks fitilj p056 r056">
           <a class="card__img" href="../assets/img/p/p056-1.webp" data-detail="P056" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p056-1-s.webp" width="640" height="599" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p056-1.webp" data-detail="P056">Oil lamp wicks</a></h3>
-          <p class="card__meta"><span class="card__code">P056</span><span class="card__price">€0.92</span></p>
+          <p class="card__meta"><span class="card__code">P056</span><span class="card__price" data-price="P056"></span></p>
           <button class="add" type="button" data-add="P056" aria-pressed="false" aria-label="Add to list: Oil lamp wicks">Add</button>
         </li>
         <li class="card" data-code="P146" data-search="encens de vatopedi vatopedi incense vatopedski tamjan p146 r146">
           <a class="card__img" href="../assets/img/p/p146-1.webp" data-detail="P146" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p146-1-s.webp" width="640" height="588" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p146-1.webp" data-detail="P146">Vatopedi incense</a></h3>
-          <p class="card__meta"><span class="card__code">P146</span><span class="card__price">€11.12</span></p>
+          <p class="card__meta"><span class="card__code">P146</span><span class="card__price" data-price="P146"></span></p>
           <button class="add" type="button" data-add="P146" aria-pressed="false" aria-label="Add to list: Vatopedi incense">Add</button>
         </li>
         <li class="card" data-code="P057" data-search="encens en tube, ordinaire tube incense, plain tamjan u tubi, obican p057 r057">
           <span class="card__img card__img--none" aria-hidden="true"><span>Photo to come</span></span>
           <h3 class="card__name">Tube incense, plain</h3>
-          <p class="card__meta"><span class="card__code">P057</span><span class="card__price">€0.98</span></p>
+          <p class="card__meta"><span class="card__code">P057</span><span class="card__price" data-price="P057"></span></p>
           <button class="add" type="button" data-add="P057" aria-pressed="false" aria-label="Add to list: Tube incense, plain">Add</button>
         </li>
         <li class="card" data-code="P099" data-search="encens en tube, parfume tube incense, scented tamjan u tubi, mirisni p099 r099">
           <span class="card__img card__img--none" aria-hidden="true"><span>Photo to come</span></span>
           <h3 class="card__name">Tube incense, scented</h3>
-          <p class="card__meta"><span class="card__code">P099</span><span class="card__price">€1.44</span></p>
+          <p class="card__meta"><span class="card__code">P099</span><span class="card__price" data-price="P099"></span></p>
           <button class="add" type="button" data-add="P099" aria-pressed="false" aria-label="Add to list: Tube incense, scented">Add</button>
         </li>
         </ul>
@@ -767,157 +772,157 @@
         <li class="card" data-code="H013" data-search="chapelet en perles pearl prayer rope brojanica perla h013 n013">
           <a class="card__img" href="../assets/img/p/h013-1.webp" data-detail="H013" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/h013-1-s.webp" width="640" height="387" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/h013-1.webp" data-detail="H013">Pearl prayer rope</a></h3>
-          <p class="card__meta"><span class="card__code">H013</span><span class="card__price">€1.85</span></p>
+          <p class="card__meta"><span class="card__code">H013</span><span class="card__price" data-price="H013"></span></p>
           <button class="add" type="button" data-add="H013" aria-pressed="false" aria-label="Add to list: Pearl prayer rope">Add</button>
         </li>
         <li class="card" data-code="H014" data-search="chapelets pour enfants children s prayer ropes brojanice decije h014 n014">
           <a class="card__img" href="../assets/img/p/h014-1.webp" data-detail="H014" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/h014-1-s.webp" width="640" height="310" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/h014-1.webp" data-detail="H014">Children’s prayer ropes</a></h3>
-          <p class="card__meta"><span class="card__code">H014</span><span class="card__price">€1.85</span></p>
+          <p class="card__meta"><span class="card__code">H014</span><span class="card__price" data-price="H014"></span></p>
           <button class="add" type="button" data-add="H014" aria-pressed="false" aria-label="Add to list: Children’s prayer ropes">Add</button>
         </li>
         <li class="card" data-code="P103" data-search="chapelet ajustable adjustable prayer rope brojanica podesiva p103 r103">
           <a class="card__img" href="../assets/img/p/p103-1.webp" data-detail="P103" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p103-1-s.webp" width="640" height="229" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p103-1.webp" data-detail="P103">Adjustable prayer rope</a></h3>
-          <p class="card__meta"><span class="card__code">P103</span><span class="card__price">€2.78</span></p>
+          <p class="card__meta"><span class="card__code">P103</span><span class="card__price" data-price="P103"></span></p>
           <button class="add" type="button" data-add="P103" aria-pressed="false" aria-label="Add to list: Adjustable prayer rope">Add</button>
         </li>
         <li class="card" data-code="P037" data-search="petite croix tressee braided small cross krstic pleteni p037 r037">
           <a class="card__img" href="../assets/img/p/p037-1.webp" data-detail="P037" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p037-1-s.webp" width="416" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p037-1.webp" data-detail="P037">Braided small cross</a></h3>
-          <p class="card__meta"><span class="card__code">P037</span><span class="card__price">€1.55</span></p>
+          <p class="card__meta"><span class="card__code">P037</span><span class="card__price" data-price="P037"></span></p>
           <button class="add" type="button" data-add="P037" aria-pressed="false" aria-label="Add to list: Braided small cross">Add</button>
         </li>
         <li class="card" data-code="P040" data-search="chapelet en pierres semi-precieuses semi-precious stone prayer rope brojanice poludragi kamen p040 r040">
           <a class="card__img" href="../assets/img/p/p040-1.webp" data-detail="P040" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p040-1-s.webp" width="640" height="289" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p040-1.webp" data-detail="P040">Semi-precious stone prayer rope</a></h3>
-          <p class="card__meta"><span class="card__code">P040</span><span class="card__price">€5.66</span></p>
+          <p class="card__meta"><span class="card__code">P040</span><span class="card__price" data-price="P040"></span></p>
           <button class="add" type="button" data-add="P040" aria-pressed="false" aria-label="Add to list: Semi-precious stone prayer rope">Add</button>
         </li>
         <li class="card" data-code="P041" data-search="chapelet enfant en plastique children s plastic prayer rope brojanica decija plasticna p041 r041">
           <a class="card__img" href="../assets/img/p/p041-1.webp" data-detail="P041" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p041-1-s.webp" width="640" height="203" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p041-1.webp" data-detail="P041">Children’s plastic prayer rope</a></h3>
-          <p class="card__meta"><span class="card__code">P041</span><span class="card__price">€1.24</span></p>
+          <p class="card__meta"><span class="card__code">P041</span><span class="card__price" data-price="P041"></span></p>
           <button class="add" type="button" data-add="P041" aria-pressed="false" aria-label="Add to list: Children’s plastic prayer rope">Add</button>
         </li>
         <li class="card" data-code="P043" data-search="chapelets tresses braided prayer ropes brojanice pletene p043 r043">
           <a class="card__img" href="../assets/img/p/p043-1.webp" data-detail="P043" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p043-1-s.webp" width="640" height="289" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p043-1.webp" data-detail="P043">Braided prayer ropes</a></h3>
-          <p class="card__meta"><span class="card__code">P043</span><span class="card__price">€1.96</span></p>
+          <p class="card__meta"><span class="card__code">P043</span><span class="card__price" data-price="P043"></span></p>
           <button class="add" type="button" data-add="P043" aria-pressed="false" aria-label="Add to list: Braided prayer ropes">Add</button>
         </li>
         <li class="card" data-code="P044" data-search="chapelet tricolore tricolour prayer rope brojanica trobojka p044 r044">
           <a class="card__img" href="../assets/img/p/p044-1.webp" data-detail="P044" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p044-1-s.webp" width="353" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p044-1.webp" data-detail="P044">Tricolour prayer rope</a></h3>
-          <p class="card__meta"><span class="card__code">P044</span><span class="card__price">€2.06</span></p>
+          <p class="card__meta"><span class="card__code">P044</span><span class="card__price" data-price="P044"></span></p>
           <button class="add" type="button" data-add="P044" aria-pressed="false" aria-label="Add to list: Tricolour prayer rope">Add</button>
         </li>
         <li class="card" data-code="P047" data-search="chapelet en verre glass prayer rope brojanica staklena p047 r047">
           <a class="card__img" href="../assets/img/p/p047-1.webp" data-detail="P047" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p047-1-s.webp" width="329" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p047-1.webp" data-detail="P047">Glass prayer rope</a></h3>
-          <p class="card__meta"><span class="card__code">P047</span><span class="card__price">€1.85</span></p>
+          <p class="card__meta"><span class="card__code">P047</span><span class="card__price" data-price="P047"></span></p>
           <button class="add" type="button" data-add="P047" aria-pressed="false" aria-label="Add to list: Glass prayer rope">Add</button>
         </li>
         <li class="card" data-code="P050" data-search="larmes de la vierge tears of the virgin bogorodicine suze p050 r050">
           <a class="card__img" href="../assets/img/p/p050-1.webp" data-detail="P050" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p050-1-s.webp" width="640" height="532" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p050-1.webp" data-detail="P050">Tears of the Virgin</a></h3>
-          <p class="card__meta"><span class="card__code">P050</span><span class="card__price">€5.15</span></p>
+          <p class="card__meta"><span class="card__code">P050</span><span class="card__price" data-price="P050"></span></p>
           <button class="add" type="button" data-add="P050" aria-pressed="false" aria-label="Add to list: Tears of the Virgin">Add</button>
         </li>
         <li class="card" data-code="P049" data-search="larmes de la vierge tears of the virgin bogorodicine suze p049 r049">
           <a class="card__img" href="../assets/img/p/p049-1.webp" data-detail="P049" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p049-1-s.webp" width="591" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p049-1.webp" data-detail="P049">Tears of the Virgin</a></h3>
-          <p class="card__meta"><span class="card__code">P049</span><span class="card__price">€1.55</span></p>
+          <p class="card__meta"><span class="card__code">P049</span><span class="card__price" data-price="P049"></span></p>
           <button class="add" type="button" data-add="P049" aria-pressed="false" aria-label="Add to list: Tears of the Virgin">Add</button>
         </li>
         <li class="card" data-code="P046" data-search="colliers en bois wooden necklaces drvene ogrlice p046 r046">
           <a class="card__img" href="../assets/img/p/p046-1.webp" data-detail="P046" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p046-1-s.webp" width="640" height="555" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p046-1.webp" data-detail="P046">Wooden necklaces</a></h3>
-          <p class="card__meta"><span class="card__code">P046</span><span class="card__price">€5.77</span></p>
+          <p class="card__meta"><span class="card__code">P046</span><span class="card__price" data-price="P046"></span></p>
           <button class="add" type="button" data-add="P046" aria-pressed="false" aria-label="Add to list: Wooden necklaces">Add</button>
         </li>
         <li class="card" data-code="P107" data-search="chapelet en bois wooden prayer rope brojanica drvena p107 r107">
           <a class="card__img" href="../assets/img/p/p107-1.webp" data-detail="P107" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p107-1-s.webp" width="467" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p107-1.webp" data-detail="P107">Wooden prayer rope</a></h3>
-          <p class="card__meta"><span class="card__code">P107</span><span class="card__price">€1.55</span></p>
+          <p class="card__meta"><span class="card__code">P107</span><span class="card__price" data-price="P107"></span></p>
           <button class="add" type="button" data-add="P107" aria-pressed="false" aria-label="Add to list: Wooden prayer rope">Add</button>
         </li>
         <li class="card" data-code="P104" data-search="chapelets fins ajustables thin adjustable prayer ropes brojanice tanje, podesive p104 r104">
           <a class="card__img" href="../assets/img/p/p104-1.webp" data-detail="P104" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p104-1-s.webp" width="640" height="210" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p104-1.webp" data-detail="P104">Thin adjustable prayer ropes</a></h3>
-          <p class="card__meta"><span class="card__code">P104</span><span class="card__price">€2.68</span></p>
+          <p class="card__meta"><span class="card__code">P104</span><span class="card__price" data-price="P104"></span></p>
           <button class="add" type="button" data-add="P104" aria-pressed="false" aria-label="Add to list: Thin adjustable prayer ropes">Add</button>
         </li>
         <li class="card" data-code="P105" data-search="chapelet en plastique plastic prayer rope brojanica plasticna p105 r105">
           <a class="card__img" href="../assets/img/p/p105-1.webp" data-detail="P105" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p105-1-s.webp" width="640" height="363" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p105-1.webp" data-detail="P105">Plastic prayer rope</a></h3>
-          <p class="card__meta"><span class="card__code">P105</span><span class="card__price">€1.85</span></p>
+          <p class="card__meta"><span class="card__code">P105</span><span class="card__price" data-price="P105"></span></p>
           <button class="add" type="button" data-add="P105" aria-pressed="false" aria-label="Add to list: Plastic prayer rope">Add</button>
         </li>
         <li class="card" data-code="P106" data-search="chapelet en cristal crystal prayer rope brojanica kristal p106 r106">
           <a class="card__img" href="../assets/img/p/p106-1.webp" data-detail="P106" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p106-1-s.webp" width="640" height="382" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p106-1.webp" data-detail="P106">Crystal prayer rope</a></h3>
-          <p class="card__meta"><span class="card__code">P106</span><span class="card__price">€1.96</span></p>
+          <p class="card__meta"><span class="card__code">P106</span><span class="card__price" data-price="P106"></span></p>
           <button class="add" type="button" data-add="P106" aria-pressed="false" aria-label="Add to list: Crystal prayer rope">Add</button>
         </li>
         <li class="card" data-code="P126" data-search="chapelet fin en cristal thin crystal prayer rope brojanica, tanki kristal p126 r126">
           <a class="card__img" href="../assets/img/p/p126-1.webp" data-detail="P126" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p126-1-s.webp" width="640" height="259" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p126-1.webp" data-detail="P126">Thin crystal prayer rope</a></h3>
-          <p class="card__meta"><span class="card__code">P126</span><span class="card__price">€1.85</span></p>
+          <p class="card__meta"><span class="card__code">P126</span><span class="card__price" data-price="P126"></span></p>
           <button class="add" type="button" data-add="P126" aria-pressed="false" aria-label="Add to list: Thin crystal prayer rope">Add</button>
         </li>
         <li class="card" data-code="P121" data-search="chapelet enfant ajustable children s adjustable prayer rope brojanice decije, podesive p121 r121">
           <a class="card__img" href="../assets/img/p/p121-1.webp" data-detail="P121" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p121-1-s.webp" width="640" height="278" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p121-1.webp" data-detail="P121">Children’s adjustable prayer rope</a></h3>
-          <p class="card__meta"><span class="card__code">P121</span><span class="card__price">€2.26</span></p>
+          <p class="card__meta"><span class="card__code">P121</span><span class="card__price" data-price="P121"></span></p>
           <button class="add" type="button" data-add="P121" aria-pressed="false" aria-label="Add to list: Children’s adjustable prayer rope">Add</button>
         </li>
         <li class="card" data-code="P109" data-search="chapelet a pompon tassel prayer rope brojanica kicanka p109 r109">
           <a class="card__img" href="../assets/img/p/p109-1.webp" data-detail="P109" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p109-1-s.webp" width="636" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p109-1.webp" data-detail="P109">Tassel prayer rope</a></h3>
-          <p class="card__meta"><span class="card__code">P109</span><span class="card__price">€7.32</span></p>
+          <p class="card__meta"><span class="card__code">P109</span><span class="card__price" data-price="P109"></span></p>
           <button class="add" type="button" data-add="P109" aria-pressed="false" aria-label="Add to list: Tassel prayer rope">Add</button>
         </li>
         <li class="card" data-code="P111" data-search="chapelet en soie silk prayer rope brojanica svila p111 r111">
           <a class="card__img" href="../assets/img/p/p111-1.webp" data-detail="P111" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p111-1-s.webp" width="511" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p111-1.webp" data-detail="P111">Silk prayer rope</a></h3>
-          <p class="card__meta"><span class="card__code">P111</span><span class="card__price">€22.15</span></p>
+          <p class="card__meta"><span class="card__code">P111</span><span class="card__price" data-price="P111"></span></p>
           <button class="add" type="button" data-add="P111" aria-pressed="false" aria-label="Add to list: Silk prayer rope">Add</button>
         </li>
         <li class="card" data-code="P045" data-search="grands chapelets large prayer ropes brojanice velike p045 r045">
           <a class="card__img" href="../assets/img/p/p045-1.webp" data-detail="P045" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p045-1-s.webp" width="438" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p045-1.webp" data-detail="P045">Large prayer ropes</a></h3>
-          <p class="card__meta"><span class="card__code">P045</span><span class="card__price">€6.18</span></p>
+          <p class="card__meta"><span class="card__code">P045</span><span class="card__price" data-price="P045"></span></p>
           <button class="add" type="button" data-add="P045" aria-pressed="false" aria-label="Add to list: Large prayer ropes">Add</button>
         </li>
         <li class="card" data-code="P150" data-search="chapelet nœud dore 100 golden knot prayer rope 100 zlatni cvor 100 p150 r150">
           <a class="card__img" href="../assets/img/p/p150-1.webp" data-detail="P150" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p150-1-s.webp" width="379" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p150-1.webp" data-detail="P150">Golden knot prayer rope 100</a></h3>
-          <p class="card__meta"><span class="card__code">P150</span><span class="card__price">€21.11</span></p>
+          <p class="card__meta"><span class="card__code">P150</span><span class="card__price" data-price="P150"></span></p>
           <button class="add" type="button" data-add="P150" aria-pressed="false" aria-label="Add to list: Golden knot prayer rope 100">Add</button>
         </li>
         <li class="card" data-code="P149" data-search="chapelet nœud dore 50 golden knot prayer rope 50 zlatni cvor 50 p149 r149">
           <a class="card__img" href="../assets/img/p/p149-1.webp" data-detail="P149" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p149-1-s.webp" width="402" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p149-1.webp" data-detail="P149">Golden knot prayer rope 50</a></h3>
-          <p class="card__meta"><span class="card__code">P149</span><span class="card__price">€10.81</span></p>
+          <p class="card__meta"><span class="card__code">P149</span><span class="card__price" data-price="P149"></span></p>
           <button class="add" type="button" data-add="P149" aria-pressed="false" aria-label="Add to list: Golden knot prayer rope 50">Add</button>
         </li>
         <li class="card" data-code="P152" data-search="chapelet a capuche hood prayer rope brojanica kapica p152 r152">
           <a class="card__img" href="../assets/img/p/p152-1.webp" data-detail="P152" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p152-1-s.webp" width="455" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p152-1.webp" data-detail="P152">Hood prayer rope</a></h3>
-          <p class="card__meta"><span class="card__code">P152</span><span class="card__price">€1.85</span></p>
+          <p class="card__meta"><span class="card__code">P152</span><span class="card__price" data-price="P152"></span></p>
           <button class="add" type="button" data-add="P152" aria-pressed="false" aria-label="Add to list: Hood prayer rope">Add</button>
         </li>
         <li class="card" data-code="P108" data-search="grande croix en cristal large crystal cross kristal krst veliki p108 r108">
           <a class="card__img" href="../assets/img/p/p108-1.webp" data-detail="P108" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p108-1-s.webp" width="484" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p108-1.webp" data-detail="P108">Large crystal cross</a></h3>
-          <p class="card__meta"><span class="card__code">P108</span><span class="card__price">€2.47</span></p>
+          <p class="card__meta"><span class="card__code">P108</span><span class="card__price" data-price="P108"></span></p>
           <button class="add" type="button" data-add="P108" aria-pressed="false" aria-label="Add to list: Large crystal cross">Add</button>
         </li>
         <li class="card" data-code="P151" data-search="bracelet en boite bracelet in a box narukvica u kutiji p151 r151">
           <a class="card__img" href="../assets/img/p/p151-1.webp" data-detail="P151" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p151-1-s.webp" width="521" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p151-1.webp" data-detail="P151">Bracelet in a box</a></h3>
-          <p class="card__meta"><span class="card__code">P151</span><span class="card__price">€5.15</span></p>
+          <p class="card__meta"><span class="card__code">P151</span><span class="card__price" data-price="P151"></span></p>
           <button class="add" type="button" data-add="P151" aria-pressed="false" aria-label="Add to list: Bracelet in a box">Add</button>
         </li>
         </ul>
@@ -928,13 +933,13 @@
         <li class="card" data-code="N002" data-search="puzzle puzzle slagalica n002 n002">
           <a class="card__img" href="../assets/img/p/n002-1.webp" data-detail="N002" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/n002-1-s.webp" width="501" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/n002-1.webp" data-detail="N002">Puzzle</a></h3>
-          <p class="card__meta"><span class="card__code">N002</span><span class="card__price">€5.20</span></p>
+          <p class="card__meta"><span class="card__code">N002</span><span class="card__price" data-price="N002"></span></p>
           <button class="add" type="button" data-add="N002" aria-pressed="false" aria-label="Add to list: Puzzle">Add</button>
         </li>
         <li class="card" data-code="N001" data-search="cube saint-sava saint sava cube kocka sv. sava n001 n001">
           <a class="card__img" href="../assets/img/p/n001-1.webp" data-detail="N001" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/n001-1-s.webp" width="505" height="619" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/n001-1.webp" data-detail="N001">Saint Sava cube</a></h3>
-          <p class="card__meta"><span class="card__code">N001</span><span class="card__price">€5.66</span></p>
+          <p class="card__meta"><span class="card__code">N001</span><span class="card__price" data-price="N001"></span></p>
           <button class="add" type="button" data-add="N001" aria-pressed="false" aria-label="Add to list: Saint Sava cube">Add</button>
         </li>
         </ul>
@@ -945,67 +950,67 @@
         <li class="card" data-code="P084" data-search="sainte ecriture holy scripture sveto pismo p084 r084">
           <a class="card__img" href="../assets/img/p/p084-1.webp" data-detail="P084" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p084-1-s.webp" width="555" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p084-1.webp" data-detail="P084">Holy Scripture</a></h3>
-          <p class="card__meta"><span class="card__code">P084</span><span class="card__price">€26.78</span></p>
+          <p class="card__meta"><span class="card__code">P084</span><span class="card__price" data-price="P084"></span></p>
           <button class="add" type="button" data-add="P084" aria-pressed="false" aria-label="Add to list: Holy Scripture">Add</button>
         </li>
         <li class="card" data-code="P081" data-search="bible pour enfants children s bible biblija za decu p081 r081">
           <a class="card__img" href="../assets/img/p/p081-1.webp" data-detail="P081" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p081-1-s.webp" width="549" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p081-1.webp" data-detail="P081">Children’s Bible</a></h3>
-          <p class="card__meta"><span class="card__code">P081</span><span class="card__price">€12.36</span></p>
+          <p class="card__meta"><span class="card__code">P081</span><span class="card__price" data-price="P081"></span></p>
           <button class="add" type="button" data-add="P081" aria-pressed="false" aria-label="Add to list: Children’s Bible">Add</button>
         </li>
         <li class="card" data-code="P079" data-search="sainte ecriture (a5) holy scripture (a5) sveto pismo (a5) p079 r079">
           <a class="card__img" href="../assets/img/p/p079-1.webp" data-detail="P079" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p079-1-s.webp" width="482" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p079-1.webp" data-detail="P079">Holy Scripture (A5)</a></h3>
-          <p class="card__meta"><span class="card__code">P079</span><span class="card__price">€18.54</span></p>
+          <p class="card__meta"><span class="card__code">P079</span><span class="card__price" data-price="P079"></span></p>
           <button class="add" type="button" data-add="P079" aria-pressed="false" aria-label="Add to list: Holy Scripture (A5)">Add</button>
         </li>
         <li class="card" data-code="P082" data-search="petit psautier small psalter psaltir mali p082 r082">
           <a class="card__img" href="../assets/img/p/p082-1.webp" data-detail="P082" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p082-1-s.webp" width="523" height="565" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p082-1.webp" data-detail="P082">Small psalter</a></h3>
-          <p class="card__meta"><span class="card__code">P082</span><span class="card__price">€4.12</span></p>
+          <p class="card__meta"><span class="card__code">P082</span><span class="card__price" data-price="P082"></span></p>
           <button class="add" type="button" data-add="P082" aria-pressed="false" aria-label="Add to list: Small psalter">Add</button>
         </li>
         <li class="card" data-code="P083" data-search="grand psautier large psalter psaltir veliki p083 r083">
           <a class="card__img" href="../assets/img/p/p083-1.webp" data-detail="P083" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p083-1-s.webp" width="574" height="598" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p083-1.webp" data-detail="P083">Large psalter</a></h3>
-          <p class="card__meta"><span class="card__code">P083</span><span class="card__price">€5.66</span></p>
+          <p class="card__meta"><span class="card__code">P083</span><span class="card__price" data-price="P083"></span></p>
           <button class="add" type="button" data-add="P083" aria-pressed="false" aria-label="Add to list: Large psalter">Add</button>
         </li>
         <li class="card" data-code="P086" data-search="livre de prieres pour enfants children s prayer book deciji molitvenik p086 r086">
           <a class="card__img" href="../assets/img/p/p086-1.webp" data-detail="P086" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p086-1-s.webp" width="585" height="639" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p086-1.webp" data-detail="P086">Children’s prayer book</a></h3>
-          <p class="card__meta"><span class="card__code">P086</span><span class="card__price">€1.24</span></p>
+          <p class="card__meta"><span class="card__code">P086</span><span class="card__price" data-price="P086"></span></p>
           <button class="add" type="button" data-add="P086" aria-pressed="false" aria-label="Add to list: Children’s prayer book">Add</button>
         </li>
         <li class="card" data-code="P075" data-search="nouveau testament new testament novi zavet p075 r075">
           <a class="card__img" href="../assets/img/p/p075-1.webp" data-detail="P075" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p075-1-s.webp" width="543" height="598" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p075-1.webp" data-detail="P075">New Testament</a></h3>
-          <p class="card__meta"><span class="card__code">P075</span><span class="card__price">€10.30</span></p>
+          <p class="card__meta"><span class="card__code">P075</span><span class="card__price" data-price="P075"></span></p>
           <button class="add" type="button" data-add="P075" aria-pressed="false" aria-label="Add to list: New Testament">Add</button>
         </li>
         <li class="card" data-code="P085" data-search="livre de prieres orthodoxe orthodox prayer book pravoslavni molitvenik p085 r085">
           <a class="card__img" href="../assets/img/p/p085-1.webp" data-detail="P085" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p085-1-s.webp" width="527" height="604" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p085-1.webp" data-detail="P085">Orthodox prayer book</a></h3>
-          <p class="card__meta"><span class="card__code">P085</span><span class="card__price">€4.32</span></p>
+          <p class="card__meta"><span class="card__code">P085</span><span class="card__price" data-price="P085"></span></p>
           <button class="add" type="button" data-add="P085" aria-pressed="false" aria-label="Add to list: Orthodox prayer book">Add</button>
         </li>
         <li class="card" data-code="P080" data-search="repons de la liturgie responses to the liturgy odgovaranje na liturgiji p080 r080">
           <a class="card__img" href="../assets/img/p/p080-1.webp" data-detail="P080" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p080-1-s.webp" width="553" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p080-1.webp" data-detail="P080">Responses to the Liturgy</a></h3>
-          <p class="card__meta"><span class="card__code">P080</span><span class="card__price">€2.57</span></p>
+          <p class="card__meta"><span class="card__code">P080</span><span class="card__price" data-price="P080"></span></p>
           <button class="add" type="button" data-add="P080" aria-pressed="false" aria-label="Add to list: Responses to the Liturgy">Add</button>
         </li>
         <li class="card" data-code="P134" data-search="livre de prieres prayer book molitvenik p134 r134">
           <a class="card__img" href="../assets/img/p/p134-1.webp" data-detail="P134" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p134-1-s.webp" width="491" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p134-1.webp" data-detail="P134">Prayer book</a></h3>
-          <p class="card__meta"><span class="card__code">P134</span><span class="card__price">€7.73</span></p>
+          <p class="card__meta"><span class="card__code">P134</span><span class="card__price" data-price="P134"></span></p>
           <button class="add" type="button" data-add="P134" aria-pressed="false" aria-label="Add to list: Prayer book">Add</button>
         </li>
         <li class="card" data-code="P138" data-search="repons de la liturgie responses to the liturgy odgovaranje na liturgiji p138 r138">
           <a class="card__img" href="../assets/img/p/p138-1.webp" data-detail="P138" tabindex="-1" aria-hidden="true"><img src="../assets/img/p/p138-1-s.webp" width="410" height="640" alt="" loading="lazy" decoding="async"></a>
           <h3 class="card__name"><a href="../assets/img/p/p138-1.webp" data-detail="P138">Responses to the Liturgy</a></h3>
-          <p class="card__meta"><span class="card__code">P138</span><span class="card__price">€2.26</span></p>
+          <p class="card__meta"><span class="card__code">P138</span><span class="card__price" data-price="P138"></span></p>
           <button class="add" type="button" data-add="P138" aria-pressed="false" aria-label="Add to list: Responses to the Liturgy">Add</button>
         </li>
         </ul>
@@ -1019,66 +1024,66 @@
             <div class="table-wrap" tabindex="0" role="region" aria-labelledby="h-bougies">
             <table class="candles__table">
               <caption>The size is the number of candles per kilo: 10/1 means ten candles to a kilo.</caption>
-              <thead><tr><th scope="col">Size</th><th scope="col" class="num">Height × width</th><th scope="col" class="num">Price per kilo</th><th scope="col" class="act"><span class="visually-hidden">List</span></th></tr></thead>
+              <thead><tr><th scope="col">Size</th><th scope="col" class="num">Height × width</th><th scope="col" class="num price">Price per kilo</th><th scope="col" class="act"><span class="visually-hidden">List</span></th></tr></thead>
               <tbody>
             <tr data-code="bougie-1-1" data-search="bougies 1/1 candles 1/1 svece 1/1 bougies en cire wax candles vostane svece">
               <th scope="row">1/1</th>
               <td class="num">72&nbsp;×&nbsp;4,5&nbsp;cm</td>
-              <td class="num price">€23.00</td>
+              <td class="num price" data-price="bougie-1-1"></td>
               <td class="act"><button class="add add--row" type="button" data-add="bougie-1-1" aria-pressed="false" aria-label="Add to list: Candles 1/1">Add</button></td>
             </tr>
             <tr data-code="bougie-2-1" data-search="bougies 2/1 candles 2/1 svece 2/1 bougies en cire wax candles vostane svece">
               <th scope="row">2/1</th>
               <td class="num">56&nbsp;×&nbsp;3,5&nbsp;cm</td>
-              <td class="num price">€18.00</td>
+              <td class="num price" data-price="bougie-2-1"></td>
               <td class="act"><button class="add add--row" type="button" data-add="bougie-2-1" aria-pressed="false" aria-label="Add to list: Candles 2/1">Add</button></td>
             </tr>
             <tr data-code="bougie-3-1" data-search="bougies 3/1 candles 3/1 svece 3/1 bougies en cire wax candles vostane svece">
               <th scope="row">3/1</th>
               <td class="num">50,05&nbsp;×&nbsp;3&nbsp;cm</td>
-              <td class="num price">€18.00</td>
+              <td class="num price" data-price="bougie-3-1"></td>
               <td class="act"><button class="add add--row" type="button" data-add="bougie-3-1" aria-pressed="false" aria-label="Add to list: Candles 3/1">Add</button></td>
             </tr>
             <tr data-code="bougie-5-1" data-search="bougies 5/1 candles 5/1 svece 5/1 bougies en cire wax candles vostane svece">
               <th scope="row">5/1</th>
               <td class="num">45&nbsp;×&nbsp;2,6&nbsp;cm</td>
-              <td class="num price">€18.00</td>
+              <td class="num price" data-price="bougie-5-1"></td>
               <td class="act"><button class="add add--row" type="button" data-add="bougie-5-1" aria-pressed="false" aria-label="Add to list: Candles 5/1">Add</button></td>
             </tr>
             <tr data-code="bougie-10-1" data-search="bougies 10/1 candles 10/1 svece 10/1 bougies en cire wax candles vostane svece">
               <th scope="row">10/1</th>
               <td class="num">42&nbsp;×&nbsp;1,8&nbsp;cm</td>
-              <td class="num price">€18.00</td>
+              <td class="num price" data-price="bougie-10-1"></td>
               <td class="act"><button class="add add--row" type="button" data-add="bougie-10-1" aria-pressed="false" aria-label="Add to list: Candles 10/1">Add</button></td>
             </tr>
             <tr data-code="bougie-30-1" data-search="bougies 30/1 candles 30/1 svece 30/1 bougies en cire wax candles vostane svece">
               <th scope="row">30/1</th>
               <td class="num">29&nbsp;×&nbsp;1,2&nbsp;cm</td>
-              <td class="num price">€17.00</td>
+              <td class="num price" data-price="bougie-30-1"></td>
               <td class="act"><button class="add add--row" type="button" data-add="bougie-30-1" aria-pressed="false" aria-label="Add to list: Candles 30/1">Add</button></td>
             </tr>
             <tr data-code="bougie-50-1" data-search="bougies 50/1 candles 50/1 svece 50/1 bougies en cire wax candles vostane svece">
               <th scope="row">50/1</th>
               <td class="num">26&nbsp;×&nbsp;1&nbsp;cm</td>
-              <td class="num price">€17.00</td>
+              <td class="num price" data-price="bougie-50-1"></td>
               <td class="act"><button class="add add--row" type="button" data-add="bougie-50-1" aria-pressed="false" aria-label="Add to list: Candles 50/1">Add</button></td>
             </tr>
             <tr data-code="bougie-100-1" data-search="bougies 100/1 candles 100/1 svece 100/1 bougies en cire wax candles vostane svece">
               <th scope="row">100/1</th>
               <td class="num">23&nbsp;×&nbsp;0,8&nbsp;cm</td>
-              <td class="num price">€17.00</td>
+              <td class="num price" data-price="bougie-100-1"></td>
               <td class="act"><button class="add add--row" type="button" data-add="bougie-100-1" aria-pressed="false" aria-label="Add to list: Candles 100/1">Add</button></td>
             </tr>
             <tr data-code="bougie-200-1" data-search="bougies 200/1 candles 200/1 svece 200/1 bougies en cire wax candles vostane svece">
               <th scope="row">200/1</th>
               <td class="num">24&nbsp;×&nbsp;0,4&nbsp;cm</td>
-              <td class="num price">€24.00</td>
+              <td class="num price" data-price="bougie-200-1"></td>
               <td class="act"><button class="add add--row" type="button" data-add="bougie-200-1" aria-pressed="false" aria-label="Add to list: Candles 200/1">Add</button></td>
             </tr>
             <tr data-code="bougie-dikiri" data-search="dikiri et trikiri dikiri and trikiri za dikirije i trikirije bougies en cire wax candles vostane svece">
               <th scope="row">Dikiri and trikiri</th>
               <td class="num note">10 pieces per kilo</td>
-              <td class="num price">€23.00</td>
+              <td class="num price" data-price="bougie-dikiri"></td>
               <td class="act"><button class="add add--row" type="button" data-add="bougie-dikiri" aria-pressed="false" aria-label="Add to list: Dikiri and trikiri">Add</button></td>
             </tr>
               </tbody>
@@ -1094,18 +1099,18 @@
       <div class="container order__grid">
         <div class="order__text">
           <h2 id="h-order">Order by code</h2>
-          <p class="lead">Add items to your list, then email it to the warehouse.</p>
+          <p class="lead">Prices and ordering are for the Eparchy’s clergy.</p>
           <ol class="steps">
-            <li>Add items from the catalogue.</li>
-            <li>Set the quantities in your list.</li>
-            <li>Send the list: it goes with the codes and the total.</li>
+            <li>Enter your email to see the prices.</li>
+            <li>Add the items and their quantities.</li>
+            <li>Send the order: the PDF goes to you and the warehouse.</li>
           </ol>
         </div>
         <div class="order__facts">
           <dl class="facts">
             <div class="facts__row"><dt>Email</dt><dd><span class="fill" data-fill="email">email address to come</span></dd></div>
             <div class="facts__row"><dt>Address</dt><dd><span class="fill" data-fill="address">warehouse address to come</span></dd></div>
-            <div class="facts__row"><dt>Prices</dt><dd>In euros, as in the warehouse catalogue.</dd></div>
+            <div class="facts__row"><dt>Prices</dt><dd>For clergy only, in euros.</dd></div>
           </dl>
           <button class="btn btn--primary" type="button" data-open-list hidden>Open my list</button>
         </div>
@@ -1138,6 +1143,27 @@
     </div>
   </dialog>
 
+  <dialog class="welcome" data-welcome aria-labelledby="welcome-title">
+    <form class="welcome__inner" data-login-form novalidate>
+      <h2 id="welcome-title">Prices for clergy only</h2>
+      <fieldset class="welcome__langs">
+        <legend class="visually-hidden">Site language</legend>
+        <div class="welcome__seg">
+        <a href="../" hreflang="fr" lang="fr" data-lang>Français</a>
+        <a href="../en/" hreflang="en" lang="en" data-lang aria-current="page">English</a>
+        <a href="../sr/" hreflang="sr-Cyrl" lang="sr-Cyrl" data-lang>Српски</a>
+        </div>
+      </fieldset>
+      <label for="login-email">Your email</label>
+      <input id="login-email" name="email" type="email" autocomplete="email" inputmode="email" spellcheck="false" placeholder="name@example.com" required>
+      <p class="welcome__help" data-login-help aria-live="polite"></p>
+      <div class="welcome__actions">
+        <button class="btn btn--primary" type="submit" data-login-submit>See prices</button>
+        <button class="textbtn" type="button" data-login-skip>Continue without prices</button>
+      </div>
+    </form>
+  </dialog>
+
   <dialog class="drawer" data-list-dialog aria-labelledby="drawer-title">
     <div class="drawer__inner">
       <div class="drawer__head">
@@ -1149,7 +1175,7 @@
     </div>
   </dialog>
 
-  <script type="application/json" id="catalogue-data">{"lang":"en","locale":"en-GB","email":"","s":{"add":"Add","added":"In your list","noMatch":"Nothing matches “{q}”. Try a code such as P074, or a shorter word.","matches":"{n} for “{q}”","photoOf":"Photo {i} of {n}","emptyTitle":"Your list is empty.","emptyText":"Add items from the catalogue and they appear here with their price.","qty":"Quantity","less":"One fewer","more":"One more","remove":"Remove","total":"Estimated total","send":"Send by email","copy":"Copy the list","copied":"List copied to the clipboard.","copyFailed":"Copying didn’t work. Select the list by hand.","noEmail":"The warehouse email isn’t set yet: copy the list to send it.","clearList":"Clear the list","mailSubject":"Order from the warehouse catalogue","mailHello":"Hello,\n\nI would like to order the following items:","kg":"kg","perKg":"/ kg","close":"Close","code":"Code","browse":"Browse the catalogue"},"mailFields":["Name:","Parish:","Address:","Phone:"],"addLabel":"Add to list: {name}","items":{"one":"item","other":"items"},"sizes":{"one":"size","other":"sizes"},"cats":{"encensoirs":"Censers","icones":"Icons","chandeliers":"Candlesticks","veilleuses":"Oil lamps","croix":"Crosses","pendentifs":"Small crosses and pendants","culte":"Church supplies","encens":"Incense and charcoal","chapelets":"Prayer ropes","enfants":"Children’s corner","livres":"Books","bougies":"Wax candles"},"p":{"P011":{"n":"Censer","c":"encensoirs","pr":2.26,"ph":[["p011-1",763,327]]},"P014":{"n":"Censer","c":"encensoirs","pr":3.08,"ph":[["p014-1",504,369],["p014-2",573,381]]},"P013":{"n":"Censer","c":"encensoirs","pr":4.12,"ph":[["p013-1",864,1043]]},"P012":{"n":"Censer","c":"encensoirs","pr":4.12,"ph":[["p012-1",404,364]]},"A006":{"n":"Censer","c":"encensoirs","pr":6.18,"ph":[["a006-1",663,319]]},"H007":{"n":"Small censer","c":"encensoirs","pr":4,"ph":[["h007-1",846,477]]},"H006":{"n":"Large censer","c":"encensoirs","pr":6.18,"ph":[["h006-1",924,443]]},"H004":{"n":"Metal censer, large","c":"encensoirs","pr":12.83,"ph":[["h004-1",468,812],["h004-2",392,574],["h004-3",492,826]]},"H005":{"n":"Metal censer, small","c":"encensoirs","pr":10.3,"ph":[["h005-1",362,566],["h005-2",864,1184],["h005-3",638,592]]},"P064":{"n":"Mounted icon A4","c":"icones","pr":11.33,"ph":[["p064-1",662,849]]},"P074":{"n":"Nika icon, medium","c":"icones","pr":24.72,"ph":[["p074-1",712,1019],["p074-2",864,589]]},"P128":{"n":"Nika icon, smallest","c":"icones","pr":12.36,"ph":[["p074-2",864,589]]},"P127":{"n":"Nika icon, largest","c":"icones","pr":41.2,"ph":[["p074-2",864,589]]},"A007":{"n":"Glass-framed icon A4","c":"icones","pr":32.96,"ph":[["a007-1",763,945]]},"P063":{"n":"House blessing","c":"icones","pr":4.73,"ph":[["p063-1",548,732]]},"P137":{"n":"Framed Nika icon","c":"icones","pr":20.6,"ph":[["p137-1",733,887]],"note":"The inscription on the icon can be personalised."},"P069":{"n":"Diptych A4","c":"icones","pr":17.51,"ph":[["p069-1",830,704]]},"P073":{"n":"Postcard diptych","c":"icones","pr":5.24,"ph":[["p073-1",382,299]]},"P070":{"n":"Small tile","c":"icones","pr":1.44,"ph":[["p070-1",442,209]]},"P072":{"n":"Small triptych","c":"icones","pr":4.02,"ph":[["p072-1",854,418]]},"P071":{"n":"Small diptych","c":"icones","pr":3.19,"ph":[["p071-1",941,623]]},"P066":{"n":"Small mounted icon","c":"icones","pr":1.63,"ph":[["p066-1",704,1084]]},"P067":{"n":"Small PVC icons","c":"icones","pr":0.1,"ph":[["p067-1",967,469]]},"P147":{"n":"Round icon","c":"icones","pr":23.69,"ph":[["p147-1",768,649]]},"H008":{"n":"Small icon","c":"icones","pr":2.99,"ph":[["h008-1",771,501]]},"P010":{"n":"Large candlestick","c":"chandeliers","pr":26.78,"ph":[["p010-1",337,693]]},"A001":{"n":"Nickel candlestick","c":"chandeliers","pr":20.6,"ph":[["a001-1",471,789]]},"A009":{"n":"Matte candlestick","c":"chandeliers","pr":20.6,"ph":[["a009-1",432,672]]},"A008":{"n":"Gold candlestick","c":"chandeliers","pr":20.6,"ph":[["a008-1",460,804]]},"P009":{"n":"Small candlestick","c":"chandeliers","pr":20.6,"ph":[["p009-1",295,562]]},"P016":{"n":"Ceramic candlestick","c":"chandeliers","pr":4.02,"ph":[["p016-1",1179,1028]]},"P015":{"n":"Ceramic candlestick","c":"chandeliers","pr":4.42,"ph":[["p015-1",369,822]]},"P004":{"n":"Knjaz Miloš oil lamp","c":"veilleuses","pr":23.69,"ph":[["p004-1",881,558]]},"P003":{"n":"Hanging oil lamp","c":"veilleuses","pr":30.9,"ph":[["p003-1",747,597]]},"A003":{"n":"Hanging oil lamp","c":"veilleuses","pr":27.8,"ph":[["a003-1",926,627]]},"P142":{"n":"Russian gilt oil lamp","c":"veilleuses","pr":39.14,"ph":[["p142-1",799,669]]},"A002":{"n":"Hanging oil lamp, matte","c":"veilleuses","pr":27.8,"ph":[["a002-1",896,728]]},"A004":{"n":"Hanging oil lamp","c":"veilleuses","pr":27.8,"ph":[["a004-1",928,701]]},"P005":{"n":"Table oil lamp with eagles","c":"veilleuses","pr":23.69,"ph":[["p005-1",272,490]]},"P002":{"n":"Lace table oil lamp","c":"veilleuses","pr":23.69,"ph":[["p002-1",434,636]]},"H001":{"n":"Table oil lamp","c":"veilleuses","pr":20.6,"ph":[["h001-1",364,550],["h001-2",387,579]]},"P141":{"n":"Combined table oil lamp","c":"veilleuses","pr":32.96,"ph":[["p141-1",721,747]]},"H017":{"n":"Table oil lamp","c":"veilleuses","pr":24.72,"ph":[["h017-1",576,1277]]},"P132":{"n":"Table oil lamp","c":"veilleuses","pr":13.38,"ph":[["p132-1",438,565]]},"A005":{"n":"Nickel table oil lamp","c":"veilleuses","pr":25.74,"ph":[["a005-1",741,687]]},"A010":{"n":"Gilded table oil lamp","c":"veilleuses","pr":25.74,"ph":[["a010-1",749,725]]},"A011":{"n":"Table oil lamp M.R.","c":"veilleuses","pr":25.74,"ph":[["a011-1",767,672]]},"A012":{"n":"Table oil lamp N.P.","c":"veilleuses","pr":25.74,"ph":[["a012-1",765,669]]},"H012":{"n":"Table cross","c":"croix","pr":7.2,"ph":[["h012-1",368,565],["h012-2",368,563]]},"P022":{"n":"Small resin cross","c":"croix","pr":5.04,"ph":[["p022-1",308,516],["p022-2",843,652]]},"P020":{"n":"Large table cross","c":"croix","pr":8.34,"ph":[["p020-1",436,780]]},"P021":{"n":"Small table cross","c":"croix","pr":5.26,"ph":[["p021-1",695,679]]},"P131":{"n":"Resin table cross","c":"croix","pr":9.58,"ph":[["p131-1",847,1065]]},"P136":{"n":"Resin hand cross","c":"croix","pr":12.25,"ph":[["p136-1",864,1184]]},"P024":{"n":"Hand cross","c":"croix","pr":5.04,"ph":[["p024-1",433,873]]},"P028":{"n":"Small wooden cross","c":"pendentifs","pr":1.02,"ph":[["p028-1",992,317]]},"P135":{"n":"Scented small cross","c":"pendentifs","pr":1.54,"ph":[["p135-1",1037,527]]},"H009":{"n":"Cross pendant","c":"pendentifs","pr":1.75,"ph":[["h009-1",860,742]]},"H010":{"n":"Small cross","c":"pendentifs","pr":1.96,"ph":[["h010-1",645,716]]},"H018":{"n":"Clip","c":"culte","pr":9.26,"ph":[["h018-1",768,407]]},"P031":{"n":"Medallions","c":"pendentifs","pr":1.55,"ph":[["p031-1",1020,282]]},"P035":{"n":"Cross pendant","c":"pendentifs","pr":1.64,"ph":[["p035-1",661,616]]},"P120":{"n":"Cross pendant","c":"pendentifs","pr":2.78,"ph":[["p120-1",768,795]]},"H016":{"n":"Cross in a box","c":"pendentifs","pr":8.24,"ph":[["h016-1",960,1088]]},"H016-1":{"n":"Cross in a box","c":"pendentifs","pr":8.24,"ph":[["h016-1-1",864,1184]]},"H016-2":{"n":"Cross in a box","c":"pendentifs","pr":8.24,"ph":[["h016-2-1",777,684]]},"H015":{"n":"Cross in a box","c":"pendentifs","pr":7.72,"ph":[["h015-1",929,744]]},"P117":{"n":"Resin car cross","c":"pendentifs","pr":2.26,"ph":[["p117-1",768,633],["p117-2",749,372]]},"H002":{"n":"Cross in a box","c":"pendentifs","pr":2.06,"ph":[["h002-1",546,411]]},"H011":{"n":"Cloth (ubrus)","c":"culte","pr":11.33,"ph":[["h011-1",864,983]]},"H020":{"n":"Candle snuffer","c":"culte","pr":12.36,"ph":[["h020-1",754,934]]},"P032":{"n":"Metal medallion","c":"pendentifs","pr":4.32,"ph":[["p032-1",807,849]]},"P051":{"n":"White rose","c":"culte","pr":1.85,"ph":[["p051-1",768,505]]},"P052":{"n":"Tricolour rose","c":"culte","pr":1.96,"ph":[["p052-1",757,475]]},"P112":{"n":"Rose","c":"culte","pr":1.94,"ph":[["p112-1",1046,667]]},"P019":{"n":"Bread seal, large","c":"culte","pr":8.24,"ph":[["p019-1",744,459]]},"P017":{"n":"Bread seal, small","c":"culte","pr":1.75,"ph":[["p019-1",744,459]]},"P018":{"n":"Bread seal, medium","c":"culte","pr":2.16,"ph":[["p019-1",744,459]]},"P023":{"n":"Bread seal, cube","c":"culte","pr":2.99,"ph":[["p023-1",426,294]]},"L003":{"n":"Magnets","c":"culte","pr":2.06,"ph":[["l003-1",864,1116]]},"P059":{"n":"Holy ointment","c":"culte","pr":3.19,"ph":[["p059-1",388,665]]},"P025":{"n":"Slava bread moulds","c":"culte","pr":24.72,"ph":[["p025-1",587,402]]},"P026":{"n":"Stencil","c":"culte","pr":8.24,"ph":[["p026-1",847,523]]},"P033":{"n":"Wooden pendant","c":"pendentifs","pr":2.57,"ph":[["p033-1",843,719]]},"P062":{"n":"Large basil sprinkler","c":"culte","pr":2.88,"ph":[["p062-1",896,693]]},"P098":{"n":"Small basil sprinkler","c":"culte","pr":2.16,"ph":[["p098-1",768,1010]]},"P119":{"n":"Mola box","c":"culte","pr":4.63,"ph":[["p119-1",768,743]]},"P133":{"n":"Baptism set","c":"culte","pr":15.44,"ph":[["p133-1",605,1150]]},"P140":{"n":"Ring","c":"culte","pr":2.16,"ph":[["p140-1",374,378]]},"P118":{"n":"Engraved car cross","c":"pendentifs","pr":2.06,"ph":[["p118-1",800,615]]},"P034":{"n":"Car cross","c":"pendentifs","pr":2.68,"ph":[["p034-1",744,897]]},"P055":{"n":"Censer charcoal","c":"encens","pr":0.83,"ph":[["p055-1",766,649]]},"P054":{"n":"Liturgical charcoal","c":"encens","pr":2.57,"ph":[["p054-1",768,1046]]},"P056":{"n":"Oil lamp wicks","c":"encens","pr":0.92,"ph":[["p056-1",691,647]]},"P146":{"n":"Vatopedi incense","c":"encens","pr":11.12,"ph":[["p146-1",761,699]]},"P057":{"n":"Tube incense, plain","c":"encens","pr":0.98,"ph":[]},"P099":{"n":"Tube incense, scented","c":"encens","pr":1.44,"ph":[]},"P130":{"n":"Little bells","c":"culte","pr":0.5,"ph":[["p130-1",682,488]]},"H013":{"n":"Pearl prayer rope","c":"chapelets","pr":1.85,"ph":[["h013-1",904,546]]},"H014":{"n":"Children’s prayer ropes","c":"chapelets","pr":1.85,"ph":[["h014-1",1114,540]]},"P103":{"n":"Adjustable prayer rope","c":"chapelets","pr":2.78,"ph":[["p103-1",817,292]]},"P037":{"n":"Braided small cross","c":"chapelets","pr":1.55,"ph":[["p037-1",562,864]]},"P040":{"n":"Semi-precious stone prayer rope","c":"chapelets","pr":5.66,"ph":[["p040-1",1155,521]]},"P041":{"n":"Children’s plastic prayer rope","c":"chapelets","pr":1.24,"ph":[["p041-1",985,313]]},"P043":{"n":"Braided prayer ropes","c":"chapelets","pr":1.96,"ph":[["p043-1",753,340]]},"P044":{"n":"Tricolour prayer rope","c":"chapelets","pr":2.06,"ph":[["p044-1",440,798]]},"P047":{"n":"Glass prayer rope","c":"chapelets","pr":1.85,"ph":[["p047-1",427,831]]},"P050":{"n":"Tears of the Virgin","c":"chapelets","pr":5.15,"ph":[["p050-1",897,745]]},"P049":{"n":"Tears of the Virgin","c":"chapelets","pr":1.55,"ph":[["p049-1",864,936]]},"P046":{"n":"Wooden necklaces","c":"chapelets","pr":5.77,"ph":[["p046-1",970,841]]},"P107":{"n":"Wooden prayer rope","c":"chapelets","pr":1.55,"ph":[["p107-1",864,1184]]},"P104":{"n":"Thin adjustable prayer ropes","c":"chapelets","pr":2.68,"ph":[["p104-1",864,284]]},"P105":{"n":"Plastic prayer rope","c":"chapelets","pr":1.85,"ph":[["p105-1",818,464]]},"P106":{"n":"Crystal prayer rope","c":"chapelets","pr":1.96,"ph":[["p106-1",781,466]]},"P126":{"n":"Thin crystal prayer rope","c":"chapelets","pr":1.85,"ph":[["p126-1",852,345]]},"P121":{"n":"Children’s adjustable prayer rope","c":"chapelets","pr":2.26,"ph":[["p121-1",1069,464]]},"P109":{"n":"Tassel prayer rope","c":"chapelets","pr":7.32,"ph":[["p109-1",802,807]]},"P111":{"n":"Silk prayer rope","c":"chapelets","pr":22.15,"ph":[["p111-1",808,1011]]},"P045":{"n":"Large prayer ropes","c":"chapelets","pr":6.18,"ph":[["p045-1",768,1121]]},"P150":{"n":"Golden knot prayer rope 100","c":"chapelets","pr":21.11,"ph":[["p150-1",730,1234]]},"P149":{"n":"Golden knot prayer rope 50","c":"chapelets","pr":10.81,"ph":[["p149-1",768,1222]]},"P152":{"n":"Hood prayer rope","c":"chapelets","pr":1.85,"ph":[["p152-1",768,1080]]},"P108":{"n":"Large crystal cross","c":"chapelets","pr":2.47,"ph":[["p108-1",768,1016]]},"P151":{"n":"Bracelet in a box","c":"chapelets","pr":5.15,"ph":[["p151-1",768,944]]},"N002":{"n":"Puzzle","c":"enfants","pr":5.2,"ph":[["n002-1",582,743]]},"N001":{"n":"Saint Sava cube","c":"enfants","pr":5.66,"ph":[["n001-1",505,619],["n001-2",698,768]]},"P084":{"n":"Holy Scripture","c":"livres","pr":26.78,"ph":[["p084-1",556,641]]},"P081":{"n":"Children’s Bible","c":"livres","pr":12.36,"ph":[["p081-1",556,648]]},"P079":{"n":"Holy Scripture (A5)","c":"livres","pr":18.54,"ph":[["p079-1",567,753]]},"P082":{"n":"Small psalter","c":"livres","pr":4.12,"ph":[["p082-1",523,565]]},"P083":{"n":"Large psalter","c":"livres","pr":5.66,"ph":[["p083-1",574,598]]},"P086":{"n":"Children’s prayer book","c":"livres","pr":1.24,"ph":[["p086-1",585,639]]},"P075":{"n":"New Testament","c":"livres","pr":10.3,"ph":[["p075-1",543,598]]},"P085":{"n":"Orthodox prayer book","c":"livres","pr":4.32,"ph":[["p085-1",527,604]]},"P080":{"n":"Responses to the Liturgy","c":"livres","pr":2.57,"ph":[["p080-1",764,884]]},"P134":{"n":"Prayer book","c":"livres","pr":7.73,"ph":[["p134-1",594,774]]},"P138":{"n":"Responses to the Liturgy","c":"livres","pr":2.26,"ph":[["p138-1",629,981]]},"bougie-1-1":{"n":"Candles 1/1","c":"bougies","pr":23,"ph":[["bougies-1",768,1052]],"kg":1,"code":"1/1"},"bougie-2-1":{"n":"Candles 2/1","c":"bougies","pr":18,"ph":[["bougies-1",768,1052]],"kg":1,"code":"2/1"},"bougie-3-1":{"n":"Candles 3/1","c":"bougies","pr":18,"ph":[["bougies-1",768,1052]],"kg":1,"code":"3/1"},"bougie-5-1":{"n":"Candles 5/1","c":"bougies","pr":18,"ph":[["bougies-1",768,1052]],"kg":1,"code":"5/1"},"bougie-10-1":{"n":"Candles 10/1","c":"bougies","pr":18,"ph":[["bougies-1",768,1052]],"kg":1,"code":"10/1"},"bougie-30-1":{"n":"Candles 30/1","c":"bougies","pr":17,"ph":[["bougies-1",768,1052]],"kg":1,"code":"30/1"},"bougie-50-1":{"n":"Candles 50/1","c":"bougies","pr":17,"ph":[["bougies-1",768,1052]],"kg":1,"code":"50/1"},"bougie-100-1":{"n":"Candles 100/1","c":"bougies","pr":17,"ph":[["bougies-1",768,1052]],"kg":1,"code":"100/1"},"bougie-200-1":{"n":"Candles 200/1","c":"bougies","pr":24,"ph":[["bougies-1",768,1052]],"kg":1,"code":"200/1"},"bougie-dikiri":{"n":"Dikiri and trikiri","c":"bougies","pr":23,"ph":[["bougies-2",573,1364]],"kg":1,"code":"Dikiri and trikiri"}}}</script>
+  <script type="application/json" id="catalogue-data">{"lang":"en","locale":"en-GB","api":null,"langs":{"fr":"../","en":"../en/","sr":"../sr/"},"s":{"add":"Add","added":"In your list","noMatch":"Nothing matches “{q}”. Try a code such as P074, or a shorter word.","matches":"{n} for “{q}”","photoOf":"Photo {i} of {n}","emptyTitle":"Your list is empty.","emptyText":"Add items from the catalogue and they appear here with their price.","qty":"Quantity","less":"One fewer","more":"One more","remove":"Remove","total":"Estimated total","copy":"Copy the list","copied":"List copied to the clipboard.","copyFailed":"Copying didn’t work. Select the list by hand.","clearList":"Clear the list","mailHello":"Hello,\n\nI would like to order the following items:","kg":"kg","perKg":"/ kg","close":"Close","code":"Code","browse":"Browse the catalogue","loginUnknown":"This address isn’t on the clergy list. Check it, or continue without prices.","loginTooMany":"Too many tries. Try again in fifteen minutes.","loginFailed":"The check didn’t go through. Try again in a moment.","loginInvalid":"Write the address as name@example.com.","checking":"Checking…","showPrices":"See prices","signOut":"Sign out","pricesFor":"Prices for {who}","guestList":"Prices and sending the order are for the clergy. Enter your email to go on.","formName":"Name","formParish":"Parish","formPhone":"Phone","formAddress":"Delivery address","formNote":"Note","optional":"optional","nameMissing":"Add your name so the warehouse knows who is ordering.","sendOrder":"Send the order","sending":"Sending…","orderDone":"Order no. {n} sent.","orderDoneMail":"The PDF is on its way to you and the warehouse by email.","orderDoneNoMail":"The warehouse has it. Download the PDF for your records.","downloadPdf":"Download the PDF","orderFailed":"The order didn’t go through. Try again in a moment: your list is kept.","orderUnknown":"An item in the list is no longer in the catalogue. Reload the page, then send the order again.","done":"Done"},"mailFields":["Name:","Parish:","Address:","Phone:"],"addLabel":"Add to list: {name}","items":{"one":"item","other":"items"},"sizes":{"one":"size","other":"sizes"},"cats":{"encensoirs":"Censers","icones":"Icons","chandeliers":"Candlesticks","veilleuses":"Oil lamps","croix":"Crosses","pendentifs":"Small crosses and pendants","culte":"Church supplies","encens":"Incense and charcoal","chapelets":"Prayer ropes","enfants":"Children’s corner","livres":"Books","bougies":"Wax candles"},"p":{"P011":{"n":"Censer","c":"encensoirs","ph":[["p011-1",763,327]]},"P014":{"n":"Censer","c":"encensoirs","ph":[["p014-1",504,369],["p014-2",573,381]]},"P013":{"n":"Censer","c":"encensoirs","ph":[["p013-1",864,1043]]},"P012":{"n":"Censer","c":"encensoirs","ph":[["p012-1",404,364]]},"A006":{"n":"Censer","c":"encensoirs","ph":[["a006-1",663,319]]},"H007":{"n":"Small censer","c":"encensoirs","ph":[["h007-1",846,477]]},"H006":{"n":"Large censer","c":"encensoirs","ph":[["h006-1",924,443]]},"H004":{"n":"Metal censer, large","c":"encensoirs","ph":[["h004-1",468,812],["h004-2",392,574],["h004-3",492,826]]},"H005":{"n":"Metal censer, small","c":"encensoirs","ph":[["h005-1",362,566],["h005-2",864,1184],["h005-3",638,592]]},"P064":{"n":"Mounted icon A4","c":"icones","ph":[["p064-1",662,849]]},"P074":{"n":"Nika icon, medium","c":"icones","ph":[["p074-1",712,1019],["p074-2",864,589]]},"P128":{"n":"Nika icon, smallest","c":"icones","ph":[["p074-2",864,589]]},"P127":{"n":"Nika icon, largest","c":"icones","ph":[["p074-2",864,589]]},"A007":{"n":"Glass-framed icon A4","c":"icones","ph":[["a007-1",763,945]]},"P063":{"n":"House blessing","c":"icones","ph":[["p063-1",548,732]]},"P137":{"n":"Framed Nika icon","c":"icones","ph":[["p137-1",733,887]],"note":"The inscription on the icon can be personalised."},"P069":{"n":"Diptych A4","c":"icones","ph":[["p069-1",830,704]]},"P073":{"n":"Postcard diptych","c":"icones","ph":[["p073-1",382,299]]},"P070":{"n":"Small tile","c":"icones","ph":[["p070-1",442,209]]},"P072":{"n":"Small triptych","c":"icones","ph":[["p072-1",854,418]]},"P071":{"n":"Small diptych","c":"icones","ph":[["p071-1",941,623]]},"P066":{"n":"Small mounted icon","c":"icones","ph":[["p066-1",704,1084]]},"P067":{"n":"Small PVC icons","c":"icones","ph":[["p067-1",967,469]]},"P147":{"n":"Round icon","c":"icones","ph":[["p147-1",768,649]]},"H008":{"n":"Small icon","c":"icones","ph":[["h008-1",771,501]]},"P010":{"n":"Large candlestick","c":"chandeliers","ph":[["p010-1",337,693]]},"A001":{"n":"Nickel candlestick","c":"chandeliers","ph":[["a001-1",471,789]]},"A009":{"n":"Matte candlestick","c":"chandeliers","ph":[["a009-1",432,672]]},"A008":{"n":"Gold candlestick","c":"chandeliers","ph":[["a008-1",460,804]]},"P009":{"n":"Small candlestick","c":"chandeliers","ph":[["p009-1",295,562]]},"P016":{"n":"Ceramic candlestick","c":"chandeliers","ph":[["p016-1",1179,1028]]},"P015":{"n":"Ceramic candlestick","c":"chandeliers","ph":[["p015-1",369,822]]},"P004":{"n":"Knjaz Miloš oil lamp","c":"veilleuses","ph":[["p004-1",881,558]]},"P003":{"n":"Hanging oil lamp","c":"veilleuses","ph":[["p003-1",747,597]]},"A003":{"n":"Hanging oil lamp","c":"veilleuses","ph":[["a003-1",926,627]]},"P142":{"n":"Russian gilt oil lamp","c":"veilleuses","ph":[["p142-1",799,669]]},"A002":{"n":"Hanging oil lamp, matte","c":"veilleuses","ph":[["a002-1",896,728]]},"A004":{"n":"Hanging oil lamp","c":"veilleuses","ph":[["a004-1",928,701]]},"P005":{"n":"Table oil lamp with eagles","c":"veilleuses","ph":[["p005-1",272,490]]},"P002":{"n":"Lace table oil lamp","c":"veilleuses","ph":[["p002-1",434,636]]},"H001":{"n":"Table oil lamp","c":"veilleuses","ph":[["h001-1",364,550],["h001-2",387,579]]},"P141":{"n":"Combined table oil lamp","c":"veilleuses","ph":[["p141-1",721,747]]},"H017":{"n":"Table oil lamp","c":"veilleuses","ph":[["h017-1",576,1277]]},"P132":{"n":"Table oil lamp","c":"veilleuses","ph":[["p132-1",438,565]]},"A005":{"n":"Nickel table oil lamp","c":"veilleuses","ph":[["a005-1",741,687]]},"A010":{"n":"Gilded table oil lamp","c":"veilleuses","ph":[["a010-1",749,725]]},"A011":{"n":"Table oil lamp M.R.","c":"veilleuses","ph":[["a011-1",767,672]]},"A012":{"n":"Table oil lamp N.P.","c":"veilleuses","ph":[["a012-1",765,669]]},"H012":{"n":"Table cross","c":"croix","ph":[["h012-1",368,565],["h012-2",368,563]]},"P022":{"n":"Small resin cross","c":"croix","ph":[["p022-1",308,516],["p022-2",843,652]]},"P020":{"n":"Large table cross","c":"croix","ph":[["p020-1",436,780]]},"P021":{"n":"Small table cross","c":"croix","ph":[["p021-1",695,679]]},"P131":{"n":"Resin table cross","c":"croix","ph":[["p131-1",847,1065]]},"P136":{"n":"Resin hand cross","c":"croix","ph":[["p136-1",864,1184]]},"P024":{"n":"Hand cross","c":"croix","ph":[["p024-1",433,873]]},"P028":{"n":"Small wooden cross","c":"pendentifs","ph":[["p028-1",992,317]]},"P135":{"n":"Scented small cross","c":"pendentifs","ph":[["p135-1",1037,527]]},"H009":{"n":"Cross pendant","c":"pendentifs","ph":[["h009-1",860,742]]},"H010":{"n":"Small cross","c":"pendentifs","ph":[["h010-1",645,716]]},"H018":{"n":"Clip","c":"culte","ph":[["h018-1",768,407]]},"P031":{"n":"Medallions","c":"pendentifs","ph":[["p031-1",1020,282]]},"P035":{"n":"Cross pendant","c":"pendentifs","ph":[["p035-1",661,616]]},"P120":{"n":"Cross pendant","c":"pendentifs","ph":[["p120-1",768,795]]},"H016":{"n":"Cross in a box","c":"pendentifs","ph":[["h016-1",960,1088]]},"H016-1":{"n":"Cross in a box","c":"pendentifs","ph":[["h016-1-1",864,1184]]},"H016-2":{"n":"Cross in a box","c":"pendentifs","ph":[["h016-2-1",777,684]]},"H015":{"n":"Cross in a box","c":"pendentifs","ph":[["h015-1",929,744]]},"P117":{"n":"Resin car cross","c":"pendentifs","ph":[["p117-1",768,633],["p117-2",749,372]]},"H002":{"n":"Cross in a box","c":"pendentifs","ph":[["h002-1",546,411]]},"H011":{"n":"Cloth (ubrus)","c":"culte","ph":[["h011-1",864,983]]},"H020":{"n":"Candle snuffer","c":"culte","ph":[["h020-1",754,934]]},"P032":{"n":"Metal medallion","c":"pendentifs","ph":[["p032-1",807,849]]},"P051":{"n":"White rose","c":"culte","ph":[["p051-1",768,505]]},"P052":{"n":"Tricolour rose","c":"culte","ph":[["p052-1",757,475]]},"P112":{"n":"Rose","c":"culte","ph":[["p112-1",1046,667]]},"P019":{"n":"Bread seal, large","c":"culte","ph":[["p019-1",744,459]]},"P017":{"n":"Bread seal, small","c":"culte","ph":[["p019-1",744,459]]},"P018":{"n":"Bread seal, medium","c":"culte","ph":[["p019-1",744,459]]},"P023":{"n":"Bread seal, cube","c":"culte","ph":[["p023-1",426,294]]},"L003":{"n":"Magnets","c":"culte","ph":[["l003-1",864,1116]]},"P059":{"n":"Holy ointment","c":"culte","ph":[["p059-1",388,665]]},"P025":{"n":"Slava bread moulds","c":"culte","ph":[["p025-1",587,402]]},"P026":{"n":"Stencil","c":"culte","ph":[["p026-1",847,523]]},"P033":{"n":"Wooden pendant","c":"pendentifs","ph":[["p033-1",843,719]]},"P062":{"n":"Large basil sprinkler","c":"culte","ph":[["p062-1",896,693]]},"P098":{"n":"Small basil sprinkler","c":"culte","ph":[["p098-1",768,1010]]},"P119":{"n":"Mola box","c":"culte","ph":[["p119-1",768,743]]},"P133":{"n":"Baptism set","c":"culte","ph":[["p133-1",605,1150]]},"P140":{"n":"Ring","c":"culte","ph":[["p140-1",374,378]]},"P118":{"n":"Engraved car cross","c":"pendentifs","ph":[["p118-1",800,615]]},"P034":{"n":"Car cross","c":"pendentifs","ph":[["p034-1",744,897]]},"P055":{"n":"Censer charcoal","c":"encens","ph":[["p055-1",766,649]]},"P054":{"n":"Liturgical charcoal","c":"encens","ph":[["p054-1",768,1046]]},"P056":{"n":"Oil lamp wicks","c":"encens","ph":[["p056-1",691,647]]},"P146":{"n":"Vatopedi incense","c":"encens","ph":[["p146-1",761,699]]},"P057":{"n":"Tube incense, plain","c":"encens","ph":[]},"P099":{"n":"Tube incense, scented","c":"encens","ph":[]},"P130":{"n":"Little bells","c":"culte","ph":[["p130-1",682,488]]},"H013":{"n":"Pearl prayer rope","c":"chapelets","ph":[["h013-1",904,546]]},"H014":{"n":"Children’s prayer ropes","c":"chapelets","ph":[["h014-1",1114,540]]},"P103":{"n":"Adjustable prayer rope","c":"chapelets","ph":[["p103-1",817,292]]},"P037":{"n":"Braided small cross","c":"chapelets","ph":[["p037-1",562,864]]},"P040":{"n":"Semi-precious stone prayer rope","c":"chapelets","ph":[["p040-1",1155,521]]},"P041":{"n":"Children’s plastic prayer rope","c":"chapelets","ph":[["p041-1",985,313]]},"P043":{"n":"Braided prayer ropes","c":"chapelets","ph":[["p043-1",753,340]]},"P044":{"n":"Tricolour prayer rope","c":"chapelets","ph":[["p044-1",440,798]]},"P047":{"n":"Glass prayer rope","c":"chapelets","ph":[["p047-1",427,831]]},"P050":{"n":"Tears of the Virgin","c":"chapelets","ph":[["p050-1",897,745]]},"P049":{"n":"Tears of the Virgin","c":"chapelets","ph":[["p049-1",864,936]]},"P046":{"n":"Wooden necklaces","c":"chapelets","ph":[["p046-1",970,841]]},"P107":{"n":"Wooden prayer rope","c":"chapelets","ph":[["p107-1",864,1184]]},"P104":{"n":"Thin adjustable prayer ropes","c":"chapelets","ph":[["p104-1",864,284]]},"P105":{"n":"Plastic prayer rope","c":"chapelets","ph":[["p105-1",818,464]]},"P106":{"n":"Crystal prayer rope","c":"chapelets","ph":[["p106-1",781,466]]},"P126":{"n":"Thin crystal prayer rope","c":"chapelets","ph":[["p126-1",852,345]]},"P121":{"n":"Children’s adjustable prayer rope","c":"chapelets","ph":[["p121-1",1069,464]]},"P109":{"n":"Tassel prayer rope","c":"chapelets","ph":[["p109-1",802,807]]},"P111":{"n":"Silk prayer rope","c":"chapelets","ph":[["p111-1",808,1011]]},"P045":{"n":"Large prayer ropes","c":"chapelets","ph":[["p045-1",768,1121]]},"P150":{"n":"Golden knot prayer rope 100","c":"chapelets","ph":[["p150-1",730,1234]]},"P149":{"n":"Golden knot prayer rope 50","c":"chapelets","ph":[["p149-1",768,1222]]},"P152":{"n":"Hood prayer rope","c":"chapelets","ph":[["p152-1",768,1080]]},"P108":{"n":"Large crystal cross","c":"chapelets","ph":[["p108-1",768,1016]]},"P151":{"n":"Bracelet in a box","c":"chapelets","ph":[["p151-1",768,944]]},"N002":{"n":"Puzzle","c":"enfants","ph":[["n002-1",582,743]]},"N001":{"n":"Saint Sava cube","c":"enfants","ph":[["n001-1",505,619],["n001-2",698,768]]},"P084":{"n":"Holy Scripture","c":"livres","ph":[["p084-1",556,641]]},"P081":{"n":"Children’s Bible","c":"livres","ph":[["p081-1",556,648]]},"P079":{"n":"Holy Scripture (A5)","c":"livres","ph":[["p079-1",567,753]]},"P082":{"n":"Small psalter","c":"livres","ph":[["p082-1",523,565]]},"P083":{"n":"Large psalter","c":"livres","ph":[["p083-1",574,598]]},"P086":{"n":"Children’s prayer book","c":"livres","ph":[["p086-1",585,639]]},"P075":{"n":"New Testament","c":"livres","ph":[["p075-1",543,598]]},"P085":{"n":"Orthodox prayer book","c":"livres","ph":[["p085-1",527,604]]},"P080":{"n":"Responses to the Liturgy","c":"livres","ph":[["p080-1",764,884]]},"P134":{"n":"Prayer book","c":"livres","ph":[["p134-1",594,774]]},"P138":{"n":"Responses to the Liturgy","c":"livres","ph":[["p138-1",629,981]]},"bougie-1-1":{"n":"Candles 1/1","c":"bougies","ph":[["bougies-1",768,1052]],"kg":1,"code":"1/1"},"bougie-2-1":{"n":"Candles 2/1","c":"bougies","ph":[["bougies-1",768,1052]],"kg":1,"code":"2/1"},"bougie-3-1":{"n":"Candles 3/1","c":"bougies","ph":[["bougies-1",768,1052]],"kg":1,"code":"3/1"},"bougie-5-1":{"n":"Candles 5/1","c":"bougies","ph":[["bougies-1",768,1052]],"kg":1,"code":"5/1"},"bougie-10-1":{"n":"Candles 10/1","c":"bougies","ph":[["bougies-1",768,1052]],"kg":1,"code":"10/1"},"bougie-30-1":{"n":"Candles 30/1","c":"bougies","ph":[["bougies-1",768,1052]],"kg":1,"code":"30/1"},"bougie-50-1":{"n":"Candles 50/1","c":"bougies","ph":[["bougies-1",768,1052]],"kg":1,"code":"50/1"},"bougie-100-1":{"n":"Candles 100/1","c":"bougies","ph":[["bougies-1",768,1052]],"kg":1,"code":"100/1"},"bougie-200-1":{"n":"Candles 200/1","c":"bougies","ph":[["bougies-1",768,1052]],"kg":1,"code":"200/1"},"bougie-dikiri":{"n":"Dikiri and trikiri","c":"bougies","ph":[["bougies-2",573,1364]],"kg":1,"code":"Dikiri and trikiri"}}}</script>
   <script src="../assets/js/app.js" defer></script>
 </body>
 </html>

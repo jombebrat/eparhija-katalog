@@ -1,5 +1,5 @@
 {
-  "_help": "Contact details of the warehouse. Fill them in, then run `node build.mjs`. An empty field shows a dashed 'to complete' slot (email, address) or is left out (phone). `url` is the public address of the site once it is online, e.g. https://jombebrat.github.io/eparhija-katalog/ (used for search engines and link previews).",
+  "_help": "Contact details of the warehouse. Fill them in, then run `node build.mjs`. An empty field shows a dashed 'to complete' slot (email, address) or is left out (phone). `url` is the public address of the site once it is online, e.g. https://jombebrat.github.io/eparhija-katalog/ (used for search engines and link previews). supabaseUrl and supabaseKey connect the price check and the orders: the project URL (https://<ref>.supabase.co) and its publishable key (sb_publishable_...), both safe to publish.",
   "url": "",
   "email": "",
   "phone": "",
@@ -7,5 +7,7 @@
     "fr": "",
     "en": "",
     "sr": ""
-  }
+  },
+  "supabaseUrl": "",
+  "supabaseKey": ""
 }

@@ -68,7 +68,8 @@ function page(lang, dir) {
   const productBy = Object.fromEntries(products.map((p) => [p.code, p]));
 
   const shelves = cats.map((c, i) => {
-    const n = c.id === 'bougies' ? count(lang, candleRows.length + 1, 'sizes') : count(lang, byCat[c.id].length);
+    const num = c.id === 'bougies' ? candleRows.length + 1 : byCat[c.id].length;
+    const n = `${num}<span class="visually-hidden">${count(lang, num, c.id === 'bougies' ? 'sizes' : 'items').replace(/^\d+/, '')}</span>`;
     const ph = c.id === 'bougies' ? catalogue.candles.photos[0] : productBy[shelfImg[c.id]].photos[0];
     return `<li class="shelf"><a href="#${c.id}">
           <span class="shelf__img"><img src="${img(root, ph.file)}" width="${ph.w}" height="${ph.h}" alt="" ${i < 8 ? 'fetchpriority="' + (i < 4 ? 'high' : 'auto') + '"' : 'loading="lazy"'} decoding="async"></span>
@@ -89,7 +90,7 @@ function page(lang, dir) {
     return `<li class="card" data-code="${esc(p.code)}" data-search="${esc(search)}">
           ${pic}
           <h3 class="card__name">${ph ? `<a href="${img(root, ph.file, false)}" data-detail="${esc(p.code)}">${t(lang, name)}</a>` : t(lang, name)}</h3>
-          <p class="card__meta"><span class="card__code">${esc(p.code)}</span><span class="card__price">${money(lang, p.price)}</span></p>
+          <p class="card__meta"><span class="card__code">${esc(p.code)}</span><span class="card__price" data-price="${esc(p.code)}"></span></p>
           <button class="add" type="button" data-add="${esc(p.code)}" aria-pressed="false" aria-label="${esc(T(lang, 'addLabel', { name }))}">${t(lang, S.add)}</button>
         </li>`;
   };
@@ -112,7 +113,7 @@ function page(lang, dir) {
       return `<tr data-code="${candleId(r.fmt)}" data-search="${esc(norm([strings.fr.candle, strings.en.candle, strings.sr.candle].map((x) => x.replace('{f}', r.fmt)).join(' ') + ' ' + norm(c.name.fr + ' ' + c.name.en + ' ' + c.name.sr)))}">
               <th scope="row">${esc(r.fmt)}</th>
               <td class="num">${esc(r.h)}&nbsp;×&nbsp;${esc(r.w)}&nbsp;cm</td>
-              <td class="num price">${money(lang, r.price)}</td>
+              <td class="num price" data-price="${candleId(r.fmt)}"></td>
               <td class="act"><button class="add add--row" type="button" data-add="${candleId(r.fmt)}" aria-pressed="false" aria-label="${esc(T(lang, 'addLabel', { name }))}">${t(lang, S.add)}</button></td>
             </tr>`;
     }).join('\n            ');
@@ -127,13 +128,13 @@ function page(lang, dir) {
             <div class="table-wrap" tabindex="0" role="region" aria-labelledby="h-${c.id}">
             <table class="candles__table">
               <caption>${t(lang, S.candlesCaption)}</caption>
-              <thead><tr><th scope="col">${t(lang, S.thFormat)}</th><th scope="col" class="num">${t(lang, S.thSize)}</th><th scope="col" class="num">${t(lang, S.thPrice)}</th><th scope="col" class="act"><span class="visually-hidden">${t(lang, S.thList)}</span></th></tr></thead>
+              <thead><tr><th scope="col">${t(lang, S.thFormat)}</th><th scope="col" class="num">${t(lang, S.thSize)}</th><th scope="col" class="num price">${t(lang, S.thPrice)}</th><th scope="col" class="act"><span class="visually-hidden">${t(lang, S.thList)}</span></th></tr></thead>
               <tbody>
             ${rows}
             <tr data-code="bougie-dikiri" data-search="${esc(norm(strings.fr.dikiri + ' ' + strings.en.dikiri + ' ' + strings.sr.dikiri + ' ' + c.name.fr + ' ' + c.name.en + ' ' + c.name.sr))}">
               <th scope="row">${t(lang, dkName)}</th>
               <td class="num note">${t(lang, S.dikiriNote)}</td>
-              <td class="num price">${money(lang, dk.price)}</td>
+              <td class="num price" data-price="bougie-dikiri"></td>
               <td class="act"><button class="add add--row" type="button" data-add="bougie-dikiri" aria-pressed="false" aria-label="${esc(T(lang, 'addLabel', { name: dkName }))}">${t(lang, S.add)}</button></td>
             </tr>
               </tbody>
@@ -144,18 +145,23 @@ function page(lang, dir) {
       </section>`;
   }
 
-  // data the script needs: names and prices in this language, photos, strings
+  // data the script needs: names in this language, photos, strings. No prices: they come from the server, for the clergy only.
+  const apiUrl = (process.env.SITE_API_URL || site.supabaseUrl || '').replace(/\/$/, '');
   const data = {
-    lang, locale: S.locale, email: site.email || '',
-    s: Object.fromEntries(['add', 'added', 'noMatch', 'matches', 'photoOf', 'emptyTitle', 'emptyText', 'qty', 'less', 'more', 'remove', 'total', 'send', 'copy', 'copied', 'copyFailed', 'noEmail', 'clearList', 'mailSubject', 'mailHello', 'kg', 'perKg', 'close', 'code', 'browse'].map((k) => [k, T(lang, k)])),
+    lang, locale: S.locale,
+    api: apiUrl ? { url: apiUrl, key: site.supabaseKey || '' } : null,
+    langs: Object.fromEntries(LANGS.map((l) => [l.id, here(l)])),
+    s: Object.fromEntries(['add', 'added', 'noMatch', 'matches', 'photoOf', 'emptyTitle', 'emptyText', 'qty', 'less', 'more', 'remove', 'total', 'copy', 'copied', 'copyFailed', 'clearList', 'mailHello', 'kg', 'perKg', 'close', 'code', 'browse',
+      'loginUnknown', 'loginTooMany', 'loginFailed', 'loginInvalid', 'checking', 'showPrices', 'signOut', 'pricesFor', 'guestList', 'formName', 'formParish', 'formPhone', 'formAddress', 'formNote', 'optional', 'nameMissing',
+      'sendOrder', 'sending', 'orderDone', 'orderDoneMail', 'orderDoneNoMail', 'downloadPdf', 'orderFailed', 'orderUnknown', 'done'].map((k) => [k, T(lang, k)])),
     mailFields: S.mailFields.map((f) => typo(lang, f)),
     addLabel: typo(lang, S.addLabel),
     items: S.items, sizes: S.sizes,
     cats: Object.fromEntries(cats.map((c) => [c.id, typo(lang, c.name[lang])])),
-    p: Object.fromEntries(products.map((p) => [p.code, { n: typo(lang, p.name[lang]), c: p.cat, pr: p.price, ph: p.photos.map((x) => [x.file, x.W, x.H]), ...(p.note ? { note: typo(lang, p.note[lang]) } : {}) }])),
+    p: Object.fromEntries(products.map((p) => [p.code, { n: typo(lang, p.name[lang]), c: p.cat, ph: p.photos.map((x) => [x.file, x.W, x.H]), ...(p.note ? { note: typo(lang, p.note[lang]) } : {}) }])),
   };
-  for (const r of candleRows) data.p[candleId(r.fmt)] = { n: T(lang, 'candle', { f: r.fmt }), c: 'bougies', pr: r.price, ph: [[catalogue.candles.photos[0].file, catalogue.candles.photos[0].W, catalogue.candles.photos[0].H]], kg: 1, code: r.fmt };
-  data.p['bougie-dikiri'] = { n: typo(lang, S.dikiri), c: 'bougies', pr: catalogue.candles.dikiri.price, ph: [[catalogue.candles.photos[1].file, catalogue.candles.photos[1].W, catalogue.candles.photos[1].H]], kg: 1, code: typo(lang, S.dikiri) };
+  for (const r of candleRows) data.p[candleId(r.fmt)] = { n: T(lang, 'candle', { f: r.fmt }), c: 'bougies', ph: [[catalogue.candles.photos[0].file, catalogue.candles.photos[0].W, catalogue.candles.photos[0].H]], kg: 1, code: r.fmt };
+  data.p['bougie-dikiri'] = { n: typo(lang, S.dikiri), c: 'bougies', ph: [[catalogue.candles.photos[1].file, catalogue.candles.photos[1].W, catalogue.candles.photos[1].H]], kg: 1, code: typo(lang, S.dikiri) };
 
   const contactRows = [
     `<div class="facts__row"><dt>${t(lang, S.rowEmail)}</dt><dd>${site.email ? `<a href="mailto:${esc(site.email)}">${esc(site.email)}</a>` : fill('email', S.fillEmail)}</dd></div>`,
@@ -197,6 +203,11 @@ function page(lang, dir) {
       <nav class="langs" aria-label="${t(lang, S.langsLabel)}">
         ${LANGS.map((l) => `<a href="${here(l)}" hreflang="${strings[l.id].htmlLang}" lang="${strings[l.id].htmlLang}" aria-label="${esc(strings[l.id].langName)}" data-lang${l.id === lang ? ' aria-current="page"' : ''}><span class="l-long">${esc(strings[l.id].langName)}</span><span class="l-short" aria-hidden="true">${esc(strings[l.id].langShort)}</span></a>`).join('\n        ')}
       </nav>
+      <div class="account" data-account hidden>
+        <button class="listbtn listbtn--login" type="button" data-login>${t(lang, S.showPrices)}</button>
+        <span class="account__who" data-who hidden></span>
+        <button class="account__out" type="button" data-logout hidden>${t(lang, S.signOut)}</button>
+      </div>
       <button class="listbtn" type="button" data-open-list hidden>${t(lang, S.list)} <span class="listbtn__n" data-count>0</span></button>
     </div>
   </header>
@@ -285,6 +296,25 @@ function page(lang, dir) {
       </div>
       <button class="iconbtn detail__close" type="button" data-close aria-label="${t(lang, S.close)}"><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg></button>
     </div>
+  </dialog>
+
+  <dialog class="welcome" data-welcome aria-labelledby="welcome-title">
+    <form class="welcome__inner" data-login-form novalidate>
+      <h2 id="welcome-title">${t(lang, S.welcomeTitle)}</h2>
+      <fieldset class="welcome__langs">
+        <legend class="visually-hidden">${t(lang, S.welcomeLang)}</legend>
+        <div class="welcome__seg">
+        ${LANGS.map((l) => `<a href="${here(l)}" hreflang="${strings[l.id].htmlLang}" lang="${strings[l.id].htmlLang}" data-lang${l.id === lang ? ' aria-current="page"' : ''}>${esc(strings[l.id].langName)}</a>`).join('\n        ')}
+        </div>
+      </fieldset>
+      <label for="login-email">${t(lang, S.emailLabel)}</label>
+      <input id="login-email" name="email" type="email" autocomplete="email" inputmode="email" spellcheck="false" placeholder="${t(lang, S.emailPlaceholder)}" required>
+      <p class="welcome__help" data-login-help aria-live="polite"></p>
+      <div class="welcome__actions">
+        <button class="btn btn--primary" type="submit" data-login-submit>${t(lang, S.showPrices)}</button>
+        <button class="textbtn" type="button" data-login-skip>${t(lang, S.continueWithout)}</button>
+      </div>
+    </form>
   </dialog>
 
   <dialog class="drawer" data-list-dialog aria-labelledby="drawer-title">

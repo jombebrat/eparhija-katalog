@@ -180,7 +180,7 @@ for r in raw:
 
 # Nika sizes from slide 10: one photo shows all three sizes
 s10 = {"media": "image18.JPG", "crop": None}
-for code, price, after in (("P128", 12.36, "P074"), ("P127", 41.20, "P128")):
+for code, price, after in (("P128", None, "P074"), ("P127", None, "P128")):  # prices: read them from the slide-10 table into the database
     sr, fr, en = OVR[code]
     by_code[code] = dict(code=code, price=price, cat="icones", name=dict(fr=fr, en=en, sr=sr), photos=[s10], slide=10)
     order.insert(order.index(after) + 1, code)
@@ -197,20 +197,23 @@ for p in prods:
 candles = {
   "photo": {"media": None},
   "rows": [
-    {"fmt": "1/1", "h": "72", "w": "4,5", "price": 23},
-    {"fmt": "2/1", "h": "56", "w": "3,5", "price": 18},
-    {"fmt": "3/1", "h": "50,05", "w": "3", "price": 18},
-    {"fmt": "5/1", "h": "45", "w": "2,6", "price": 18},
-    {"fmt": "10/1", "h": "42", "w": "1,8", "price": 18},
-    {"fmt": "30/1", "h": "29", "w": "1,2", "price": 17},
-    {"fmt": "50/1", "h": "26", "w": "1", "price": 17},
-    {"fmt": "100/1", "h": "23", "w": "0,8", "price": 17},
-    {"fmt": "200/1", "h": "24", "w": "0,4", "price": 24},
+    {"fmt": "1/1", "h": "72", "w": "4,5"},
+    {"fmt": "2/1", "h": "56", "w": "3,5"},
+    {"fmt": "3/1", "h": "50,05", "w": "3"},
+    {"fmt": "5/1", "h": "45", "w": "2,6"},
+    {"fmt": "10/1", "h": "42", "w": "1,8"},
+    {"fmt": "30/1", "h": "29", "w": "1,2"},
+    {"fmt": "50/1", "h": "26", "w": "1"},
+    {"fmt": "100/1", "h": "23", "w": "0,8"},
+    {"fmt": "200/1", "h": "24", "w": "0,4"},
   ],
-  "dikiri": {"price": 23, "per_kilo": 10}
+  "dikiri": {"per_kilo": 10}
 }
+# prices never go into the public catalogue: they are kept apart for the database (table public.products)
+prices = {p['code']: p.pop('price') for p in prods}
+if len(sys.argv) > 3: json.dump(prices, open(sys.argv[3], 'w'), indent=1)
 json.dump(dict(categories=[dict(id=c[0], name=dict(fr=c[1], en=c[2], sr=c[3])) for c in CATS], products=prods, candles=candles),
           open(sys.argv[2], 'w'), ensure_ascii=False, indent=1)
 from collections import Counter
 print(len(prods), Counter(p['cat'] for p in prods))
-for p in prods: print(f"{p['code']:8} {p['price']:6.2f} {p['cat']:11} {len(p['photos'])} | {p['name']['sr']} | {p['name']['fr']} | {p['name']['en']}")
+for p in prods: print(f"{p['code']:8} {p['cat']:11} {len(p['photos'])} | {p['name']['sr']} | {p['name']['fr']} | {p['name']['en']}")

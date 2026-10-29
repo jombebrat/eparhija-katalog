@@ -100,7 +100,6 @@
  "products": [
   {
    "code": "P011",
-   "price": 2.26,
    "cat": "encensoirs",
    "name": {
     "fr": "Encensoir",
@@ -119,7 +118,6 @@
   },
   {
    "code": "P014",
-   "price": 3.08,
    "cat": "encensoirs",
    "name": {
     "fr": "Encensoir",
@@ -145,7 +143,6 @@
   },
   {
    "code": "P013",
-   "price": 4.12,
    "cat": "encensoirs",
    "name": {
     "fr": "Encensoir",
@@ -164,7 +161,6 @@
   },
   {
    "code": "P012",
-   "price": 4.12,
    "cat": "encensoirs",
    "name": {
     "fr": "Encensoir",
@@ -183,7 +179,6 @@
   },
   {
    "code": "A006",
-   "price": 6.18,
    "cat": "encensoirs",
    "name": {
     "fr": "Encensoir",
@@ -202,7 +197,6 @@
   },
   {
    "code": "H007",
-   "price": 4.0,
    "cat": "encensoirs",
    "name": {
     "fr": "Petit encensoir",
@@ -221,7 +215,6 @@
   },
   {
    "code": "H006",
-   "price": 6.18,
    "cat": "encensoirs",
    "name": {
     "fr": "Grand encensoir",
@@ -240,7 +233,6 @@
   },
   {
    "code": "H004",
-   "price": 12.83,
    "cat": "encensoirs",
    "name": {
     "fr": "Encensoir en métal, grand",
@@ -273,7 +265,6 @@
   },
   {
    "code": "H005",
-   "price": 10.3,
    "cat": "encensoirs",
    "name": {
     "fr": "Encensoir en métal, petit",
@@ -306,7 +297,6 @@
   },
   {
    "code": "P064",
-   "price": 11.33,
    "cat": "icones",
    "name": {
     "fr": "Icône montée A4",
@@ -325,7 +315,6 @@
   },
   {
    "code": "P074",
-   "price": 24.72,
    "cat": "icones",
    "name": {
     "fr": "Icône Nika, moyenne",
@@ -351,7 +340,6 @@
   },
   {
    "code": "P128",
-   "price": 12.36,
    "cat": "icones",
    "name": {
     "fr": "Icône Nika, très petite",
@@ -370,7 +358,6 @@
   },
   {
    "code": "P127",
-   "price": 41.2,
    "cat": "icones",
    "name": {
     "fr": "Icône Nika, très grande",
@@ -389,7 +376,6 @@
   },
   {
    "code": "A007",
-   "price": 32.96,
    "cat": "icones",
    "name": {
     "fr": "Icône encadrée sous verre A4",
@@ -408,7 +394,6 @@
   },
   {
    "code": "P063",
-   "price": 4.73,
    "cat": "icones",
    "name": {
     "fr": "Bénédiction de la maison",
@@ -427,7 +412,6 @@
   },
   {
    "code": "P137",
-   "price": 20.6,
    "cat": "icones",
    "name": {
     "fr": "Icône Nika encadrée",
@@ -451,7 +435,6 @@
   },
   {
    "code": "P069",
-   "price": 17.51,
    "cat": "icones",
    "name": {
     "fr": "Diptyque A4",
@@ -470,7 +453,6 @@
   },
   {
    "code": "P073",
-   "price": 5.24,
    "cat": "icones",
    "name": {
     "fr": "Diptyque carte postale",
@@ -489,7 +471,6 @@
   },
   {
    "code": "P070",
-   "price": 1.44,
    "cat": "icones",
    "name": {
     "fr": "Petite plaquette",
@@ -508,7 +489,6 @@
   },
   {
    "code": "P072",
-   "price": 4.02,
    "cat": "icones",
    "name": {
     "fr": "Petit triptyque",
@@ -527,7 +507,6 @@
   },
   {
    "code": "P071",
-   "price": 3.19,
    "cat": "icones",
    "name": {
     "fr": "Petit diptyque",
@@ -546,7 +525,6 @@
   },
   {
    "code": "P066",
-   "price": 1.63,
    "cat": "icones",
    "name": {
     "fr": "Petite icône montée",
@@ -565,7 +543,6 @@
   },
   {
    "code": "P067",
-   "price": 0.1,
    "cat": "icones",
    "name": {
     "fr": "Petites icônes en PVC",
@@ -584,7 +561,6 @@
   },
   {
    "code": "P147",
-   "price": 23.69,
    "cat": "icones",
    "name": {
     "fr": "Icône ronde",
@@ -603,7 +579,6 @@
   },
   {
    "code": "H008",
-   "price": 2.99,
    "cat": "icones",
    "name": {
     "fr": "Petite icône",
@@ -622,7 +597,6 @@
   },
   {
    "code": "P010",
-   "price": 26.78,
    "cat": "chandeliers",
    "name": {
     "fr": "Grand chandelier",
@@ -641,7 +615,6 @@
   },
   {
    "code": "A001",
-   "price": 20.6,
    "cat": "chandeliers",
    "name": {
     "fr": "Chandelier nickelé",
@@ -660,7 +633,6 @@
   },
   {
    "code": "A009",
-   "price": 20.6,
    "cat": "chandeliers",
    "name": {
     "fr": "Chandelier mat",
@@ -679,7 +651,6 @@
   },
   {
    "code": "A008",
-   "price": 20.6,
    "cat": "chandeliers",
    "name": {
     "fr": "Chandelier doré",
@@ -698,7 +669,6 @@
   },
   {
    "code": "P009",
-   "price": 20.6,
    "cat": "chandeliers",
    "name": {
     "fr": "Petit chandelier",
@@ -717,7 +687,6 @@
   },
   {
    "code": "P016",
-   "price": 4.02,
    "cat": "chandeliers",
    "name": {
     "fr": "Chandelier en céramique",
@@ -736,7 +705,6 @@
   },
   {
    "code": "P015",
-   "price": 4.42,
    "cat": "chandeliers",
    "name": {
     "fr": "Chandelier en céramique",
@@ -755,7 +723,6 @@
   },
   {
    "code": "P004",
-   "price": 23.69,
    "cat": "veilleuses",
    "name": {
     "fr": "Veilleuse Knjaz Miloš",
@@ -774,7 +741,6 @@
   },
   {
    "code": "P003",
-   "price": 30.9,
    "cat": "veilleuses",
    "name": {
     "fr": "Veilleuse suspendue",
@@ -793,7 +759,6 @@
   },
   {
    "code": "A003",
-   "price": 27.8,
    "cat": "veilleuses",
    "name": {
     "fr": "Veilleuse suspendue",
@@ -812,7 +777,6 @@
   },
   {
    "code": "P142",
-   "price": 39.14,
    "cat": "veilleuses",
    "name": {
     "fr": "Veilleuse dorée russe",
@@ -831,7 +795,6 @@
   },
   {
    "code": "A002",
-   "price": 27.8,
    "cat": "veilleuses",
    "name": {
     "fr": "Veilleuse suspendue, mate",
@@ -850,7 +813,6 @@
   },
   {
    "code": "A004",
-   "price": 27.8,
    "cat": "veilleuses",
    "name": {
     "fr": "Veilleuse suspendue",
@@ -869,7 +831,6 @@
   },
   {
    "code": "P005",
-   "price": 23.69,
    "cat": "veilleuses",
    "name": {
     "fr": "Veilleuse de table aux aigles",
@@ -888,7 +849,6 @@
   },
   {
    "code": "P002",
-   "price": 23.69,
    "cat": "veilleuses",
    "name": {
     "fr": "Veilleuse de table dentelle",
@@ -907,7 +867,6 @@
   },
   {
    "code": "H001",
-   "price": 20.6,
    "cat": "veilleuses",
    "name": {
     "fr": "Veilleuse de table",
@@ -933,7 +892,6 @@
   },
   {
    "code": "P141",
-   "price": 32.96,
    "cat": "veilleuses",
    "name": {
     "fr": "Veilleuse de table combinée",
@@ -952,7 +910,6 @@
   },
   {
    "code": "H017",
-   "price": 24.72,
    "cat": "veilleuses",
    "name": {
     "fr": "Veilleuse de table",
@@ -971,7 +928,6 @@
   },
   {
    "code": "P132",
-   "price": 13.38,
    "cat": "veilleuses",
    "name": {
     "fr": "Veilleuse de table",
@@ -990,7 +946,6 @@
   },
   {
    "code": "A005",
-   "price": 25.74,
    "cat": "veilleuses",
    "name": {
     "fr": "Veilleuse de table nickelée",
@@ -1009,7 +964,6 @@
   },
   {
    "code": "A010",
-   "price": 25.74,
    "cat": "veilleuses",
    "name": {
     "fr": "Veilleuse de table dorée",
@@ -1028,7 +982,6 @@
   },
   {
    "code": "A011",
-   "price": 25.74,
    "cat": "veilleuses",
    "name": {
     "fr": "Veilleuse de table M.R.",
@@ -1047,7 +1000,6 @@
   },
   {
    "code": "A012",
-   "price": 25.74,
    "cat": "veilleuses",
    "name": {
     "fr": "Veilleuse de table N.P.",
@@ -1066,7 +1018,6 @@
   },
   {
    "code": "H012",
-   "price": 7.2,
    "cat": "croix",
    "name": {
     "fr": "Croix de table",
@@ -1092,7 +1043,6 @@
   },
   {
    "code": "P022",
-   "price": 5.04,
    "cat": "croix",
    "name": {
     "fr": "Petite croix en résine",
@@ -1118,7 +1068,6 @@
   },
   {
    "code": "P020",
-   "price": 8.34,
    "cat": "croix",
    "name": {
     "fr": "Grande croix de table",
@@ -1137,7 +1086,6 @@
   },
   {
    "code": "P021",
-   "price": 5.26,
    "cat": "croix",
    "name": {
     "fr": "Petite croix de table",
@@ -1156,7 +1104,6 @@
   },
   {
    "code": "P131",
-   "price": 9.58,
    "cat": "croix",
    "name": {
     "fr": "Croix de table en résine",
@@ -1175,7 +1122,6 @@
   },
   {
    "code": "P136",
-   "price": 12.25,
    "cat": "croix",
    "name": {
     "fr": "Croix de bénédiction en résine",
@@ -1194,7 +1140,6 @@
   },
   {
    "code": "P024",
-   "price": 5.04,
    "cat": "croix",
    "name": {
     "fr": "Croix de bénédiction",
@@ -1213,7 +1158,6 @@
   },
   {
    "code": "P028",
-   "price": 1.02,
    "cat": "pendentifs",
    "name": {
     "fr": "Petite croix en bois",
@@ -1232,7 +1176,6 @@
   },
   {
    "code": "P135",
-   "price": 1.54,
    "cat": "pendentifs",
    "name": {
     "fr": "Petite croix parfumée",
@@ -1251,7 +1194,6 @@
   },
   {
    "code": "H009",
-   "price": 1.75,
    "cat": "pendentifs",
    "name": {
     "fr": "Pendentif croix",
@@ -1270,7 +1212,6 @@
   },
   {
    "code": "H010",
-   "price": 1.96,
    "cat": "pendentifs",
    "name": {
     "fr": "Petite croix",
@@ -1289,7 +1230,6 @@
   },
   {
    "code": "H018",
-   "price": 9.26,
    "cat": "culte",
    "name": {
     "fr": "Pince",
@@ -1308,7 +1248,6 @@
   },
   {
    "code": "P031",
-   "price": 1.55,
    "cat": "pendentifs",
    "name": {
     "fr": "Médaillons",
@@ -1327,7 +1266,6 @@
   },
   {
    "code": "P035",
-   "price": 1.64,
    "cat": "pendentifs",
    "name": {
     "fr": "Pendentif croix",
@@ -1346,7 +1284,6 @@
   },
   {
    "code": "P120",
-   "price": 2.78,
    "cat": "pendentifs",
    "name": {
     "fr": "Pendentif croix",
@@ -1365,7 +1302,6 @@
   },
   {
    "code": "H016",
-   "price": 8.24,
    "cat": "pendentifs",
    "name": {
     "fr": "Croix en boîte",
@@ -1384,7 +1320,6 @@
   },
   {
    "code": "H016-1",
-   "price": 8.24,
    "cat": "pendentifs",
    "name": {
     "fr": "Croix en boîte",
@@ -1403,7 +1338,6 @@
   },
   {
    "code": "H016-2",
-   "price": 8.24,
    "cat": "pendentifs",
    "name": {
     "fr": "Croix en boîte",
@@ -1422,7 +1356,6 @@
   },
   {
    "code": "H015",
-   "price": 7.72,
    "cat": "pendentifs",
    "name": {
     "fr": "Croix en boîte",
@@ -1441,7 +1374,6 @@
   },
   {
    "code": "P117",
-   "price": 2.26,
    "cat": "pendentifs",
    "name": {
     "fr": "Croix de voiture en résine",
@@ -1467,7 +1399,6 @@
   },
   {
    "code": "H002",
-   "price": 2.06,
    "cat": "pendentifs",
    "name": {
     "fr": "Croix en boîte",
@@ -1486,7 +1417,6 @@
   },
   {
    "code": "H011",
-   "price": 11.33,
    "cat": "culte",
    "name": {
     "fr": "Serviette (ubrus)",
@@ -1505,7 +1435,6 @@
   },
   {
    "code": "H020",
-   "price": 12.36,
    "cat": "culte",
    "name": {
     "fr": "Éteignoir à bougies",
@@ -1524,7 +1453,6 @@
   },
   {
    "code": "P032",
-   "price": 4.32,
    "cat": "pendentifs",
    "name": {
     "fr": "Médaillon en métal",
@@ -1543,7 +1471,6 @@
   },
   {
    "code": "P051",
-   "price": 1.85,
    "cat": "culte",
    "name": {
     "fr": "Rose blanche",
@@ -1562,7 +1489,6 @@
   },
   {
    "code": "P052",
-   "price": 1.96,
    "cat": "culte",
    "name": {
     "fr": "Rose tricolore",
@@ -1581,7 +1507,6 @@
   },
   {
    "code": "P112",
-   "price": 1.94,
    "cat": "culte",
    "name": {
     "fr": "Rose",
@@ -1600,7 +1525,6 @@
   },
   {
    "code": "P019",
-   "price": 8.24,
    "cat": "culte",
    "name": {
     "fr": "Sceau à pain, grand",
@@ -1619,7 +1543,6 @@
   },
   {
    "code": "P017",
-   "price": 1.75,
    "cat": "culte",
    "name": {
     "fr": "Sceau à pain, petit",
@@ -1638,7 +1561,6 @@
   },
   {
    "code": "P018",
-   "price": 2.16,
    "cat": "culte",
    "name": {
     "fr": "Sceau à pain, moyen",
@@ -1657,7 +1579,6 @@
   },
   {
    "code": "P023",
-   "price": 2.99,
    "cat": "culte",
    "name": {
     "fr": "Sceau à pain, cube",
@@ -1676,7 +1597,6 @@
   },
   {
    "code": "L003",
-   "price": 2.06,
    "cat": "culte",
    "name": {
     "fr": "Aimants",
@@ -1695,7 +1615,6 @@
   },
   {
    "code": "P059",
-   "price": 3.19,
    "cat": "culte",
    "name": {
     "fr": "Myron",
@@ -1714,7 +1633,6 @@
   },
   {
    "code": "P025",
-   "price": 24.72,
    "cat": "culte",
    "name": {
     "fr": "Moules pour pain de slava",
@@ -1733,7 +1651,6 @@
   },
   {
    "code": "P026",
-   "price": 8.24,
    "cat": "culte",
    "name": {
     "fr": "Pochoir",
@@ -1752,7 +1669,6 @@
   },
   {
    "code": "P033",
-   "price": 2.57,
    "cat": "pendentifs",
    "name": {
     "fr": "Pendentif en bois",
@@ -1771,7 +1687,6 @@
   },
   {
    "code": "P062",
-   "price": 2.88,
    "cat": "culte",
    "name": {
     "fr": "Grand aspersoir en basilic",
@@ -1790,7 +1705,6 @@
   },
   {
    "code": "P098",
-   "price": 2.16,
    "cat": "culte",
    "name": {
     "fr": "Petit aspersoir en basilic",
@@ -1809,7 +1723,6 @@
   },
   {
    "code": "P119",
-   "price": 4.63,
    "cat": "culte",
    "name": {
     "fr": "Boîte Mola",
@@ -1828,7 +1741,6 @@
   },
   {
    "code": "P133",
-   "price": 15.44,
    "cat": "culte",
    "name": {
     "fr": "Coffret de baptême",
@@ -1847,7 +1759,6 @@
   },
   {
    "code": "P140",
-   "price": 2.16,
    "cat": "culte",
    "name": {
     "fr": "Bague",
@@ -1866,7 +1777,6 @@
   },
   {
    "code": "P118",
-   "price": 2.06,
    "cat": "pendentifs",
    "name": {
     "fr": "Croix de voiture gravée",
@@ -1885,7 +1795,6 @@
   },
   {
    "code": "P034",
-   "price": 2.68,
    "cat": "pendentifs",
    "name": {
     "fr": "Croix de voiture",
@@ -1904,7 +1813,6 @@
   },
   {
    "code": "P055",
-   "price": 0.83,
    "cat": "encens",
    "name": {
     "fr": "Charbon pour encensoir",
@@ -1923,7 +1831,6 @@
   },
   {
    "code": "P054",
-   "price": 2.57,
    "cat": "encens",
    "name": {
     "fr": "Charbon liturgique",
@@ -1942,7 +1849,6 @@
   },
   {
    "code": "P056",
-   "price": 0.92,
    "cat": "encens",
    "name": {
     "fr": "Mèches pour veilleuse",
@@ -1961,7 +1867,6 @@
   },
   {
    "code": "P146",
-   "price": 11.12,
    "cat": "encens",
    "name": {
     "fr": "Encens de Vatopédi",
@@ -1980,7 +1885,6 @@
   },
   {
    "code": "P057",
-   "price": 0.98,
    "cat": "encens",
    "name": {
     "fr": "Encens en tube, ordinaire",
@@ -1991,7 +1895,6 @@
   },
   {
    "code": "P099",
-   "price": 1.44,
    "cat": "encens",
    "name": {
     "fr": "Encens en tube, parfumé",
@@ -2002,7 +1905,6 @@
   },
   {
    "code": "P130",
-   "price": 0.5,
    "cat": "culte",
    "name": {
     "fr": "Clochettes",
@@ -2021,7 +1923,6 @@
   },
   {
    "code": "H013",
-   "price": 1.85,
    "cat": "chapelets",
    "name": {
     "fr": "Chapelet en perles",
@@ -2040,7 +1941,6 @@
   },
   {
    "code": "H014",
-   "price": 1.85,
    "cat": "chapelets",
    "name": {
     "fr": "Chapelets pour enfants",
@@ -2059,7 +1959,6 @@
   },
   {
    "code": "P103",
-   "price": 2.78,
    "cat": "chapelets",
    "name": {
     "fr": "Chapelet ajustable",
@@ -2078,7 +1977,6 @@
   },
   {
    "code": "P037",
-   "price": 1.55,
    "cat": "chapelets",
    "name": {
     "fr": "Petite croix tressée",
@@ -2097,7 +1995,6 @@
   },
   {
    "code": "P040",
-   "price": 5.66,
    "cat": "chapelets",
    "name": {
     "fr": "Chapelet en pierres semi-précieuses",
@@ -2116,7 +2013,6 @@
   },
   {
    "code": "P041",
-   "price": 1.24,
    "cat": "chapelets",
    "name": {
     "fr": "Chapelet enfant en plastique",
@@ -2135,7 +2031,6 @@
   },
   {
    "code": "P043",
-   "price": 1.96,
    "cat": "chapelets",
    "name": {
     "fr": "Chapelets tressés",
@@ -2154,7 +2049,6 @@
   },
   {
    "code": "P044",
-   "price": 2.06,
    "cat": "chapelets",
    "name": {
     "fr": "Chapelet tricolore",
@@ -2173,7 +2067,6 @@
   },
   {
    "code": "P047",
-   "price": 1.85,
    "cat": "chapelets",
    "name": {
     "fr": "Chapelet en verre",
@@ -2192,7 +2085,6 @@
   },
   {
    "code": "P050",
-   "price": 5.15,
    "cat": "chapelets",
    "name": {
     "fr": "Larmes de la Vierge",
@@ -2211,7 +2103,6 @@
   },
   {
    "code": "P049",
-   "price": 1.55,
    "cat": "chapelets",
    "name": {
     "fr": "Larmes de la Vierge",
@@ -2230,7 +2121,6 @@
   },
   {
    "code": "P046",
-   "price": 5.77,
    "cat": "chapelets",
    "name": {
     "fr": "Colliers en bois",
@@ -2249,7 +2139,6 @@
   },
   {
    "code": "P107",
-   "price": 1.55,
    "cat": "chapelets",
    "name": {
     "fr": "Chapelet en bois",
@@ -2268,7 +2157,6 @@
   },
   {
    "code": "P104",
-   "price": 2.68,
    "cat": "chapelets",
    "name": {
     "fr": "Chapelets fins ajustables",
@@ -2287,7 +2175,6 @@
   },
   {
    "code": "P105",
-   "price": 1.85,
    "cat": "chapelets",
    "name": {
     "fr": "Chapelet en plastique",
@@ -2306,7 +2193,6 @@
   },
   {
    "code": "P106",
-   "price": 1.96,
    "cat": "chapelets",
    "name": {
     "fr": "Chapelet en cristal",
@@ -2325,7 +2211,6 @@
   },
   {
    "code": "P126",
-   "price": 1.85,
    "cat": "chapelets",
    "name": {
     "fr": "Chapelet fin en cristal",
@@ -2344,7 +2229,6 @@
   },
   {
    "code": "P121",
-   "price": 2.26,
    "cat": "chapelets",
    "name": {
     "fr": "Chapelet enfant ajustable",
@@ -2363,7 +2247,6 @@
   },
   {
    "code": "P109",
-   "price": 7.32,
    "cat": "chapelets",
    "name": {
     "fr": "Chapelet à pompon",
@@ -2382,7 +2265,6 @@
   },
   {
    "code": "P111",
-   "price": 22.15,
    "cat": "chapelets",
    "name": {
     "fr": "Chapelet en soie",
@@ -2401,7 +2283,6 @@
   },
   {
    "code": "P045",
-   "price": 6.18,
    "cat": "chapelets",
    "name": {
     "fr": "Grands chapelets",
@@ -2420,7 +2301,6 @@
   },
   {
    "code": "P150",
-   "price": 21.11,
    "cat": "chapelets",
    "name": {
     "fr": "Chapelet nœud doré 100",
@@ -2439,7 +2319,6 @@
   },
   {
    "code": "P149",
-   "price": 10.81,
    "cat": "chapelets",
    "name": {
     "fr": "Chapelet nœud doré 50",
@@ -2458,7 +2337,6 @@
   },
   {
    "code": "P152",
-   "price": 1.85,
    "cat": "chapelets",
    "name": {
     "fr": "Chapelet à capuche",
@@ -2477,7 +2355,6 @@
   },
   {
    "code": "P108",
-   "price": 2.47,
    "cat": "chapelets",
    "name": {
     "fr": "Grande croix en cristal",
@@ -2496,7 +2373,6 @@
   },
   {
    "code": "P151",
-   "price": 5.15,
    "cat": "chapelets",
    "name": {
     "fr": "Bracelet en boîte",
@@ -2515,7 +2391,6 @@
   },
   {
    "code": "N002",
-   "price": 5.2,
    "cat": "enfants",
    "name": {
     "fr": "Puzzle",
@@ -2534,7 +2409,6 @@
   },
   {
    "code": "N001",
-   "price": 5.66,
    "cat": "enfants",
    "name": {
     "fr": "Cube Saint-Sava",
@@ -2560,7 +2434,6 @@
   },
   {
    "code": "P084",
-   "price": 26.78,
    "cat": "livres",
    "name": {
     "fr": "Sainte Écriture",
@@ -2579,7 +2452,6 @@
   },
   {
    "code": "P081",
-   "price": 12.36,
    "cat": "livres",
    "name": {
     "fr": "Bible pour enfants",
@@ -2598,7 +2470,6 @@
   },
   {
    "code": "P079",
-   "price": 18.54,
    "cat": "livres",
    "name": {
     "fr": "Sainte Écriture (A5)",
@@ -2617,7 +2488,6 @@
   },
   {
    "code": "P082",
-   "price": 4.12,
    "cat": "livres",
    "name": {
     "fr": "Petit psautier",
@@ -2636,7 +2506,6 @@
   },
   {
    "code": "P083",
-   "price": 5.66,
    "cat": "livres",
    "name": {
     "fr": "Grand psautier",
@@ -2655,7 +2524,6 @@
   },
   {
    "code": "P086",
-   "price": 1.24,
    "cat": "livres",
    "name": {
     "fr": "Livre de prières pour enfants",
@@ -2674,7 +2542,6 @@
   },
   {
    "code": "P075",
-   "price": 10.3,
    "cat": "livres",
    "name": {
     "fr": "Nouveau Testament",
@@ -2693,7 +2560,6 @@
   },
   {
    "code": "P085",
-   "price": 4.32,
    "cat": "livres",
    "name": {
     "fr": "Livre de prières orthodoxe",
@@ -2712,7 +2578,6 @@
   },
   {
    "code": "P080",
-   "price": 2.57,
    "cat": "livres",
    "name": {
     "fr": "Répons de la liturgie",
@@ -2731,7 +2596,6 @@
   },
   {
    "code": "P134",
-   "price": 7.73,
    "cat": "livres",
    "name": {
     "fr": "Livre de prières",
@@ -2750,7 +2614,6 @@
   },
   {
    "code": "P138",
-   "price": 2.26,
    "cat": "livres",
    "name": {
     "fr": "Répons de la liturgie",
@@ -2773,60 +2636,50 @@
    {
     "fmt": "1/1",
     "h": "72",
-    "w": "4,5",
-    "price": 23
+    "w": "4,5"
    },
    {
     "fmt": "2/1",
     "h": "56",
-    "w": "3,5",
-    "price": 18
+    "w": "3,5"
    },
    {
     "fmt": "3/1",
     "h": "50,05",
-    "w": "3",
-    "price": 18
+    "w": "3"
    },
    {
     "fmt": "5/1",
     "h": "45",
-    "w": "2,6",
-    "price": 18
+    "w": "2,6"
    },
    {
     "fmt": "10/1",
     "h": "42",
-    "w": "1,8",
-    "price": 18
+    "w": "1,8"
    },
    {
     "fmt": "30/1",
     "h": "29",
-    "w": "1,2",
-    "price": 17
+    "w": "1,2"
    },
    {
     "fmt": "50/1",
     "h": "26",
-    "w": "1",
-    "price": 17
+    "w": "1"
    },
    {
     "fmt": "100/1",
     "h": "23",
-    "w": "0,8",
-    "price": 17
+    "w": "0,8"
    },
    {
     "fmt": "200/1",
     "h": "24",
-    "w": "0,4",
-    "price": 24
+    "w": "0,4"
    }
   ],
   "dikiri": {
-   "price": 23,
    "per_kilo": 10
   },
   "photos": [

@@ -1,0 +1,9 @@
+# Supabase CLI settings for this project's two Edge Functions.
+# Both check the caller themselves (email on the clergy list), so the platform JWT check is off.
+project_id = "eparhija-katalog"
+
+[functions.prices]
+verify_jwt = false
+
+[functions.order]
+verify_jwt = false

@@ -1,10 +1,12 @@
 # Magacinski katalog Eparhije zapadnoevropske
 
-Izložbeni sajt magacina: 137 artikala u 11 kategorija i tabela voštanih sveća, sa šiframa, cenama i fotografijama iz kataloga `CATALOGUE_SR_FR_EN.pptx`.
+Izložbeni sajt magacina: 137 artikala u 11 kategorija i tabela voštanih sveća, sa šiframa i fotografijama iz kataloga `CATALOGUE_SR_FR_EN.pptx`. **Cene vide samo sveštenici** čiji je mejl na spisku, a porudžbina stiže kao PDF.
 
 - **Jezici:** francuski (glavni, `/`), engleski (`/en/`), srpski ćirilicom (`/sr/`).
 - **Pretraga** po šifri (`P074`, radi i ćirilično `Р074`) i po nazivu na sva tri jezika, latinicom ili ćirilicom (`brojanica` nalazi `бројаница`).
-- **„Moja lista":** posetilac doda artikle i količine, pa listu pošalje e-poštom magacinu (sa šiframa i okvirnim zbirom) ili je kopira. Nema plaćanja; lista se čuva samo u pregledaču posetioca.
+- **Na ulazu** iskoči prozor: izbor jezika i mejl. Ako je mejl na spisku sveštenstva, vide se cene (sajt pamti mejl na tom uređaju). „Continuer sans les prix" vodi na katalog bez cena.
+- **Količina** se bira odmah na kartici (− 1 +), u tabeli sveća (kg) i u detaljima artikla.
+- **Porudžbina:** sveštenik u listi upiše ime, parohiju, telefon, adresu i napomenu i klikne „Envoyer la commande". Server proveri mejl, uzme cene iz baze, sačuva porudžbinu, napravi PDF na jeziku sajta i pošalje ga svešteniku i magacinu (kad je podešeno slanje mejlova). PDF može i odmah da se preuzme.
 - Radi i bez JavaScript-a (ceo katalog je u HTML-u), i na telefonu.
 
 ## Objavljivanje
@@ -16,6 +18,35 @@ Gotov sajt je u folderu **`docs/`**. Nije potreban server ni baza.
 **Netlify ili Vercel:** poveži repozitorijum, *Publish directory* = `docs`, *Build command* ostavi prazno (ili `node build.mjs`). Radi i sa privatnim repozitorijumom.
 
 **Sopstveni domen** (npr. `katalog.eparhija.fr`): podešava se u istim podešavanjima (*Custom domain*).
+
+## Cene, sveštenici i porudžbine (Supabase)
+
+Cene **nisu** u ovom repozitorijumu ni na stranici: nalaze se u bazi (Supabase), u tabeli `products`. Stranica ih dobija od servera tek kad sveštenik upiše mejl koji je na spisku.
+
+| Tabela | Šta je u njoj | Ko je menja |
+| --- | --- | --- |
+| `priests` | mejl, ime, parohija, telefon, `active` | magacin: novi red za svakog sveštenika; `active = false` ukida pristup |
+| `products` | šifra, nazivi na 3 jezika, **cena**, jedinica (`piece` ili `kg`) | magacin: menja cene |
+| `orders` | svaka poslata porudžbina sa stavkama i zbirom | samo čitanje |
+| `attempts` | provere mejlova (čuva se dan), protiv nagađanja adresa | niko |
+
+Sve se uređuje u Supabase kontrolnoj tabli, *Table Editor*, kao u Excelu. Tabele su zatvorene za javni pristup (RLS), čitaju ih samo dve funkcije:
+
+- `supabase/functions/prices`: mejl → cene (posle 10 pogrešnih pokušaja sa iste adrese u 15 minuta odgovara „previše pokušaja").
+- `supabase/functions/order`: mejl + stavke → porudžbina u bazi, PDF, mejlovi.
+
+**Slanje mejlova** (PDF svešteniku i magacinu) radi preko servisa [Resend](https://resend.com): u Resend-u potvrdi domen magacina (DNS zapis), napravi API ključ, pa u Supabase-u (*Edge Functions → Secrets*) dodaj:
+
+```
+RESEND_API_KEY   = re_...
+ORDER_FROM       = Magacin Eparhije <porudzbine@domen-magacina.fr>
+WAREHOUSE_EMAIL  = magacin@domen-magacina.fr
+WAREHOUSE_LANG   = sr        (jezik poruke magacinu: fr, en ili sr)
+```
+
+Dok ovo nije podešeno, porudžbina se ipak čuva u tabeli `orders`, a sveštenik dobija PDF za preuzimanje.
+
+**Novi Supabase projekat:** primeni `supabase/migrations/…_catalogue.sql`, unesi artikle i cene u `products`, objavi dve funkcije (`supabase functions deploy prices` i `order`, obe bez JWT provere, vidi `supabase/config.toml`), pa u `data/site.json` upiši `supabaseUrl` (https://<ref>.supabase.co) i `supabaseKey` (publishable ključ, `sb_publishable_…`, sme da bude javan) i pokreni `node build.mjs`.
 
 ## Pre objavljivanja: kontakt magacina
 
@@ -30,18 +61,19 @@ Otvori `data/site.json` i upiši:
 
 Zatim pokreni `node build.mjs` i sačuvaj promene (commit). Dok je e-pošta prazna, dugme „Envoyer par e-mail" je isključeno i na sajtu stoje isprekidano označena polja „à compléter".
 
-## Izmene cena i artikala
+## Izmene artikala
 
-Svi artikli su u **`data/catalogue.json`**:
+Nazivi, kategorije i fotografije su u **`data/catalogue.json`** (cene su u bazi, vidi gore):
 
 ```json
-{ "code": "P074", "price": 24.72, "cat": "icones",
+{ "code": "P074", "cat": "icones",
   "name": { "fr": "Icône Nika, moyenne", "en": "Nika icon, medium", "sr": "Икона Ника, средња" },
   "photos": [{ "file": "p074-1", ... }] }
 ```
 
-1. Promeni cenu, naziv ili kategoriju (`cat` je jedna od: `encensoirs, icones, chandeliers, veilleuses, croix, pendentifs, culte, encens, chapelets, enfants, livres`).
+1. Promeni naziv ili kategoriju (`cat` je jedna od: `encensoirs, icones, chandeliers, veilleuses, croix, pendentifs, culte, encens, chapelets, enfants, livres`).
 2. Pokreni `node build.mjs` (potreban je samo Node 18+, bez instalacije paketa).
+   Novi artikal treba dodati i u tabelu `products` u bazi, sa istom šifrom i cenom.
 3. Commit i push: sajt se sam ažurira.
 
 Tekstovi stranice (naslovi, dugmad, e-mail poruka) su u `data/strings.json`, za sva tri jezika.
@@ -66,6 +98,7 @@ build.mjs              pravi docs/index.html, docs/en/, docs/sr/ iz podataka
 data/catalogue.json    artikli, cene, kategorije, fotografije
 data/strings.json      tekstovi stranice na tri jezika
 data/site.json         kontakt magacina i adresa sajta
+supabase/              baza (migrations/) i dve serverske funkcije (functions/prices, functions/order)
 docs/                  gotov sajt (ovo se objavljuje)
   assets/css/          tokens.css, base.css, fonts.css, site.css
   assets/js/app.js     pretraga, kategorije, detalji artikla, lista

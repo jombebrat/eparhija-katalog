@@ -6,6 +6,7 @@
 /* Hallmark · waive 22 · ink and greys at zero chroma, as the Ink theme sets them · the catalogue is printed in plain black so the gold of each icon and chandelier carries the colour */
 /* Hallmark · waive 77 · the catalogue section holds twelve category sections, each a head over its grid · a warehouse catalogue reads as one long list by nature */
 /* Hallmark · waive 59 · the sticky catalogue bar sits 64px under the hero and rules the seam with hairlines · the bar is chrome that opens the catalogue, not a section */
+/* Hallmark · waive 49b · the links that wrap are product names, the card titles of the two-column grid at 320px · a name such as Glass-framed icon A4 or Ceramic candlestick is the article itself */
 /* Hallmark · answered F20 · each category keeps the warehouse's own count of articles; a row ends where the stock ends */
 /* Hallmark · note · Onest stands in for Epilogue, which has no Cyrillic, so one face serves French, English and Serbian */
 /* Hallmark · note · product photographs keep true colour (a buyer tells gold from nickel by them); their white grounds multiply into the well */
@@ -239,7 +240,7 @@ dialog::backdrop { background: var(--color-scrim); }
 .line__img { position: relative; width: 56px; height: 56px; border-radius: 8px; background: var(--color-paper-2); }
 .line__img img { position: absolute; inset: 0; width: 100%; height: 100%; padding: var(--space-2xs); object-fit: contain; mix-blend-mode: multiply; }
 .line__name { font-weight: 600; line-height: 1.3; }
-.line__sub { display: flex; flex-wrap: wrap; column-gap: var(--space-sm); font-size: var(--text-sm); font-weight: 400; color: var(--color-muted); font-variant-numeric: tabular-nums; }
+.line__sub { display: flex; flex-wrap: wrap; column-gap: var(--space-sm); font-size: var(--text-sm); font-weight: 400; color: var(--color-muted); }
 .line__sum { font-weight: 700; font-variant-numeric: tabular-nums; text-align: right; }
 .line__ctl { grid-column: 2 / -1; display: flex; align-items: center; justify-content: space-between; gap: var(--space-sm); }
 .qty { display: inline-flex; align-items: center; border: var(--rule-hair) solid var(--color-rule); border-radius: 10px; }
@@ -282,8 +283,63 @@ dialog::backdrop { background: var(--color-scrim); }
 .drawer__clear:active { color: var(--color-ink-2); }
 .drawer__clear:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
 
+/* ---------- prices for the clergy ---------- */
+html:not(.priced) .candles__table .price { display: none; }
+.card__price:empty, .detail__price[hidden] { display: none; }
+.account { display: flex; align-items: center; gap: var(--space-sm); min-width: 0; }
+.account[hidden], .account [hidden] { display: none; }
+.account__who { max-width: 16rem; overflow: hidden; color: var(--color-on-ink-2); font-size: var(--text-sm); white-space: nowrap; text-overflow: ellipsis; }
+.account__out { min-height: 40px; padding: 0 var(--space-xs); border: 0; border-radius: 8px; background: transparent; color: var(--color-paper); font: 600 var(--text-sm)/1 var(--font-body); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.2em; cursor: pointer; }
+.account__out:hover { text-decoration-color: var(--color-accent-soft); }
+.account__out:active { background: var(--color-ink-2); }
+.account__out:focus-visible { outline: 2px solid var(--color-accent-soft); outline-offset: 2px; }
+.listbtn--login { padding: 0 var(--space-md); }
+
+.textbtn { min-height: 40px; padding: 0; border: 0; background: transparent; color: var(--color-ink-2); font: 600 var(--text-sm)/1 var(--font-body); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.2em; cursor: pointer; transition: color var(--dur-micro) var(--ease-out); }
+.textbtn:hover { color: var(--color-ink); text-decoration-color: var(--color-accent); }
+.textbtn:active { color: var(--color-ink); }
+.textbtn:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; border-radius: 2px; }
+.textbtn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* the welcome: language, email, or carry on */
+.welcome { width: min(520px, calc(100% - 2 * var(--space-md))); border-radius: var(--radius-card); }
+.welcome[open] { animation: detail-in var(--dur-long) var(--ease-out); }
+.welcome__inner { display: grid; gap: var(--space-sm); padding: var(--space-xl); }
+.welcome h2 { font-size: var(--text-2xl); line-height: 1.1; }
+.welcome__langs { margin: var(--space-sm) 0 var(--space-md); padding: 0; border: 0; }
+.welcome__langs legend { margin-bottom: var(--space-xs); padding: 0; font-size: var(--text-sm); color: var(--color-ink-2); }
+.welcome__seg { display: flex; flex-wrap: wrap; gap: var(--space-2xs); }
+.welcome__seg a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 var(--space-md); border: var(--rule-hair) solid var(--color-rule); border-radius: 10px; color: var(--color-ink); font-weight: 600; text-decoration: none; transition: background-color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out); }
+.welcome__seg a:hover { border-color: var(--color-ink); }
+.welcome__seg a:active { background: var(--color-paper-2); }
+.welcome__seg a[aria-current="page"] { border-color: var(--color-ink); background: var(--color-ink); color: var(--color-paper); }
+.welcome__seg a:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+.welcome label, .field label { font-size: var(--text-sm); color: var(--color-ink-2); }
+.welcome input, .field input, .field textarea { width: 100%; min-height: 48px; padding: 0 var(--space-md); border: var(--rule-hair) solid var(--color-muted); border-radius: 10px; background: var(--color-paper); color: var(--color-ink); outline: 2px solid transparent; outline-offset: -1px; transition: border-color var(--dur-micro) var(--ease-out); }
+.field textarea { min-height: 72px; padding-block: var(--space-sm); resize: vertical; line-height: 1.45; }
+.welcome input:hover, .field input:hover, .field textarea:hover { border-color: var(--color-ink); }
+.welcome input:focus-visible, .field input:focus-visible, .field textarea:focus-visible { outline-color: var(--color-focus); }
+.welcome input[aria-invalid="true"], .field input[aria-invalid="true"] { border-color: var(--color-error); }
+.welcome input::placeholder { color: var(--color-muted); }
+.welcome__help { min-height: 1lh; font-size: var(--text-sm); color: var(--color-ink-2); }
+.welcome__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-lg); margin-top: var(--space-xs); }
+.btn[aria-busy="true"] { cursor: progress; }
+
+/* the order form in the list */
+.order-form { display: grid; gap: var(--space-sm); }
+.order-form__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: end; gap: var(--space-sm); }
+.field { display: grid; gap: var(--space-2xs); }
+.field__opt { color: var(--color-muted); }
+.order-form .btn { width: 100%; }
+.drawer__more { display: flex; flex-wrap: wrap; gap: var(--space-lg); }
+.drawer__guest { color: var(--color-ink-2); }
+.drawer__done { display: grid; gap: var(--space-sm); padding-block: var(--space-xl); }
+.drawer__done b { font-size: var(--text-xl); letter-spacing: -0.01em; }
+.drawer__done p { color: var(--color-ink-2); max-width: 45ch; }
+
 @media (prefers-reduced-motion: reduce) {
-  .detail[open], .drawer[open] { animation: none; }
+  .detail[open], .drawer[open], .welcome[open] { animation: none; }
+  .textbtn, .welcome__seg a, .welcome input, .field input, .field textarea { transition: none; }
   .btn, .add, .listbtn, .card__img, .shelf__img, .chips a, .langs a { transition: none; }
 }
 
@@ -307,13 +363,19 @@ dialog::backdrop { background: var(--color-scrim); }
   html { scroll-padding-top: 128px; }
 }
 @media (max-width: 40rem) {
-  .slab__inner { min-height: 64px; gap: var(--space-sm); }
+  .slab__inner { flex-wrap: wrap; min-height: 0; gap: var(--space-xs) var(--space-sm); padding-block: var(--space-sm); }
+  .wordmark { flex-basis: 100%; }
+  .account { margin-left: auto; }
   .wordmark b { font-size: var(--text-md); }
   .wordmark span { display: none; }
   .l-long { display: none; }
   .l-short { display: inline; }
   .langs a { padding: 0 var(--space-xs); }
-  .slab .listbtn { display: none; }
+  .slab .listbtn:not(.listbtn--login) { display: none; }
+  .account__who { display: none; }
+  .listbtn--login { min-height: 40px; padding: 0 var(--space-sm); }
+  .welcome__inner { padding: var(--space-lg); }
+  .order-form__grid { grid-template-columns: minmax(0, 1fr); }
   .hero { padding-block: var(--space-xl) var(--space-2xl); }
   .shelves ul { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-md) var(--space-sm); }
   .shelf__img img { padding: var(--space-xs); }
