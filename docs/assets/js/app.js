@@ -98,24 +98,59 @@
   const body = $('[data-list-body]');
   const foot = $('[data-list-foot]');
 
+  // quantity is set right where the item is: "Add" turns into − n + on the card, the table row and the detail
+  function stepperFor(btn) {
+    if (btn._step) return btn._step;
+    const el = document.createElement('span');
+    el.className = 'qty qty--inline' + (btn.classList.contains('add--row') ? ' qty--row' : '') + (btn.classList.contains('add--big') ? ' qty--big' : '');
+    el.hidden = true;
+    el.innerHTML = '<button type="button" data-q="-1">\u2212</button><input type="number" inputmode="numeric" min="0" max="999" step="1"><span class="qty__unit" hidden></span><button type="button" data-q="1">+</button>';
+    el.addEventListener('click', (e) => {
+      const q = e.target.closest('[data-q]');
+      if (q) setQty(btn.dataset.add, (list[btn.dataset.add] || 0) + Number(q.dataset.q), btn);
+    });
+    const input = el.querySelector('input');
+    input.addEventListener('change', () => setQty(btn.dataset.add, Number(input.value), btn));
+    input.addEventListener('focus', () => input.select());
+    btn.after(el);
+    btn._step = el;
+    return el;
+  }
+  function setQty(code, v, btn) {
+    v = Math.max(0, Math.min(999, Math.round(v) || 0));
+    if (v === 0) delete list[code]; else list[code] = v;
+    save(); syncButtons(); if (drawer.open) renderList();
+    if (v === 0 && btn) btn.focus();
+  }
   function syncButtons() {
     $$('[data-add]').forEach((b) => {
-      const on = !!list[b.dataset.add];
-      b.setAttribute('aria-pressed', on ? 'true' : 'false');
-      b.textContent = on ? S.added : S.add;
+      const code = b.dataset.add;
+      const p = D.p[code];
+      if (!p) return;
+      const q = list[code] || 0;
+      const st = stepperFor(b);
+      b.hidden = q > 0;
+      st.hidden = q === 0;
+      b.textContent = S.add;
+      b.removeAttribute('aria-pressed');
+      const input = $('input', st);
+      if (document.activeElement !== input) input.value = q;
+      input.setAttribute('aria-label', `${S.qty}: ${p.n}`);
+      const [minus, plus] = $$('[data-q]', st);
+      minus.setAttribute('aria-label', `${q <= 1 ? S.remove : S.less}: ${p.n}`);
+      plus.setAttribute('aria-label', `${S.more}: ${p.n}`);
+      const unit = $('.qty__unit', st);
+      unit.hidden = !p.kg; unit.textContent = p.kg ? S.kg : '';
     });
     const n = Object.keys(list).length;
     $$('[data-count]').forEach((c) => { c.textContent = n; });
     $$('[data-open-list]').forEach((b) => b.toggleAttribute('data-has', n > 0));
-    syncDetailButton();
-  }
-  function toggle(code) {
-    if (list[code]) delete list[code]; else list[code] = 1;
-    save(); syncButtons(); if (drawer.open) renderList();
   }
   document.addEventListener('click', (e) => {
     const b = e.target.closest('[data-add]');
-    if (b) toggle(b.dataset.add);
+    if (!b) return;
+    setQty(b.dataset.add, 1, null);
+    $('[data-q="1"]', stepperFor(b)).focus();
   });
 
   const lineSum = (code) => D.p[code].pr * list[code];
@@ -172,7 +207,7 @@
         input.value = list[code]; minus.disabled = list[code] <= 1;
         $('.line__sum', row).textContent = money.format(lineSum(code));
         $('[data-total]', foot).textContent = money.format(sum());
-        save();
+        save(); syncButtons();
       };
       minus.addEventListener('click', () => set(list[code] - 1));
       plus.addEventListener('click', () => set(list[code] + 1));
@@ -236,12 +271,6 @@
   const dThumbs = $('[data-detail-thumbs]');
   const dAdd = $('[data-detail-add]');
   let dCode = null;
-  function syncDetailButton() {
-    if (!dCode) return;
-    const on = !!list[dCode];
-    dAdd.setAttribute('aria-pressed', on ? 'true' : 'false');
-    dAdd.textContent = on ? S.added : S.add;
-  }
   function show(i) {
     const p = D.p[dCode];
     const [f, w, h] = p.ph[i];
@@ -267,7 +296,8 @@
       dThumbs.append(b);
     });
     dAdd.dataset.add = code;
-    show(0); syncDetailButton();
+    dAdd.setAttribute('aria-label', fmt(D.addLabel, { name: p.n }));
+    show(0); syncButtons();
     detail.showModal();
     return true;
   }

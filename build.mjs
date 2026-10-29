@@ -149,6 +149,7 @@ function page(lang, dir) {
     lang, locale: S.locale, email: site.email || '',
     s: Object.fromEntries(['add', 'added', 'noMatch', 'matches', 'photoOf', 'emptyTitle', 'emptyText', 'qty', 'less', 'more', 'remove', 'total', 'send', 'copy', 'copied', 'copyFailed', 'noEmail', 'clearList', 'mailSubject', 'mailHello', 'kg', 'perKg', 'close', 'code', 'browse'].map((k) => [k, T(lang, k)])),
     mailFields: S.mailFields.map((f) => typo(lang, f)),
+    addLabel: typo(lang, S.addLabel),
     items: S.items, sizes: S.sizes,
     cats: Object.fromEntries(cats.map((c) => [c.id, typo(lang, c.name[lang])])),
     p: Object.fromEntries(products.map((p) => [p.code, { n: typo(lang, p.name[lang]), c: p.cat, pr: p.price, ph: p.photos.map((x) => [x.file, x.W, x.H]), ...(p.note ? { note: typo(lang, p.note[lang]) } : {}) }])),

@@ -220,7 +220,8 @@ dialog::backdrop { background: var(--color-scrim); }
 .detail__meta { color: var(--color-ink-2); font-size: var(--text-sm); }
 .detail__price { font: 700 var(--text-3xl)/1 var(--font-display); letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
 .detail__note { max-width: 36ch; color: var(--color-ink-2); }
-.add--big { align-self: flex-start; min-height: 48px; padding: 0 var(--space-lg); font-size: var(--text-md); }
+.add--big, .qty--big { align-self: flex-start; }
+.add--big { min-height: 48px; padding: 0 var(--space-lg); font-size: var(--text-md); }
 .detail__close { position: absolute; top: var(--space-sm); right: var(--space-sm); }
 
 .drawer { width: min(460px, 100%); max-width: 100%; height: 100dvh; max-height: 100dvh; margin: 0 0 0 auto; }
@@ -251,6 +252,19 @@ dialog::backdrop { background: var(--color-scrim); }
 .qty input::-webkit-inner-spin-button, .qty input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 .qty input:focus-visible { outline-color: var(--color-focus); }
 .qty__unit { padding-right: var(--space-sm); font-size: var(--text-sm); color: var(--color-muted); }
+/* the stepper that replaces "Add" once an item is in the list: teal means in your list */
+.qty--inline { display: flex; align-items: center; justify-content: space-between; min-height: 44px; border-color: transparent; background: var(--color-accent-soft); color: var(--color-accent-soft-ink); }
+.qty--inline[hidden] { display: none; }
+.qty--inline button { width: 44px; height: 44px; color: var(--color-accent-soft-ink); }
+.qty--inline button:hover { background: var(--color-accent-soft-2); }
+.qty--inline button:active { background: var(--color-accent-soft-2); transform: translateY(1px); }
+.qty--inline input { flex: 1; width: 3ch; min-width: 0; min-height: 44px; color: var(--color-accent-soft-ink); font-weight: 700; }
+.qty--inline .qty__unit { padding: 0 var(--space-2xs) 0 0; color: var(--color-accent-soft-ink); }
+.card .qty--inline { align-self: stretch; margin-top: var(--space-2xs); }
+.qty--row, .candles__table .add--row { width: 8.5rem; }
+.qty--big { width: 12rem; min-height: 48px; }
+.qty--big button, .qty--big input { height: 48px; min-height: 48px; }
+@media (prefers-reduced-motion: reduce) { .qty--inline button:active { transform: none; } }
 .line__remove { min-height: 40px; padding: 0 var(--space-xs); border: 0; border-radius: 8px; background: transparent; color: var(--color-ink-2); font: 400 var(--text-sm)/1 var(--font-body); text-decoration: underline; text-underline-offset: 0.2em; cursor: pointer; }
 .line__remove:hover { color: var(--color-ink); }
 .line__remove:active { background: var(--color-paper-2); }
