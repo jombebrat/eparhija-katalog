@@ -540,3 +540,8 @@ body.adm { font-size: var(--t-md); line-height: 1.5; background: var(--adm-bg); 
 .stats .panel__head h2 { font-size: var(--t-lg); }
 .stats .tbl-wrap { margin-inline: calc(-1 * var(--space-xs)); }
 .toolbar .field > .field__label, .toolbar .field > label { margin-bottom: 0; }
+
+/* contacts: the price of a group */
+.pricebox { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--space-sm); margin: var(--space-md) 0; padding: var(--space-md); border: var(--rule-hair) solid var(--color-rule); border-radius: 14px; background: var(--color-paper); box-shadow: var(--adm-shadow); }
+.pricebox .field { flex: 0 1 16rem; margin: 0; }
+.pricebox .field__help { flex: 1 1 100%; margin: 0; }

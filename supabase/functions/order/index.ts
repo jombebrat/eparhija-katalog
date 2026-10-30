@@ -104,16 +104,18 @@ Deno.serve(async (req) => {
   const since = new Date(Date.now() - 15 * 60 * 1000).toISOString();
   const { count: fails } = await db.from('attempts').select('id', { count: 'exact', head: true }).eq('ip', ip).eq('ok', false).gte('at', since);
   if ((fails ?? 0) >= 10) return json({ error: 'too_many' }, 429);
-  const { data: priest } = await db.from('priests').select('id, name, parish, phone, address').eq('email', email).eq('active', true).maybeSingle();
+  const { data: priest } = await db.from('priests').select('id, name, parish, phone, address, grp').eq('email', email).eq('active', true).maybeSingle();
   if (!priest) {
     await db.from('attempts').insert({ ip, ok: false });
     return json({ error: 'unknown' }, 404);
   }
 
-  // price every line from the database
+  // price every line from the database, at the price of the member's group (markup in percent over the article's price)
   const priced = await linesFor(items, lang);
   if ('error' in priced) return problem(priced);
-  const lines = priced.lines;
+  const { data: group } = await db.from('contact_groups').select('markup').eq('grp', priest.grp ?? 'svestenstvo').maybeSingle();
+  const factor = 1 + Number(group?.markup ?? 0) / 100;
+  const lines = factor === 1 ? priced.lines : priced.lines.map((l) => ({ ...l, price: Math.round(l.price * factor * 100) / 100 }));
   const total = sumOf(lines);
 
   const name = clean(body.name, 120) || priest.name || '';

@@ -167,3 +167,6 @@ Jedan PDF sa svim artiklima, slikama i cenama; nazivi na srpskom, francuskom i e
 - **Čuva se u privatnom bucketu `catalogue`** (`cenovnik.pdf`); piše i čita ga samo admin (migracija `20261030210000_catalogue_pdf.sql`).
 - **Član ga dobija preko funkcije `prices`**: `POST { email, pdf: true }` vraća petominutni potpisani link, samo za mejl sa aktivnog spiska članova (isto ograničenje pokušaja kao za cene). Bez PDF-a vraća 404 `nopdf`.
 - **Osvežava se sam jednom dnevno:** čim se admin otvori, a PDF je stariji od 24 sata ili ga nema, napravi se (i jedna otvorena kartica proverava svakog sata). Izmene artikala ga više ne pokreću same; posle većeg unosa pritisnite „Osveži PDF“ (dugme je stalno u gornjoj traci admina i u Pregledu).
+
+## Kontakti i cena po grupi
+Admin → Kontakti ima dve grupe: Sveštenstvo i Ostali kontakti. Svaka grupa ima povećanje u % nad cenom artikla (0 = nabavna cena); važi za prikaz cena, porudžbine (funkcije `prices` i `order`) i PDF (`cenovnik.pdf` za sveštenstvo, `cenovnik-ostali.pdf` za ostale). Tabela `contact_groups`, kolona `priests.grp`.

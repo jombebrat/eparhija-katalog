@@ -150,8 +150,11 @@ async function addPhoto(file, code) {
 const thumb = (ph) => photoUrl(SITE, ph.src, true);
 
 // ---------- data ----------
-const D = { products: [], cats: [], priests: [], orders: [], inquiries: [], options: [] };
-const ST = { products: 'idle', cats: 'idle', priests: 'idle', orders: 'idle', inquiries: 'idle' };
+const D = { products: [], cats: [], priests: [], groups: [], orders: [], inquiries: [], options: [] };
+const ST = { products: 'idle', cats: 'idle', priests: 'idle', groups: 'idle', orders: 'idle', inquiries: 'idle' };
+const GROUPS = [['svestenstvo', 'Sveštenstvo'], ['ostali', 'Ostali kontakti']];
+const groupOf = (p) => p.grp || 'svestenstvo';
+const markupOf = (g) => Number(D.groups.find((x) => x.grp === g)?.markup ?? 0);
 const allRows = async (path) => {
   const all = [];
   for (let from = 0; ; from += 1000) {
@@ -170,6 +173,7 @@ const Q = {
     return p;
   },
   priests: () => db('priests?select=*&order=name.asc.nullslast,email.asc'),
+  groups: () => db('contact_groups?select=*&order=grp.asc'),
   orders: () => allRows('orders?select=*&order=created_at.desc'),
   inquiries: () => allRows('inquiries?select=*&order=created_at.desc'),
 };
@@ -201,7 +205,7 @@ const nameOf = (p) => p.name_sr || p.name_fr || p.name_en || p.code;
 const TABS = ['pregled', 'upiti', 'porudzbine', 'artikli', 'statistika', 'svestenstvo', 'kategorije'];
 const NEEDS = {
   pregled: ['orders', 'products', 'inquiries', 'priests', 'cats'], upiti: ['inquiries', 'products', 'priests'],
-  artikli: ['products', 'cats'], kategorije: ['cats', 'products'], svestenstvo: ['priests'], porudzbine: ['orders', 'products'], statistika: ['orders', 'products', 'cats'],
+  artikli: ['products', 'cats'], kategorije: ['cats', 'products'], svestenstvo: ['priests', 'groups'], porudzbine: ['orders', 'products'], statistika: ['orders', 'products', 'cats'],
 };
 function route() {
   const [tab, qs] = location.hash.slice(1).split('?');
@@ -251,7 +255,8 @@ function draw() {
 // Made here, in the browser, from the articles as they are now; kept in the private bucket `catalogue`.
 // The site hands it to members only (function `prices`, after the email check).
 const PDF_NAME = 'cenovnik.pdf';
-const PDF_NAME_BLANK = 'cenovnik-bez-cena.pdf';   // the same list with a line instead of each price, for parishes to write their own
+const PDF_NAME_GROUP = (g) => `cenovnik-${g}.pdf`;
+const PDF_NAME_BLANK ='cenovnik-bez-cena.pdf';   // the same list with a line instead of each price, for parishes to write their own
 let pdfBusy = false;
 const pdfWhen = new Intl.DateTimeFormat('sr-Latn-RS', { dateStyle: 'long', timeStyle: 'short', timeZone: 'Europe/Paris' });
 async function pdfInfo() {
@@ -280,13 +285,16 @@ async function drawPdfCard() {
 // the PDF made from the database as it is now, without touching what is on the screen
 async function makePdf(say) {
   say('Učitavam artikle…');
-  const [products, cats] = await Promise.all([Q.products(), Q.cats()]);
+  const [products, cats, groups] = await Promise.all([Q.products(), Q.cats(), Q.groups()]);
+  D.groups = groups;
   const { buildCatalogue } = await import('./catalogue-pdf.js?v=0d7a5f5e72');
   const t = await token();
   let r;
-  for (const [name, withPrices] of [[PDF_NAME, true], [PDF_NAME_BLANK, false]]) {
+  // one priced list per group (the clergy's at the article price, the others' with their markup) and the blank one
+  const at = (g) => products.map((p) => ({ ...p, price: Math.round(Number(p.price) * (1 + markupOf(g) / 100) * 100) / 100 }));
+  for (const [name, withPrices, list] of [[PDF_NAME, true, at('svestenstvo')], [PDF_NAME_GROUP('ostali'), true, at('ostali')], [PDF_NAME_BLANK, false, products]]) {
     r = await buildCatalogue({
-      products, cats, options: D.options, prices: withPrices,
+      products: list, cats, options: D.options, prices: withPrices,
       photoUrl: (src) => photoUrl(SITE, src, true), siteBase: SITE, onProgress: say,
     });
     say('Čuvam PDF…');
@@ -540,27 +548,37 @@ function drawCats() {
   </table>`;
 }
 
-// ----- clergy -----
+// ----- contacts: clergy and other contacts, each group with its own price -----
 function drawPriests(r) {
   const box = $('[data-region="priests"]');
   const sc = $('[data-screen="svestenstvo"]');
   const q = r.p.get('q') || '';
+  const g = r.p.get('g') === 'ostali' ? 'ostali' : 'svestenstvo';
   syncInput($('[data-q]', sc), q);
   const st = stateOf(NEEDS.svestenstvo);
   if (st === 'loading') { box.innerHTML = skeleton(); return; }
-  if (st === 'error') { box.innerHTML = failed('Sveštenici', NEEDS.svestenstvo); return; }
+  if (st === 'error') { box.innerHTML = failed('Kontakti', NEEDS.svestenstvo); return; }
   priestCount();
-  if (!D.priests.length) {
-    box.innerHTML = empty('Lista sveštenstva je prazna.', 'Samo adrese sa ove liste vide cene i mogu da naruče.', '<button class="btn btn--primary" type="button" data-new="priest">Dodaj sveštenika</button>');
+  const mine = D.priests.filter((p) => groupOf(p) === g);
+  const mk = markupOf(g);
+  const tabs = `<div class="seg" role="group" aria-label="Grupa" data-g>${GROUPS.map(([k, t]) => `<button type="button" data-v="${k}" aria-pressed="${k === g}">${esc(t)} <span class="seg__n">${D.priests.filter((p) => groupOf(p) === k).length}</span></button>`).join('')}</div>`;
+  const price = `<form class="pricebox" data-markup-form="${g}" novalidate>
+    <div class="field"><label for="mk-${g}">Cena za ovu grupu: povećanje u %</label>
+      <input class="input" id="mk-${g}" name="markup" type="number" step="0.5" min="-50" max="300" inputmode="decimal" value="${mk}" aria-describedby="mk-${g}-h"></div>
+    <button class="btn btn--primary" type="submit">Sačuvaj cenu</button>
+    <p class="field__help" id="mk-${g}-h">0 znači cena artikla (nabavna). 25 znači 25% više. Važi za prikaz cena, porudžbine i PDF ove grupe. PDF se osveži sam za nekoliko sekundi.</p>
+  </form>`;
+  if (!mine.length) {
+    box.innerHTML = `${tabs}${price}${empty(g === 'ostali' ? 'Nema ostalih kontakata.' : 'Lista sveštenstva je prazna.', 'Samo adrese sa lista vide cene i mogu da naruče.', '<button class="btn btn--primary" type="button" data-new="priest">Dodaj kontakt</button>')}`;
     return;
   }
   const nq = norm(q);
-  const list = D.priests.filter((p) => !nq || norm([p.name, p.parish, p.email, p.phone].join(' ')).includes(nq));
+  const list = mine.filter((p) => !nq || norm([p.name, p.parish, p.email, p.phone].join(' ')).includes(nq));
   if (!list.length) {
-    box.innerHTML = empty('Niko ne odgovara pretrazi.', 'Pretražite po imenu, parohiji ili mejlu.', '<button class="btn" type="button" data-clear>Prikaži sve</button>');
+    box.innerHTML = `${tabs}${price}${empty('Niko ne odgovara pretrazi.', 'Pretražite po imenu, parohiji ili mejlu.', '<button class="btn" type="button" data-clear>Prikaži sve</button>')}`;
     return;
   }
-  box.innerHTML = `<p class="region__count">${esc(plural(list.length, 'sveštenik', 'sveštenika', 'sveštenika'))}${list.length < D.priests.length ? ` od ${D.priests.length}` : ''}</p>
+  box.innerHTML = `${tabs}${price}<p class="region__count">${list.length} od ${mine.length}</p>
   <table class="tbl tbl--priests">
     <thead><tr><th scope="col">Ime</th><th scope="col">Parohija</th><th scope="col">Mejl</th><th scope="col">Telefon</th><th scope="col">Vidi cene</th><th scope="col"><span class="visually-hidden">Izmena</span></th></tr></thead>
     <tbody>${list.map((p) => `<tr data-priest="${p.id}"${p.active ? '' : ' class="is-hidden"'}>
@@ -574,8 +592,25 @@ function drawPriests(r) {
   </table>`;
 }
 function priestCount() {
-  const on = D.priests.filter((x) => x.active).length;
-  $('[data-priest-count]').textContent = D.priests.length ? `Cene vidi ${on} od ${D.priests.length}` : '';
+  const el = $('[data-priest-count]');
+  const n = (g) => D.priests.filter((x) => groupOf(x) === g).length;
+  el.textContent = D.priests.length ? `Sveštenstvo ${n('svestenstvo')}, ostali kontakti ${n('ostali')}` : '';
+}
+async function saveMarkup(form) {
+  const g = form.dataset.markupForm;
+  const v = Number(String(form.elements.markup.value).replace(',', '.'));
+  const help = $(`#mk-${g}-h`);
+  if (!Number.isFinite(v) || v < -50 || v > 300) { help.textContent = 'Upišite broj od -50 do 300.'; form.elements.markup.focus(); return; }
+  const btn = $('button[type="submit"]', form);
+  btn.disabled = true;
+  try {
+    const row = one(await db(`contact_groups?grp=eq.${g}`, { method: 'PATCH', body: { markup: v }, prefer: 'return=representation' }));
+    Object.assign(D.groups.find((x) => x.grp === g) || D.groups[D.groups.push({ grp: g }) - 1], row);
+    notify(`Cena za grupu „${GROUPS.find(([k]) => k === g)[1]}“: ${v > 0 ? '+' : ''}${v}%. PDF se osvežava.`);
+    pdfLater(5000);
+  } catch (e) {
+    if (!e.signedOut) notify(`Cena nije sačuvana. ${reason(e)}`, null, true);
+  } finally { btn.disabled = false; }
 }
 async function savePriestActive(box) {
   const id = Number(box.dataset.priestActive);
@@ -1612,11 +1647,12 @@ async function deleteCat() {
 let editPriest = null;
 function priestForm(p) {
   const isNew = !p;
-  p ??= { email: '', name: '', parish: '', phone: '', address: '', active: true };
+  p ??= { email: '', name: '', parish: '', phone: '', address: '', active: true, grp: route().p.get('g') === 'ostali' ? 'ostali' : 'svestenstvo' };
   editPriest = isNew ? null : p.id;
   openSheet(`<form class="sheet__inner" novalidate data-form="priest">
-    ${head(isNew ? 'Novi sveštenik' : esc(p.name || p.email), isNew ? 'Sa ovim mejlom vidi cene i šalje porudžbine.' : '')}
+    ${head(isNew ? 'Novi kontakt' : esc(p.name || p.email), isNew ? 'Sa ovim mejlom vidi cene i šalje porudžbine.' : '')}
     <div class="sheet__body">
+      ${select({ id: 'p-grp', label: 'Grupa', name: 'grp', options: GROUPS, value: groupOf(p), help: 'Svaka grupa ima svoju cenu.' })}
       ${field({ id: 'p-email', label: 'Mejl', name: 'email', type: 'email', value: p.email, req: true, help: 'Adresa koju sveštenik upisuje na sajtu.', attrs: `autocomplete="off" inputmode="email" spellcheck="false"${isNew ? ' autofocus' : ''}` })}
       ${field({ id: 'p-name', label: 'Ime i prezime', name: 'name', value: p.name, help: 'Upisuje se u porudžbinu i PDF.', attrs: 'autocomplete="off"' })}
       ${field({ id: 'p-parish', label: 'Parohija ili crkva', name: 'parish', value: p.parish, attrs: 'autocomplete="off"' })}
@@ -1624,7 +1660,7 @@ function priestForm(p) {
       ${field({ id: 'p-address', label: 'Adresa za dostavu', name: 'address', value: p.address, help: 'Upisuje se sama u porudžbinu; član je može menjati u svom nalogu.', attrs: 'autocomplete="off"' })}
       ${checkbox({ id: 'p-active', label: 'Vidi cene i može da naruči', name: 'active', checked: p.active, help: 'Isključite umesto brisanja kad neko privremeno ne treba pristup.' })}
     </div>
-    ${foot(isNew ? 'Dodaj sveštenika' : 'Sačuvaj izmene', isNew ? '' : '<button class="btn btn--danger" type="button" data-delete-priest>Obriši sa liste</button>')}
+    ${foot(isNew ? 'Dodaj kontakt' : 'Sačuvaj izmene', isNew ? '' : '<button class="btn btn--danger" type="button" data-delete-priest>Obriši sa liste</button>')}
   </form>`);
 }
 async function submitPriest(form) {
@@ -1634,7 +1670,7 @@ async function submitPriest(form) {
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) errs.push(invalid(form, 'email', 'Upišite ceo mejl, na primer ime@parohija.fr.'));
   else if (D.priests.some((p) => p.email === email && p.id !== editPriest)) errs.push(invalid(form, 'email', 'Taj mejl je već na listi.'));
   if (errs.length) { errs[0].focus(); return; }
-  const row = { email, name: v('name') || null, parish: v('parish') || null, phone: v('phone') || null, address: v('address') || null, active: form.elements.active.checked };
+  const row = { email, name: v('name') || null, parish: v('parish') || null, phone: v('phone') || null, address: v('address') || null, grp: form.elements.grp.value, active: form.elements.active.checked };
   busy(form, true, 'Čuvanje…');
   formError(form, '');
   try {
@@ -1766,6 +1802,7 @@ document.addEventListener('click', (e) => {
   if (t.matches('[data-clear]')) { history.replaceState(null, '', `#${route().tab}`); draw(); return; }
   if (t.matches('[data-s-all]')) { setParam('s', 'all'); return; }
   if (t.matches('[data-f] button')) { setParam('f', t.dataset.v); return; }
+  if (t.matches('[data-g] button')) { setParam('g', t.dataset.v === 'svestenstvo' ? '' : t.dataset.v); return; }
   if (t.matches('[data-s] button')) { setParam('s', t.dataset.v === 'new' ? '' : t.dataset.v); return; }
   if (t.matches('[data-new="product"]')) { if (!D.cats.length) { notify('Prvo napravite kategoriju; svaki artikal pripada jednoj.', null, true); return; } productForm(null); return; }
   if (t.matches('[data-new="cat"]')) { catForm(null); return; }
@@ -1892,6 +1929,10 @@ sheet.addEventListener('submit', (e) => {
   e.preventDefault();
   const f = e.target;
   ({ product: submitProduct, cat: submitCat, priest: submitPriest, password: submitPassword })[f.dataset.form]?.(f);
+});
+document.addEventListener('submit', (e) => {
+  const f = e.target;
+  if (f.matches?.('[data-markup-form]')) { e.preventDefault(); saveMarkup(f); }
 });
 window.addEventListener('hashchange', () => { closeSheet(); draw(); });
 

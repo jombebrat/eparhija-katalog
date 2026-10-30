@@ -40,7 +40,7 @@ Deno.serve(async (req) => {
   ]);
   if ((mine ?? 0) >= MAX_FAILS_PER_IP || (all ?? 0) >= MAX_FAILS_TOTAL) return json({ error: 'too_many' }, 429);
 
-  const { data: priest, error } = await db.from('priests').select('id, name, parish, phone, address').eq('email', email).eq('active', true).maybeSingle();
+  const { data: priest, error } = await db.from('priests').select('id, name, parish, phone, address, grp').eq('email', email).eq('active', true).maybeSingle();
   if (error) return json({ error: 'server' }, 500);
   await db.from('attempts').insert({ ip, ok: !!priest });
   if (Math.random() < 0.05) await db.from('attempts').delete().lt('at', new Date(Date.now() - 86400000).toISOString());
@@ -50,13 +50,18 @@ Deno.serve(async (req) => {
   }
 
   if (wantPdf) {
-    const { data, error: e3 } = await db.storage.from('catalogue').createSignedUrl(blank ? 'cenovnik-bez-cena.pdf' : 'cenovnik.pdf', 300, { download: blank ? 'Magacin-Eparhije-cenovnik-bez-cena.pdf' : 'Magacin-Eparhije-cenovnik.pdf' });
+    // one price list per group: the clergy's is cenovnik.pdf, another group's is cenovnik-<group>.pdf
+    const file = blank ? 'cenovnik-bez-cena.pdf' : (priest.grp ?? 'svestenstvo') === 'svestenstvo' ? 'cenovnik.pdf' : `cenovnik-${priest.grp}.pdf`;
+    const { data, error: e3 } = await db.storage.from('catalogue').createSignedUrl(file, 300, { download: blank ? 'Magacin-Eparhije-cenovnik-bez-cena.pdf' : 'Magacin-Eparhije-cenovnik.pdf' });
     if (e3 || !data?.signedUrl) return json({ error: 'nopdf' }, 404);
     return json({ url: data.signedUrl });
   }
 
   const { data: products, error: e2 } = await db.from('products').select('code, price').eq('active', true);
   if (e2) return json({ error: 'server' }, 500);
-  const prices = Object.fromEntries((products ?? []).map((p) => [p.code, Number(p.price)]));
+  // the group's price: the article's price plus the group's markup in percent
+  const { data: group } = await db.from('contact_groups').select('markup').eq('grp', priest.grp ?? 'svestenstvo').maybeSingle();
+  const factor = 1 + Number(group?.markup ?? 0) / 100;
+  const prices = Object.fromEntries((products ?? []).map((p) => [p.code, Math.round(Number(p.price) * factor * 100) / 100]));
   return json({ priest: { name: priest.name ?? '', parish: priest.parish ?? '', phone: priest.phone ?? '', address: priest.address ?? '' }, prices });
 });
