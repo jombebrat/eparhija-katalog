@@ -65,7 +65,7 @@ export async function buildCatalogue({ products, cats, options, photoUrl, siteBa
   const { PDFLib, fontkit } = await loadLibs();
   const { PDFDocument, rgb } = PDFLib;
   const hex = (h) => rgb(parseInt(h.slice(1, 3), 16) / 255, parseInt(h.slice(3, 5), 16) / 255, parseInt(h.slice(5, 7), 16) / 255);
-  const BURG = hex('#702832'), GOLD = hex('#B3945E'), IVORY = hex('#F6F3EC'), CHAR = hex('#34312F'), WHITE = hex('#FFFFFF'), BEIGE = hex('#EAE5DA');
+  const BURG = hex('#702832'), GOLD = hex('#B3945E'), IVORY = hex('#F6F3EC'), CHAR = hex('#34312F'), WHITE = hex('#FFFFFF'), BEIGE = hex('#EAE5DA'), PAGE = hex('#FDFCFA');
   const SOFT = hex('#6E6A66');           // charcoal, lighter, for translations and codes (contrast 5:1 on white)
   const ON_BURG = hex('#EBDCC0');        // ivory-gold text on the burgundy cover
 
@@ -154,7 +154,7 @@ export async function buildCatalogue({ products, cats, options, photoUrl, siteBa
   const line = (pg, x1, top, x2, color = GOLD, th = 0.6) => pg.drawLine({ start: { x: x1, y: H - top }, end: { x: x2, y: H - top }, thickness: th, color });
   const card = (pg, x, top, w, h, r = 4) => {
     const d = `M ${r} 0 H ${w - r} Q ${w} 0 ${w} ${r} V ${h - r} Q ${w} ${h} ${w - r} ${h} H ${r} Q 0 ${h} 0 ${h - r} V ${r} Q 0 0 ${r} 0 Z`;
-    pg.drawSvgPath(d, { x, y: H - top, color: WHITE, borderColor: BEIGE, borderWidth: 0.5 });
+    pg.drawSvgPath(d, { x, y: H - top, color: WHITE, borderColor: BEIGE, borderWidth: 0.8 });
   };
   const fitImage = (pg, e, x, top, bw, bh, pad = 8) => {
     const s = Math.min((bw - 2 * pad) / e.w, (bh - 2 * pad) / e.h);
@@ -163,7 +163,7 @@ export async function buildCatalogue({ products, cats, options, photoUrl, siteBa
   };
   const namesOf = (c) => [safe(c.name_sr), safe(c.name_fr), safe(c.name_en)];
   const countLine = (n) => `${n} ${srPlural(n, 'артикал', 'артикла', 'артикала')}  ·  ${n} article${n > 1 ? 's' : ''}  ·  ${n} item${n > 1 ? 's' : ''}`;
-  const pageOf = () => { const p = doc.addPage([W, H]); rect(p, 0, 0, W, H, IVORY); return p; };
+  const pageOf = () => { const p = doc.addPage([W, H]); rect(p, 0, 0, W, H, PAGE); return p; };
 
   // ----- cover -----
   onProgress('Slažem stranice…');
