@@ -407,7 +407,7 @@ function adminPage() {
             <button class="btn btn--primary" type="button" data-pdf-refresh>Osveži PDF</button>
             <button class="btn" type="button" data-pdf-get hidden>Pregledaj PDF</button>
           </div>
-          <p class="pdfcard__help">Osvežite ga kad uvezete nove artikle ili promenite cene, nazive ili slike. Traje oko pola minuta, a stranica mora ostati otvorena.</p>
+          <p class="pdfcard__help">Osvežava se sam, otprilike minut posle poslednje izmene artikala, cena, naziva, slika ili kategorija. Dok traje, ostavite ovu stranicu otvorenom. Dugme služi da ga osvežite odmah.</p>
         </section>
       </section>
 

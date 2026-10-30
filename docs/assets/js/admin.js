@@ -71,7 +71,7 @@ function signedOut(msg = 'Sesija je istekla. Prijavite se ponovo.') {
 async function db(path, { method = 'GET', body, prefer } = {}) {
   const t = await token();
   try {
-    return await call(`${C.url}/rest/v1/${path}`, {
+    const res = await call(`${C.url}/rest/v1/${path}`, {
       method,
       headers: {
         apikey: C.key, Authorization: `Bearer ${t}`,
@@ -79,6 +79,8 @@ async function db(path, { method = 'GET', body, prefer } = {}) {
       },
       body: body !== undefined ? JSON.stringify(body) : undefined,
     });
+    if (method !== 'GET') pdfChanged(path, body);
+    return res;
   } catch (e) {
     if (e.status === 401) throw signedOut();
     throw e;
@@ -274,30 +276,36 @@ async function drawPdfCard() {
     state.textContent = 'Ne mogu da proverim PDF. Pokušajte ponovo kasnije.';
   }
 }
-async function refreshPdf(btn) {
+// the PDF made from the database as it is now, without touching what is on the screen
+async function makePdf(say) {
+  say('Učitavam artikle…');
+  const [products, cats] = await Promise.all([Q.products(), Q.cats()]);
+  const { buildCatalogue } = await import('./catalogue-pdf.js?v=13178fb3eb');
+  const r = await buildCatalogue({
+    products, cats, options: D.options,
+    photoUrl: (src) => photoUrl(SITE, src, true), siteBase: SITE, onProgress: say,
+  });
+  say('Čuvam PDF…');
+  const t = await token();
+  await call(`${C.url}/storage/v1/object/catalogue/${PDF_NAME}`, {
+    method: 'POST',
+    headers: { apikey: C.key, Authorization: `Bearer ${t}`, 'Content-Type': 'application/pdf', 'x-upsert': 'true', 'cache-control': 'no-cache' },
+    body: new Blob([r.bytes], { type: 'application/pdf' }),
+  });
+  try { localStorage.removeItem(PDF_DIRTY); } catch { /* fine */ }
+  return r;
+}
+async function refreshPdf() {
   if (pdfBusy) return;
   pdfBusy = true;
+  clearTimeout(pdfTimer);
   const state = $('[data-pdf-state]');
   const buttons = $$('[data-pdf-refresh]');
   const labels = buttons.map((b) => b.textContent);
   buttons.forEach((b) => { b.disabled = true; });
   const say = (s) => { state.textContent = s; buttons.forEach((b) => { b.textContent = s.length < 28 ? s : 'Pravim PDF…'; }); };
   try {
-    say('Učitavam artikle…');
-    await Promise.all([load('products', true), load('cats', true)]);
-    if (ST.products !== 'ready' || ST.cats !== 'ready') throw new Error('Ne mogu da učitam artikle. Proverite vezu i pokušajte ponovo.');
-    const { buildCatalogue } = await import('./catalogue-pdf.js?v=13178fb3eb');
-    const r = await buildCatalogue({
-      products: D.products, cats: D.cats, options: D.options,
-      photoUrl: (src) => photoUrl(SITE, src, true), siteBase: SITE, onProgress: say,
-    });
-    say('Čuvam PDF…');
-    const t = await token();
-    await call(`${C.url}/storage/v1/object/catalogue/${PDF_NAME}`, {
-      method: 'POST',
-      headers: { apikey: C.key, Authorization: `Bearer ${t}`, 'Content-Type': 'application/pdf', 'x-upsert': 'true', 'cache-control': 'no-cache' },
-      body: new Blob([r.bytes], { type: 'application/pdf' }),
-    });
+    const r = await makePdf(say);
     pdfBusy = false;
     await drawPdfCard();
     notify(`PDF je osvežen: ${plural(r.articles, 'artikal', 'artikla', 'artikala')}, ${plural(r.pages, 'strana', 'strane', 'strana')}.`);
@@ -309,6 +317,47 @@ async function refreshPdf(btn) {
     pdfBusy = false;
     buttons.forEach((b, i) => { b.disabled = false; b.textContent = labels[i]; });
   }
+}
+// After every change to articles, options or categories the PDF is made again, a minute after the last change.
+// A new stock figure does not change it. If the tab is closed before that, the next visit makes it first thing.
+const PDF_DIRTY = 'ek-pdf-dirty';
+const PDF_WAIT = 60000;
+let pdfTimer;
+function pdfChanged(path, body) {
+  if (!/^(products|options|categories)\b/.test(path)) return;
+  if (body && !Array.isArray(body) && typeof body === 'object' && Object.keys(body).every((k) => ['stock', 'min_stock', 'cost'].includes(k))) return;
+  try { localStorage.setItem(PDF_DIRTY, '1'); } catch { /* fine */ }
+  pdfLater(PDF_WAIT);
+}
+function pdfLater(ms) {
+  clearTimeout(pdfTimer);
+  pdfTimer = setTimeout(autoPdf, ms);
+  const state = $('[data-pdf-state]');
+  if (state && !pdfBusy) state.textContent = 'PDF će se osvežiti sam za oko minut, posle poslednje izmene.';
+}
+async function autoPdf() {
+  if (pdfBusy || !session) return;
+  if (!$('#app') || $('#app').hidden) return;
+  pdfBusy = true;
+  const state = $('[data-pdf-state]');
+  const say = (s) => { if (state) state.textContent = s; };
+  try {
+    await makePdf(say);
+    pdfBusy = false;
+    await drawPdfCard();
+  } catch (e) {
+    if (e.signedOut) return;
+    pdfBusy = false;
+    say(`PDF se nije osvežio sam. ${reason(e)} Pritisnite „Osveži PDF“.`);
+  } finally { pdfBusy = false; }
+}
+// on entering: a PDF that is missing, or was left stale by a closed tab, is made at once
+async function pdfOnEnter() {
+  let dirty = false;
+  try { dirty = !!localStorage.getItem(PDF_DIRTY); } catch { /* fine */ }
+  try {
+    if (dirty || !(await pdfInfo())) pdfLater(4000);
+  } catch (e) { /* the card says it */ }
 }
 async function openPdf(btn) {
   btn.disabled = true;
@@ -1848,6 +1897,7 @@ function showApp() {
   draw();
   load('orders');
   load('inquiries');
+  pdfOnEnter();
 }
 async function enter() {
   let ok;
