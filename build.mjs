@@ -90,7 +90,7 @@ const t = (lang, s) => esc(typo(lang, s));
 
 const CLIENT_STRINGS = ['add', 'added', 'noMatch', 'matches', 'photoOf', 'emptyTitle', 'emptyText', 'qty', 'less', 'more', 'remove', 'total', 'copy', 'copied', 'copyFailed', 'clearList', 'mailHello', 'kg', 'perKg', 'close', 'code', 'browse',
   'loginUnknown', 'loginTooMany', 'loginFailed', 'loginInvalid', 'checking', 'showPrices', 'signOut', 'pricesFor', 'guestList', 'formName', 'formParish', 'formPhone', 'formAddress', 'formNote', 'optional', 'nameMissing',
-  'sendOrder', 'sending', 'orderDone', 'orderDoneMail', 'orderDoneNoMail', 'downloadPdf', 'orderFailed', 'orderUnknown', 'orderUnavailable', 'done', 'outOfStock',
+  'sendOrder', 'sending', 'orderDone', 'orderDoneMail', 'orderDoneNoMail', 'downloadPdf', 'orderFailed', 'orderUnknown', 'orderUnavailable', 'done', 'outOfStock', 'related', 'inStock',
   'noPhoto', 'addLabel', 'acLink', 'list', 'cartLabel', 'askPrices', 'gatePriest', 'gateLead', 'gateUnknown', 'gateOther', 'gateOtherLead', 'emailPlaceholder', 'inqSend', 'inqDone', 'inqDoneText', 'inqFailed', 'inqTooMany',
   'emailMissing', 'emailLabel', 'quoteTitle', 'quoteLead', 'quoteOrder', 'quoteGone', 'quoteFor', 'cancel', 'choose', 'chooseLabel', 'optCount', 'optsHead', 'optsFind', 'optsFindPh', 'optsNone', 'orderChoose', 'candlesLead', 'candlesCaption', 'thFormat', 'thSize', 'thDetail', 'thPrice', 'thPriceUnit', 'thList'];
 
@@ -244,8 +244,9 @@ function page(lang, dir) {
         <div class="detail__thumbs" data-detail-thumbs></div>
       </div>
       <div class="detail__text">
+        <p class="detail__cat" data-detail-cat></p>
         <h2 id="detail-name" class="detail__name" data-detail-name></h2>
-        <p class="detail__meta" data-detail-meta></p>
+        <p class="detail__tags"><span class="detail__code" data-detail-code></span><span class="detail__stock" data-detail-stock hidden></span></p>
         <p class="detail__price" data-detail-price></p>
         <p class="detail__note" data-detail-note hidden></p>
         <button class="add add--big" type="button" data-detail-add>${t(lang, S.add)}</button>
@@ -257,6 +258,10 @@ function page(lang, dir) {
           </div>
           <ul class="opts__list" role="list" aria-labelledby="opts-head" data-opts-list></ul>
           <p class="opts__none" data-opts-none hidden>${t(lang, S.optsNone)}</p>
+        </div>
+        <div class="related" data-detail-related hidden>
+          <h3 class="related__head">${t(lang, S.related)}</h3>
+          <ul class="related__list" role="list" data-related-list></ul>
         </div>
       </div>
       <button class="iconbtn detail__close" type="button" data-close aria-label="${t(lang, S.close)}">${X}</button>
@@ -374,10 +379,16 @@ function adminPage() {
         <a href="#kategorije" data-tab="kategorije">Kategorije</a>
       </nav>
       <div class="bar__me">
-        <span class="bar__email" data-me></span>
-        <a class="btn btn--quiet btn--s" href="../" target="_blank" rel="noopener">Sajt</a>
-        <button class="btn btn--quiet btn--s" type="button" data-password>Lozinka</button>
-        <button class="btn btn--quiet btn--s" type="button" data-signout>Odjava</button>
+        <button class="btn btn--quiet btn--s profile__btn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="profile-menu" data-profile>
+          <svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="7" r="3.25" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 17c.8-3 3.2-4.5 6.5-4.5s5.7 1.5 6.5 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          Profil
+        </button>
+        <div class="profile" id="profile-menu" data-profile-menu hidden>
+          <p class="profile__who"><span class="profile__label">Prijavljeni ste kao</span><span class="profile__email" data-me></span></p>
+          <a class="profile__item" href="../" target="_blank" rel="noopener">Otvori sajt</a>
+          <button class="profile__item" type="button" data-password>Promena lozinke</button>
+          <button class="profile__item profile__item--out" type="button" data-signout>Odjava</button>
+        </div>
       </div>
     </header>
 

@@ -708,12 +708,36 @@ import * as R from './render.js?v=1381f84ccd';
     dImg.src = photo(f, false); dImg.width = w; dImg.height = h; dImg.alt = p.n;
     $$('button', dThumbs).forEach((b, j) => b.setAttribute('aria-current', j === i ? 'true' : 'false'));
   }
+  // a few more articles of the same category, with a photo, nearest by code first
+  const dRelated = $('[data-detail-related]');
+  const dRelList = $('[data-related-list]');
+  function drawRelated(code) {
+    const me = D.p[code];
+    const keys = Object.keys(D.p);
+    const at = keys.indexOf(code);
+    const more = keys.filter((k) => k !== code && D.p[k].c === me.c && D.p[k].ph.length)
+      .sort((x, y) => Math.abs(keys.indexOf(x) - at) - Math.abs(keys.indexOf(y) - at)).slice(0, 4);
+    dRelList.innerHTML = '';
+    dRelated.hidden = !more.length;
+    for (const k of more) {
+      const li = el('li', 'related__item');
+      const b = el('button', 'related__btn'); b.type = 'button';
+      const img = new Image(); img.alt = ''; img.loading = 'lazy'; img.decoding = 'async'; img.src = photo(D.p[k].ph[0][0]);
+      b.append(img, el('span', 'related__name', D.p[k].n));
+      b.addEventListener('click', () => openDetail(k, opener));
+      li.append(b); dRelList.append(li);
+    }
+  }
   function openDetail(code, from) {
     const p = D.p[code];
     if (!p || (!p.ph.length && !p.o)) return false;
     dCode = code; opener = from;
     $('[data-detail-name]').textContent = p.n;
-    $('[data-detail-meta]').textContent = `${D.cats[p.c]}, ${S.code.toLowerCase()} ${code}`;
+    $('[data-detail-cat]').textContent = D.cats[p.c];
+    $('[data-detail-code]').textContent = `${S.code} ${code}`;
+    const stock = $('[data-detail-stock]');
+    stock.hidden = !!p.o || !!p.out; stock.textContent = S.inStock;
+    drawRelated(code);
     paintDetailPrice();
     const note = $('[data-detail-note]');
     note.hidden = !p.note; note.textContent = p.note || '';
@@ -749,7 +773,8 @@ import * as R from './render.js?v=1381f84ccd';
       dAdd.setAttribute('aria-label', fmt(D.addLabel, { name: p.n }));
     }
     show(0); syncButtons();
-    detail.showModal();
+    if (!detail.open) detail.showModal();
+    detail.scrollTop = 0;
     // on a phone the search box would open the keyboard: start on the first option instead
     if (p.o) ($('.opt:not([hidden]) [data-add]', dOptsList) || $('[data-close]', detail)).focus({ preventScroll: true });
     return true;

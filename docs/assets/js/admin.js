@@ -1696,9 +1696,26 @@ document.addEventListener('click', (e) => {
   }
   if (t.matches('[data-delete-cat]')) { deleteCat(); return; }
   if (t.matches('[data-delete-priest]')) { deletePriest(); return; }
-  if (t.matches('[data-password]')) { passwordForm(); return; }
-  if (t.matches('[data-signout]')) { signOut(); }
+  if (t.matches('[data-password]')) { closeProfile(); passwordForm(); return; }
+  if (t.matches('[data-signout]')) { closeProfile(); signOut(); }
 });
+
+// the profile menu: who is signed in, the site, the password, sign out
+const profileBtn = $('[data-profile]');
+const profileMenu = $('[data-profile-menu]');
+function closeProfile(back = false) {
+  if (profileMenu.hidden) return;
+  profileMenu.hidden = true; profileBtn.setAttribute('aria-expanded', 'false');
+  if (back) profileBtn.focus();
+}
+profileBtn.addEventListener('click', () => {
+  const open = profileMenu.hidden;
+  profileMenu.hidden = !open; profileBtn.setAttribute('aria-expanded', String(open));
+  if (open) $('.profile__item', profileMenu).focus();
+});
+document.addEventListener('click', (e) => { if (!e.target.closest('.bar__me')) closeProfile(); });
+profileMenu.addEventListener('click', (e) => { if (e.target.closest('a')) closeProfile(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !profileMenu.hidden) closeProfile(true); });
 
 document.addEventListener('change', (e) => {
   const t = e.target;

@@ -8,7 +8,7 @@
   <meta name="robots" content="noindex, nofollow">
   <link rel="icon" href="../favicon.png" type="image/png">
   <link rel="preload" href="../assets/fonts/onest-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="../assets/css/admin.css?v=ed118fc2aa">
+  <link rel="stylesheet" href="../assets/css/admin.css?v=68404cdaa3">
 </head>
 <body class="adm">
   <a class="skip" href="#main">Preskoči na sadržaj</a>
@@ -49,10 +49,16 @@
         <a href="#kategorije" data-tab="kategorije">Kategorije</a>
       </nav>
       <div class="bar__me">
-        <span class="bar__email" data-me></span>
-        <a class="btn btn--quiet btn--s" href="../" target="_blank" rel="noopener">Sajt</a>
-        <button class="btn btn--quiet btn--s" type="button" data-password>Lozinka</button>
-        <button class="btn btn--quiet btn--s" type="button" data-signout>Odjava</button>
+        <button class="btn btn--quiet btn--s profile__btn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="profile-menu" data-profile>
+          <svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="7" r="3.25" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 17c.8-3 3.2-4.5 6.5-4.5s5.7 1.5 6.5 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          Profil
+        </button>
+        <div class="profile" id="profile-menu" data-profile-menu hidden>
+          <p class="profile__who"><span class="profile__label">Prijavljeni ste kao</span><span class="profile__email" data-me></span></p>
+          <a class="profile__item" href="../" target="_blank" rel="noopener">Otvori sajt</a>
+          <button class="profile__item" type="button" data-password>Promena lozinke</button>
+          <button class="profile__item profile__item--out" type="button" data-signout>Odjava</button>
+        </div>
       </div>
     </header>
 
@@ -160,6 +166,6 @@
   <noscript><p class="boot">Administracija radi samo sa uključenim JavaScriptom.</p></noscript>
 
   <script type="application/json" id="admin-config">{"url":"https://ivzzhtaksdwbhhioilsn.supabase.co","key":"sb_publishable_rxpulg5CJqz_TpV1brvBCQ_C2ioyLyW","userDomain":"magacin.example.com"}</script>
-  <script type="module" src="../assets/js/admin.js?v=e7fbae10cb"></script>
+  <script type="module" src="../assets/js/admin.js?v=d48d1ef19b"></script>
 </body>
 </html>
