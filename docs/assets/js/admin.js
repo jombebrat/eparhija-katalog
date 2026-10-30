@@ -327,17 +327,12 @@ async function refreshPdf() {
 const PDF_DIRTY = 'ek-pdf-dirty';
 const PDF_WAIT = 60000;
 let pdfTimer;
-function pdfChanged(path, body) {
-  if (!/^(products|options|categories)\b/.test(path)) return;
-  if (body && !Array.isArray(body) && typeof body === 'object' && Object.keys(body).every((k) => ['stock', 'min_stock', 'cost'].includes(k))) return;
-  try { localStorage.setItem(PDF_DIRTY, '1'); } catch { /* fine */ }
-  pdfLater(PDF_WAIT);
-}
+function pdfChanged() { /* the list is made once a day, see pdfOnEnter; the button does it at once */ }
 function pdfLater(ms) {
   clearTimeout(pdfTimer);
   pdfTimer = setTimeout(autoPdf, ms);
   const state = $('[data-pdf-state]');
-  if (state && !pdfBusy) state.textContent = 'PDF će se osvežiti sam za oko minut, posle poslednje izmene.';
+  if (state && !pdfBusy) state.textContent = 'PDF se pravi za trenutak, jer je stariji od jednog dana.';
 }
 async function autoPdf() {
   if (pdfBusy || !session) return;
@@ -356,12 +351,17 @@ async function autoPdf() {
   } finally { pdfBusy = false; }
 }
 // on entering: a PDF that is missing, or was left stale by a closed tab, is made at once
+const PDF_DAY = 24 * 3600 * 1000;
 async function pdfOnEnter() {
-  let dirty = false;
-  try { dirty = !!localStorage.getItem(PDF_DIRTY); } catch { /* fine */ }
-  try {
-    if (dirty || !(await pdfInfo())) pdfLater(4000);
-  } catch (e) { /* the card says it */ }
+  const check = async () => {
+    try {
+      const f = await pdfInfo();
+      const age = f ? Date.now() - new Date(f.updated_at || f.created_at).getTime() : Infinity;
+      if (age > PDF_DAY) pdfLater(4000);
+    } catch (e) { /* the card says it */ }
+  };
+  await check();
+  setInterval(check, 3600 * 1000);   // an admin tab left open overnight still makes it
 }
 async function openPdf(btn) {
   btn.disabled = true;

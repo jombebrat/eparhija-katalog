@@ -435,3 +435,4 @@ body.adm { font-size: var(--t-md); line-height: 1.5; background: var(--color-pap
   .opt-ed--head { display: none; }
 }
 
+.bar__pdf { margin-right: var(--space-2xs); }

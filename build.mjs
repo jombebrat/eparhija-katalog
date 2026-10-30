@@ -394,6 +394,7 @@ function adminPage() {
         <a href="#kategorije" data-tab="kategorije">Kategorije</a>
       </nav>
       <div class="bar__me">
+        <button class="btn btn--quiet btn--s bar__pdf" type="button" data-pdf-refresh title="Osveži PDF cenovnik">Osveži PDF</button>
         <button class="btn btn--quiet btn--s profile__btn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="profile-menu" data-profile>
           <svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="7" r="3.25" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 17c.8-3 3.2-4.5 6.5-4.5s5.7 1.5 6.5 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
           Profil
@@ -412,7 +413,6 @@ function adminPage() {
         <div class="screen__head">
           <div><h1 id="h-pregled">Pregled</h1><p class="screen__sub" data-today></p></div>
         </div>
-        <div class="region ov" data-region="overview"></div>
         <section class="panel pdfcard" aria-labelledby="h-pdf">
           <div class="panel__head"><h2 id="h-pdf">PDF cenovnik za članove</h2><p class="panel__sub">Svi artikli sa slikama i cenama, na srpskom, francuskom i engleskom, u jednom fajlu. Članovi ga preuzimaju sa sajta, posetioci bez prijave ga ne vide.</p></div>
           <p class="pdfcard__state" data-pdf-state aria-live="polite">Proveravam…</p>
@@ -420,8 +420,9 @@ function adminPage() {
             <button class="btn btn--primary" type="button" data-pdf-refresh>Osveži PDF</button>
             <button class="btn" type="button" data-pdf-get hidden>Pregledaj PDF</button>
           </div>
-          <p class="pdfcard__help">Osvežava se sam, otprilike minut posle poslednje izmene artikala, cena, naziva, slika ili kategorija. Dok traje, ostavite ovu stranicu otvorenom. Dugme služi da ga osvežite odmah.</p>
+          <p class="pdfcard__help">PDF se osvežava sam jednom dnevno, čim otvorite administraciju, i pravi se u dve verzije: sa cenama i bez cena. Dugme ga osvežava odmah, na primer posle unosa novih artikala. Dok traje, ostavite stranicu otvorenom.</p>
         </section>
+        <div class="region ov" data-region="overview"></div>
       </section>
 
       <section class="screen" data-screen="upiti" aria-labelledby="h-upiti" hidden>
