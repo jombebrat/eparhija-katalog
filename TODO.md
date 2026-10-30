@@ -22,3 +22,19 @@ Redosled: prvo 1 i 3, jer najviše štede posao.
   - Posebna radnja: primljeno / izdato / ispravka, sa količinom i razlogom.
   - Svako kretanje se beleži (ko, kada, koliko, zašto), a stanje se računa iz njih.
   - Sada se stanje samo prepisuje, bez traga.
+
+## Cene za nečlanove (viša cena na sajtu)
+
+Ideja: članovi (crkve) i dalje kupuju po nabavnoj ceni, a ko nije član vidi višu cenu odmah, bez upita đakonu.
+
+- [ ] **Javna cena na sajtu za one koji se nisu prijavili**
+  - Prijavljen član (mejl sa spiska) vidi sadašnje, nabavne cene, kao do sada.
+  - Posetilac bez prijave vidi višu cenu i može da poruči sam, bez slanja upita.
+  - Kako se određuje viša cena, da se odluči: jedan procenat u adminu (npr. +25%), ili posebno polje „cena za ostale“ po artiklu (151 unos), ili nivo cene po članu na spisku.
+- [ ] **Upit đakonu ostaje samo za kupovinu na veliko**
+  - Dugme „Zatraži cene“ postaje „Zatraži popust za veću količinu“, sa poljem za količinu i napomenu.
+  - Đakon odgovara ponudom sa posebnim cenama (tabela ponude već dozvoljava ručnu izmenu cene).
+- [ ] **Šta treba prilagoditi**
+  - Porudžbina nečlana: funkcija `order` sada računa cene samo za članove, treba dodati višu cenu i za goste (i naplatu, vidi IBAN/Stripe).
+  - PDF cenovnik ostaje samo za članove (nabavne cene); za javnost se po želji pravi druga verzija ili samo „bez cena“.
+  - Pravno: u mejlu/uslovima navesti da su cene za crkve i ustanove eparhije posebne, a ostalima važi javna cena.
