@@ -68,7 +68,7 @@ const leaf = { 'render.js': hashOf('js/render.js'), 'tokens.css': hashOf('css/to
 const css3 = { 'tokens.css': leaf['tokens.css'], 'base.css': leaf['base.css'], 'fonts.css': leaf['fonts.css'] };
 const V = {
   app: stamp('js/app.js', { 'render.js': leaf['render.js'] }),
-  admin: stamp('js/admin.js', { 'render.js': leaf['render.js'] }),
+  admin: stamp('js/admin.js', { 'render.js': leaf['render.js'], 'catalogue-pdf.js': hashOf('js/catalogue-pdf.js') }),
   account: stamp('js/account.js', { 'render.js': leaf['render.js'] }),
   site: stamp('css/site.css', css3),
   adminCss: stamp('css/admin.css', css3),
@@ -92,7 +92,7 @@ const CLIENT_STRINGS = ['add', 'added', 'noMatch', 'matches', 'photoOf', 'emptyT
   'loginUnknown', 'loginTooMany', 'loginFailed', 'loginInvalid', 'checking', 'showPrices', 'signOut', 'pricesFor', 'guestList', 'formName', 'formParish', 'formPhone', 'formAddress', 'formNote', 'optional', 'nameMissing',
   'sendOrder', 'sending', 'orderDone', 'orderDoneMail', 'orderDoneNoMail', 'downloadPdf', 'orderFailed', 'orderUnknown', 'orderUnavailable', 'done', 'outOfStock', 'related', 'inStock',
   'noPhoto', 'addLabel', 'acLink', 'list', 'cartLabel', 'askPrices', 'gatePriest', 'gateLead', 'gateUnknown', 'gateOther', 'gateOtherLead', 'emailPlaceholder', 'inqSend', 'inqDone', 'inqDoneText', 'inqFailed', 'inqTooMany',
-  'emailMissing', 'emailLabel', 'quoteTitle', 'quoteLead', 'quoteOrder', 'quoteGone', 'quoteFor', 'cancel', 'choose', 'chooseLabel', 'optCount', 'optsHead', 'optsFind', 'optsFindPh', 'optsNone', 'orderChoose', 'candlesLead', 'candlesCaption', 'thFormat', 'thSize', 'thDetail', 'thPrice', 'thPriceUnit', 'thList'];
+  'emailMissing', 'emailLabel', 'quoteTitle', 'quoteLead', 'quoteOrder', 'quoteGone', 'quoteFor', 'cancel', 'pdfBtn', 'pdfWorking', 'pdfNone', 'pdfFailed', 'choose', 'chooseLabel', 'optCount', 'optsHead', 'optsFind', 'optsFindPh', 'optsNone', 'orderChoose', 'candlesLead', 'candlesCaption', 'thFormat', 'thSize', 'thDetail', 'thPrice', 'thPriceUnit', 'thList'];
 
 const X = '<svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>';
 // national flags, drawn small: France, the United Kingdom (for English), Serbia (the civil flag)
@@ -107,6 +107,7 @@ const flagLinks = (lang, hrefOf) => LANGS.map((l) => `<a href="${hrefOf(l)}" hre
 const ICON = {
   cart: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 3.5h2.2l2.5 11.4a1.6 1.6 0 0 0 1.6 1.3h8.5a1.6 1.6 0 0 0 1.6-1.2l1.8-7.5H6"/><circle cx="9.5" cy="20" r="1.4"/><circle cx="17.5" cy="20" r="1.4"/></svg>',
   person: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.6-4 4.6-6 8-6s6.4 2 8 6"/></svg>',
+  pdf: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg>',
   search: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>',
 };
 
@@ -180,6 +181,7 @@ function page(lang, dir) {
       </nav>
       <div class="account" data-account hidden>
         <button class="listbtn listbtn--login" type="button" data-login>${t(lang, S.memberLogin)}</button>
+        <button class="listbtn listbtn--pdf" type="button" data-pdf hidden>${ICON.pdf}<span data-pdf-label aria-live="polite">${t(lang, S.pdfBtn)}</span></button>
         <a class="listbtn listbtn--profile" data-profile hidden href="${root}${thisLang.dir}${S.acSlug}/">${ICON.person}${t(lang, S.acLink)}</a>
       </div>
     </div>
@@ -398,6 +400,15 @@ function adminPage() {
           <div><h1 id="h-pregled">Pregled</h1><p class="screen__sub" data-today></p></div>
         </div>
         <div class="region ov" data-region="overview"></div>
+        <section class="panel pdfcard" aria-labelledby="h-pdf">
+          <div class="panel__head"><h2 id="h-pdf">PDF cenovnik za članove</h2><p class="panel__sub">Svi artikli sa slikama i cenama, na srpskom, francuskom i engleskom, u jednom fajlu. Članovi ga preuzimaju sa sajta, posetioci bez prijave ga ne vide.</p></div>
+          <p class="pdfcard__state" data-pdf-state aria-live="polite">Proveravam…</p>
+          <div class="pdfcard__actions">
+            <button class="btn btn--primary" type="button" data-pdf-refresh>Osveži PDF</button>
+            <button class="btn" type="button" data-pdf-get hidden>Pregledaj PDF</button>
+          </div>
+          <p class="pdfcard__help">Osvežite ga kad uvezete nove artikle ili promenite cene, nazive ili slike. Traje oko pola minuta, a stranica mora ostati otvorena.</p>
+        </section>
       </section>
 
       <section class="screen" data-screen="upiti" aria-labelledby="h-upiti" hidden>
@@ -413,7 +424,7 @@ function adminPage() {
       <section class="screen" data-screen="artikli" aria-labelledby="h-artikli" hidden>
         <div class="screen__head">
           <h1 id="h-artikli">Artikli i stanje</h1>
-          <div class="screen__actions"><button class="btn" type="button" data-csv="products">Izvezi u Excel (CSV)</button><button class="btn btn--primary" type="button" data-new="product">Novi artikal</button></div>
+          <div class="screen__actions"><button class="btn" type="button" data-pdf-refresh>Osveži PDF cenovnik</button><button class="btn" type="button" data-csv="products">Izvezi u Excel (CSV)</button><button class="btn btn--primary" type="button" data-new="product">Novi artikal</button></div>
         </div>
         <div class="toolbar" role="search">
           <div class="field field--grow"><label for="q-artikli">Pretraga</label><input class="input" id="q-artikli" type="search" name="q" autocomplete="off" spellcheck="false" placeholder="P011, кадионица" data-q></div>

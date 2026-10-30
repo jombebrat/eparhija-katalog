@@ -342,6 +342,11 @@ a.account__who:focus-visible { outline: 2px solid var(--color-accent-soft); outl
 .account__out:active { background: var(--color-ink-2); }
 .account__out:focus-visible { outline: 2px solid var(--color-accent-soft); outline-offset: 2px; }
 .listbtn--login { padding: 0 var(--space-md); }
+.listbtn--pdf { padding: 0 var(--space-md) 0 var(--space-sm); border-color: var(--color-accent-soft-2); background: var(--color-accent-soft); color: var(--color-accent-soft-ink); }
+.listbtn--pdf:hover { border-color: var(--color-accent-soft-2); background: var(--color-accent-soft-2); }
+.listbtn--pdf:active { background: var(--color-accent-soft-2); }
+.listbtn--pdf:disabled { border-color: var(--color-rule); background: var(--color-paper-3); color: var(--color-muted); cursor: progress; }
+.listbtn--pdf svg { flex-shrink: 0; }
 
 .textbtn { min-height: 40px; padding: 0; border: 0; background: transparent; color: var(--color-ink-2); font: 600 var(--text-sm)/1 var(--font-body); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.2em; cursor: pointer; transition: color var(--dur-micro) var(--ease-out); }
 .textbtn:hover { color: var(--color-ink); text-decoration-color: var(--color-accent); }
@@ -419,7 +424,9 @@ a.account__who:focus-visible { outline: 2px solid var(--color-accent-soft); outl
   .l-short { display: inline; }
   .langs a { gap: var(--space-2xs); padding: 0 var(--space-2xs); }
   .langs { gap: 0; }
-  .slab .listbtn:not(.listbtn--login):not(.listbtn--profile) { display: none; }
+  .slab .listbtn:not(.listbtn--login):not(.listbtn--profile):not(.listbtn--pdf) { display: none; }
+  .listbtn--pdf { min-height: 40px; padding: 0 var(--space-xs); font-size: var(--text-xs); }
+  .account { gap: var(--space-xs); }
   .listbtn--profile { min-height: 40px; padding: 0 var(--space-sm) 0 var(--space-xs); }
   .account__who { display: none; }
   .listbtn--login { min-height: 40px; padding: 0 var(--space-xs); font-size: var(--text-xs); }

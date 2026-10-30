@@ -1,4 +1,5 @@
 // POST { email } -> { priest: { name, parish, phone, address }, prices: { CODE: price } }
+// POST { email, pdf: true } -> { url }: a five-minute link to the price-list PDF (private bucket `catalogue`), for members only
 // Prices are only returned for an email on the members' list (table public.priests, active = true).
 // Failed checks are counted per IP so nobody can try addresses one after another.
 import { createClient } from 'npm:@supabase/supabase-js@2';
@@ -27,8 +28,8 @@ Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response(null, { headers: CORS });
   if (req.method !== 'POST') return json({ error: 'method' }, 405);
 
-  let email = '';
-  try { email = String((await req.json()).email ?? '').trim().toLowerCase(); } catch { /* empty body */ }
+  let email = '', wantPdf = false;
+  try { const b = await req.json(); email = String(b.email ?? '').trim().toLowerCase(); wantPdf = b.pdf === true; } catch { /* empty body */ }
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) || email.length > 200) return json({ error: 'invalid' }, 400);
 
   const ip = clientIp(req);
@@ -46,6 +47,12 @@ Deno.serve(async (req) => {
   if (!priest) {
     await new Promise((r) => setTimeout(r, 400));
     return json({ error: 'unknown' }, 404);
+  }
+
+  if (wantPdf) {
+    const { data, error: e3 } = await db.storage.from('catalogue').createSignedUrl('cenovnik.pdf', 300, { download: 'Magacin-Eparhije-cenovnik.pdf' });
+    if (e3 || !data?.signedUrl) return json({ error: 'nopdf' }, 404);
+    return json({ url: data.signedUrl });
   }
 
   const { data: products, error: e2 } = await db.from('products').select('code, price').eq('active', true);

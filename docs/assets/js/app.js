@@ -131,6 +131,22 @@ import * as R from './render.js?v=1381f84ccd';
   const account = $('[data-account]');
   const loginBtn = $('[data-login]');
   const profile = $('[data-profile]');
+  // the members' PDF price list: a short-lived link, given only for an email on the members' list
+  const pdfBtn = $('[data-pdf]');
+  const pdfLabel = $('[data-pdf-label]');
+  let pdfTimer;
+  const pdfSay = (s, ms = 0) => { clearTimeout(pdfTimer); pdfLabel.textContent = s; if (ms) pdfTimer = setTimeout(() => { pdfLabel.textContent = S.pdfBtn; }, ms); };
+  pdfBtn?.addEventListener('click', async () => {
+    const email = store.get('ek-email');
+    if (!email || pdfBtn.disabled) return;
+    pdfBtn.disabled = true; pdfSay(S.pdfWorking);
+    try {
+      const { status, data } = await api('prices', { email, pdf: true });
+      if (status === 200 && data.url) { pdfSay(S.pdfBtn); location.href = data.url; }
+      else pdfSay(status === 404 && data.error === 'nopdf' ? S.pdfNone : S.pdfFailed, 5000);
+    } catch { pdfSay(S.pdfFailed, 5000); }
+    pdfBtn.disabled = false;
+  });
   function paintPrices() {
     document.documentElement.classList.toggle('priced', !!prices);
     $$('[data-price]').forEach((el) => {
@@ -142,6 +158,7 @@ import * as R from './render.js?v=1381f84ccd';
       account.hidden = !D.api;
       loginBtn.hidden = !!prices;
       profile.hidden = !prices;
+      pdfBtn.hidden = !prices;
     }
     if (drawer.open) renderList();
     if (detail.open && dCode) paintDetailPrice();

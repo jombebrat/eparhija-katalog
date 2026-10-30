@@ -157,3 +157,12 @@ tools/                 skripte za izvlačenje podataka iz .pptx kataloga; erplai
 - Artikli od 37. do 47. slajda su podeljeni u tri kategorije: krstići i privesci, crkveni pribor, tamjan i briket.
 - Sveće: format „10/1“ je protumačen kao broj sveća u kilogramu, a cena kao cena po kilogramu. Proveriti sa magacinom.
 - P057 i P099 (tamjan u tubi) nemaju fotografiju u katalogu.
+
+## PDF cenovnik za članove
+
+Jedan PDF sa svim artiklima, slikama i cenama; nazivi na srpskom, francuskom i engleskom. Prijavljeni član ga preuzima dugmetom „Preuzmi PDF“ u zaglavlju sajta.
+
+- **Pravi ga admin panel, u pregledaču** (`docs/assets/js/catalogue-pdf.js`, pdf-lib i fontkit iz `docs/assets/vendor`, font Onest iz `docs/assets/fonts/pdf`). Dugme „Osveži PDF“ je u Pregledu (kartica „PDF cenovnik za članove“) i u Artiklima. Uzima artikle, opcije i cene kakvi su u bazi, traje oko pola minuta, stranica mora ostati otvorena.
+- **Čuva se u privatnom bucketu `catalogue`** (`cenovnik.pdf`); piše i čita ga samo admin (migracija `20261030210000_catalogue_pdf.sql`).
+- **Član ga dobija preko funkcije `prices`**: `POST { email, pdf: true }` vraća petominutni potpisani link, samo za mejl sa aktivnog spiska članova (isto ograničenje pokušaja kao za cene). Bez PDF-a vraća 404 `nopdf`.
+- Posle uvoza novih artikala, promene cena ili slika treba pritisnuti „Osveži PDF“; sam se ne osvežava.

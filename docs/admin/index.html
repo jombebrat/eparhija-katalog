@@ -8,7 +8,7 @@
   <meta name="robots" content="noindex, nofollow">
   <link rel="icon" href="../favicon.png" type="image/png">
   <link rel="preload" href="../assets/fonts/onest-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="../assets/css/admin.css?v=68404cdaa3">
+  <link rel="stylesheet" href="../assets/css/admin.css?v=792889bc62">
 </head>
 <body class="adm">
   <a class="skip" href="#main">Preskoči na sadržaj</a>
@@ -68,6 +68,15 @@
           <div><h1 id="h-pregled">Pregled</h1><p class="screen__sub" data-today></p></div>
         </div>
         <div class="region ov" data-region="overview"></div>
+        <section class="panel pdfcard" aria-labelledby="h-pdf">
+          <div class="panel__head"><h2 id="h-pdf">PDF cenovnik za članove</h2><p class="panel__sub">Svi artikli sa slikama i cenama, na srpskom, francuskom i engleskom, u jednom fajlu. Članovi ga preuzimaju sa sajta, posetioci bez prijave ga ne vide.</p></div>
+          <p class="pdfcard__state" data-pdf-state aria-live="polite">Proveravam…</p>
+          <div class="pdfcard__actions">
+            <button class="btn btn--primary" type="button" data-pdf-refresh>Osveži PDF</button>
+            <button class="btn" type="button" data-pdf-get hidden>Pregledaj PDF</button>
+          </div>
+          <p class="pdfcard__help">Osvežite ga kad uvezete nove artikle ili promenite cene, nazive ili slike. Traje oko pola minuta, a stranica mora ostati otvorena.</p>
+        </section>
       </section>
 
       <section class="screen" data-screen="upiti" aria-labelledby="h-upiti" hidden>
@@ -89,7 +98,7 @@
       <section class="screen" data-screen="artikli" aria-labelledby="h-artikli" hidden>
         <div class="screen__head">
           <h1 id="h-artikli">Artikli i stanje</h1>
-          <div class="screen__actions"><button class="btn" type="button" data-csv="products">Izvezi u Excel (CSV)</button><button class="btn btn--primary" type="button" data-new="product">Novi artikal</button></div>
+          <div class="screen__actions"><button class="btn" type="button" data-pdf-refresh>Osveži PDF cenovnik</button><button class="btn" type="button" data-csv="products">Izvezi u Excel (CSV)</button><button class="btn btn--primary" type="button" data-new="product">Novi artikal</button></div>
         </div>
         <div class="toolbar" role="search">
           <div class="field field--grow"><label for="q-artikli">Pretraga</label><input class="input" id="q-artikli" type="search" name="q" autocomplete="off" spellcheck="false" placeholder="P011, кадионица" data-q></div>
@@ -166,6 +175,6 @@
   <noscript><p class="boot">Administracija radi samo sa uključenim JavaScriptom.</p></noscript>
 
   <script type="application/json" id="admin-config">{"url":"https://ivzzhtaksdwbhhioilsn.supabase.co","key":"sb_publishable_rxpulg5CJqz_TpV1brvBCQ_C2ioyLyW","userDomain":"magacin.example.com"}</script>
-  <script type="module" src="../assets/js/admin.js?v=d48d1ef19b"></script>
+  <script type="module" src="../assets/js/admin.js?v=4ea5dde3e2"></script>
 </body>
 </html>
