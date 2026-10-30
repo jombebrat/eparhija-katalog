@@ -163,6 +163,7 @@ tools/                 skripte za izvlačenje podataka iz .pptx kataloga; erplai
 Jedan PDF sa svim artiklima, slikama i cenama; nazivi na srpskom, francuskom i engleskom. Prijavljeni član ga preuzima dugmetom „Preuzmi PDF“ u zaglavlju sajta.
 
 - **Pravi ga admin panel, u pregledaču** (`docs/assets/js/catalogue-pdf.js`, pdf-lib i fontkit iz `docs/assets/vendor`, font Onest iz `docs/assets/fonts/pdf`). Dugme „Osveži PDF“ je u Pregledu (kartica „PDF cenovnik za članove“) i u Artiklima. Uzima artikle, opcije i cene kakvi su u bazi, traje oko pola minuta, stranica mora ostati otvorena.
+- **Dva fajla**: `cenovnik.pdf` (sa cenama) i `cenovnik-bez-cena.pdf` (umesto cene je linija za upis, za parohije koje dopisuju svoje cene). Admin pravi oba odjednom; pri klikanju na „Preuzmi PDF“ član bira koji želi.
 - **Čuva se u privatnom bucketu `catalogue`** (`cenovnik.pdf`); piše i čita ga samo admin (migracija `20261030210000_catalogue_pdf.sql`).
 - **Član ga dobija preko funkcije `prices`**: `POST { email, pdf: true }` vraća petominutni potpisani link, samo za mejl sa aktivnog spiska članova (isto ograničenje pokušaja kao za cene). Bez PDF-a vraća 404 `nopdf`.
 - - **Osvežava se sam:** minut posle poslednje izmene artikala, opcija ili kategorija u adminu (nova količina na stanju ga ne pokreće). Ako se stranica zatvori pre toga, ostaje zabeleženo (`ek-pdf-dirty` u pregledaču) pa se napravi čim se admin sledeći put otvori; napravi se i kad PDF uopšte ne postoji. Dugme „Osveži PDF“ radi isto odmah.
