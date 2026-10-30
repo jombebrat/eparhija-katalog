@@ -14,6 +14,7 @@
   --color-error-soft: oklch(95.5% 0.025 27); --color-error-ink: oklch(42% 0.16 27);
   --color-success-soft: oklch(95% 0.03 150); --color-success-ink: oklch(36% 0.09 150);
   --bar-h: 64px;
+  --photo-bg: oklch(99% 0.003 100);
   --color-chart-soft: oklch(78% 0.1 275);
   --adm-bg: oklch(97.2% 0.004 265);
   --adm-shadow: 0 1px 2px oklch(20% 0.02 265 / 0.05), 0 4px 16px oklch(20% 0.02 265 / 0.04);
@@ -504,7 +505,7 @@ body.adm { font-size: var(--t-md); line-height: 1.5; background: var(--adm-bg); 
   --color-scrim: oklch(5% 0 0 / 0.6); --color-chart-soft: oklch(48% 0.1 275);
   --color-on-ink-2: oklch(40% 0.01 265);
   }
-  :root:not([data-theme="light"]) .c-photo img, :root:not([data-theme="light"]) .toplist__img img { mix-blend-mode: normal; background: #fff; }
+  :root:not([data-theme="light"]) .c-photo img, :root:not([data-theme="light"]) .toplist__img img { mix-blend-mode: normal; background: var(--photo-bg); }
 }
 :root[data-theme="dark"] {
   color-scheme: dark;
@@ -520,10 +521,10 @@ body.adm { font-size: var(--t-md); line-height: 1.5; background: var(--adm-bg); 
   --color-scrim: oklch(5% 0 0 / 0.6); --color-chart-soft: oklch(48% 0.1 275);
   --color-on-ink-2: oklch(40% 0.01 265);
 }
-:root[data-theme="dark"] .c-photo img, :root[data-theme="dark"] .toplist__img img { mix-blend-mode: normal; background: #fff; }
+:root[data-theme="dark"] .c-photo img, :root[data-theme="dark"] .toplist__img img { mix-blend-mode: normal; background: var(--photo-bg); }
 
-.theme { display: inline-flex; padding: 3px; border: var(--rule-hair) solid var(--color-rule); border-radius: 10px; background: var(--color-paper); }
-.theme button { position: relative; display: inline-grid; place-items: center; width: 34px; height: 30px; border: 0; border-radius: 7px; background: transparent; color: var(--color-muted); cursor: pointer; }
+.theme { display: inline-flex; padding: 4px; border: var(--rule-hair) solid var(--color-rule); border-radius: 10px; background: var(--color-paper); }
+.theme button { position: relative; display: inline-grid; place-items: center; width: 32px; height: 28px; border: 0; border-radius: 7px; background: transparent; color: var(--color-muted); cursor: pointer; }
 .theme button::before { content: ""; position: absolute; inset: -6px -1px; }
 .theme button[aria-pressed="true"] { background: var(--color-paper-3); color: var(--color-ink); }
 @media (hover: hover) { .theme button:hover { color: var(--color-ink); } }
