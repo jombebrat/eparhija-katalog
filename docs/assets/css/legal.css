@@ -1,7 +1,7 @@
 /* Hallmark · shape: content page · genre: editorial · theme: Ink (the catalogue's own)
  * nav: the catalogue's slab · signature: the company's register entry, read as a ledger of label and value · states: static
  * axes: light/grotesk-sans/chromatic-gold · contrast: pass · v2.0.0 */
-@import url("./site.css?v=b73b8bb16a");
+@import url("./site.css?v=af7ec5d900");
 
 .legal { padding-block: var(--space-xl) var(--space-3xl); }
 .legal__inner { display: grid; gap: var(--space-2xl); }

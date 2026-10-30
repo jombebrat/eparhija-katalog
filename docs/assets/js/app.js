@@ -1,7 +1,7 @@
 // Catalogue: search, category chips, product detail, prices for members and the order list.
 // Everything on the page works without this file; it only adds the tools.
 // The catalogue itself is reloaded from the database, so what the admin changes shows at once.
-import * as R from './render.js?v=c6dbe39cc4';
+import * as R from './render.js?v=1381f84ccd';
 
 (() => {
   const D = JSON.parse(document.getElementById('catalogue-data').textContent);
@@ -226,9 +226,24 @@ import * as R from './render.js?v=c6dbe39cc4';
   loginBtn?.addEventListener('click', () => { opener = loginBtn; openLogin(); });
 
   // ---------- the list ----------
+  // a line is an article ("P011") or an article with its option ("P064#57": the icon of St Nicholas)
   const KEY = 'eparhija-katalog-liste';
+  const keyOf = (code, opt) => (opt ? `${code}#${opt}` : code);
+  const splitKey = (k) => { const i = k.lastIndexOf('#'); return i < 0 ? { code: k, opt: null } : { code: k.slice(0, i), opt: Number(k.slice(i + 1)) }; };
+  let OPT = {};
+  const indexOptions = () => { OPT = {}; for (const [code, p] of Object.entries(D.p)) for (const [id, l, sku, out] of p.o || []) OPT[id] = { code, l, sku, out: !!out }; };
+  indexOptions();
+  const itemOf = (k) => {
+    const { code, opt } = splitKey(k);
+    const p = D.p[code];
+    if (!p) return null;
+    if (opt === null) return p.o ? null : { code, opt, p, name: p.n, sku: code, out: !!p.out };
+    const o = OPT[opt];
+    return o && o.code === code ? { code, opt, p, o, name: `${p.n}, ${o.l}`, sku: o.sku || code, out: o.out } : null;
+  };
+  const payload = () => Object.entries(list).map(([k, qty]) => { const { code, opt } = splitKey(k); return { code, qty, ...(opt ? { option: opt } : {}) }; });
   let list = store.get(KEY, {}) || {};
-  for (const k of Object.keys(list)) if (!D.p[k] || !(list[k] > 0)) delete list[k];
+  for (const k of Object.keys(list)) if (!itemOf(k) || !(list[k] > 0)) delete list[k];
   const save = () => store.set(KEY, list);
 
   const drawer = $('[data-list-dialog]');
@@ -262,8 +277,9 @@ import * as R from './render.js?v=c6dbe39cc4';
   function syncButtons() {
     $$('[data-add]').forEach((b) => {
       const code = b.dataset.add;
-      const p = D.p[code];
-      if (!p) return;
+      const it = itemOf(code);
+      if (!it) return;
+      const p = { ...it.p, n: it.name };
       const q = list[code] || 0;
       const st = stepperFor(b);
       b.hidden = q > 0;
@@ -279,6 +295,13 @@ import * as R from './render.js?v=c6dbe39cc4';
       const unit = $('.qty__unit', st);
       unit.hidden = !p.kg; unit.textContent = p.kg ? S.kg : '';
     });
+    // "Choose" on a card says how many of its options are in the list
+    $$('[data-choose]').forEach((b) => {
+      const c = b.dataset.choose;
+      const m = Object.keys(list).filter((k) => splitKey(k).code === c).length;
+      b.textContent = m ? `${S.choose} (${m})` : S.choose;
+      b.classList.toggle('add--has', m > 0);
+    });
     const n = Object.keys(list).length;
     $$('[data-count]').forEach((c) => { c.textContent = n; });
     $$('[data-open-list]').forEach((b) => b.toggleAttribute('data-has', n > 0));
@@ -291,7 +314,7 @@ import * as R from './render.js?v=c6dbe39cc4';
     $('[data-q="1"]', stepperFor(b)).focus();
   });
 
-  const lineSum = (code) => (priceOf(code) ?? 0) * list[code];
+  const lineSum = (k) => (priceOf(splitKey(k).code) ?? 0) * list[k];
   const sum = () => Object.keys(list).reduce((a, k) => a + lineSum(k), 0);
   const el = (tag, cls, text) => { const x = document.createElement(tag); if (cls) x.className = cls; if (text !== undefined) x.textContent = text; return x; };
 
@@ -313,8 +336,10 @@ import * as R from './render.js?v=c6dbe39cc4';
       return;
     }
     for (const code of codes) {
-      const p = D.p[code];
-      const pr = priceOf(code);
+      const it = itemOf(code);
+      if (!it) continue;
+      const p = it.p;
+      const pr = priceOf(it.code);
       const row = el('div', 'line');
       row.innerHTML = `
         <span class="line__img">${p.ph[0] ? `<img src="${photo(p.ph[0][0])}" alt="" width="56" height="56">` : ''}</span>
@@ -332,21 +357,22 @@ import * as R from './render.js?v=c6dbe39cc4';
       const name = $('.line__name', row);
       name.textContent = p.n;
       const sub = el('span', 'line__sub');
-      if (!p.kg) sub.append(el('span', '', code));
+      if (it.o) sub.append(el('span', 'line__opt', it.o.l));
+      if (!p.kg) sub.append(el('span', '', it.sku));
       if (pr !== null) sub.append(el('span', '', `${money.format(pr)}${p.kg ? ` ${S.perKg}` : ''}`));
-      if (p.out) sub.append(el('span', 'line__out', S.outOfStock));
+      if (it.out) sub.append(el('span', 'line__out', S.outOfStock));
       name.append(sub);
       const lineTotal = $('.line__sum', row);
       lineTotal.textContent = pr === null ? '' : money.format(lineSum(code));
       const input = $('input', row);
       input.value = list[code];
-      input.setAttribute('aria-label', `${S.qty}: ${p.n}`);
+      input.setAttribute('aria-label', `${S.qty}: ${it.name}`);
       const [minus, plus] = $$('[data-step]', row);
-      minus.textContent = '−'; minus.setAttribute('aria-label', `${S.less}: ${p.n}`); minus.disabled = list[code] <= 1;
-      plus.textContent = '+'; plus.setAttribute('aria-label', `${S.more}: ${p.n}`);
+      minus.textContent = '−'; minus.setAttribute('aria-label', `${S.less}: ${it.name}`); minus.disabled = list[code] <= 1;
+      plus.textContent = '+'; plus.setAttribute('aria-label', `${S.more}: ${it.name}`);
       if (p.kg) $('.qty__unit', row).textContent = S.kg;
       const rm = $('[data-remove]', row);
-      rm.textContent = S.remove; rm.setAttribute('aria-label', `${S.remove}: ${p.n}`);
+      rm.textContent = S.remove; rm.setAttribute('aria-label', `${S.remove}: ${it.name}`);
       const set = (v) => {
         list[code] = Math.max(1, Math.min(999, Math.round(v) || 1));
         input.value = list[code]; minus.disabled = list[code] <= 1;
@@ -464,11 +490,13 @@ import * as R from './render.js?v=c6dbe39cc4';
       send.disabled = true; send.setAttribute('aria-busy', 'true'); send.textContent = S.sending; help.textContent = '';
       let res = null;
       try {
-        res = await api('order', { action: 'inquiry', lang: D.lang, items: Object.entries(list).map(([code, qty]) => ({ code, qty })), ...data, email });
+        res = await api('order', { action: 'inquiry', lang: D.lang, items: payload(), ...data, email });
       } catch { res = null; }
       send.disabled = false; send.removeAttribute('aria-busy'); send.textContent = S.inqSend;
       if (res && res.status === 200 && res.data.ok) { lastInquiry = res.data; renderList(); $('[data-done-close]', foot)?.focus(); return; }
-      help.textContent = res && res.status === 429 ? S.inqTooMany : res && res.status === 400 ? S.loginInvalid : S.inqFailed;
+      help.textContent = res && res.status === 429 ? S.inqTooMany
+        : res && res.data?.error === 'choose' ? fmt(S.orderChoose, { codes: (res.data.codes || []).join(', ') })
+        : res && res.status === 400 && res.data?.error === 'invalid' ? S.loginInvalid : S.inqFailed;
     });
   }
   function renderInquiryDone() {
@@ -508,7 +536,7 @@ import * as R from './render.js?v=c6dbe39cc4';
       const name = $('.line__name', row);
       name.textContent = l.name;
       const sub = el('span', 'line__sub');
-      sub.append(el('span', '', l.code), el('span', '', `${l.qty}${l.unit === 'kg' ? ` ${S.kg}` : ''} × ${money.format(l.price)}${l.unit === 'kg' ? ` ${S.perKg}` : ''}`));
+      sub.append(el('span', '', l.sku || l.code), el('span', '', `${l.qty}${l.unit === 'kg' ? ` ${S.kg}` : ''} × ${money.format(l.price)}${l.unit === 'kg' ? ` ${S.perKg}` : ''}`));
       name.append(sub);
       $('.line__sum', row).textContent = money.format(l.price * l.qty);
       body.append(row);
@@ -573,7 +601,7 @@ import * as R from './render.js?v=c6dbe39cc4';
       send.disabled = true; send.setAttribute('aria-busy', 'true'); send.textContent = S.sending; help.textContent = '';
       let res = null;
       try {
-        res = await api('order', { email: store.get('ek-email'), lang: D.lang, items: Object.entries(list).map(([code, qty]) => ({ code, qty })), ...data });
+        res = await api('order', { email: store.get('ek-email'), lang: D.lang, items: payload(), ...data });
       } catch { res = null; }
       send.disabled = false; send.removeAttribute('aria-busy'); send.textContent = S.sendOrder;
       if (res && res.status === 200 && res.data.number) {
@@ -584,6 +612,7 @@ import * as R from './render.js?v=c6dbe39cc4';
       }
       if (res && res.status === 404) { signOut(); help.textContent = S.loginUnknown; return; }
       help.textContent = res && res.data?.error === 'unknown_item' ? S.orderUnknown
+        : res && res.data?.error === 'choose' ? fmt(S.orderChoose, { codes: (res.data.codes || []).join(', ') })
         : res && res.data?.error === 'unavailable' ? fmt(S.orderUnavailable, { codes: (res.data.codes || []).join(', ') })
         : res && res.status === 429 ? S.loginTooMany : S.orderFailed;
     });
@@ -612,11 +641,10 @@ import * as R from './render.js?v=c6dbe39cc4';
   }
 
   function listText() {
-    const lines = Object.keys(list).map((code) => {
-      const p = D.p[code];
-      const pr = priceOf(code);
-      const price = pr === null ? '' : `  (${money.format(pr)}${p.kg ? ` ${S.perKg}` : ''})  = ${money.format(lineSum(code))}`;
-      return p.kg ? `${list[code]} ${S.kg}  ${p.n}${price}` : `${list[code]} ×  ${code}  ${p.n}${price}`;
+    const lines = Object.keys(list).map((k) => itemOf(k) && [k, itemOf(k)]).filter(Boolean).map(([k, it]) => {
+      const pr = priceOf(it.code);
+      const price = pr === null ? '' : `  (${money.format(pr)}${it.p.kg ? ` ${S.perKg}` : ''})  = ${money.format(lineSum(k))}`;
+      return it.p.kg ? `${list[k]} ${S.kg}  ${it.name}${price}` : `${list[k]} ×  ${it.sku}  ${it.name}${price}`;
     });
     return `${S.mailHello}\n\n${lines.join('\n')}${prices ? `\n\n${S.total}: ${money.format(sum())}` : ''}\n\n${D.mailFields.join('\n')}\n`;
   }
@@ -639,15 +667,50 @@ import * as R from './render.js?v=c6dbe39cc4';
     dPrice.hidden = v === null;
     dPrice.textContent = v === null ? '' : money.format(v) + (D.p[dCode].kg ? ` ${S.perKg}` : '');
   }
+  // the options of an article: one row each, with its own Add; a search box when the list is long
+  const dOpts = $('[data-detail-opts]');
+  const dOptsList = $('[data-opts-list]');
+  const dOptsQ = $('[data-opts-q]');
+  const dOptsNone = $('[data-opts-none]');
+  function drawOpts(code) {
+    const p = D.p[code];
+    $('[data-opts-head]').textContent = fmt(S.optsHead, { n: p.o.length });
+    $('[data-opts-findbox]').hidden = p.o.length < 8;
+    dOptsList.innerHTML = '';
+    for (const [id, l, sku, out] of p.o) {
+      const li = el('li', `opt${out ? ' opt--out' : ''}`);
+      li.dataset.search = norm(`${l} ${sku}`);
+      const txt = el('span', 'opt__text');
+      txt.append(el('span', 'opt__name', l), el('span', 'opt__code', sku));
+      li.append(txt);
+      if (out) li.append(el('span', 'opt__out', S.outOfStock));
+      else {
+        const b = el('button', 'add add--row', S.add); b.type = 'button';
+        b.dataset.add = keyOf(code, id);
+        li.append(b);
+      }
+      dOptsList.append(li);
+    }
+  }
+  function filterOpts() {
+    const terms = norm(dOptsQ.value).split(' ').filter(Boolean);
+    let n = 0;
+    $$('li', dOptsList).forEach((li) => { const hit = terms.every((t) => li.dataset.search.includes(t)); li.hidden = !hit; if (hit) n++; });
+    dOptsNone.hidden = n > 0;
+  }
+  dOptsQ.addEventListener('input', filterOpts);
+  dOptsQ.addEventListener('keydown', (e) => { if (e.key === 'Escape' && dOptsQ.value) { e.preventDefault(); dOptsQ.value = ''; filterOpts(); } });
+
   function show(i) {
     const p = D.p[dCode];
+    if (!p.ph.length) return;
     const [f, w, h] = p.ph[i];
     dImg.src = photo(f, false); dImg.width = w; dImg.height = h; dImg.alt = p.n;
     $$('button', dThumbs).forEach((b, j) => b.setAttribute('aria-current', j === i ? 'true' : 'false'));
   }
   function openDetail(code, from) {
     const p = D.p[code];
-    if (!p || !p.ph.length) return false;
+    if (!p || (!p.ph.length && !p.o)) return false;
     dCode = code; opener = from;
     $('[data-detail-name]').textContent = p.n;
     $('[data-detail-meta]').textContent = `${D.cats[p.c]}, ${S.code.toLowerCase()} ${code}`;
@@ -663,7 +726,19 @@ import * as R from './render.js?v=c6dbe39cc4';
       b.addEventListener('click', () => show(i));
       dThumbs.append(b);
     });
-    if (p.out) {
+    $('[data-detail-photo]').hidden = !p.ph.length;
+    dOpts.hidden = !p.o;
+    if (p.o) {
+      // the article is chosen through its options; a search that found it by a saint's name narrows them
+      delete dAdd.dataset.add;
+      if (dAdd._step) dAdd._step.hidden = true;
+      dAdd.hidden = true;
+      drawOpts(code);
+      const t = norm(q.value).split(' ').filter(Boolean);
+      const own = norm(`${p.n} ${code}`);
+      dOptsQ.value = t.length && !t.every((x) => own.includes(x)) && p.o.some(([, l, sku]) => t.every((x) => norm(`${l} ${sku}`).includes(x))) ? q.value.trim() : '';
+      filterOpts();
+    } else if (p.out) {
       delete dAdd.dataset.add;
       if (dAdd._step) dAdd._step.hidden = true;
       dAdd.hidden = false; dAdd.disabled = true; dAdd.textContent = S.outOfStock;
@@ -675,12 +750,19 @@ import * as R from './render.js?v=c6dbe39cc4';
     }
     show(0); syncButtons();
     detail.showModal();
+    // on a phone the search box would open the keyboard: start on the first option instead
+    if (p.o) ($('.opt:not([hidden]) [data-add]', dOptsList) || $('[data-close]', detail)).focus({ preventScroll: true });
     return true;
   }
   document.addEventListener('click', (e) => {
     const a = e.target.closest('[data-detail]');
     if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return;
     if (openDetail(a.dataset.detail, a.closest('.card')?.querySelector('.card__name a') || a)) e.preventDefault();
+  });
+  // "Choose" on a card opens the article with its options
+  document.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-choose]');
+    if (b) openDetail(b.dataset.choose, b);
   });
 
   // ---------- dialogs: close on button, backdrop, Escape; focus returns ----------
@@ -695,12 +777,13 @@ import * as R from './render.js?v=c6dbe39cc4';
   async function refreshCatalogue() {
     const head = { apikey: D.api.key };
     const cols = 'code,category,name_fr,name_en,name_sr,note_fr,note_en,note_sr,unit,available,photos,sort';
-    const [rc, rp] = await Promise.all([
+    const [rc, rp, ro] = await Promise.all([
       fetch(`${D.api.url}/rest/v1/categories?select=*&order=sort`, { headers: head }),
       fetch(`${D.api.url}/rest/v1/products?select=${cols}&active=eq.true&order=sort`, { headers: head }),
+      fetch(`${D.api.url}/rest/v1/options?select=id,product,sku,label_sr,label_fr,label_en,available,active,sort&active=eq.true&order=product,sort`, { headers: head }),
     ]);
-    if (!rc.ok || !rp.ok) return;
-    const model = R.fromDb(await rc.json(), await rp.json());
+    if (!rc.ok || !rp.ok || !ro.ok) return;
+    const model = R.fromDb(await rc.json(), await rp.json(), await ro.json());
     if (!model.products.length) return;
     const ctx = { lang: D.lang, S: { ...S, ...{ items: D.items, sizes: D.sizes, locale: D.locale } }, root };
     const fresh = R.clientData(model, ctx);
@@ -708,13 +791,14 @@ import * as R from './render.js?v=c6dbe39cc4';
     const same = sig(fresh.p) === sig(D.p) && sig(fresh.cats) === sig(D.cats) && Object.keys(fresh.p).join() === Object.keys(D.p).join();
     if (same) return;
     D.p = fresh.p; D.cats = fresh.cats;
+    indexOptions();
     $('[data-shelves]').innerHTML = R.shelves(model, ctx);
     rail.innerHTML = R.chips(model, ctx);
     const host = $('[data-sections]');
     $$('[data-cat]', host).forEach((c) => c.remove());
     host.insertAdjacentHTML('beforeend', R.sections(model, ctx));
     defaultStatus = R.countText(ctx.S, model.products.length);
-    for (const k of Object.keys(list)) if (!D.p[k]) delete list[k];
+    for (const k of Object.keys(list)) if (!itemOf(k)) delete list[k];
     save();
     collect(); observe(); syncButtons(); paintPrices();
     filter(q.value);

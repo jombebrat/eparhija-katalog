@@ -24,6 +24,7 @@ const LANGS = [
 ];
 
 const PUBLIC_PRODUCT_COLUMNS = 'code,category,name_fr,name_en,name_sr,note_fr,note_en,note_sr,unit,available,photos,sort';
+const PUBLIC_OPTION_COLUMNS = 'id,product,sku,label_sr,label_fr,label_en,available,active,sort';
 
 async function loadCatalogue() {
   const snapshot = read('data/catalogue.json');
@@ -34,13 +35,14 @@ async function loadCatalogue() {
         if (!r.ok) throw new Error(`${q}: ${r.status}`);
         return r.json();
       };
-      const [categories, products] = await Promise.all([
+      const [categories, products, options] = await Promise.all([
         get('categories?select=*&order=sort'),
         get(`products?select=${PUBLIC_PRODUCT_COLUMNS}&active=eq.true&order=sort`),
+        get(`options?select=${PUBLIC_OPTION_COLUMNS}&active=eq.true&order=product,sort`),
       ]);
-      writeFileSync(join(ROOT, 'data/catalogue.json'), JSON.stringify({ _about: snapshot._about, categories, products }, null, 1) + '\n');
-      console.log(`catalogue from the database: ${products.length} articles`);
-      return { categories, products };
+      writeFileSync(join(ROOT, 'data/catalogue.json'), JSON.stringify({ _about: snapshot._about, categories, products, options }, null, 1) + '\n');
+      console.log(`catalogue from the database: ${products.length} articles, ${options.length} options`);
+      return { categories, products, options };
     } catch (e) {
       console.log(`database not reachable (${e.message}), using data/catalogue.json`);
     }
@@ -75,7 +77,7 @@ V.accountCss = stamp('css/account.css', { 'site.css': V.site });
 V.legalCss = stamp('css/legal.css', { 'site.css': V.site });
 
 const raw = await loadCatalogue();
-const model = R.fromDb(raw.categories, raw.products);
+const model = R.fromDb(raw.categories, raw.products, raw.options || []);
 
 const esc = R.esc;
 const typo = R.typo;
@@ -90,7 +92,7 @@ const CLIENT_STRINGS = ['add', 'added', 'noMatch', 'matches', 'photoOf', 'emptyT
   'loginUnknown', 'loginTooMany', 'loginFailed', 'loginInvalid', 'checking', 'showPrices', 'signOut', 'pricesFor', 'guestList', 'formName', 'formParish', 'formPhone', 'formAddress', 'formNote', 'optional', 'nameMissing',
   'sendOrder', 'sending', 'orderDone', 'orderDoneMail', 'orderDoneNoMail', 'downloadPdf', 'orderFailed', 'orderUnknown', 'orderUnavailable', 'done', 'outOfStock',
   'noPhoto', 'addLabel', 'acLink', 'list', 'cartLabel', 'askPrices', 'gatePriest', 'gateLead', 'gateUnknown', 'gateOther', 'gateOtherLead', 'emailPlaceholder', 'inqSend', 'inqDone', 'inqDoneText', 'inqFailed', 'inqTooMany',
-  'emailMissing', 'emailLabel', 'quoteTitle', 'quoteLead', 'quoteOrder', 'quoteGone', 'quoteFor', 'cancel', 'candlesLead', 'candlesCaption', 'thFormat', 'thSize', 'thDetail', 'thPrice', 'thPriceUnit', 'thList'];
+  'emailMissing', 'emailLabel', 'quoteTitle', 'quoteLead', 'quoteOrder', 'quoteGone', 'quoteFor', 'cancel', 'choose', 'chooseLabel', 'optCount', 'optsHead', 'optsFind', 'optsFindPh', 'optsNone', 'orderChoose', 'candlesLead', 'candlesCaption', 'thFormat', 'thSize', 'thDetail', 'thPrice', 'thPriceUnit', 'thList'];
 
 const X = '<svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>';
 // national flags, drawn small: France, the United Kingdom (for English), Serbia (the civil flag)
@@ -247,6 +249,15 @@ function page(lang, dir) {
         <p class="detail__price" data-detail-price></p>
         <p class="detail__note" data-detail-note hidden></p>
         <button class="add add--big" type="button" data-detail-add>${t(lang, S.add)}</button>
+        <div class="opts" data-detail-opts hidden>
+          <h3 class="opts__head" id="opts-head" data-opts-head></h3>
+          <div class="opts__find" data-opts-findbox hidden>
+            <label class="visually-hidden" for="opts-q">${t(lang, S.optsFind)}</label>
+            <input id="opts-q" type="search" placeholder="${t(lang, S.optsFindPh)}" autocomplete="off" spellcheck="false" data-opts-q>
+          </div>
+          <ul class="opts__list" role="list" aria-labelledby="opts-head" data-opts-list></ul>
+          <p class="opts__none" data-opts-none hidden>${t(lang, S.optsNone)}</p>
+        </div>
       </div>
       <button class="iconbtn detail__close" type="button" data-close aria-label="${t(lang, S.close)}">${X}</button>
     </div>

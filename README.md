@@ -72,6 +72,7 @@ Cene, stanje, sveštenici i porudžbine **nisu** u ovom repozitorijumu ni na str
 | --- | --- | --- |
 | `categories` | kategorije | svi |
 | `products` | šifra, nazivi, napomene, **cena**, jedinica, **stanje**, fotografije, `active` | posetioci samo nazive i fotografije aktivnih artikala; cene samo sveštenici sa liste (preko funkcije `prices`); stanje i cene administratori |
+| `options` | opcije artikla (npr. svetac na ikoni): naziv na tri jezika, šifra iz Erplaina, **stanje**, `active` | posetioci naziv, šifru i da li ima na stanju; stanje administratori |
 | `priests` | lista članova: mejl, ime, parohija, telefon, adresa, `active` | administratori; član samo svoj red |
 | `orders` | svaka porudžbina sa stavkama, zbirom i statusom | administratori; član samo svoje porudžbine |
 | `admins` | nalozi administracije | samo administratori |
@@ -79,6 +80,8 @@ Cene, stanje, sveštenici i porudžbine **nisu** u ovom repozitorijumu ni na str
 | `attempts` | provere mejlova, kodovi i upiti (protiv zloupotrebe) | niko |
 
 Koliko se podaci čuvaju (piše i na pravnoj stranici), radi sama baza preko `pg_cron`: `attempts` (IP adrese) se brišu posle 24 sata (posao `sweep-attempts`, svakog sata), upiti koji nisu postali porudžbina posle 3 godine (`sweep-inquiries`, svake noći). Porudžbine se čuvaju 10 godina (knjigovodstvo) i ne brišu se same.
+
+Artikal sa opcijama (P064, P066, P074, P127, A007: ikone sa svecima) poručuje se samo sa izabranom opcijom; red porudžbine nosi `option` i `sku`, a izvršena porudžbina skida stanje sa te opcije. Opcije se menjaju u administraciji (Artikli → Uredi → Opcije); prvi put su uvezene iz Erplain izvoza (`python3 tools/erplain_options.py izvoz.xlsx`, stanje iz kolone „Disponible“).
 
 Pristup čuva sama baza (RLS i prava po kolonama), ne stranica. Fotografije koje se otpreme iz administracije idu u Storage, u javni bucket `products`.
 
@@ -143,7 +146,7 @@ docs/                  gotov sajt (ovo se objavljuje)
   assets/img/grb-*     grb SPC
   assets/img/europa.svg  obrisi zapadne Evrope za mapu u Pregledu (Natural Earth, javno dobro)
   assets/fonts/        Onest (SIL Open Font License), lokalno
-tools/                 skripte za izvlačenje podataka iz .pptx kataloga
+tools/                 skripte za izvlačenje podataka iz .pptx kataloga; erplain_options.py: opcije (sveci) iz Erplain izvoza
 ```
 
 ## Šta je promenjeno u odnosu na PowerPoint katalog

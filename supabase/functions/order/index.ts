@@ -1,7 +1,8 @@
 // Orders, and the member's account. Three requests:
-//   POST { email, lang, items: [{ code, qty }], name, parish, phone, address, note }
+//   POST { email, lang, items: [{ code, qty, option }], name, parish, phone, address, note }
 //     -> { number, total, emailed, pdf (base64), filename }
 //     Only an email on the members' list (table priests) may order. Prices and names come from the database, never from the page.
+//     An article with options (the saint of an icon) is ordered with one: option is its id in the table options.
 //     When RESEND_API_KEY, ORDER_FROM and WAREHOUSE_EMAIL are set, the PDF is emailed to the member who ordered and the warehouse
 //     (the warehouse's message is in WAREHOUSE_LANG: fr, en or sr, default sr).
 //   POST { action: 'code', email, lang }
@@ -11,12 +12,13 @@
 //     -> { pdf, filename } for an order of the signed-in member, or any order for an admin.
 //   POST { action: 'inquiry', email, name, parish, phone, note, lang, items } -> { ok, number }
 //     A visitor who is not a member asks for prices; the warehouse is told by email (when mail is set up).
-//   POST { action: 'quote', id, lines: [{ code, qty, price }], send } with an admin's session
+//   POST { action: 'quote', id, lines: [{ code, qty, price, option }], send } with an admin's session
 //     -> { pdf, filename, emailed, link }: the quote for an inquiry, emailed to the visitor when send is true.
 //   POST { action: 'quote-get', token } -> the quote behind the link in its email and PDF
 //   POST { action: 'quote-order', token, name, parish, phone, address, note } -> like an order, at the quote's prices
 import { createClient } from '@supabase/supabase-js';
 import { orderPdf, type Line, type Assets } from './pdf.ts';
+import { readItems, buildLines, total as sumOf, type Item, type Problem } from './lines.ts';
 import { T, LOCALE, fill, type Lang, toCyrillic } from './i18n.ts';
 
 const CORS = {
@@ -94,8 +96,8 @@ Deno.serve(async (req) => {
   if (body.action === 'quote-order') return quoteOrder(req, body);
   const email = clean(body.email, 200).toLowerCase();
   const lang = (['fr', 'en', 'sr'].includes(String(body.lang)) ? body.lang : 'fr') as Lang;
-  const items = Array.isArray(body.items) ? body.items.slice(0, 300) : [];
-  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) || !items.length) return json({ error: 'invalid' }, 400);
+  const items = readItems(body.items);
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) || !items) return json({ error: 'invalid' }, 400);
 
   // same guard as the price check
   const ip = clientIp(req);
@@ -109,28 +111,10 @@ Deno.serve(async (req) => {
   }
 
   // price every line from the database
-  const wanted = new Map<string, number>();
-  for (const it of items as { code?: unknown; qty?: unknown }[]) {
-    const code = clean(it?.code, 40);
-    const qty = Math.round(Number(it?.qty));
-    if (!code || !Number.isFinite(qty) || qty < 1 || qty > 999) return json({ error: 'invalid' }, 400);
-    wanted.set(code, (wanted.get(code) ?? 0) + qty);
-  }
-  const { data: products, error } = await db.from('products').select('code, name_fr, name_en, name_sr, price, unit, sort, available').eq('active', true).in('code', [...wanted.keys()]);
-  if (error) return json({ error: 'server' }, 500);
-  if ((products ?? []).length !== wanted.size) return json({ error: 'unknown_item' }, 400);
-  const gone = products!.filter((p) => !p.available).map((p) => p.code);
-  if (gone.length) return json({ error: 'unavailable', codes: gone }, 409);
-  const lines: Line[] = products!
-    .sort((a, b) => a.sort - b.sort)
-    .map((p) => ({
-      code: p.code,
-      name: String((p as Record<string, unknown>)[`name_${lang}`] || p.name_fr || p.name_sr || p.name_en || p.code),
-      qty: wanted.get(p.code)!,
-      price: Number(p.price),
-      unit: p.unit as 'piece' | 'kg',
-    }));
-  const total = Math.round(lines.reduce((a, l) => a + l.price * l.qty, 0) * 100) / 100;
+  const priced = await linesFor(items, lang);
+  if ('error' in priced) return problem(priced);
+  const lines = priced.lines;
+  const total = sumOf(lines);
 
   const name = clean(body.name, 120) || priest.name || '';
   const who = {
@@ -147,6 +131,19 @@ Deno.serve(async (req) => {
   if (e2 || !saved) return json({ error: 'server' }, 500);
   return json(await finishOrder(saved, lang, email, who, lines, total));
 });
+
+// the articles and options of a list, from the database, into lines in the order's language
+async function linesFor(items: Item[], lang: Lang, checkStock = true): Promise<{ lines: Line[] } | Problem | { error: 'server' }> {
+  const codes = [...new Set(items.map((i) => i.code))];
+  const [{ data: products, error: e1 }, { data: options, error: e2 }] = await Promise.all([
+    db.from('products').select('code, name_fr, name_en, name_sr, price, unit, sort, available').eq('active', true).in('code', codes),
+    db.from('options').select('id, product, sku, label_fr, label_en, label_sr, available, active').eq('active', true).in('product', codes),
+  ]);
+  if (e1 || e2) { console.error('lines', e1 || e2); return { error: 'server' }; }
+  return buildLines(items, products ?? [], options ?? [], lang, { checkStock });
+}
+const problem = (p: Problem | { error: 'server' }) =>
+  json(p, p.error === 'server' ? 500 : p.error === 'unavailable' ? 409 : 400);
 
 type Who = { name: string; parish: string; phone: string; address: string; note: string };
 // the PDF of a saved order, and the emails to the member and the warehouse
@@ -237,7 +234,6 @@ const SITE = (Deno.env.get('SITE_URL') ?? 'https://magacinzapadnoevropski.com/')
 const langPath = (l: Lang) => (l === 'fr' ? '' : `${l}/`);
 const mailOn = () => !!(Deno.env.get('RESEND_API_KEY') && Deno.env.get('ORDER_FROM'));
 const pickLang = (v: unknown) => (['fr', 'en', 'sr'].includes(String(v)) ? v : 'fr') as Lang;
-const nameIn = (p: Record<string, unknown>, lang: Lang) => String(p[`name_${lang}`] || p.name_fr || p.name_sr || p.name_en || p.code);
 
 async function adminOf(req: Request) {
   const jwt = (req.headers.get('authorization') ?? '').replace(/^Bearer\s+/i, '');
@@ -253,22 +249,16 @@ async function inquiry(req: Request, body: Record<string, unknown>) {
   if (clean(body.website, 200)) return json({ ok: true }); // the hidden field: only robots fill it
   const email = clean(body.email, 200).toLowerCase();
   const lang = pickLang(body.lang);
-  const items = Array.isArray(body.items) ? body.items.slice(0, 300) : [];
-  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) || !items.length) return json({ error: 'invalid' }, 400);
+  const items = readItems(body.items);
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) || !items) return json({ error: 'invalid' }, 400);
   const ip = clientIp(req);
   const hour = new Date(Date.now() - 60 * 60 * 1000).toISOString();
   const { count } = await db.from('attempts').select('id', { count: 'exact', head: true }).eq('ip', ip).eq('kind', 'inquiry').gte('at', hour);
   if ((count ?? 0) >= 5) return json({ error: 'too_many' }, 429);
-  const wanted = new Map<string, number>();
-  for (const it of items as { code?: unknown; qty?: unknown }[]) {
-    const code = clean(it?.code, 40);
-    const qty = Math.round(Number(it?.qty));
-    if (!code || !Number.isFinite(qty) || qty < 1 || qty > 999) return json({ error: 'invalid' }, 400);
-    wanted.set(code, (wanted.get(code) ?? 0) + qty);
-  }
-  const { data: known } = await db.from('products').select('code').eq('active', true).in('code', [...wanted.keys()]);
-  const asked = (known ?? []).map((p) => ({ code: p.code, qty: wanted.get(p.code)! }));
-  if (!asked.length) return json({ error: 'invalid' }, 400);
+  // what is asked, as the warehouse will price it: known articles, each with its option
+  const checked = await linesFor(items, lang, false);
+  if ('error' in checked) return problem(checked);
+  const asked = checked.lines.map((l) => ({ code: l.code, qty: l.qty, ...(l.option ? { option: l.option } : {}) }));
   const who = { name: clean(body.name, 120), parish: clean(body.parish, 160), phone: clean(body.phone, 40), note: clean(body.note, 1000) };
   const { data: saved, error } = await db.from('inquiries').insert({ email, lang, items: asked, ...who }).select('id').single();
   if (error || !saved) { console.error('inquiry', error); return json({ error: 'server' }, 500); }
@@ -290,19 +280,12 @@ async function quoteFor(req: Request, body: Record<string, unknown>) {
   const { data: inq } = await db.from('inquiries').select('*').eq('id', id).maybeSingle();
   if (!inq) return json({ error: 'not_found' }, 404);
   const lang = pickLang(inq.lang);
-  const asked = (Array.isArray(body.lines) ? body.lines : []).slice(0, 300) as { code?: unknown; qty?: unknown; price?: unknown }[];
-  const { data: products } = await db.from('products').select('code, name_fr, name_en, name_sr, unit').in('code', asked.map((l) => clean(l.code, 40)));
-  const by = new Map((products ?? []).map((p) => [p.code, p]));
-  const lines: Line[] = [];
-  for (const l of asked) {
-    const p = by.get(clean(l.code, 40));
-    const qty = Math.round(Number(l.qty));
-    const price = Math.round(Number(l.price) * 100) / 100;
-    if (!p || !Number.isFinite(qty) || qty < 1 || qty > 999 || !Number.isFinite(price) || price < 0) return json({ error: 'invalid' }, 400);
-    lines.push({ code: p.code, name: nameIn(p, lang), qty, price, unit: p.unit as 'piece' | 'kg' });
-  }
-  if (!lines.length) return json({ error: 'invalid' }, 400);
-  const total = Math.round(lines.reduce((a, l) => a + l.price * l.qty, 0) * 100) / 100;
+  const asked = readItems(body.lines, true);
+  if (!asked) return json({ error: 'invalid' }, 400);
+  const priced = await linesFor(asked, lang, false);
+  if ('error' in priced) return problem(priced);
+  const lines = priced.lines;
+  const total = sumOf(lines);
   const link = `${SITE}${langPath(lang)}?ponuda=${inq.token}`;
   const now = new Date();
   const name = lang === 'sr' ? toCyrillic(inq.name) : inq.name ?? '';
@@ -344,9 +327,13 @@ async function quoteOrder(req: Request, body: Record<string, unknown>) {
   if (!('q' in r)) return json({ error: r.error }, r.status);
   const q = r.q;
   const lines = q.quote as Line[];
-  const { data: products } = await db.from('products').select('code, available').eq('active', true).in('code', lines.map((l) => l.code));
+  const [{ data: products }, { data: options }] = await Promise.all([
+    db.from('products').select('code, available').eq('active', true).in('code', lines.map((l) => l.code)),
+    db.from('options').select('id, available').eq('active', true).in('id', lines.filter((l) => l.option).map((l) => l.option)),
+  ]);
   const ok = new Map((products ?? []).map((p) => [p.code, p.available]));
-  const gone = lines.filter((l) => !ok.get(l.code)).map((l) => l.code);
+  const okOpt = new Map((options ?? []).map((o) => [o.id, o.available]));
+  const gone = lines.filter((l) => !ok.get(l.code) || (l.option && !okOpt.get(l.option))).map((l) => l.sku || l.code);
   if (gone.length) return json({ error: 'unavailable', codes: gone }, 409);
   const lang = pickLang(q.lang);
   const name = clean(body.name, 120) || q.name || '';

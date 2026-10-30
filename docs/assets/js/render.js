@@ -25,25 +25,41 @@ export const countText = (S, n, key = 'items') => {
 export const photoUrl = (root, src, small = true) =>
   (/^https?:/.test(src) ? src : `${root}assets/img/p/${src}`) + (small ? '-s.webp' : '.webp');
 
-// rows from the database, or the snapshot in data/catalogue.json, into one shape
-export function fromDb(categories, products) {
+// rows from the database, or the snapshot in data/catalogue.json, into one shape.
+// options: the saint or feast of an icon, each with its own code; an article with options is out only when all are.
+export function fromDb(categories, products, options = []) {
   // a translation left empty in the admin falls back to another language rather than a blank
   const tri = (o, k) => {
     const fr = o[`${k}_fr`] || '', en = o[`${k}_en`] || '', sr = o[`${k}_sr`] || '';
     return { fr: fr || en || sr, en: en || fr || sr, sr: sr || fr || en };
   };
+  const opts = {};
+  for (const o of options) if (o.active !== false) (opts[o.product] ??= []).push({ id: o.id, sku: o.sku || '', label: tri(o, 'label'), available: o.available !== false, sort: o.sort ?? 0 });
   return {
     categories: categories.map((c) => ({ id: c.id, name: tri(c, 'name'), layout: c.layout || 'grid', cover: c.cover || null, sort: c.sort ?? 0 }))
       .sort((a, b) => a.sort - b.sort),
-    products: products.map((p) => ({
-      code: p.code, category: p.category, name: tri(p, 'name'),
-      note: p.note_fr || p.note_en || p.note_sr ? tri(p, 'note') : null,
-      unit: p.unit || 'piece', available: p.available !== false, photos: Array.isArray(p.photos) ? p.photos : [], sort: p.sort ?? 0,
-    })).sort((a, b) => a.sort - b.sort),
+    products: products.map((p) => {
+      const o = (opts[p.code] || []).sort((a, b) => a.sort - b.sort);
+      return {
+        code: p.code, category: p.category, name: tri(p, 'name'),
+        note: p.note_fr || p.note_en || p.note_sr ? tri(p, 'note') : null,
+        unit: p.unit || 'piece', available: p.available !== false && (!o.length || o.some((x) => x.available)),
+        photos: Array.isArray(p.photos) ? p.photos : [], sort: p.sort ?? 0, options: o,
+      };
+    }).sort((a, b) => a.sort - b.sort),
   };
 }
 
-export const searchKey = (p, catName) => norm([p.name.fr, p.name.en, p.name.sr, ...codeKeys(p.code), catName?.fr, catName?.en, catName?.sr].filter(Boolean).join(' '));
+export const searchKey = (p, catName) => norm([p.name.fr, p.name.en, p.name.sr, ...codeKeys(p.code), catName?.fr, catName?.en, catName?.sr,
+  ...(p.options || []).flatMap((o) => [o.label.fr, o.label.en, o.label.sr, o.sku])].filter(Boolean).join(' '));
+
+// options in the reader's alphabet, saints by their name: "Saint Nicolas" files under N, "Св. архангел Михаило" under М
+const TITLE_WORDS = /^(saints?|sainte|sts?|св\.|света|свети|пресвета|archange|archangel|апостоли?|архангел|архиђакон|пророк|врачи|владика|кнез|цар|the|les?|la|l’)\s+/i;
+const sortName = (s) => { let t = String(s || ''), u; while ((u = t.replace(TITLE_WORDS, '')) !== t) t = u; return t; };
+export const sortedOptions = (p, lang, locale) => {
+  const col = new Intl.Collator(locale || lang, { sensitivity: 'base' });
+  return [...(p.options || [])].sort((a, b) => col.compare(sortName(a.label[lang]), sortName(b.label[lang])) || col.compare(a.label[lang], b.label[lang]) || a.sku.localeCompare(b.sku));
+};
 
 const byCategory = (m) => Object.fromEntries(m.categories.map((c) => [c.id, m.products.filter((p) => p.category === c.id)]));
 const coverOf = (m, c, list) => (list.find((p) => p.code === c.cover && p.photos.length) || list.find((p) => p.photos.length))?.photos[0];
@@ -72,6 +88,7 @@ export function chips(m, { lang }) {
 // ---------- one card, one row ----------
 function addButton(p, { lang, S }, cls = 'add') {
   const name = typo(lang, p.name[lang]);
+  if (p.available && p.options?.length) return `<button class="${cls} add--choose" type="button" data-choose="${esc(p.code)}" aria-haspopup="dialog" aria-label="${esc(typo(lang, S.chooseLabel).replace('{name}', name))}">${tx(lang, S.choose)}</button>`;
   if (!p.available) return `<button class="${cls} add--out" type="button" disabled aria-label="${esc(`${S.outOfStock}: ${name}`)}">${tx(lang, S.outOfStock)}</button>`;
   return `<button class="${cls}" type="button" data-add="${esc(p.code)}" aria-label="${esc(typo(lang, S.addLabel).replace('{name}', name))}">${tx(lang, S.add)}</button>`;
 }
@@ -88,6 +105,7 @@ function card(p, ctx, catName) {
           ${pic}
           <h3 class="card__name">${ph ? `<a href="${big}" data-detail="${esc(p.code)}">${tx(lang, name)}</a>` : tx(lang, name)}</h3>
           <p class="card__meta"><span class="card__code">${esc(p.code)}</span><span class="card__price" data-price="${esc(p.code)}"></span></p>
+          ${p.options?.length ? `<p class="card__opts">${tx(lang, S.optCount.replace('{n}', p.options.length))}</p>` : ''}
           ${addButton(p, ctx)}
         </li>`;
 }
@@ -141,11 +159,13 @@ export function sections(m, ctx) {
 }
 
 // what the page script needs for each article, in this language
-export function clientData(m, { lang }) {
+// o: the options as [id, label, code] (+ 1 when out of stock), in the order the reader looks for them
+export function clientData(m, { lang, S }) {
   const cats = Object.fromEntries(m.categories.map((c) => [c.id, typo(lang, c.name[lang])]));
   const p = Object.fromEntries(m.products.map((x) => [x.code, {
     n: typo(lang, x.name[lang]), c: x.category, ph: x.photos.map((f) => [f.src, f.W, f.H]),
     ...(x.unit === 'kg' ? { kg: 1 } : {}), ...(x.available ? {} : { out: 1 }),
+    ...(x.options?.length ? { o: sortedOptions(x, lang, S?.locale).map((o) => [o.id, typo(lang, o.label[lang]), o.sku, ...(o.available ? [] : [1])]) } : {}),
     ...(x.note && m.categories.find((c) => c.id === x.category)?.layout !== 'table' ? { note: typo(lang, x.note[lang]) } : {}),
   }]));
   return { cats, p, total: m.products.length };

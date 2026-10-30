@@ -193,7 +193,15 @@
     "quoteLead": "Prix valables 30 jours. Vérifiez vos coordonnées et commandez.",
     "quoteOrder": "Commander selon ce devis",
     "quoteGone": "Ce devis n'est plus valable ou a déjà été commandé. Écrivez à l'entrepôt pour un nouveau devis.",
-    "quoteFor": "Pour"
+    "quoteFor": "Pour",
+    "choose": "Choisir",
+    "chooseLabel": "Choisir : {name}",
+    "optCount": "{n} au choix",
+    "optsHead": "Choisissez : {n} au choix",
+    "optsFind": "Chercher dans la liste",
+    "optsFindPh": "Nicolas, Sava, Trinité…",
+    "optsNone": "Rien de tel dans la liste.",
+    "orderChoose": "Choisissez d'abord une option pour : {codes}."
   },
   "en": {
     "htmlLang": "en",
@@ -389,7 +397,15 @@
     "quoteLead": "Prices valid for 30 days. Check your details and order.",
     "quoteOrder": "Order as quoted",
     "quoteGone": "This quote is no longer valid or has already been ordered. Write to the warehouse for a new one.",
-    "quoteFor": "For"
+    "quoteFor": "For",
+    "choose": "Choose",
+    "chooseLabel": "Choose: {name}",
+    "optCount": "{n} to choose from",
+    "optsHead": "Choose one of {n}",
+    "optsFind": "Search the list",
+    "optsFindPh": "Nicholas, Sava, Trinity…",
+    "optsNone": "Nothing like that in the list.",
+    "orderChoose": "Choose an option first for: {codes}."
   },
   "sr": {
     "htmlLang": "sr-Cyrl",
@@ -587,6 +603,14 @@
     "quoteLead": "Цене важе 30 дана. Проверите своје податке и поручите.",
     "quoteOrder": "Поручи по овој понуди",
     "quoteGone": "Ова понуда више не важи или је већ поручена. Пишите магацину за нову понуду.",
-    "quoteFor": "За"
+    "quoteFor": "За",
+    "choose": "Изабери",
+    "chooseLabel": "Изабери: {name}",
+    "optCount": "{n} за избор",
+    "optsHead": "Изаберите: {n} за избор",
+    "optsFind": "Претражи листу",
+    "optsFindPh": "Никола, Сава, Тројица…",
+    "optsNone": "Тога нема на листи.",
+    "orderChoose": "Прво изаберите опцију за: {codes}."
   }
 }

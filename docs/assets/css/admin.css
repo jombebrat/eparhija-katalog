@@ -400,3 +400,24 @@ body.adm { font-size: var(--t-md); line-height: 1.5; background: var(--color-pap
   .tbl--quote .input--stock { width: 4.5rem; }
   .tbl--quote .input--qty { width: 3rem; }
 }
+
+/* ---------- the options of an article (the saints of an icon) ---------- */
+.stock--opts { display: inline-flex; align-items: baseline; gap: var(--space-xs); }
+.stock__sum { font-weight: 600; font-variant-numeric: tabular-nums; }
+.opts-ed { display: grid; }
+.group .opts-ed__help { grid-column: auto; }
+.opt-ed { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)) auto; grid-template-areas: "sr fr en del" "sku st on on"; align-items: center; gap: var(--space-xs); padding-block: var(--space-sm); border-bottom: var(--rule-hair) solid var(--color-rule); }
+.opt-ed--head { grid-template-areas: none; padding-block: 0 var(--space-2xs); border-bottom: var(--rule-hair) solid var(--color-ink); color: var(--color-ink-2); font-size: var(--t-xs); }
+.opt-ed > [name="o-sr"] { grid-area: sr; }
+.opt-ed > [name="o-fr"] { grid-area: fr; }
+.opt-ed > [name="o-en"] { grid-area: en; }
+.opt-ed > [name="o-sku"] { grid-area: sku; }
+.opt-ed > [name="o-stock"] { grid-area: st; width: 100%; }
+.opt-ed__on { grid-area: on; }
+.opt-ed > [data-opt-del] { grid-area: del; }
+.opt-ed .input { min-height: var(--control-s); }
+@media (max-width: 40rem) {
+  .opt-ed { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "sr sr" "fr en" "sku st" "on del"; }
+  .opt-ed--head { display: none; }
+}
+

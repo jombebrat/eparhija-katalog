@@ -4,7 +4,8 @@ import { PDFDocument, rgb, type PDFFont, type PDFPage } from 'pdf-lib';
 import fontkit from '@pdf-lib/fontkit';
 import { T, LOCALE, ADDRESS, fill, type Lang } from './i18n.ts';
 
-export type Line = { code: string; name: string; qty: number; price: number; unit: 'piece' | 'kg' };
+import type { Line } from './lines.ts';
+export type { Line };
 export type Assets = { regular: Uint8Array; bold: Uint8Array; emblem: Uint8Array };
 export type Order = {
   number: number | string; date: Date; lang: Lang;
@@ -107,7 +108,7 @@ export async function orderPdf(o: Order, a: Assets): Promise<Uint8Array> {
     if (y - h < M + 60) { newPage(false); tableHead(); }
     const qty = l.unit === 'kg' ? `${l.qty}\u00a0${t.kg}` : String(l.qty);
     const unit = money.format(l.price) + (l.unit === 'kg' ? ` ${t.perKg}` : '');
-    text(l.code, C.code, y, 10, reg, INK2);
+    text(l.sku || l.code, C.code, y, 10, reg, INK2);
     names.forEach((n, i) => text(n, C.item, y - i * 14, 10.5));
     right(qty, C.qty, y, 10.5);
     right(unit, C.unit, y, 10, reg, INK2);

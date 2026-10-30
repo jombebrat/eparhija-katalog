@@ -1,7 +1,7 @@
 // Administration of the warehouse: articles and their stock, categories, clergy, orders.
 // Talks to Supabase over plain fetch (Auth, the REST API, Storage). What a signed-in account may read
 // or change is decided by the database (an account must be listed in the `admins` table).
-import { norm, esc, photoUrl } from './render.js?v=c6dbe39cc4';
+import { norm, esc, photoUrl } from './render.js?v=1381f84ccd';
 
 const C = JSON.parse(document.getElementById('admin-config').textContent);
 // an admin can sign in with a bare user name: "djakon" is the account djakon@<userDomain>
@@ -148,7 +148,7 @@ async function addPhoto(file, code) {
 const thumb = (ph) => photoUrl(SITE, ph.src, true);
 
 // ---------- data ----------
-const D = { products: [], cats: [], priests: [], orders: [], inquiries: [] };
+const D = { products: [], cats: [], priests: [], orders: [], inquiries: [], options: [] };
 const ST = { products: 'idle', cats: 'idle', priests: 'idle', orders: 'idle', inquiries: 'idle' };
 const allRows = async (path) => {
   const all = [];
@@ -161,7 +161,12 @@ const allRows = async (path) => {
 const ERR = {};
 const Q = {
   cats: () => db('categories?select=*&order=sort.asc,id.asc'),
-  products: () => db('products?select=*&order=sort.asc,code.asc'),
+  // the options (the saints of an icon) come with the articles they belong to
+  products: async () => {
+    const [p, o] = await Promise.all([db('products?select=*&order=sort.asc,code.asc'), allRows('options?select=*&order=product.asc,sort.asc,id.asc')]);
+    D.options = o;
+    return p;
+  },
   priests: () => db('priests?select=*&order=name.asc.nullslast,email.asc'),
   orders: () => allRows('orders?select=*&order=created_at.desc'),
   inquiries: () => allRows('inquiries?select=*&order=created_at.desc'),
@@ -180,6 +185,9 @@ async function load(what, force = false) {
   draw();
 }
 const byCode = (code) => D.products.find((p) => p.code === code);
+const optionsOf = (code) => D.options.filter((o) => o.product === code);
+const optById = (id) => D.options.find((o) => o.id === Number(id));
+const optStock = (code) => optionsOf(code).reduce((a, o) => a + (o.stock ?? 0), 0);
 // at or under its reorder point (or gone): time to order more
 const low = (p) => p.stock !== null && p.stock !== undefined && (p.stock === 0 || (p.min_stock !== null && p.min_stock !== undefined && p.stock <= p.min_stock));
 const ledgerCounts = (all) => ({ '': all.length, out: all.filter((p) => p.stock === 0).length, low: all.filter(low).length, hidden: all.filter((p) => !p.active).length });
@@ -191,7 +199,7 @@ const nameOf = (p) => p.name_sr || p.name_fr || p.name_en || p.code;
 const TABS = ['pregled', 'upiti', 'porudzbine', 'artikli', 'statistika', 'svestenstvo', 'kategorije'];
 const NEEDS = {
   pregled: ['orders', 'products', 'inquiries', 'priests', 'cats'], upiti: ['inquiries', 'products', 'priests'],
-  artikli: ['products', 'cats'], kategorije: ['cats', 'products'], svestenstvo: ['priests'], porudzbine: ['orders'], statistika: ['orders', 'products', 'cats'],
+  artikli: ['products', 'cats'], kategorije: ['cats', 'products'], svestenstvo: ['priests'], porudzbine: ['orders', 'products'], statistika: ['orders', 'products', 'cats'],
 };
 function route() {
   const [tab, qs] = location.hash.slice(1).split('?');
@@ -306,7 +314,9 @@ function productRow(p) {
       <td class="c-name">${p.name_sr ? `<span lang="sr">${esc(p.name_sr)}</span><span class="sub" lang="fr">${esc(p.name_fr || '')}</span>` : `<span lang="${p.name_fr ? 'fr' : 'en'}">${esc(nameOf(p))}</span>`}</td>
       <td class="c-cat" data-label="Kategorija">${esc(catName(p.category))}</td>
       <td class="num c-price" data-label="Cena">${esc(money.format(p.price))}${p.unit === 'kg' ? ' / kg' : ''}</td>
-      <td class="num c-stock" data-label="Stanje"><span class="stock"><input class="input input--stock" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" value="${p.stock ?? ''}" placeholder="—" aria-label="Stanje, ${c}" data-stock="${c}">${stockTag(p)}</span></td>
+      <td class="num c-stock" data-label="Stanje">${optionsOf(p.code).length
+        ? `<span class="stock stock--opts"><span class="stock__sum">${optStock(p.code)}</span><span class="sub">${esc(plural(optionsOf(p.code).length, 'opcija', 'opcije', 'opcija'))}</span>${optionsOf(p.code).every((o) => o.stock === 0) ? '<span class="tag tag--out">nema</span>' : ''}</span>`
+        : `<span class="stock"><input class="input input--stock" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" value="${p.stock ?? ''}" placeholder="—" aria-label="Stanje, ${c}" data-stock="${c}">${stockTag(p)}</span>`}</td>
       <td class="c-on" data-label="Na sajtu"><label class="check"><input type="checkbox" data-active="${c}"${p.active ? ' checked' : ''}><span class="visually-hidden">${c} na sajtu</span></label></td>
       <td class="c-act"><button class="btn btn--s" type="button" data-edit="${c}" aria-label="Uredi ${c}">Uredi</button></td>
     </tr>`;
@@ -317,10 +327,12 @@ function refreshRow(code) {
   if (!tr || !p) return;
   tr.classList.toggle('is-hidden', !p.active);
   const s = $('.stock', tr);
-  $('.tag', s)?.remove();
-  s.insertAdjacentHTML('beforeend', stockTag(p));
   const inp = $('[data-stock]', tr);
-  if (document.activeElement !== inp) inp.value = p.stock ?? '';
+  if (inp) {
+    $('.tag', s)?.remove();
+    s.insertAdjacentHTML('beforeend', stockTag(p));
+    if (document.activeElement !== inp) inp.value = p.stock ?? '';
+  }
   const sc = $('[data-screen="artikli"]');
   const counts = ledgerCounts(D.products);
   $$('[data-f] [data-n]', sc).forEach((n) => { n.textContent = counts[n.dataset.n]; });
@@ -779,7 +791,13 @@ function inquirySheet(i) {
   const member = D.priests.find((p) => p.email === i.email);
   const lines = (i.quote?.length ? i.quote : i.items).map((l) => {
     const p = byCode(l.code);
-    return { code: l.code, name: p ? nameOf(p) : l.name || l.code, qty: l.qty, price: l.price ?? p?.price ?? 0, unit: p?.unit || l.unit || 'piece', out: !!p && p.stock === 0, gone: !p || !p.active };
+    const o = l.option ? optById(l.option) : null;
+    return {
+      code: l.code, option: l.option || null, sku: o?.sku || l.sku || l.code,
+      name: p ? `${nameOf(p)}${o ? `, ${o.label_sr}` : ''}` : l.name || l.code,
+      qty: l.qty, price: l.price ?? p?.price ?? 0, unit: p?.unit || l.unit || 'piece',
+      out: o ? o.stock === 0 : !!p && p.stock === 0, gone: !p || !p.active || (l.option && (!o || !o.active)),
+    };
   });
   const facts = [['Mejl', `<a href="mailto:${esc(i.email)}">${esc(i.email)}</a>`], ['Parohija', esc(i.parish || '')],
     ['Telefon', i.phone ? `<a href="tel:${esc(i.phone.replace(/[^+\d]/g, ''))}">${esc(i.phone)}</a>` : ''], ['Napomena', esc(i.note || '').replace(/\n/g, '<br>')],
@@ -793,11 +811,11 @@ function inquirySheet(i) {
         : '<button class="btn btn--s" type="button" data-add-member>Dodaj kao člana</button> <span>Sledeći put će sam videti cene i moći da poruči.</span>'}</p>
       <div class="tbl-wrap"><table class="tbl tbl--lines tbl--quote">
         <thead><tr><th scope="col" class="c-code">Šifra</th><th scope="col">Artikal</th><th scope="col" class="num">Kol.</th><th scope="col" class="num">Cena (€)</th><th scope="col" class="num">Ukupno</th></tr></thead>
-        <tbody>${lines.map((l, k) => `<tr data-line="${k}" data-code="${esc(l.code)}">
-          <th scope="row" class="c-code">${esc(l.code)}</th>
-          <td><span class="code-s">${esc(l.code)} · </span>${esc(l.name)}${l.unit === 'kg' ? ' <span class="sub">po kg</span>' : ''}${l.out ? ' <span class="tag tag--out">nema</span>' : ''}${l.gone ? ' <span class="tag tag--cancelled">nije na sajtu</span>' : ''}</td>
-          <td class="num"><input class="input input--stock input--qty" data-q-qty value="${l.qty}" inputmode="numeric" autocomplete="off" aria-label="Količina, ${esc(l.code)}"></td>
-          <td class="num"><input class="input input--stock" data-q-price value="${esc(String(l.price).replace('.', ','))}" inputmode="decimal" autocomplete="off" aria-label="Cena, ${esc(l.code)}"></td>
+        <tbody>${lines.map((l, k) => `<tr data-line="${k}" data-code="${esc(l.code)}"${l.option ? ` data-option="${l.option}"` : ''} data-sku="${esc(l.sku)}">
+          <th scope="row" class="c-code">${esc(l.sku)}</th>
+          <td><span class="code-s">${esc(l.sku)} · </span>${esc(l.name)}${l.unit === 'kg' ? ' <span class="sub">po kg</span>' : ''}${l.out ? ' <span class="tag tag--out">nema</span>' : ''}${l.gone ? ' <span class="tag tag--cancelled">nije na sajtu</span>' : ''}</td>
+          <td class="num"><input class="input input--stock input--qty" data-q-qty value="${l.qty}" inputmode="numeric" autocomplete="off" aria-label="Količina, ${esc(l.sku)}"></td>
+          <td class="num"><input class="input input--stock" data-q-price value="${esc(String(l.price).replace('.', ','))}" inputmode="decimal" autocomplete="off" aria-label="Cena, ${esc(l.sku)}"></td>
           <td class="num" data-q-sum></td></tr>`).join('')}</tbody>
         <tfoot><tr><td class="c-code"></td><th scope="row" colspan="3">Ukupno</th><td class="num total" data-q-total></td></tr></tfoot>
       </table></div>
@@ -837,9 +855,9 @@ async function sendQuote(id, send, btn) {
   for (const tr of $$('tr[data-line]', box)) {
     const q = $('[data-q-qty]', tr), pr = $('[data-q-price]', tr);
     const qty = decIn(q.value), price = decIn(pr.value);
-    if (!(Number.isInteger(qty) && qty >= 1 && qty <= 999)) { q.setAttribute('aria-invalid', 'true'); q.focus(); formError(box, `Količina za ${tr.dataset.code} mora biti ceo broj od 1 do 999.`); return; }
-    if (!(Number.isFinite(price) && price >= 0)) { pr.setAttribute('aria-invalid', 'true'); pr.focus(); formError(box, `Cena za ${tr.dataset.code} nije ispravna (na primer 12,50).`); return; }
-    lines.push({ code: tr.dataset.code, qty, price });
+    if (!(Number.isInteger(qty) && qty >= 1 && qty <= 999)) { q.setAttribute('aria-invalid', 'true'); q.focus(); formError(box, `Količina za ${tr.dataset.sku} mora biti ceo broj od 1 do 999.`); return; }
+    if (!(Number.isFinite(price) && price >= 0)) { pr.setAttribute('aria-invalid', 'true'); pr.focus(); formError(box, `Cena za ${tr.dataset.sku} nije ispravna (na primer 12,50).`); return; }
+    lines.push({ code: tr.dataset.code, qty, price, ...(tr.dataset.option ? { option: Number(tr.dataset.option) } : {}) });
   }
   formError(box, '');
   const all = $$('.sheet__actions button', box);
@@ -1134,7 +1152,7 @@ function productForm(p) {
   const cat = p?.category || route().p.get('k') || D.cats[0]?.id || '';
   const nextSort = Math.max(0, ...D.products.filter((x) => x.category === cat).map((x) => x.sort)) + 10;
   p ??= { code: '', category: cat, name_sr: '', name_fr: '', name_en: '', note_sr: '', note_fr: '', note_en: '', price: '', unit: 'piece', stock: null, min_stock: null, active: true, sort: nextSort, photos: [] };
-  edit = { code: isNew ? null : p.code, photos: [...(p.photos || [])], added: [], removed: [], saved: false };
+  edit = { code: isNew ? null : p.code, photos: [...(p.photos || [])], added: [], removed: [], saved: false, options: isNew ? [] : optionsOf(p.code).map((o) => ({ ...o })), dropped: [] };
   onSheetClose = () => { if (!edit?.saved && edit?.added.length) removeFiles(edit.added); edit = null; };
   const price = p.price === '' ? '' : String(p.price).replace('.', ',');
   openSheet(`<form class="sheet__inner" novalidate data-form="product">
@@ -1180,10 +1198,56 @@ function productForm(p) {
           <p class="field__help" data-photo-msg aria-live="polite">Prva fotografija je naslovna. JPG, PNG ili WebP; sajt ih sam smanjuje.</p>
         </div>
       </fieldset>
+      <fieldset class="group">
+        <legend>Opcije <span class="req req--quiet">nije obavezno</span></legend>
+        <p class="field__help opts-ed__help">Na primer sveci na ikoni. Svaka opcija ima svoju šifru (kao u Erplainu) i svoje stanje, a cena je cena artikla. Kad artikal ima opcije, član na sajtu bira jednu.</p>
+        <div class="opts-ed" data-opts-ed></div>
+        <p><button class="btn btn--s" type="button" data-opt-add>Dodaj opciju</button></p>
+      </fieldset>
     </div>
     ${foot(isNew ? 'Dodaj artikal' : 'Sačuvaj izmene', isNew ? '' : '<button class="btn btn--danger" type="button" data-delete-product>Obriši artikal</button>')}
   </form>`);
   drawPhotos();
+  drawOptEditor();
+}
+// ----- the options of an article, edited in its form and saved with it -----
+function readOptEditor() {
+  if (!edit) return;
+  $$('[data-oi]', sheet).forEach((row) => {
+    const o = edit.options[Number(row.dataset.oi)];
+    const v = (n) => row.querySelector(`[name="${n}"]`).value.trim();
+    Object.assign(o, { label_sr: v('o-sr'), label_fr: v('o-fr') || null, label_en: v('o-en') || null, sku: v('o-sku') || null, stockRaw: v('o-stock'), active: row.querySelector('[name="o-on"]').checked });
+  });
+}
+function drawOptEditor() {
+  const box = $('[data-opts-ed]', sheet);
+  if (!box || !edit) return;
+  const n = edit.options.length;
+  box.innerHTML = n ? `<div class="opt-ed opt-ed--head" aria-hidden="true"><span>Srpski</span><span>Francuski</span><span>Engleski</span></div>
+    ${edit.options.map((o, i) => {
+      const stock = o.stockRaw ?? (o.stock ?? '');
+      const label = o.label_sr || `opcija ${i + 1}`;
+      return `<div class="opt-ed" data-oi="${i}">
+        <input class="input" name="o-sr" lang="sr" value="${esc(o.label_sr || '')}" placeholder="Srpski" aria-label="Opcija ${i + 1}, srpski naziv" autocomplete="off">
+        <input class="input" name="o-fr" lang="fr" value="${esc(o.label_fr || '')}" placeholder="Francuski" aria-label="${esc(label)}, francuski" autocomplete="off">
+        <input class="input" name="o-en" lang="en" value="${esc(o.label_en || '')}" placeholder="Engleski" aria-label="${esc(label)}, engleski" autocomplete="off">
+        <input class="input" name="o-sku" value="${esc(o.sku || '')}" placeholder="Šifra" aria-label="${esc(label)}, šifra" autocomplete="off" spellcheck="false">
+        <input class="input input--stock" name="o-stock" value="${esc(String(stock))}" placeholder="Stanje" inputmode="numeric" aria-label="${esc(label)}, stanje (prazno: ne prati se)" autocomplete="off">
+        <label class="check opt-ed__on"><input type="checkbox" name="o-on"${o.active !== false ? ' checked' : ''}><span>Na sajtu</span><span class="visually-hidden">, ${esc(label)}</span></label>
+        <button class="btn btn--s" type="button" data-opt-del="${i}" aria-label="Ukloni ${esc(label)}">Ukloni</button>
+      </div>`;
+    }).join('')}` : '<p class="photos__none">Bez opcija: član stavlja sam artikal u listu.</p>';
+}
+async function saveOptions(code) {
+  const before = new Map(optionsOf(code).map((o) => [o.id, o]));
+  const rows = edit.options.map((o, i) => ({ ...o, sort: (i + 1) * 10, stock: o.stockRaw === undefined ? o.stock ?? null : o.stockRaw === '' ? null : Number(o.stockRaw) }));
+  const body = (o) => ({ label_sr: o.label_sr, label_fr: o.label_fr, label_en: o.label_en, sku: o.sku, stock: o.stock, active: o.active !== false, sort: o.sort });
+  const fresh = rows.filter((o) => !o.id);
+  const changed = rows.filter((o) => o.id && JSON.stringify(body(o)) !== JSON.stringify(body(before.get(o.id) || {})));
+  if (fresh.length) await db('options', { method: 'POST', body: fresh.map((o) => ({ product: code, ...body(o) })) });
+  for (const o of changed) await db(`options?id=${eq(o.id)}`, { method: 'PATCH', body: body(o) });
+  if (edit.dropped.length) await db(`options?id=in.(${edit.dropped.join(',')})`, { method: 'DELETE' });
+  if (fresh.length || changed.length || edit.dropped.length) D.options = await allRows('options?select=*&order=product.asc,sort.asc,id.asc');
 }
 function drawPhotos() {
   const ul = $('[data-photos]', sheet);
@@ -1236,6 +1300,7 @@ async function addFiles(input) {
 async function submitProduct(form) {
   const v = (n) => form.elements[n].value.trim();
   const errs = [];
+  let formMsg = '';
   const code = v('code');
   if (!code) errs.push(invalid(form, 'code', 'Upišite šifru artikla.'));
   else if (code !== edit.code && byCode(code)) errs.push(invalid(form, 'code', `Šifra ${code} već postoji.`));
@@ -1250,7 +1315,14 @@ async function submitProduct(form) {
   if (minRaw !== '' && !/^\d{1,7}$/.test(minRaw)) errs.push(invalid(form, 'min_stock', 'Ceo broj, 0 ili više, ili prazno.'));
   const sortRaw = v('sort');
   if (sortRaw !== '' && !/^-?\d{1,6}$/.test(sortRaw)) errs.push(invalid(form, 'sort', 'Ceo broj, na primer 10.'));
-  if (errs.length) { errs[0].focus(); return; }
+  readOptEditor();
+  edit.options.forEach((o, i) => {
+    const row = $(`[data-oi="${i}"]`, sheet);
+    const bad = (name, msg) => { const el = row.querySelector(`[name="${name}"]`); el.setAttribute('aria-invalid', 'true'); errs.push(el); if (!formMsg) formMsg = msg; };
+    if (!o.label_sr) bad('o-sr', `Opcija ${i + 1}: upišite srpski naziv ili je uklonite.`);
+    if (o.stockRaw && !/^\d{1,7}$/.test(o.stockRaw)) bad('o-stock', `${o.label_sr || `Opcija ${i + 1}`}: stanje je ceo broj, 0 ili više, ili prazno.`);
+  });
+  if (errs.length) { errs[0].focus(); if (formMsg) formError(form, formMsg); return; }
 
   const row = {
     code, category: v('category'),
@@ -1274,6 +1346,14 @@ async function submitProduct(form) {
       }
     }
     if (old === null) D.products.push(saved); else Object.assign(byCode(old), saved);
+    if (old !== null && old !== code) D.options.forEach((o) => { if (o.product === old) o.product = code; });
+    try { await saveOptions(code); } catch (e) {
+      busy(form, false);
+      edit.code = code;
+      if (!e.signedOut) formError(form, `Artikal je sačuvan, ali opcije nisu. ${reason(e)}`);
+      draw();
+      return;
+    }
     const gone = (byCodeBefore.get(old) || []).filter((s) => !edit.photos.some((ph) => ph.src === s));
     edit.saved = true;
     removeFiles(gone);
@@ -1301,6 +1381,8 @@ async function deleteProduct() {
   }
   const copy = { ...p };
   delete copy.available; delete copy.updated_at;
+  const opts = optionsOf(p.code).map(({ id, available, updated_at, ...o }) => o);
+  D.options = D.options.filter((o) => o.product !== p.code);
   D.products = D.products.filter((x) => x !== p);
   edit.saved = true;
   closeSheet();
@@ -1310,6 +1392,7 @@ async function deleteProduct() {
     undone = true;
     try {
       D.products.push(one(await db('products', { method: 'POST', body: copy, prefer: 'return=representation' })));
+      if (opts.length) { await db('options', { method: 'POST', body: opts }); D.options = await allRows('options?select=*&order=product.asc,sort.asc,id.asc'); }
       draw();
     } catch (e) { if (!e.signedOut) notify(`${p.code} nije vraćen. ${reason(e)}`, null, true); }
   });
@@ -1467,11 +1550,11 @@ function orderSheet(o) {
       <dl class="facts">${facts.map(([k, x]) => `<div><dt>${k}</dt><dd>${x}</dd></div>`).join('')}</dl>
       <table class="tbl tbl--lines">
         <thead><tr><th scope="col">Šifra</th><th scope="col">Artikal</th><th scope="col" class="num">Kol.</th><th scope="col" class="num">Cena</th><th scope="col" class="num">Ukupno</th></tr></thead>
-        <tbody>${o.items.map((l) => `<tr><th scope="row" class="c-code">${esc(l.code)}</th><td>${esc(l.name)}</td><td class="num">${l.qty}${l.unit === 'kg' ? ' kg' : ''}</td><td class="num">${esc(money.format(l.price))}</td><td class="num">${esc(money.format(l.price * l.qty))}</td></tr>`).join('')}</tbody>
+        <tbody>${o.items.map((l) => `<tr><th scope="row" class="c-code">${esc(l.sku || l.code)}</th><td>${esc(l.name)}</td><td class="num">${l.qty}${l.unit === 'kg' ? ' kg' : ''}</td><td class="num">${esc(money.format(l.price))}</td><td class="num">${esc(money.format(l.price * l.qty))}</td></tr>`).join('')}</tbody>
         <tfoot><tr><th scope="row" colspan="4">Ukupno</th><td class="num total">${esc(money.format(o.total))}</td></tr></tfoot>
       </table>
       <p class="order__stock">${o.status === 'done'
-        ? (taken?.length ? `Skinuto sa stanja: ${taken.map(([c, n]) => `${esc(c)} × ${n}`).join(', ')}.` : 'Nijedan artikal iz porudžbine nema praćeno stanje, pa stanje nije menjano.')
+        ? (taken?.length ? `Skinuto sa stanja: ${taken.map(([c, n]) => `${esc(c.startsWith('#') ? optById(c.slice(1))?.sku || o.items.find((l) => String(l.option) === c.slice(1))?.sku || c : c)} × ${n}`).join(', ')}.` : 'Nijedan artikal iz porudžbine nema praćeno stanje, pa stanje nije menjano.')
         : o.status === 'new' ? 'Kada je označite kao izvršenu, naručene količine se skidaju sa stanja.' : 'Otkazana porudžbina ne menja stanje.'}</p>
     </div>
     <footer class="sheet__foot">
@@ -1595,6 +1678,22 @@ document.addEventListener('click', (e) => {
     return;
   }
   if (t.matches('[data-delete-product]')) { deleteProduct(); return; }
+  if (t.matches('[data-opt-add]')) {
+    readOptEditor();
+    edit.options.push({ label_sr: '', label_fr: null, label_en: null, sku: null, stock: null, active: true });
+    drawOptEditor();
+    $(`[data-oi="${edit.options.length - 1}"] [name="o-sr"]`, sheet)?.focus();
+    return;
+  }
+  if (t.matches('[data-opt-del]')) {
+    readOptEditor();
+    const i = Number(t.dataset.optDel);
+    const [o] = edit.options.splice(i, 1);
+    if (o?.id) edit.dropped.push(o.id);
+    drawOptEditor();
+    ($(`[data-opt-del="${Math.min(i, edit.options.length - 1)}"]`, sheet) || $('[data-opt-add]', sheet))?.focus();
+    return;
+  }
   if (t.matches('[data-delete-cat]')) { deleteCat(); return; }
   if (t.matches('[data-delete-priest]')) { deletePriest(); return; }
   if (t.matches('[data-password]')) { passwordForm(); return; }

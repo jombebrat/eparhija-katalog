@@ -1,7 +1,7 @@
 // The member's account: sign in with a code sent by email, see past orders and their PDFs,
 // order the same again, keep the details that fill in the order form.
 // The database shows a signed-in member only their own row and their own orders.
-import { esc, toCyrillic } from './render.js?v=c6dbe39cc4';
+import { esc, toCyrillic } from './render.js?v=1381f84ccd';
 
 const D = JSON.parse(document.getElementById('account-data').textContent);
 const S = D.s;
@@ -195,7 +195,7 @@ function drawOrders() {
         <summary>${esc(S.acLines)} <span class="myorder__count">(${esc(count(o.items.length))})</span></summary>
         <table class="lines">
           <thead><tr><th scope="col">${esc(S.code)}</th><th scope="col">${esc(S.acItem)}</th><th scope="col" class="num">${esc(S.acQty)}</th><th scope="col" class="num">${esc(S.acAmount)}</th></tr></thead>
-          <tbody>${o.items.map((l) => `<tr><td class="code">${esc(l.code)}</td><td>${esc(l.name)}</td><td class="num">${esc(String(l.qty))}${l.unit === 'kg' ? ` ${esc(S.kg)}` : ''}</td><td class="num">${esc(money.format(l.price * l.qty))}</td></tr>`).join('')}</tbody>
+          <tbody>${o.items.map((l) => `<tr><td class="code">${esc(l.sku || l.code)}</td><td>${esc(l.name)}</td><td class="num">${esc(String(l.qty))}${l.unit === 'kg' ? ` ${esc(S.kg)}` : ''}</td><td class="num">${esc(money.format(l.price * l.qty))}</td></tr>`).join('')}</tbody>
         </table>
       </details>
       <div class="myorder__actions">
@@ -230,16 +230,24 @@ async function orderAgain(id, b) {
   const o = orders.find((x) => x.id === id);
   const msg = $('[data-msg]', b.closest('.myorder'));
   b.disabled = true;
-  let live = null;
+  let live = null, liveOpts = null;
   try {
-    live = await call(`${D.api.url}/rest/v1/products?select=code,available&active=eq.true`, { headers: { apikey: D.api.key } });
+    [live, liveOpts] = await Promise.all([
+      call(`${D.api.url}/rest/v1/products?select=code,available&active=eq.true`, { headers: { apikey: D.api.key } }),
+      call(`${D.api.url}/rest/v1/options?select=id,product,available&active=eq.true`, { headers: { apikey: D.api.key } }),
+    ]);
   } catch { /* the catalogue checks again when the order is sent */ }
   const ok = live ? new Map(live.map((p) => [p.code, p.available])) : null;
+  const okOpt = liveOpts ? new Map(liveOpts.map((x) => [x.id, x.available])) : null;
+  const hasOpts = liveOpts ? new Set(liveOpts.map((x) => x.product)) : new Set();
   const list = store.get('eparhija-katalog-liste', {}) || {};
   const skipped = [];
   for (const l of o.items) {
-    if (ok && !ok.get(l.code)) { skipped.push(l.code); continue; }
-    list[l.code] = (list[l.code] || 0) + l.qty;
+    // a line with an option (the saint of an icon) goes back with it; an article that now has options needs a new choice
+    const gone = ok && (!ok.get(l.code) || (l.option ? okOpt && !okOpt.get(l.option) : hasOpts.has(l.code)));
+    if (gone) { skipped.push(l.sku || l.code); continue; }
+    const key = l.option ? `${l.code}#${l.option}` : l.code;
+    list[key] = (list[key] || 0) + l.qty;
   }
   store.set('eparhija-katalog-liste', list);
   if (skipped.length && skipped.length === o.items.length) {
