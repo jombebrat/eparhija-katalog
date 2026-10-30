@@ -1,4 +1,4 @@
-# Magacin Eparhije zapadnoevropske · Magasin du Diocèse d'Europe occidentale
+# Magacin Eparhije zapadnoevropske · Entrepôt du Diocèse d'Europe occidentale
 
 Katalog magacina Eparhije zapadnoevropske (23, rue du Simplon, 75018 Paris): 147 artikala u 12 kategorija, sa šiframa i fotografijama iz kataloga `CATALOGUE_SR_FR_EN.pptx`. **Cene vide samo članovi** čiji je mejl na listi, a porudžbina stiže kao PDF sa grbom. Članovi imaju **svoj nalog** sa svim porudžbinama, a magacin sve vodi iz **administracije** na `/admin/`, sa statistikom i listom za naručivanje.
 

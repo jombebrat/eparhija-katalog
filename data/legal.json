@@ -3,7 +3,7 @@
   "fr": {
     "slug": "mentions-legales",
     "title": "Mentions légales et confidentialité",
-    "description": "Qui édite le catalogue du magasin du Diocèse, où il est hébergé, et ce que nous faisons de vos données.",
+    "description": "Qui édite le catalogue de l'entrepôt du Diocèse, où il est hébergé, et ce que nous faisons de vos données.",
     "companyLine": "MAGACIN ZAPADNOEVROPSKI SASU, RCS Paris 981 254 600, TVA FR52981254600.",
     "updated": "Mise à jour le 29 octobre 2026.",
     "contactPost": "Par courrier au siège.",
@@ -64,7 +64,7 @@
         "dl": [
           [
             "Liste des membres",
-            "E-mail, nom, paroisse, téléphone et adresse des membres, inscrits par le magasin. Sert à réserver les prix aux membres et à préremplir leurs commandes (intérêt légitime). Conservée tant que la personne est membre."
+            "E-mail, nom, paroisse, téléphone et adresse des membres, inscrits par l'entrepôt. Sert à réserver les prix aux membres et à préremplir leurs commandes (intérêt légitime). Conservée tant que la personne est membre."
           ],
           [
             "Commandes",
@@ -83,7 +83,7 @@
       {
         "h": "Qui y a accès",
         "p": [
-          "Seule l'équipe du magasin. Nos prestataires techniques, Supabase (base de données, serveurs à Paris) et GitHub (pages du site), traitent les données pour notre compte uniquement. Ce sont des sociétés américaines : un éventuel transfert hors de l'Union européenne est encadré par les clauses contractuelles types de la Commission européenne."
+          "Seule l'équipe de l'entrepôt. Nos prestataires techniques, Supabase (base de données, serveurs à Paris) et GitHub (pages du site), traitent les données pour notre compte uniquement. Ce sont des sociétés américaines : un éventuel transfert hors de l'Union européenne est encadré par les clauses contractuelles types de la Commission européenne."
         ]
       },
       {
@@ -95,7 +95,7 @@
       {
         "h": "Vos droits",
         "p": [
-          "Vous pouvez demander à consulter, corriger ou supprimer vos données, vous opposer à leur traitement ou le limiter, et les recevoir dans un format lisible. Les commandes ne sont supprimées qu'à la fin de la durée imposée par la loi. Écrivez au magasin à l'adresse du siège.",
+          "Vous pouvez demander à consulter, corriger ou supprimer vos données, vous opposer à leur traitement ou le limiter, et les recevoir dans un format lisible. Les commandes ne sont supprimées qu'à la fin de la durée imposée par la loi. Écrivez à l'entrepôt à l'adresse du siège.",
           "Si vous estimez que vos droits ne sont pas respectés, vous pouvez saisir la CNIL (cnil.fr)."
         ]
       }

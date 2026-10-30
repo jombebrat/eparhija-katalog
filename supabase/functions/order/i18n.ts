@@ -5,7 +5,7 @@ export const LOCALE: Record<Lang, string> = { fr: 'fr-FR', en: 'en-GB', sr: 'sr-
 
 export const T: Record<Lang, Record<string, string>> = {
   fr: {
-    org: 'Magasin du Diocèse d’Europe occidentale',
+    org: 'Entrepôt du Diocèse d’Europe occidentale',
     sub: 'Diocèse orthodoxe serbe d’Europe occidentale',
     company: 'MAGACIN ZAPADNOEVROPSKI, SASU au capital de 1 000 €, RCS Paris 981 254 600, TVA FR52981254600',
     order: 'Commande n°\u00a0{n}',
@@ -26,7 +26,7 @@ export const T: Record<Lang, Record<string, string>> = {
     perKg: '/\u00a0kg',
     foot: 'Prix en euros selon le catalogue de l’entrepôt. L’entrepôt confirme la disponibilité et le total.',
     page: 'Page {i} sur {n}',
-    subject: 'Commande n°\u00a0{n}, Magasin du Diocèse',
+    subject: 'Commande n°\u00a0{n}, Entrepôt du Diocèse',
     mailPriest: 'Bonjour,\n\nVoici votre commande n°\u00a0{n}, envoyée à l’entrepôt du Diocèse. Le détail est dans le PDF joint.\n\nTotal indicatif : {total}',
     mailWarehouse: 'Nouvelle commande n°\u00a0{n} de {who}.\n\nTotal indicatif : {total}\n\nLe détail est dans le PDF joint. Répondre à ce message écrit directement à {email}.',
     file: 'commande-{n}.pdf',
@@ -35,7 +35,7 @@ export const T: Record<Lang, Record<string, string>> = {
     quoteFor: 'Pour',
     quoteFoot: 'Prix en euros, valables 30 jours à partir de la date du devis. L’entrepôt confirme la disponibilité à la commande.',
     quoteLink: 'Commander selon ce devis :',
-    quoteSubject: 'Devis n°\u00a0{n}, Magasin du Diocèse',
+    quoteSubject: 'Devis n°\u00a0{n}, Entrepôt du Diocèse',
     quoteMail: 'Bonjour,\n\nVoici les prix des articles que vous avez demandés : devis n°\u00a0{n}, en PDF joint.\n\nTotal indicatif : {total}\n\nPour commander selon ce devis, ouvrez ce lien :\n{link}\n\nL’entrepôt du Diocèse d’Europe occidentale',
     quoteFile: 'devis-{n}.pdf',
     inqSubject: 'Demande de prix n°\u00a0{n}',

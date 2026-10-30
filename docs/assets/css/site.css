@@ -85,7 +85,7 @@ h1, h2, h3 { color: var(--color-ink); }
 /* ---------- hero: the index ---------- */
 .hero { padding-block: var(--space-lg) var(--space-2xl); }
 .hero__grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--space-3xl); align-items: center; }
-.hero h1 { font-size: clamp(2.125rem, 3.2vw + 1rem, 4.5rem); line-height: 1.02; max-width: 13ch; }
+.hero h1 { font-size: clamp(1.875rem, 2.2vw + 1rem, 3.5rem); line-height: 1.06; letter-spacing: -0.035em; text-wrap: balance; overflow-wrap: normal; hyphens: manual; }
 .hero .lead { margin-top: var(--space-lg); max-width: 34ch; }
 .find { margin-top: var(--space-xl); max-width: 30rem; }
 .find label { display: block; margin-bottom: var(--space-xs); font-size: var(--text-sm); color: var(--color-ink-2); }
