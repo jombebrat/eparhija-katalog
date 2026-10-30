@@ -1217,6 +1217,72 @@
    "sort": 480
   },
   {
+   "code": "P155",
+   "category": "veilleuses",
+   "name_fr": "Veilleuse en onyx",
+   "name_en": "Onyx oil lamp",
+   "name_sr": "Кандило од оникса",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
+   "photos": [
+    {
+     "src": "p155-1",
+     "w": 526,
+     "h": 636,
+     "W": 526,
+     "H": 636
+    }
+   ],
+   "sort": 481
+  },
+  {
+   "code": "P156",
+   "category": "veilleuses",
+   "name_fr": "Veilleuse en onyx",
+   "name_en": "Onyx oil lamp",
+   "name_sr": "Кандило од оникса",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
+   "photos": [
+    {
+     "src": "p156-1",
+     "w": 461,
+     "h": 640,
+     "W": 503,
+     "H": 698
+    }
+   ],
+   "sort": 482
+  },
+  {
+   "code": "P157",
+   "category": "veilleuses",
+   "name_fr": "Veilleuse en onyx",
+   "name_en": "Onyx oil lamp",
+   "name_sr": "Кандило од оникса",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
+   "photos": [
+    {
+     "src": "p157-1",
+     "w": 540,
+     "h": 640,
+     "W": 580,
+     "H": 688
+    }
+   ],
+   "sort": 483
+  },
+  {
    "code": "H012",
    "category": "croix",
    "name_fr": "Croix de table",
@@ -1698,6 +1764,28 @@
     }
    ],
    "sort": 690
+  },
+  {
+   "code": "P154",
+   "category": "pendentifs",
+   "name_fr": "Petites croix en pierres semi-précieuses",
+   "name_en": "Small crosses in semi-precious stones",
+   "name_sr": "Крстићи - полудраго камење",
+   "note_fr": null,
+   "note_en": null,
+   "note_sr": null,
+   "unit": "piece",
+   "available": true,
+   "photos": [
+    {
+     "src": "p154-1",
+     "w": 494,
+     "h": 640,
+     "W": 768,
+     "H": 995
+    }
+   ],
+   "sort": 695
   },
   {
    "code": "H011",
