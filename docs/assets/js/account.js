@@ -6,6 +6,7 @@ import { esc, toCyrillic } from './render.js?v=1381f84ccd';
 const D = JSON.parse(document.getElementById('account-data').textContent);
 const S = D.s;
 const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const fill = (s, v) => Object.entries(v).reduce((a, [k, x]) => a.replaceAll(`{${k}}`, x), s);
 const money = new Intl.NumberFormat(D.locale, { style: 'currency', currency: 'EUR' });
 const day = new Intl.DateTimeFormat(D.locale, { dateStyle: 'long', timeZone: 'Europe/Paris' });
@@ -158,7 +159,17 @@ verify.addEventListener('submit', async (e) => {
 // ---------- signed in ----------
 let me = null;
 let orders = null;
+// the tabs at the side: one panel at a time, kept in the address
+const TABS = ['pregled', 'porudzbine', 'podaci'];
+function tab() {
+  const h = location.hash.slice(1);
+  const t = TABS.includes(h) ? h : 'pregled';
+  $$('[data-apanel]').forEach((p) => { p.hidden = p.dataset.apanel !== t; });
+  $$('[data-atab]').forEach((a) => { if (a.dataset.atab === t) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+}
+window.addEventListener('hashchange', tab);
 async function enter() {
+  tab();
   $('[data-boot]').hidden = true;
   out.hidden = true;
   inside.hidden = false;
@@ -201,6 +212,7 @@ function drawStats() {
   const live = orders.filter((o) => o.status !== 'cancelled');
   const sec = $('[data-stats]');
   sec.hidden = !live.length;
+  $('[data-stats-none]').hidden = !!live.length;
   if (!live.length) return;
   const spent = live.reduce((a, o) => a + Number(o.total), 0);
   $('[data-st-orders]').textContent = String(live.length);

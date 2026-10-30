@@ -126,3 +126,30 @@ a.listbtn { text-decoration: none; }
   .acct__figures dt { font-size: var(--t-xs); }
   .acct__figures dd { font-size: var(--t-md); }
 }
+
+/* ---------- side tabs, as in the admin ---------- */
+.acct-page .acct__shell { display: grid; grid-template-columns: 16rem minmax(0, 1fr); gap: var(--space-lg); align-items: start; }
+.acct-page .acct__side { position: sticky; top: var(--space-lg); display: grid; gap: var(--space-md); padding: var(--space-md); border: var(--rule-hair) solid var(--color-rule); border-radius: 14px; background: var(--color-paper); box-shadow: var(--acct-shadow); }
+.acct-page .acct__side .acct__who { padding: var(--space-xs) var(--space-xs) var(--space-md); border: 0; border-bottom: var(--rule-hair) solid var(--color-rule); border-radius: 0; background: none; box-shadow: none; }
+.acct__name { overflow-wrap: anywhere; }
+.acct__tabs { display: grid; gap: var(--space-3xs); }
+.acct__tabs a { display: flex; align-items: center; gap: var(--space-sm); min-height: 44px; padding: 0 var(--space-sm); border-radius: 10px; color: var(--color-ink-2); font-weight: 500; text-decoration: none; transition: background-color var(--dur-micro) var(--ease-out); }
+.acct__ic { flex: none; color: var(--color-muted); }
+@media (hover: hover) { .acct__tabs a:hover { background: var(--color-paper-2); color: var(--color-ink); } }
+.acct__tabs a[aria-current="page"] { background: var(--color-paper-3); color: var(--color-ink); font-weight: 600; }
+.acct__tabs a[aria-current="page"] .acct__ic { color: var(--color-ink); }
+.acct__tabs a:focus-visible { outline: 2px solid var(--color-focus); outline-offset: -2px; }
+.acct__out-btn { width: 100%; }
+.acct__main { min-width: 0; display: grid; }
+.acct__h { margin-bottom: var(--space-md); }
+.acct-page .acct__stats { grid-template-columns: minmax(0, 1fr); }
+.acct-page .acct__figures { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.acct-page .acct__details { max-width: 36rem; }
+.acct__empty { max-width: 52ch; color: var(--color-ink-2); }
+@media (max-width: 60rem) {
+  .acct-page .acct__shell { grid-template-columns: minmax(0, 1fr); }
+  .acct-page .acct__side { position: static; }
+  .acct__tabs { display: flex; overflow-x: auto; scrollbar-width: none; }
+  .acct__tabs a { white-space: nowrap; }
+  .acct__ic { display: none; }
+}

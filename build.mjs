@@ -523,7 +523,7 @@ console.log('wrote docs/admin/index.html');
 
 // ---------- the member's account page, one per language ----------
 const ACCOUNT_STRINGS = ['acTitle', 'acEmail', 'acSend', 'acSendHelp', 'acSending', 'acSent', 'acCode', 'acSignIn', 'acSigningIn', 'acAgain', 'acOther',
-  'acWrongCode', 'acNoCode', 'acMailOff', 'acMailFailed', 'acSignedOut', 'acOrders', 'acStats', 'acStatOrders', 'acStatSpent', 'acStatAvg', 'acTop', 'acTopHint', 'acTopNone', 'acOrdersEmpty', 'acOrdersEmptyText', 'acOrdersError', 'acRetry',
+  'acWrongCode', 'acNoCode', 'acMailOff', 'acMailFailed', 'acSignedOut', 'acOrders', 'acTabOverview', 'acStats', 'acStatOrders', 'acStatSpent', 'acStatAvg', 'acTop', 'acTopHint', 'acTopNone', 'acOrdersEmpty', 'acOrdersEmptyText', 'acOrdersError', 'acRetry',
   'acOrder', 'acStatusNew', 'acStatusDone', 'acStatusCancelled', 'acLines', 'acPdf', 'acPdfMaking', 'acPdfFailed', 'acReorder', 'acReorderSome',
   'acSave', 'acSaving', 'acSaved', 'acSaveFailed', 'acItem', 'acQty', 'acAmount', 'acCatalogue', 'code', 'total', 'kg', 'signOut',
   'loginUnknown', 'loginTooMany', 'loginInvalid', 'loginFailed', 'formName', 'formParish', 'formPhone', 'formAddress', 'optional', 'pricesFor'];
@@ -599,28 +599,43 @@ function accountPage(lang) {
       </section>
 
       <section class="acct__in" data-in hidden aria-labelledby="h-orders">
-        <div class="acct__who">
-          <div><p class="acct__name" data-name></p><p class="acct__meta" data-meta></p></div>
-          <button class="btn" type="button" data-signout>${t(lang, S.signOut)}</button>
-        </div>
-        <section class="acct__stats" data-stats aria-labelledby="h-stats" hidden>
-          <h2 id="h-stats" class="visually-hidden">${t(lang, S.acStats)}</h2>
-          <dl class="acct__figures">
-            <div><dt>${t(lang, S.acStatOrders)}</dt><dd data-st-orders></dd></div>
-            <div><dt>${t(lang, S.acStatSpent)}</dt><dd data-st-spent></dd></div>
-            <div><dt>${t(lang, S.acStatAvg)}</dt><dd data-st-avg></dd></div>
-          </dl>
-          <section class="acct__top" aria-labelledby="h-top">
-            <h3 id="h-top">${t(lang, S.acTop)}</h3>
-            <ol class="toplist" data-top role="list"></ol>
-            <p class="acct__meta">${t(lang, S.acTopHint)}</p>
-          </section>
-        </section>
-        <div class="acct__cols">
+        <div class="acct__shell">
+          <aside class="acct__side">
+            <div class="acct__who">
+              <div><p class="acct__name" data-name></p><p class="acct__meta" data-meta></p></div>
+            </div>
+            <nav class="acct__tabs" aria-label="${t(lang, S.acTitle)}">
+              <a href="#pregled" data-atab="pregled"><svg class="acct__ic" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="6" height="6" rx="1.5"/><rect x="11" y="3" width="6" height="6" rx="1.5"/><rect x="3" y="11" width="6" height="6" rx="1.5"/><rect x="11" y="11" width="6" height="6" rx="1.5"/></svg><span>${t(lang, S.acTabOverview)}</span></a>
+              <a href="#porudzbine" data-atab="porudzbine"><svg class="acct__ic" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2.5l1.7 8h8l1.5-5.5H6"/><circle cx="8" cy="16" r="1"/><circle cx="14" cy="16" r="1"/></svg><span>${t(lang, S.acStatOrders)}</span></a>
+              <a href="#podaci" data-atab="podaci"><svg class="acct__ic" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="7" r="3"/><path d="M3.5 17c.8-3 3.2-4.5 6.5-4.5s5.7 1.5 6.5 4.5"/></svg><span>${t(lang, S.acDetails)}</span></a>
+            </nav>
+            <button class="btn acct__out-btn" type="button" data-signout>${t(lang, S.signOut)}</button>
+          </aside>
+          <div class="acct__main">
+            <div data-apanel="pregled">
+              <h2 class="acct__h">${t(lang, S.acTabOverview)}</h2>
+              <section class="acct__stats" data-stats aria-labelledby="h-stats" hidden>
+                <h2 id="h-stats" class="visually-hidden">${t(lang, S.acStats)}</h2>
+                <dl class="acct__figures">
+                  <div><dt>${t(lang, S.acStatOrders)}</dt><dd data-st-orders></dd></div>
+                  <div><dt>${t(lang, S.acStatSpent)}</dt><dd data-st-spent></dd></div>
+                  <div><dt>${t(lang, S.acStatAvg)}</dt><dd data-st-avg></dd></div>
+                </dl>
+                <section class="acct__top" aria-labelledby="h-top">
+                  <h3 id="h-top">${t(lang, S.acTop)}</h3>
+                  <ol class="toplist" data-top role="list"></ol>
+                  <p class="acct__meta">${t(lang, S.acTopHint)}</p>
+                </section>
+              </section>
+              <p class="acct__empty" data-stats-none hidden>${t(lang, S.acTopNone)}</p>
+            </div>
+            <div data-apanel="porudzbine" hidden>
           <section class="acct__orders">
             <h2 id="h-orders">${t(lang, S.acOrders)}</h2>
             <div data-orders aria-live="polite"></div>
           </section>
+            </div>
+            <div data-apanel="podaci" hidden>
           <section class="acct__details" aria-labelledby="h-details">
             <h2 id="h-details">${t(lang, S.acDetails)}</h2>
             <p class="acct__meta">${t(lang, S.acDetailsLead)}</p>
@@ -633,6 +648,8 @@ function accountPage(lang) {
               <p class="acct__help" data-details-help aria-live="polite"></p>
             </form>
           </section>
+            </div>
+          </div>
         </div>
       </section>
     </div>
