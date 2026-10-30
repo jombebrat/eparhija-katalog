@@ -523,7 +523,7 @@ body.adm { font-size: var(--t-md); line-height: 1.5; background: var(--adm-bg); 
 }
 :root[data-theme="dark"] .c-photo img, :root[data-theme="dark"] .toplist__img img { mix-blend-mode: normal; background: var(--photo-bg); }
 
-.theme { display: inline-flex; padding: 4px; border: var(--rule-hair) solid var(--color-rule); border-radius: 10px; background: var(--color-paper); }
+.theme { display: inline-flex; padding: var(--space-2xs); border: var(--rule-hair) solid var(--color-rule); border-radius: 10px; background: var(--color-paper); }
 .theme button { position: relative; display: inline-grid; place-items: center; width: 32px; height: 28px; border: 0; border-radius: 7px; background: transparent; color: var(--color-muted); cursor: pointer; }
 .theme button::before { content: ""; position: absolute; inset: -6px -1px; }
 .theme button[aria-pressed="true"] { background: var(--color-paper-3); color: var(--color-ink); }
