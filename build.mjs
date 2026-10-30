@@ -359,6 +359,7 @@ function adminPage() {
   <meta name="robots" content="noindex, nofollow">
   <link rel="icon" href="../favicon.png" type="image/png">
   <link rel="preload" href="../assets/fonts/onest-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <script>try { var th = localStorage.getItem('ek-theme'); if (th === 'dark' || th === 'light') document.documentElement.dataset.theme = th; } catch (e) {}</script>
   <link rel="stylesheet" href="../assets/css/admin.css?v=${V.adminCss}">
 </head>
 <body class="adm">
@@ -399,6 +400,11 @@ function adminPage() {
     <div class="shell">
     <header class="bar">
       <div class="bar__me">
+        <div class="theme" role="group" aria-label="Izgled: dan ili noć" data-theme-switch>
+          <button type="button" data-theme-set="light" aria-pressed="false" title="Dan" aria-label="Dan"><svg width="16" height="16" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="10" cy="10" r="3.5"/><path d="M10 2v2M10 16v2M2 10h2M16 10h2M4.3 4.3l1.4 1.4M14.3 14.3l1.4 1.4M4.3 15.7l1.4-1.4M14.3 5.7l1.4-1.4"/></svg></button>
+          <button type="button" data-theme-set="auto" aria-pressed="true" title="Prema uređaju" aria-label="Prema uređaju"><svg width="16" height="16" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="6.5"/><path d="M10 3.5v13a6.5 6.5 0 0 0 0-13z" fill="currentColor"/></svg></button>
+          <button type="button" data-theme-set="dark" aria-pressed="false" title="Noć" aria-label="Noć"><svg width="16" height="16" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 11.5A6.5 6.5 0 0 1 8.5 3.5a6.5 6.5 0 1 0 8 8z"/></svg></button>
+        </div>
         <button class="btn btn--quiet btn--s bar__pdf" type="button" data-pdf-refresh title="Osveži PDF cenovnik">Osveži PDF</button>
         <button class="btn btn--quiet btn--s profile__btn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="profile-menu" data-profile>
           <svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="7" r="3.25" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 17c.8-3 3.2-4.5 6.5-4.5s5.7 1.5 6.5 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>

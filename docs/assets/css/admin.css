@@ -448,7 +448,7 @@ body.adm { font-size: var(--t-md); line-height: 1.5; background: var(--adm-bg); 
 .bar__pdf { border-color: var(--color-rule); background: var(--color-paper); }
 
 /* ---------- the look: white cards on a soft grey ground ---------- */
-.screens .panel, .pdfcard, .wait, .kpi, .region:not(.ov):not(:empty), .state--card { padding: var(--space-lg); border: var(--rule-hair) solid var(--color-rule); border-radius: 14px; background: var(--color-paper); box-shadow: var(--adm-shadow); }
+.screens .panel, .pdfcard, .wait, .kpi, .region:not(.ov):not(.stats):not(:empty), .state--card { padding: var(--space-lg); border: var(--rule-hair) solid var(--color-rule); border-radius: 14px; background: var(--color-paper); box-shadow: var(--adm-shadow); }
 .screens .pdfcard { margin-top: 0; margin-bottom: var(--space-lg); }
 .kpi { border-top-width: var(--rule-hair); }
 .ov { gap: var(--space-lg); }
@@ -460,7 +460,7 @@ body.adm { font-size: var(--t-md); line-height: 1.5; background: var(--adm-bg); 
 .tbl thead th:last-child { border-radius: 0 8px 8px 0; }
 .tbl td:first-child, .tbl th:first-child { padding-left: var(--space-sm); }
 .tbl td:last-child, .tbl th:last-child { padding-right: var(--space-sm); }
-.screens .panel .panel, .screens .region:not(.ov) .panel { padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; }
+.screens .panel .panel, .screens .region:not(.ov):not(.stats) .panel { padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; }
 .btn--primary { border-color: var(--color-accent); background: var(--color-accent); color: var(--color-accent-ink); }
 @media (hover: hover) { .btn--primary:hover { background: var(--color-accent-soft-ink); } }
 .btn, .input, .seg button { border-radius: 10px; }
@@ -487,3 +487,55 @@ body.adm { font-size: var(--t-md); line-height: 1.5; background: var(--adm-bg); 
   .pdfcard { grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "state" "act" "help"; }
   .pdfcard__actions { flex-direction: row; }
 }
+
+/* ---------- night: follows the device, or the switch in the top bar ---------- */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+  color-scheme: dark;
+  --adm-bg: oklch(17% 0.012 265); --adm-shadow: 0 1px 2px oklch(0% 0 0 / 0.4);
+  --color-paper: oklch(21.5% 0.013 265); --color-paper-2: oklch(25% 0.013 265); --color-paper-3: oklch(30% 0.015 265);
+  --color-ink: oklch(95% 0.004 265); --color-ink-2: oklch(86% 0.006 265); --color-muted: oklch(70% 0.01 265);
+  --color-rule: oklch(32% 0.014 265);
+  --color-accent: oklch(66% 0.16 275); --color-accent-ink: oklch(14% 0.02 275); --color-accent-soft: oklch(30% 0.075 275); --color-accent-soft-ink: oklch(88% 0.07 275);
+  --color-focus: oklch(76% 0.12 275);
+  --color-error: oklch(70% 0.17 27); --color-error-soft: oklch(29% 0.07 27); --color-error-ink: oklch(82% 0.11 27);
+  --color-success: oklch(72% 0.13 150); --color-success-soft: oklch(28% 0.05 150); --color-success-ink: oklch(82% 0.11 150);
+  --color-warn-soft: oklch(30% 0.06 50); --color-warn-ink: oklch(84% 0.1 55);
+  --color-scrim: oklch(5% 0 0 / 0.6); --color-chart-soft: oklch(48% 0.1 275);
+  --color-on-ink-2: oklch(40% 0.01 265);
+  }
+  :root:not([data-theme="light"]) .c-photo img, :root:not([data-theme="light"]) .toplist__img img { mix-blend-mode: normal; background: #fff; }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --adm-bg: oklch(17% 0.012 265); --adm-shadow: 0 1px 2px oklch(0% 0 0 / 0.4);
+  --color-paper: oklch(21.5% 0.013 265); --color-paper-2: oklch(25% 0.013 265); --color-paper-3: oklch(30% 0.015 265);
+  --color-ink: oklch(95% 0.004 265); --color-ink-2: oklch(86% 0.006 265); --color-muted: oklch(70% 0.01 265);
+  --color-rule: oklch(32% 0.014 265);
+  --color-accent: oklch(66% 0.16 275); --color-accent-ink: oklch(14% 0.02 275); --color-accent-soft: oklch(30% 0.075 275); --color-accent-soft-ink: oklch(88% 0.07 275);
+  --color-focus: oklch(76% 0.12 275);
+  --color-error: oklch(70% 0.17 27); --color-error-soft: oklch(29% 0.07 27); --color-error-ink: oklch(82% 0.11 27);
+  --color-success: oklch(72% 0.13 150); --color-success-soft: oklch(28% 0.05 150); --color-success-ink: oklch(82% 0.11 150);
+  --color-warn-soft: oklch(30% 0.06 50); --color-warn-ink: oklch(84% 0.1 55);
+  --color-scrim: oklch(5% 0 0 / 0.6); --color-chart-soft: oklch(48% 0.1 275);
+  --color-on-ink-2: oklch(40% 0.01 265);
+}
+:root[data-theme="dark"] .c-photo img, :root[data-theme="dark"] .toplist__img img { mix-blend-mode: normal; background: #fff; }
+
+.theme { display: inline-flex; padding: 3px; border: var(--rule-hair) solid var(--color-rule); border-radius: 10px; background: var(--color-paper); }
+.theme button { position: relative; display: inline-grid; place-items: center; width: 34px; height: 30px; border: 0; border-radius: 7px; background: transparent; color: var(--color-muted); cursor: pointer; }
+.theme button::before { content: ""; position: absolute; inset: -6px -1px; }
+.theme button[aria-pressed="true"] { background: var(--color-paper-3); color: var(--color-ink); }
+@media (hover: hover) { .theme button:hover { color: var(--color-ink); } }
+.theme button:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 1px; }
+.bar__me { gap: var(--space-xs); }
+
+/* ---------- statistics: cards, not one long page ---------- */
+.stats { gap: var(--space-lg); }
+.figures { gap: var(--space-md); }
+.figures > div { padding: var(--space-md) var(--space-lg); border: var(--rule-hair) solid var(--color-rule); border-radius: 14px; background: var(--color-paper); box-shadow: var(--adm-shadow); }
+.stats > .region__hint { margin-top: calc(-1 * var(--space-sm)); }
+.stats .pair { gap: var(--space-lg); }
+.stats .panel__head h2 { font-size: var(--t-lg); }
+.stats .tbl-wrap { margin-inline: calc(-1 * var(--space-xs)); }
+.toolbar .field > .field__label, .toolbar .field > label { margin-bottom: 0; }

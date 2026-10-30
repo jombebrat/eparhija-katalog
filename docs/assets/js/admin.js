@@ -1835,6 +1835,22 @@ document.addEventListener('click', (e) => {
   if (t.matches('[data-signout]')) { closeProfile(); signOut(); }
 });
 
+// day or night: automatic follows the device; the choice is kept in this browser
+(function theme() {
+  const root = document.documentElement;
+  const get = () => { try { return localStorage.getItem('ek-theme') || 'auto'; } catch { return 'auto'; } };
+  const apply = (v) => {
+    if (v === 'light' || v === 'dark') root.dataset.theme = v; else delete root.dataset.theme;
+    $$('[data-theme-set]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.themeSet === v)));
+  };
+  apply(get());
+  $$('[data-theme-set]').forEach((b) => b.addEventListener('click', () => {
+    const v = b.dataset.themeSet;
+    try { if (v === 'auto') localStorage.removeItem('ek-theme'); else localStorage.setItem('ek-theme', v); } catch { /* fine */ }
+    apply(v);
+  }));
+})();
+
 // the profile menu: who is signed in, the site, the password, sign out
 const profileBtn = $('[data-profile]');
 const profileMenu = $('[data-profile-menu]');
