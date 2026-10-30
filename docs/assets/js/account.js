@@ -196,7 +196,31 @@ async function loadOrders() {
     box.innerHTML = `<div class="state state--error" role="alert"><p class="state__title">${esc(S.acOrdersError)}</p><p>${esc(e.offline ? S.loginFailed : e.message)}</p><button class="btn" type="button" data-retry>${esc(S.acRetry)}</button></div>`;
   }
 }
+// what this member has bought: totals, and the articles that cost the most over all orders (cancelled ones left out)
+function drawStats() {
+  const live = orders.filter((o) => o.status !== 'cancelled');
+  const sec = $('[data-stats]');
+  sec.hidden = !live.length;
+  if (!live.length) return;
+  const spent = live.reduce((a, o) => a + Number(o.total), 0);
+  $('[data-st-orders]').textContent = String(live.length);
+  $('[data-st-spent]').textContent = money.format(spent);
+  $('[data-st-avg]').textContent = money.format(spent / live.length);
+  const by = new Map();
+  for (const o of live) for (const l of o.items) {
+    const k = l.sku || l.code;
+    const e = by.get(k) || { code: k, name: l.name, qty: 0, unit: l.unit, value: 0, orders: 0 };
+    e.qty += Number(l.qty); e.value += Number(l.price) * Number(l.qty); e.orders += 1;
+    by.set(k, e);
+  }
+  const top = [...by.values()].sort((a, b) => b.value - a.value || b.qty - a.qty).slice(0, 5);
+  const max = top[0]?.value || 1;
+  $('[data-top]').innerHTML = top.map((e, i) => `<li class="toplist__item"><span class="toplist__rank">${i + 1}</span>
+      <span class="toplist__text"><b>${esc(e.name)}</b><span class="sub">${esc(e.code)} · ${esc(String(e.qty))}${e.unit === 'kg' ? ` ${esc(S.kg)}` : ''}</span><span class="toplist__bar"><span style="width:${Math.max(4, Math.round(e.value / max * 100))}%"></span></span></span>
+      <span class="toplist__value">${esc(money.format(e.value))}</span></li>`).join('');
+}
 function drawOrders() {
+  drawStats();
   if (!orders.length) {
     box.innerHTML = `<div class="state"><p class="state__title">${esc(S.acOrdersEmpty)}</p><p>${esc(S.acOrdersEmptyText)}</p><a class="btn" href="${esc(D.catalogue)}">${esc(S.acCatalogue)}</a></div>`;
     return;

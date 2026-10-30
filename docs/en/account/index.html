@@ -11,7 +11,7 @@
   <link rel="alternate" hreflang="sr-Cyrl" href="../../sr/nalog/">
   <link rel="icon" href="../../favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
-  <link rel="stylesheet" href="../../assets/css/account.css?v=5361b8e2d7">
+  <link rel="stylesheet" href="../../assets/css/account.css?v=c6cdf5230b">
   <script>document.documentElement.className = 'js';</script>
 </head>
 <body class="acct-page">
@@ -63,6 +63,19 @@
           <div><p class="acct__name" data-name></p><p class="acct__meta" data-meta></p></div>
           <button class="btn" type="button" data-signout>Sign out</button>
         </div>
+        <section class="acct__stats" data-stats aria-labelledby="h-stats" hidden>
+          <h2 id="h-stats" class="visually-hidden">Your purchases</h2>
+          <dl class="acct__figures">
+            <div><dt>Orders</dt><dd data-st-orders></dd></div>
+            <div><dt>Total spent</dt><dd data-st-spent></dd></div>
+            <div><dt>Average order</dt><dd data-st-avg></dd></div>
+          </dl>
+          <section class="acct__top" aria-labelledby="h-top">
+            <h3 id="h-top">Most ordered</h3>
+            <ol class="toplist" data-top role="list"></ol>
+            <p class="acct__meta">Cancelled orders are not counted. Ranked by amount.</p>
+          </section>
+        </section>
         <div class="acct__cols">
           <section class="acct__orders">
             <h2 id="h-orders">Your orders</h2>
@@ -95,7 +108,7 @@
     </div>
   </footer>
 
-  <script type="application/json" id="account-data">{"lang":"en","locale":"en-GB","catalogue":"../../en/","api":{"url":"https://ivzzhtaksdwbhhioilsn.supabase.co","key":"sb_publishable_rxpulg5CJqz_TpV1brvBCQ_C2ioyLyW"},"s":{"acTitle":"My profile","acEmail":"Your email","acSend":"Get a code","acSendHelp":"We send a 6-digit code to this address.","acSending":"Sending…","acSent":"Code sent to {email}. It works for one hour; check the spam folder too.","acCode":"Code from the email","acSignIn":"Sign in","acSigningIn":"Signing in…","acAgain":"Send the code again","acOther":"Use another address","acWrongCode":"That code doesn’t match or has expired. Ask for a new one.","acNoCode":"Enter the code from the email.","acMailOff":"The warehouse hasn’t switched on sending codes yet. Prices and ordering still work in the catalogue.","acMailFailed":"The email didn’t go out. Try again in a moment.","acSignedOut":"Your session ended. Ask for a new code.","acOrders":"Your orders","acOrdersEmpty":"No orders yet.","acOrdersEmptyText":"Orders sent from the catalogue show up here, with their PDF.","acOrdersError":"Your orders didn’t load.","acRetry":"Try again","acOrder":"Order no. {n}","acStatusNew":"Received","acStatusDone":"Completed","acStatusCancelled":"Cancelled","acLines":"See the items","acPdf":"PDF","acPdfMaking":"Preparing…","acPdfFailed":"The PDF couldn’t be prepared. Try again.","acReorder":"Order again","acReorderSome":"No longer available, not added: {codes}.","acSave":"Save","acSaving":"Saving…","acSaved":"Saved.","acSaveFailed":"Not saved. Try again.","acItem":"Item","acQty":"Qty","acAmount":"Amount","acCatalogue":"Catalogue","code":"Code","total":"Estimated total","kg":"kg","signOut":"Sign out","loginUnknown":"This address isn’t on the members’ list. Check it, or continue without prices.","loginTooMany":"Too many tries. Try again in fifteen minutes.","loginInvalid":"Write the address as name@example.com.","loginFailed":"The check didn’t go through. Try again in a moment.","formName":"Name","formParish":"Parish","formPhone":"Phone","formAddress":"Delivery address","optional":"optional","pricesFor":"Prices for {who}"},"items":{"one":"item","other":"items"}}</script>
-  <script type="module" src="../../assets/js/account.js?v=a6665ee607"></script>
+  <script type="application/json" id="account-data">{"lang":"en","locale":"en-GB","catalogue":"../../en/","api":{"url":"https://ivzzhtaksdwbhhioilsn.supabase.co","key":"sb_publishable_rxpulg5CJqz_TpV1brvBCQ_C2ioyLyW"},"s":{"acTitle":"My profile","acEmail":"Your email","acSend":"Get a code","acSendHelp":"We send a 6-digit code to this address.","acSending":"Sending…","acSent":"Code sent to {email}. It works for one hour; check the spam folder too.","acCode":"Code from the email","acSignIn":"Sign in","acSigningIn":"Signing in…","acAgain":"Send the code again","acOther":"Use another address","acWrongCode":"That code doesn’t match or has expired. Ask for a new one.","acNoCode":"Enter the code from the email.","acMailOff":"The warehouse hasn’t switched on sending codes yet. Prices and ordering still work in the catalogue.","acMailFailed":"The email didn’t go out. Try again in a moment.","acSignedOut":"Your session ended. Ask for a new code.","acOrders":"Your orders","acStats":"Your purchases","acStatOrders":"Orders","acStatSpent":"Total spent","acStatAvg":"Average order","acTop":"Most ordered","acTopHint":"Cancelled orders are not counted. Ranked by amount.","acTopNone":"No purchases to show yet.","acOrdersEmpty":"No orders yet.","acOrdersEmptyText":"Orders sent from the catalogue show up here, with their PDF.","acOrdersError":"Your orders didn’t load.","acRetry":"Try again","acOrder":"Order no. {n}","acStatusNew":"Received","acStatusDone":"Completed","acStatusCancelled":"Cancelled","acLines":"See the items","acPdf":"PDF","acPdfMaking":"Preparing…","acPdfFailed":"The PDF couldn’t be prepared. Try again.","acReorder":"Order again","acReorderSome":"No longer available, not added: {codes}.","acSave":"Save","acSaving":"Saving…","acSaved":"Saved.","acSaveFailed":"Not saved. Try again.","acItem":"Item","acQty":"Qty","acAmount":"Amount","acCatalogue":"Catalogue","code":"Code","total":"Estimated total","kg":"kg","signOut":"Sign out","loginUnknown":"This address isn’t on the members’ list. Check it, or continue without prices.","loginTooMany":"Too many tries. Try again in fifteen minutes.","loginInvalid":"Write the address as name@example.com.","loginFailed":"The check didn’t go through. Try again in a moment.","formName":"Name","formParish":"Parish","formPhone":"Phone","formAddress":"Delivery address","optional":"optional","pricesFor":"Prices for {who}"},"items":{"one":"item","other":"items"}}</script>
+  <script type="module" src="../../assets/js/account.js?v=1cd4d3e2a9"></script>
 </body>
 </html>

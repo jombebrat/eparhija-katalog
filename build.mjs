@@ -523,7 +523,7 @@ console.log('wrote docs/admin/index.html');
 
 // ---------- the member's account page, one per language ----------
 const ACCOUNT_STRINGS = ['acTitle', 'acEmail', 'acSend', 'acSendHelp', 'acSending', 'acSent', 'acCode', 'acSignIn', 'acSigningIn', 'acAgain', 'acOther',
-  'acWrongCode', 'acNoCode', 'acMailOff', 'acMailFailed', 'acSignedOut', 'acOrders', 'acOrdersEmpty', 'acOrdersEmptyText', 'acOrdersError', 'acRetry',
+  'acWrongCode', 'acNoCode', 'acMailOff', 'acMailFailed', 'acSignedOut', 'acOrders', 'acStats', 'acStatOrders', 'acStatSpent', 'acStatAvg', 'acTop', 'acTopHint', 'acTopNone', 'acOrdersEmpty', 'acOrdersEmptyText', 'acOrdersError', 'acRetry',
   'acOrder', 'acStatusNew', 'acStatusDone', 'acStatusCancelled', 'acLines', 'acPdf', 'acPdfMaking', 'acPdfFailed', 'acReorder', 'acReorderSome',
   'acSave', 'acSaving', 'acSaved', 'acSaveFailed', 'acItem', 'acQty', 'acAmount', 'acCatalogue', 'code', 'total', 'kg', 'signOut',
   'loginUnknown', 'loginTooMany', 'loginInvalid', 'loginFailed', 'formName', 'formParish', 'formPhone', 'formAddress', 'optional', 'pricesFor'];
@@ -603,6 +603,19 @@ function accountPage(lang) {
           <div><p class="acct__name" data-name></p><p class="acct__meta" data-meta></p></div>
           <button class="btn" type="button" data-signout>${t(lang, S.signOut)}</button>
         </div>
+        <section class="acct__stats" data-stats aria-labelledby="h-stats" hidden>
+          <h2 id="h-stats" class="visually-hidden">${t(lang, S.acStats)}</h2>
+          <dl class="acct__figures">
+            <div><dt>${t(lang, S.acStatOrders)}</dt><dd data-st-orders></dd></div>
+            <div><dt>${t(lang, S.acStatSpent)}</dt><dd data-st-spent></dd></div>
+            <div><dt>${t(lang, S.acStatAvg)}</dt><dd data-st-avg></dd></div>
+          </dl>
+          <section class="acct__top" aria-labelledby="h-top">
+            <h3 id="h-top">${t(lang, S.acTop)}</h3>
+            <ol class="toplist" data-top role="list"></ol>
+            <p class="acct__meta">${t(lang, S.acTopHint)}</p>
+          </section>
+        </section>
         <div class="acct__cols">
           <section class="acct__orders">
             <h2 id="h-orders">${t(lang, S.acOrders)}</h2>
