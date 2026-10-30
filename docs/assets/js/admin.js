@@ -251,6 +251,7 @@ function draw() {
 // Made here, in the browser, from the articles as they are now; kept in the private bucket `catalogue`.
 // The site hands it to members only (function `prices`, after the email check).
 const PDF_NAME = 'cenovnik.pdf';
+const PDF_NAME_BLANK = 'cenovnik-bez-cena.pdf';   // the same list with a line instead of each price, for parishes to write their own
 let pdfBusy = false;
 const pdfWhen = new Intl.DateTimeFormat('sr-Latn-RS', { dateStyle: 'long', timeStyle: 'short', timeZone: 'Europe/Paris' });
 async function pdfInfo() {
@@ -280,18 +281,21 @@ async function drawPdfCard() {
 async function makePdf(say) {
   say('Učitavam artikle…');
   const [products, cats] = await Promise.all([Q.products(), Q.cats()]);
-  const { buildCatalogue } = await import('./catalogue-pdf.js?v=13178fb3eb');
-  const r = await buildCatalogue({
-    products, cats, options: D.options,
-    photoUrl: (src) => photoUrl(SITE, src, true), siteBase: SITE, onProgress: say,
-  });
-  say('Čuvam PDF…');
+  const { buildCatalogue } = await import('./catalogue-pdf.js?v=0d7a5f5e72');
   const t = await token();
-  await call(`${C.url}/storage/v1/object/catalogue/${PDF_NAME}`, {
-    method: 'POST',
-    headers: { apikey: C.key, Authorization: `Bearer ${t}`, 'Content-Type': 'application/pdf', 'x-upsert': 'true', 'cache-control': 'no-cache' },
-    body: new Blob([r.bytes], { type: 'application/pdf' }),
-  });
+  let r;
+  for (const [name, withPrices] of [[PDF_NAME, true], [PDF_NAME_BLANK, false]]) {
+    r = await buildCatalogue({
+      products, cats, options: D.options, prices: withPrices,
+      photoUrl: (src) => photoUrl(SITE, src, true), siteBase: SITE, onProgress: say,
+    });
+    say('Čuvam PDF…');
+    await call(`${C.url}/storage/v1/object/catalogue/${name}`, {
+      method: 'POST',
+      headers: { apikey: C.key, Authorization: `Bearer ${t}`, 'Content-Type': 'application/pdf', 'x-upsert': 'true', 'cache-control': 'no-cache' },
+      body: new Blob([r.bytes], { type: 'application/pdf' }),
+    });
+  }
   try { localStorage.removeItem(PDF_DIRTY); } catch { /* fine */ }
   return r;
 }

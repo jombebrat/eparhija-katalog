@@ -61,7 +61,7 @@ async function jpeg(url, max = 520) {
 
 // products: rows of the table products (with price); cats, options: rows of their tables.
 // photoUrl(src) gives the address of an article's small photo; siteBase is where assets/ lives.
-export async function buildCatalogue({ products, cats, options, photoUrl, siteBase, now = new Date(), onProgress = () => {} }) {
+export async function buildCatalogue({ products, cats, options, photoUrl, siteBase, prices = true, now = new Date(), onProgress = () => {} }) {
   const { PDFLib, fontkit } = await loadLibs();
   const { PDFDocument, rgb } = PDFLib;
   const hex = (h) => rgb(parseInt(h.slice(1, 3), 16) / 255, parseInt(h.slice(3, 5), 16) / 255, parseInt(h.slice(5, 7), 16) / 255);
@@ -226,7 +226,13 @@ export async function buildCatalogue({ products, cats, options, photoUrl, siteBa
     const fy = top + rowH - 26;
     line(pg, x + PAD, fy, x + colW - PAD, GOLD, 0.4);
     text(pg, p.code, x + PAD, fy + 9, 8.5, reg, SOFT);
-    text(pg, price(p.price, p.unit), x + colW - PAD, fy + 6.5, 12.5, bold, BURG, { align: 'right' });
+    priceMark(pg, p, x + colW - PAD, fy + 6.5, 12.5, 62);
+  }
+  // the price, or - in the copy without prices - a line to write the parish's own price on
+  function priceMark(pg, p, xr, y, size, lineW) {
+    if (prices) { text(pg, price(p.price, p.unit), xr, y, size, bold, BURG, { align: 'right' }); return; }
+    text(pg, '€', xr, y, size, reg, SOFT, { align: 'right' });
+    line(pg, xr - lineW - 12, y + size - 1.5, xr - 12, SOFT, 0.6);
   }
   function grid(s) {
     const tw = colW - 2 * PAD;
@@ -251,7 +257,7 @@ export async function buildCatalogue({ products, cats, options, photoUrl, siteBa
       text(pg, p.name_sr || p.name_fr || p.code, MX, y + 2, 11, bold, CHAR);
       text(pg, [safe(p.name_fr), safe(p.name_en)].filter((v, i, a) => v && a.indexOf(v) === i).join('  ·  '), MX, y + 18, 8.5, reg, SOFT);
       text(pg, p.code, W - MX - 110, y + 6, 8.5, reg, SOFT, { align: 'right' });
-      text(pg, price(p.price, p.unit), W - MX, y + 3, 13, bold, BURG, { align: 'right' });
+      priceMark(pg, p, W - MX, y + 3, 13, 80);
       line(pg, MX, y + 35, W - MX, BEIGE, 0.6);
       y += 40;
     }

@@ -92,7 +92,7 @@ const CLIENT_STRINGS = ['add', 'added', 'noMatch', 'matches', 'photoOf', 'emptyT
   'loginUnknown', 'loginTooMany', 'loginFailed', 'loginInvalid', 'checking', 'showPrices', 'signOut', 'pricesFor', 'guestList', 'formName', 'formParish', 'formPhone', 'formAddress', 'formNote', 'optional', 'nameMissing',
   'sendOrder', 'sending', 'orderDone', 'orderDoneMail', 'orderDoneNoMail', 'downloadPdf', 'orderFailed', 'orderUnknown', 'orderUnavailable', 'done', 'outOfStock', 'related', 'inStock',
   'noPhoto', 'addLabel', 'acLink', 'list', 'cartLabel', 'askPrices', 'gatePriest', 'gateLead', 'gateUnknown', 'gateOther', 'gateOtherLead', 'emailPlaceholder', 'inqSend', 'inqDone', 'inqDoneText', 'inqFailed', 'inqTooMany',
-  'emailMissing', 'emailLabel', 'quoteTitle', 'quoteLead', 'quoteOrder', 'quoteGone', 'quoteFor', 'cancel', 'pdfBtn', 'pdfWorking', 'pdfNone', 'pdfFailed', 'choose', 'chooseLabel', 'optCount', 'optsHead', 'optsFind', 'optsFindPh', 'optsNone', 'orderChoose', 'candlesLead', 'candlesCaption', 'thFormat', 'thSize', 'thDetail', 'thPrice', 'thPriceUnit', 'thList'];
+  'emailMissing', 'emailLabel', 'quoteTitle', 'quoteLead', 'quoteOrder', 'quoteGone', 'quoteFor', 'cancel', 'pdfBtn', 'pdfChooseTitle', 'pdfChooseLead', 'pdfBlank', 'pdfWithPrices', 'pdfWorking', 'pdfNone', 'pdfFailed', 'choose', 'chooseLabel', 'optCount', 'optsHead', 'optsFind', 'optsFindPh', 'optsNone', 'orderChoose', 'candlesLead', 'candlesCaption', 'thFormat', 'thSize', 'thDetail', 'thPrice', 'thPriceUnit', 'thList'];
 
 const X = '<svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>';
 // national flags, drawn small: France, the United Kingdom (for English), Serbia (the civil flag)
@@ -277,6 +277,19 @@ function page(lang, dir) {
       <p class="welcome__lead">${t(lang, S.langPickLead)}</p>
       <div class="welcome__langs">
         ${LANGS.map((l) => `<a class="welcome__lang" href="${here(l)}" hreflang="${strings[l.id].htmlLang}" lang="${strings[l.id].htmlLang}" data-lang data-pick="${l.id}"${l.id === lang ? ' aria-current="page"' : ''}><span class="flag flag--big">${FLAG[l.id]()}</span><span>${esc(strings[l.id].langName)}</span></a>`).join('\n        ')}
+      </div>
+    </div>
+  </dialog>
+
+  <dialog class="welcome" data-pdf-dialog aria-labelledby="pdfchoose-title">
+    <div class="welcome__inner">
+      <img class="welcome__grb" src="${root}assets/img/grb-240.webp" width="82" height="96" alt="">
+      <h2 id="pdfchoose-title">${t(lang, S.pdfChooseTitle)}</h2>
+      <p class="welcome__lead">${t(lang, S.pdfChooseLead)}</p>
+      <div class="welcome__actions">
+        <button class="btn btn--primary" type="button" data-pdf-pick="blank">${t(lang, S.pdfBlank)}</button>
+        <button class="btn" type="button" data-pdf-pick="priced">${t(lang, S.pdfWithPrices)}</button>
+        <button class="textbtn" type="button" data-pdf-cancel>${t(lang, S.cancel)}</button>
       </div>
     </div>
   </dialog>

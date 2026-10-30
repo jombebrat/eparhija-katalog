@@ -136,17 +136,21 @@ import * as R from './render.js?v=1381f84ccd';
   const pdfLabel = $('[data-pdf-label]');
   let pdfTimer;
   const pdfSay = (s, ms = 0) => { clearTimeout(pdfTimer); pdfLabel.textContent = s; if (ms) pdfTimer = setTimeout(() => { pdfLabel.textContent = S.pdfBtn; }, ms); };
-  pdfBtn?.addEventListener('click', async () => {
+  const pdfDialog = $('[data-pdf-dialog]');
+  const getPdf = async (blank) => {
     const email = store.get('ek-email');
     if (!email || pdfBtn.disabled) return;
     pdfBtn.disabled = true; pdfSay(S.pdfWorking);
     try {
-      const { status, data } = await api('prices', { email, pdf: true });
+      const { status, data } = await api('prices', { email, pdf: true, blank });
       if (status === 200 && data.url) { pdfSay(S.pdfBtn); location.href = data.url; }
       else pdfSay(status === 404 && data.error === 'nopdf' ? S.pdfNone : S.pdfFailed, 5000);
     } catch { pdfSay(S.pdfFailed, 5000); }
     pdfBtn.disabled = false;
-  });
+  };
+  pdfBtn?.addEventListener('click', () => { if (!pdfBtn.disabled) pdfDialog.showModal(); });
+  $('[data-pdf-cancel]', pdfDialog)?.addEventListener('click', () => pdfDialog.close());
+  pdfDialog.querySelectorAll('[data-pdf-pick]').forEach((b) => b.addEventListener('click', () => { pdfDialog.close(); getPdf(b.dataset.pdfPick === 'blank'); }));
   function paintPrices() {
     document.documentElement.classList.toggle('priced', !!prices);
     $$('[data-price]').forEach((el) => {
