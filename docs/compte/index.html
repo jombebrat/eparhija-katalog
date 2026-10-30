@@ -11,7 +11,7 @@
   <link rel="alternate" hreflang="sr-Cyrl" href="../sr/nalog/">
   <link rel="icon" href="../favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="../apple-touch-icon.png">
-  <link rel="stylesheet" href="../assets/css/account.css?v=14f17583dd">
+  <link rel="stylesheet" href="../assets/css/account.css?v=5361b8e2d7">
   <script>document.documentElement.className = 'js';</script>
 </head>
 <body class="acct-page">
@@ -41,6 +41,13 @@
           <div class="field"><label for="ac-email">Votre e-mail</label><input id="ac-email" name="email" type="email" autocomplete="email" inputmode="email" spellcheck="false" required aria-required="true" aria-describedby="ac-help"></div>
           <button class="btn btn--primary" type="submit">Recevoir un code</button>
         </form>
+        <details class="acct__pw" data-pw>
+          <summary>Connexion par mot de passe</summary>
+          <form class="acct__form" data-pwform novalidate>
+            <div class="field"><label for="ac-pw">Mot de passe</label><input id="ac-pw" name="pw" type="password" autocomplete="current-password" required></div>
+            <button class="btn" type="submit">Se connecter</button>
+          </form>
+        </details>
         <form class="acct__form" data-verify novalidate hidden>
           <p class="acct__sent" data-sent></p>
           <div class="field"><label for="ac-code">Code reçu par e-mail</label><input id="ac-code" name="code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]*" maxlength="10" spellcheck="false" required aria-required="true" aria-describedby="ac-help"></div>
@@ -89,6 +96,6 @@
   </footer>
 
   <script type="application/json" id="account-data">{"lang":"fr","locale":"fr-FR","catalogue":"../","api":{"url":"https://ivzzhtaksdwbhhioilsn.supabase.co","key":"sb_publishable_rxpulg5CJqz_TpV1brvBCQ_C2ioyLyW"},"s":{"acTitle":"Mon profil","acEmail":"Votre e-mail","acSend":"Recevoir un code","acSendHelp":"Nous envoyons un code à 6 chiffres à cette adresse.","acSending":"Envoi…","acSent":"Code envoyé à {email}. Il est valable une heure ; regardez aussi dans les indésirables.","acCode":"Code reçu par e-mail","acSignIn":"Se connecter","acSigningIn":"Connexion…","acAgain":"Renvoyer le code","acOther":"Changer d’adresse","acWrongCode":"Ce code ne correspond pas ou a expiré. Demandez-en un nouveau.","acNoCode":"Entrez le code reçu par e-mail.","acMailOff":"L’envoi des codes n’est pas encore activé par l’entrepôt. Les prix et la commande restent disponibles dans le catalogue.","acMailFailed":"L’e-mail n’est pas parti. Réessayez dans un instant.","acSignedOut":"Session terminée. Demandez un nouveau code.","acOrders":"Vos commandes","acOrdersEmpty":"Aucune commande pour l’instant.","acOrdersEmptyText":"Les commandes envoyées depuis le catalogue apparaissent ici, avec leur PDF.","acOrdersError":"Vos commandes ne se sont pas chargées.","acRetry":"Réessayer","acOrder":"Commande n° {n}","acStatusNew":"Reçue","acStatusDone":"Traitée","acStatusCancelled":"Annulée","acLines":"Voir les articles","acPdf":"PDF","acPdfMaking":"Préparation…","acPdfFailed":"Le PDF n’a pas pu être préparé. Réessayez.","acReorder":"Commander à nouveau","acReorderSome":"Plus disponibles, non ajoutés : {codes}.","acSave":"Enregistrer","acSaving":"Enregistrement…","acSaved":"Enregistré.","acSaveFailed":"Non enregistré. Réessayez.","acItem":"Article","acQty":"Qté","acAmount":"Montant","acCatalogue":"Catalogue","code":"Code","total":"Total indicatif","kg":"kg","signOut":"Se déconnecter","loginUnknown":"Cette adresse n’est pas sur la liste des membres. Vérifiez-la, ou continuez sans les prix.","loginTooMany":"Trop d’essais. Réessayez dans un quart d’heure.","loginInvalid":"Écrivez l’adresse sous la forme nom@exemple.fr.","loginFailed":"La vérification n’a pas abouti. Réessayez dans un instant.","formName":"Nom","formParish":"Paroisse","formPhone":"Téléphone","formAddress":"Adresse de livraison","optional":"facultatif","pricesFor":"Prix pour {who}"},"items":{"one":"article","other":"articles"}}</script>
-  <script type="module" src="../assets/js/account.js?v=7b074502b4"></script>
+  <script type="module" src="../assets/js/account.js?v=a6665ee607"></script>
 </body>
 </html>

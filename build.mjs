@@ -581,6 +581,13 @@ function accountPage(lang) {
           <div class="field"><label for="ac-email">${t(lang, S.acEmail)}</label><input id="ac-email" name="email" type="email" autocomplete="email" inputmode="email" spellcheck="false" required aria-required="true" aria-describedby="ac-help"></div>
           <button class="btn btn--primary" type="submit">${t(lang, S.acSend)}</button>
         </form>
+        <details class="acct__pw" data-pw>
+          <summary>${t(lang, S.acPw)}</summary>
+          <form class="acct__form" data-pwform novalidate>
+            <div class="field"><label for="ac-pw">${t(lang, S.acPwLabel)}</label><input id="ac-pw" name="pw" type="password" autocomplete="current-password" required></div>
+            <button class="btn" type="submit">${t(lang, S.acSignIn)}</button>
+          </form>
+        </details>
         <form class="acct__form" data-verify novalidate hidden>
           <p class="acct__sent" data-sent></p>
           <div class="field"><label for="ac-code">${t(lang, S.acCode)}</label><input id="ac-code" name="code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]*" maxlength="10" spellcheck="false" required aria-required="true" aria-describedby="ac-help"></div>

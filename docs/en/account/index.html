@@ -11,7 +11,7 @@
   <link rel="alternate" hreflang="sr-Cyrl" href="../../sr/nalog/">
   <link rel="icon" href="../../favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
-  <link rel="stylesheet" href="../../assets/css/account.css?v=14f17583dd">
+  <link rel="stylesheet" href="../../assets/css/account.css?v=5361b8e2d7">
   <script>document.documentElement.className = 'js';</script>
 </head>
 <body class="acct-page">
@@ -41,6 +41,13 @@
           <div class="field"><label for="ac-email">Your email</label><input id="ac-email" name="email" type="email" autocomplete="email" inputmode="email" spellcheck="false" required aria-required="true" aria-describedby="ac-help"></div>
           <button class="btn btn--primary" type="submit">Get a code</button>
         </form>
+        <details class="acct__pw" data-pw>
+          <summary>Sign in with a password</summary>
+          <form class="acct__form" data-pwform novalidate>
+            <div class="field"><label for="ac-pw">Password</label><input id="ac-pw" name="pw" type="password" autocomplete="current-password" required></div>
+            <button class="btn" type="submit">Sign in</button>
+          </form>
+        </details>
         <form class="acct__form" data-verify novalidate hidden>
           <p class="acct__sent" data-sent></p>
           <div class="field"><label for="ac-code">Code from the email</label><input id="ac-code" name="code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]*" maxlength="10" spellcheck="false" required aria-required="true" aria-describedby="ac-help"></div>
@@ -89,6 +96,6 @@
   </footer>
 
   <script type="application/json" id="account-data">{"lang":"en","locale":"en-GB","catalogue":"../../en/","api":{"url":"https://ivzzhtaksdwbhhioilsn.supabase.co","key":"sb_publishable_rxpulg5CJqz_TpV1brvBCQ_C2ioyLyW"},"s":{"acTitle":"My profile","acEmail":"Your email","acSend":"Get a code","acSendHelp":"We send a 6-digit code to this address.","acSending":"Sending…","acSent":"Code sent to {email}. It works for one hour; check the spam folder too.","acCode":"Code from the email","acSignIn":"Sign in","acSigningIn":"Signing in…","acAgain":"Send the code again","acOther":"Use another address","acWrongCode":"That code doesn’t match or has expired. Ask for a new one.","acNoCode":"Enter the code from the email.","acMailOff":"The warehouse hasn’t switched on sending codes yet. Prices and ordering still work in the catalogue.","acMailFailed":"The email didn’t go out. Try again in a moment.","acSignedOut":"Your session ended. Ask for a new code.","acOrders":"Your orders","acOrdersEmpty":"No orders yet.","acOrdersEmptyText":"Orders sent from the catalogue show up here, with their PDF.","acOrdersError":"Your orders didn’t load.","acRetry":"Try again","acOrder":"Order no. {n}","acStatusNew":"Received","acStatusDone":"Completed","acStatusCancelled":"Cancelled","acLines":"See the items","acPdf":"PDF","acPdfMaking":"Preparing…","acPdfFailed":"The PDF couldn’t be prepared. Try again.","acReorder":"Order again","acReorderSome":"No longer available, not added: {codes}.","acSave":"Save","acSaving":"Saving…","acSaved":"Saved.","acSaveFailed":"Not saved. Try again.","acItem":"Item","acQty":"Qty","acAmount":"Amount","acCatalogue":"Catalogue","code":"Code","total":"Estimated total","kg":"kg","signOut":"Sign out","loginUnknown":"This address isn’t on the members’ list. Check it, or continue without prices.","loginTooMany":"Too many tries. Try again in fifteen minutes.","loginInvalid":"Write the address as name@example.com.","loginFailed":"The check didn’t go through. Try again in a moment.","formName":"Name","formParish":"Parish","formPhone":"Phone","formAddress":"Delivery address","optional":"optional","pricesFor":"Prices for {who}"},"items":{"one":"item","other":"items"}}</script>
-  <script type="module" src="../../assets/js/account.js?v=7b074502b4"></script>
+  <script type="module" src="../../assets/js/account.js?v=a6665ee607"></script>
 </body>
 </html>

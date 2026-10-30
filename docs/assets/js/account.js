@@ -107,6 +107,23 @@ send.addEventListener('submit', async (e) => {
     input.focus();
   } finally { busy(send, false); }
 });
+// a password for accounts that have one (the administrators; handy while the post is not connected)
+const pwForm = $('[data-pwform]');
+pwForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const mail = send.elements.email.value.trim().toLowerCase();
+  const pw = pwForm.elements.pw.value;
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail)) { send.elements.email.setAttribute('aria-invalid', 'true'); say(S.loginInvalid, true); send.elements.email.focus(); return; }
+  busy(pwForm, true, S.acSigningIn);
+  try {
+    const j = await call(`${D.api.url}/auth/v1/token?grant_type=password`, { method: 'POST', headers: headers(), body: JSON.stringify({ email: mail, password: pw }) });
+    keep(j);
+    store.set('ek-email', session.email);
+    await enter();
+  } catch (err) {
+    say(err.offline ? S.loginFailed : err.status === 429 ? S.loginTooMany : S.acWrongCode, true);
+  } finally { busy(pwForm, false); }
+});
 $('[data-again]').addEventListener('click', async (e) => {
   const b = e.currentTarget;
   b.disabled = true;

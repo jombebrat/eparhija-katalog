@@ -78,3 +78,6 @@ a.listbtn { text-decoration: none; }
   .myorder__date { grid-column: 1 / -1; grid-row: 2; }
   .lines thead th:first-child, .lines td.code { display: none; }
 }
+.acct__pw { margin-top: var(--space-md); }
+.acct__pw summary { width: fit-content; min-height: 44px; display: flex; align-items: center; font-size: var(--text-sm); color: var(--color-muted); cursor: pointer; }
+.acct__pw .acct__form { margin-top: var(--space-xs); }

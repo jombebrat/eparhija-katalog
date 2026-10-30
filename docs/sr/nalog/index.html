@@ -11,7 +11,7 @@
   <link rel="alternate" hreflang="sr-Cyrl" href="../../sr/nalog/">
   <link rel="icon" href="../../favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
-  <link rel="stylesheet" href="../../assets/css/account.css?v=14f17583dd">
+  <link rel="stylesheet" href="../../assets/css/account.css?v=5361b8e2d7">
   <script>document.documentElement.className = 'js';</script>
 </head>
 <body class="acct-page">
@@ -41,6 +41,13 @@
           <div class="field"><label for="ac-email">Ваша е-пошта</label><input id="ac-email" name="email" type="email" autocomplete="email" inputmode="email" spellcheck="false" required aria-required="true" aria-describedby="ac-help"></div>
           <button class="btn btn--primary" type="submit">Пошаљи код</button>
         </form>
+        <details class="acct__pw" data-pw>
+          <summary>Пријава лозинком</summary>
+          <form class="acct__form" data-pwform novalidate>
+            <div class="field"><label for="ac-pw">Лозинка</label><input id="ac-pw" name="pw" type="password" autocomplete="current-password" required></div>
+            <button class="btn" type="submit">Пријави се</button>
+          </form>
+        </details>
         <form class="acct__form" data-verify novalidate hidden>
           <p class="acct__sent" data-sent></p>
           <div class="field"><label for="ac-code">Код из е-поруке</label><input id="ac-code" name="code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]*" maxlength="10" spellcheck="false" required aria-required="true" aria-describedby="ac-help"></div>
@@ -89,6 +96,6 @@
   </footer>
 
   <script type="application/json" id="account-data">{"lang":"sr","locale":"sr-RS","catalogue":"../../sr/","api":{"url":"https://ivzzhtaksdwbhhioilsn.supabase.co","key":"sb_publishable_rxpulg5CJqz_TpV1brvBCQ_C2ioyLyW"},"s":{"acTitle":"Мој профил","acEmail":"Ваша е-пошта","acSend":"Пошаљи код","acSendHelp":"Шаљемо код од 6 цифара на ову адресу.","acSending":"Слање…","acSent":"Код је послат на {email}. Важи један сат; погледајте и нежељену пошту.","acCode":"Код из е-поруке","acSignIn":"Пријави се","acSigningIn":"Пријављивање…","acAgain":"Пошаљи код поново","acOther":"Друга адреса","acWrongCode":"Код није тачан или је истекао. Затражите нови.","acNoCode":"Унесите код из е-поруке.","acMailOff":"Магацин још није укључио слање кодова. Цене и поручивање и даље раде у каталогу.","acMailFailed":"Порука није послата. Покушајте поново за тренутак.","acSignedOut":"Сесија је истекла. Затражите нови код.","acOrders":"Ваше поруџбине","acOrdersEmpty":"Још нема поруџбина.","acOrdersEmptyText":"Поруџбине послате из каталога појављују се овде, са PDF-ом.","acOrdersError":"Поруџбине се нису учитале.","acRetry":"Покушај поново","acOrder":"Поруџбина бр. {n}","acStatusNew":"Примљена","acStatusDone":"Извршена","acStatusCancelled":"Отказана","acLines":"Погледај артикле","acPdf":"PDF","acPdfMaking":"Припрема…","acPdfFailed":"PDF није припремљен. Покушајте поново.","acReorder":"Поручи поново","acReorderSome":"Више нису доступни, нису додати: {codes}.","acSave":"Сачувај","acSaving":"Чување…","acSaved":"Сачувано.","acSaveFailed":"Није сачувано. Покушајте поново.","acItem":"Артикал","acQty":"Кол.","acAmount":"Износ","acCatalogue":"Каталог","code":"Шифра","total":"Оквирни збир","kg":"kg","signOut":"Одјави се","loginUnknown":"Ова адреса није на списку чланова. Проверите је или наставите без цена.","loginTooMany":"Превише покушаја. Покушајте поново за петнаест минута.","loginInvalid":"Упишите адресу у облику ime@primer.rs.","loginFailed":"Провера није успела. Покушајте поново за тренутак.","formName":"Име и презиме","formParish":"Парохија","formPhone":"Телефон","formAddress":"Адреса за испоруку","optional":"није обавезно","pricesFor":"Цене за: {who}"},"items":{"one":"артикал","few":"артикла","other":"артикала"}}</script>
-  <script type="module" src="../../assets/js/account.js?v=7b074502b4"></script>
+  <script type="module" src="../../assets/js/account.js?v=a6665ee607"></script>
 </body>
 </html>
