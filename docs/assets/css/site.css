@@ -510,3 +510,16 @@ a.account__who:focus-visible { outline: 2px solid var(--color-accent-soft); outl
 .gate-other { display: grid; gap: var(--space-xs); margin-top: var(--space-sm); }
 .trap { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 .line--quote { grid-template-columns: 56px minmax(0, 1fr) auto; }
+
+/* the basket: a labelled pill on a computer, a ring that breathes while the list has articles, a bounce when one is added */
+.fab__label { display: none; }
+.fab[data-has]::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: 0 0 0 0 var(--color-accent); opacity: 0.5; animation: fab-ring 2.6s var(--ease-out) infinite; pointer-events: none; }
+@keyframes fab-ring { 0% { box-shadow: 0 0 0 0 var(--color-accent); opacity: 0.55; } 70%, 100% { box-shadow: 0 0 0 16px var(--color-accent); opacity: 0; } }
+.fab--bump { animation: fab-bump 520ms var(--ease-out); }
+@keyframes fab-bump { 0% { transform: scale(1); } 28% { transform: scale(1.22) rotate(-8deg); } 55% { transform: scale(0.94) rotate(4deg); } 100% { transform: scale(1) rotate(0); } }
+@media (min-width: 60.01rem) {
+  .fab { grid-auto-flow: column; gap: var(--space-xs); width: auto; height: 60px; padding: 0 var(--space-lg) 0 var(--space-md); border-radius: var(--radius-pill); }
+  .fab__label { display: inline; font-weight: 600; font-size: var(--text-md); white-space: nowrap; }
+  .fab__n { top: -6px; right: -6px; }
+}
+@media (prefers-reduced-motion: reduce) { .fab[data-has]::after, .fab--bump { animation: none; } }

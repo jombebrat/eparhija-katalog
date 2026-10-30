@@ -132,6 +132,7 @@ import * as R from './render.js?v=1381f84ccd';
   const loginBtn = $('[data-login]');
   const profile = $('[data-profile]');
   // the members' PDF price list: a short-lived link, given only for an email on the members' list
+  let fabN = null;   // the list's size last time, to bump the basket when it grows
   const pdfBtn = $('[data-pdf]');
   const pdfLabel = $('[data-pdf-label]');
   let pdfTimer;
@@ -324,6 +325,8 @@ import * as R from './render.js?v=1381f84ccd';
       b.classList.toggle('add--has', m > 0);
     });
     const n = Object.keys(list).length;
+    if (n > (fabN ?? n)) $$('.fab').forEach((b) => { b.classList.remove('fab--bump'); void b.offsetWidth; b.classList.add('fab--bump'); });
+    fabN = n;
     $$('[data-count]').forEach((c) => { c.textContent = n; });
     $$('[data-open-list]').forEach((b) => b.toggleAttribute('data-has', n > 0));
     $$('.fab').forEach((b) => b.setAttribute('aria-label', fmt(S.cartLabel, { n: countText(n) })));

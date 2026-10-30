@@ -322,7 +322,7 @@ function page(lang, dir) {
     </div>
   </dialog>
 
-  <button class="fab" type="button" data-open-list hidden aria-label="${t(lang, S.list)}">${ICON.cart}<span class="fab__n" data-count>0</span></button>
+  <button class="fab" type="button" data-open-list hidden aria-label="${t(lang, S.list)}">${ICON.cart}<span class="fab__label" aria-hidden="true">${t(lang, S.list)}</span><span class="fab__n" data-count>0</span></button>
 
   <script type="application/json" id="catalogue-data">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>
   <script type="module" src="${root}assets/js/app.js?v=${V.app}"></script>
