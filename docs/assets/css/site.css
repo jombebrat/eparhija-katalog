@@ -10,7 +10,7 @@
 /* Hallmark · answered F20 · each category keeps the warehouse's own count of articles; a row ends where the stock ends */
 /* Hallmark · note · Onest stands in for Epilogue, which has no Cyrillic, so one face serves French, English and Serbian */
 /* Hallmark · note · product photographs keep true colour (a buyer tells gold from nickel by them); their white grounds multiply into the well */
-@import url("./tokens.css?v=b91159de23");
+@import url("./tokens.css?v=93fc761ac3");
 @import url("./base.css?v=3c92bcd680");
 @import url("./fonts.css?v=272f648b17");
 
@@ -285,7 +285,7 @@ dialog::backdrop { background: var(--color-scrim); }
 .qty--inline[hidden] { display: none; }
 .qty--inline button { width: 44px; height: 44px; color: var(--color-accent-soft-ink); }
 .qty--inline button:hover { background: var(--color-accent-soft-2); }
-.qty--inline button:active { background: var(--color-accent-soft-2); transform: translateY(1px); }
+.qty--inline button:active { background: var(--color-accent-soft-2); }
 .qty--inline input { flex: 1; width: 3ch; min-width: 0; min-height: 44px; color: var(--color-accent-soft-ink); font-weight: 700; }
 .qty--inline .qty__unit { padding: 0 var(--space-2xs) 0 0; color: var(--color-accent-soft-ink); }
 .card .qty--inline { align-self: stretch; margin-top: var(--space-2xs); }
@@ -549,3 +549,14 @@ a.account__who:focus-visible { outline: 2px solid var(--color-accent-soft); outl
   html.js .card.pre { opacity: 0; filter: blur(12px); transform: translateY(18px); }
   .card.in { animation: rise-in 0.9s cubic-bezier(.22,1,.36,1) backwards; animation-delay: calc(var(--rd, 0) * 90ms); }
 }
+
+/* the picture that flies to the basket; the stepper that replaces "Add"; springy buttons */
+.flyer { position: fixed; z-index: 90; margin: 0; object-fit: contain; border-radius: 14px; background: var(--color-paper); box-shadow: 0 10px 30px var(--glass-shadow); pointer-events: none; will-change: transform, opacity; }
+span.flyer { border-radius: 50%; background: var(--color-ink); }
+@keyframes qty-in { from { opacity: 0; transform: scaleX(0.55); filter: blur(5px); } to { opacity: 1; transform: none; filter: blur(0); } }
+.qty--inline { overflow: hidden; }
+.qty--inline.is-new { animation: qty-in 0.5s cubic-bezier(.22,1,.36,1) backwards; transform-origin: center; }
+.qty--inline button, .add { transition: transform 0.35s cubic-bezier(.34,1.56,.64,1), background-color var(--dur-short) var(--ease-out); }
+.qty--inline button:active { transform: scale(0.82); }
+.add:active { transform: scale(0.96); }
+@media (prefers-reduced-motion: reduce) { .qty--inline.is-new { animation: none; } .qty--inline button:active, .add:active { transform: none; } .flyer { display: none; } }

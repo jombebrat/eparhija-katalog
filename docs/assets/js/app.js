@@ -272,6 +272,41 @@ import * as R from './render.js?v=1381f84ccd';
   const body = $('[data-list-body]');
   const foot = $('[data-list-foot]');
 
+  // ----- feedback when something goes in the list: the picture flies to the basket, numbers roll, buttons spring -----
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const visible = (e) => e && e.getClientRects().length > 0;
+  const basket = () => $$('.fab').find(visible) || $$('[data-open-list]').find(visible) || null;
+  function bumpBasket() { $$('.fab').forEach((b) => { b.classList.remove('fab--bump'); void b.offsetWidth; b.classList.add('fab--bump'); }); }
+  function fly(from) {
+    const to = basket();
+    if (still || !from || !to) return false;
+    const src = from.closest('.card, tr, .detail, .opt')?.querySelector('img');
+    const a = (src && visible(src) ? src : from).getBoundingClientRect(), t = to.getBoundingClientRect();
+    if (!a.width) return false;
+    const size = Math.min(96, Math.max(56, Math.min(a.width, a.height)));
+    const g = document.createElement(src ? 'img' : 'span');
+    g.className = 'flyer';
+    if (src) { g.src = src.currentSrc || src.src; g.alt = ''; }
+    Object.assign(g.style, { left: `${a.left + a.width / 2 - size / 2}px`, top: `${a.top + a.height / 2 - size / 2}px`, width: `${size}px`, height: `${size}px` });
+    document.body.append(g);
+    const dx = t.left + t.width / 2 - (a.left + a.width / 2), dy = t.top + t.height / 2 - (a.top + a.height / 2);
+    const lift = Math.min(90, Math.abs(dy) * 0.25 + 30);
+    g.animate([
+      { transform: 'translate(0, 0) scale(1)', opacity: 1, offset: 0 },
+      { transform: `translate(${dx * 0.45}px, ${dy * 0.45 - lift}px) scale(0.7)`, opacity: 0.95, offset: 0.5 },
+      { transform: `translate(${dx}px, ${dy}px) scale(0.16)`, opacity: 0.35, offset: 1 },
+    ], { duration: 720, easing: 'cubic-bezier(.45,0,.25,1)' }).finished.then(() => { g.remove(); bumpBasket(); }, () => g.remove());
+    return true;
+  }
+  // a number rolls in from below when it grows, from above when it falls
+  function roll(el, dir) {
+    if (still || !el || !dir) return;
+    el.animate([
+      { transform: `translateY(${dir > 0 ? 55 : -55}%)`, opacity: 0, filter: 'blur(4px)' },
+      { transform: 'none', opacity: 1, filter: 'blur(0)' },
+    ], { duration: 320, easing: 'cubic-bezier(.22,1,.36,1)' });
+  }
+
   // quantity is set right where the item is: "Add" turns into − n + on the card, the table row and the detail
   function stepperFor(btn) {
     if (btn._step) return btn._step;
@@ -281,7 +316,7 @@ import * as R from './render.js?v=1381f84ccd';
     el.innerHTML = '<button type="button" data-q="-1">−</button><input type="number" inputmode="numeric" min="0" max="999" step="1"><span class="qty__unit" hidden></span><button type="button" data-q="1">+</button>';
     el.addEventListener('click', (e) => {
       const q = e.target.closest('[data-q]');
-      if (q) setQty(btn.dataset.add, (list[btn.dataset.add] || 0) + Number(q.dataset.q), btn);
+      if (q) { if (Number(q.dataset.q) > 0) fly(btn); setQty(btn.dataset.add, (list[btn.dataset.add] || 0) + Number(q.dataset.q), btn); }
     });
     const input = el.querySelector('input');
     input.addEventListener('change', () => setQty(btn.dataset.add, Number(input.value), btn));
@@ -292,8 +327,10 @@ import * as R from './render.js?v=1381f84ccd';
   }
   function setQty(code, v, btn) {
     v = Math.max(0, Math.min(999, Math.round(v) || 0));
+    const was = list[code] || 0;
     if (v === 0) delete list[code]; else list[code] = v;
     save(); syncButtons(); if (drawer.open) renderList();
+    if (was > 0 && v > 0 && v !== was) $$(`[data-add="${code}"]`).forEach((b) => b._step && roll($('input', b._step), v > was ? 1 : -1));
     if (v === 0 && btn) btn.focus();
   }
   function syncButtons() {
@@ -304,8 +341,10 @@ import * as R from './render.js?v=1381f84ccd';
       const p = { ...it.p, n: it.name };
       const q = list[code] || 0;
       const st = stepperFor(b);
+      const appears = st.hidden && q > 0;
       b.hidden = q > 0;
       st.hidden = q === 0;
+      if (appears && !still) { st.classList.remove('is-new'); void st.offsetWidth; st.classList.add('is-new'); }
       b.textContent = S.add;
       b.removeAttribute('aria-pressed');
       const input = $('input', st);
@@ -325,15 +364,16 @@ import * as R from './render.js?v=1381f84ccd';
       b.classList.toggle('add--has', m > 0);
     });
     const n = Object.keys(list).length;
-    if (n > (fabN ?? n)) $$('.fab').forEach((b) => { b.classList.remove('fab--bump'); void b.offsetWidth; b.classList.add('fab--bump'); });
+    if (still && n > (fabN ?? n)) bumpBasket();
     fabN = n;
-    $$('[data-count]').forEach((c) => { c.textContent = n; });
+    $$('[data-count]').forEach((c) => { if (c.textContent !== String(n)) { const was = Number(c.textContent) || 0; c.textContent = n; roll(c, n > was ? 1 : -1); } });
     $$('[data-open-list]').forEach((b) => b.toggleAttribute('data-has', n > 0));
     $$('.fab').forEach((b) => b.setAttribute('aria-label', fmt(S.cartLabel, { n: countText(n) })));
   }
   document.addEventListener('click', (e) => {
     const b = e.target.closest('[data-add]');
     if (!b) return;
+    fly(b);
     setQty(b.dataset.add, 1, null);
     $('[data-q="1"]', stepperFor(b)).focus();
   });
