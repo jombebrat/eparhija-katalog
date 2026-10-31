@@ -1420,7 +1420,7 @@ function productForm(p) {
         ${select({ id: 'f-unit', label: 'Prodaje se na', name: 'unit', value: p.unit, options: [['piece', 'komad'], ['kg', 'kilogram']] })}
       </div>
       <div class="row2">
-        ${field({ id: 'f-cost', label: 'Nabavna cena u evrima', name: 'cost', value: p.cost === null || p.cost === undefined ? '' : String(p.cost).replace('.', ','), help: 'Ne vidi se na sajtu. Služi za zaradu u Pregledu.', attrs: 'inputmode="decimal" autocomplete="off" placeholder="8,00"' })}
+        ${field({ id: 'f-cost', label: 'Nabavna cena u evrima', name: 'cost', value: p.cost === null || p.cost === undefined ? '' : String(p.cost).replace('.', ','), help: 'Ne vidi se na sajtu. Služi za zaradu u Pregledu.', attrs: 'inputmode="decimal" autocomplete="off" placeholder="nije upisana"' })}
       </div>
       <div class="row2">
         ${field({ id: 'f-stock', label: 'Stanje u magacinu', name: 'stock', value: p.stock ?? '', help: 'Prazno: ne prati se. 0: na sajtu piše da ga nema.', attrs: 'inputmode="numeric" autocomplete="off"' })}
