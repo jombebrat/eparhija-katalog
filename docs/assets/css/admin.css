@@ -555,3 +555,10 @@ body.adm { font-size: var(--t-md); line-height: 1.5; background: var(--adm-bg); 
   .tabs a { position: relative; z-index: 1; }
   .tabs.has-pill a[aria-current="page"] { background: transparent; }
 }
+
+/* a screen opened from the menu slides in, from below when the pill goes down, from above when it goes up */
+@keyframes screen-from-below { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: none; } }
+@keyframes screen-from-above { from { opacity: 0; transform: translateY(-28px); } to { opacity: 1; transform: none; } }
+.screen.slide-down { animation: screen-from-below 0.5s cubic-bezier(.22,1,.36,1) both; }
+.screen.slide-up { animation: screen-from-above 0.5s cubic-bezier(.22,1,.36,1) both; }
+@media (prefers-reduced-motion: reduce) { .screen.slide-down, .screen.slide-up { animation: none; } }

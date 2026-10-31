@@ -259,6 +259,14 @@ function draw() {
   }
   movePill();
   if (shownTab !== r.tab) {
+    // the new screen slides in from the side the pill is travelling to
+    const order = $$('.tabs a').map((x) => x.dataset.tab);
+    if (shownTab && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const sc = $(`[data-screen="${r.tab}"]`);
+      sc.classList.remove('slide-down', 'slide-up');
+      void sc.offsetWidth;
+      sc.classList.add(order.indexOf(r.tab) > order.indexOf(shownTab) ? 'slide-down' : 'slide-up');
+    }
     shownTab = r.tab;
     const a = $(`[data-tab="${r.tab}"]`), row = a.parentElement;
     // on a phone the tab row scrolls sideways: keep the current tab in view
