@@ -534,3 +534,18 @@ a.account__who:focus-visible { outline: 2px solid var(--color-accent-soft); outl
   .card__price:hover { background: color-mix(in oklab, var(--color-accent) 12%, transparent); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--color-accent) 28%, transparent), inset 0 1px 0 oklch(100% 0 0 / 0.6); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
 }
 @media (prefers-reduced-motion: reduce) { .card, .card::before, .card__price { transition: none; } .card:hover, .card:focus-within { transform: none; } }
+
+/* entering the page: the parts rise out of a blur, one after another */
+@keyframes rise-in { from { opacity: 0; filter: blur(12px); transform: translateY(16px); } to { opacity: 1; filter: blur(0); transform: none; } }
+@media (prefers-reduced-motion: no-preference) {
+  html.js .slab, html.js .hero__text > :not(h1), html.js .shelves__title, html.js .shelves li, html.js .bar { animation: rise-in 0.9s cubic-bezier(.22,1,.36,1) backwards; }
+  html.js .slab { animation-delay: 0.05s; }
+  html.js .hero__text > :not(h1) { animation-delay: 0.7s; }
+  html.js .shelves__title { animation-delay: 0.5s; }
+  html.js .shelves li { animation-delay: calc(0.6s + var(--i, 0) * 60ms); }
+  html.js .shelves li:nth-child(1) { --i: 0; } html.js .shelves li:nth-child(2) { --i: 1; } html.js .shelves li:nth-child(3) { --i: 2; } html.js .shelves li:nth-child(4) { --i: 3; }
+  html.js .shelves li:nth-child(5) { --i: 4; } html.js .shelves li:nth-child(6) { --i: 5; } html.js .shelves li:nth-child(n+7) { --i: 6; }
+  html.js .bar { animation-delay: 0.9s; }
+  .card.pre { opacity: 0; filter: blur(12px); transform: translateY(18px); }
+  .card.in { animation: rise-in 0.9s cubic-bezier(.22,1,.36,1) backwards; animation-delay: calc(var(--rd, 0) * 90ms); }
+}

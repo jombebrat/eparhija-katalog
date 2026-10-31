@@ -877,3 +877,32 @@ import * as R from './render.js?v=1381f84ccd';
     if (!welcome.open) { renderList(); drawer.showModal(); }
   }
 })();
+
+// ----- entering the page: the name types itself, articles rise out of a blur as they come into view -----
+(() => {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) return;
+  const h = document.querySelector('.hero h1');
+  if (h && !h.children.length) {
+    const text = h.textContent;
+    h.setAttribute('aria-label', text);
+    h.style.minHeight = `${h.offsetHeight}px`;
+    h.textContent = ' ';
+    let n = 0;
+    setTimeout(() => {
+      const t = setInterval(() => { n++; h.textContent = text.slice(0, n); if (n >= text.length) { clearInterval(t); h.removeAttribute('aria-label'); h.style.minHeight = ''; } }, 34);
+    }, 250);
+  }
+  const cards = [...document.querySelectorAll('.card')];
+  cards.forEach((c) => c.classList.add('pre'));
+  const io = new IntersectionObserver((entries) => {
+    let n = 0;
+    for (const e of entries) {
+      if (!e.isIntersecting) continue;
+      e.target.style.setProperty('--rd', String(n++ % 8));
+      e.target.classList.remove('pre');
+      e.target.classList.add('in');
+      io.unobserve(e.target);
+    }
+  }, { rootMargin: '0px 0px -5% 0px' });
+  cards.forEach((c) => io.observe(c));
+})();
