@@ -10,6 +10,9 @@ import * as R from './render.js?v=1381f84ccd';
   const $$ = (s, el = document) => [...el.querySelectorAll(s)];
   const root = new URL('../../', import.meta.url).href;
   const money = new Intl.NumberFormat(D.locale, { style: 'currency', currency: 'EUR' });
+  const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const RISE = [{ opacity: 0, filter: 'blur(10px)', transform: 'translateY(14px)' }, { opacity: 1, filter: 'blur(0)', transform: 'none' }];
+  const inView = (el) => { const r = el.getBoundingClientRect(); return r.width > 0 && r.bottom > 0 && r.top < innerHeight; };
   const plural = new Intl.PluralRules(D.locale);
   const countText = (n, forms = D.items) => `${n} ${forms[plural.select(n)] ?? forms.other}`;
   const fmt = (s, v) => Object.entries(v).reduce((a, [k, x]) => a.replace(`{${k}}`, x), s);
@@ -31,11 +34,15 @@ import * as R from './render.js?v=1381f84ccd';
   function filter(raw) {
     const terms = norm(raw).split(' ').filter(Boolean);
     let shown = 0;
+    const back = [];
     items.forEach((el) => {
       const hit = terms.every((t) => el.dataset.search.includes(t));
+      if (hit && el.hidden) back.push(el);
       el.hidden = !hit;
       if (hit) shown++;
     });
+    // what comes back into the list rises into place, one after another
+    if (!reduced()) back.filter(inView).slice(0, 16).forEach((el, i) => el.animate(RISE, { duration: 520, delay: i * 40, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'backwards' }));
     cats.forEach((c) => {
       const any = $$('[data-search]', c).some((el) => !el.hidden);
       c.hidden = !any;
@@ -153,6 +160,7 @@ import * as R from './render.js?v=1381f84ccd';
   $('[data-pdf-cancel]', pdfDialog)?.addEventListener('click', () => pdfDialog.close());
   pdfDialog.querySelectorAll('[data-pdf-pick]').forEach((b) => b.addEventListener('click', () => { pdfDialog.close(); getPdf(b.dataset.pdfPick === 'blank'); }));
   function paintPrices() {
+    const first = !!prices && !document.documentElement.classList.contains('priced');
     document.documentElement.classList.toggle('priced', !!prices);
     $$('[data-price]').forEach((el) => {
       const v = priceOf(el.dataset.price);
@@ -167,6 +175,8 @@ import * as R from './render.js?v=1381f84ccd';
     }
     if (drawer.open) renderList();
     if (detail.open && dCode) paintDetailPrice();
+    // the prices appear as a wave over what is on the screen
+    if (first && !reduced()) $$('[data-price]').filter(inView).slice(0, 30).forEach((el, i) => el.animate(RISE, { duration: 650, delay: 150 + i * 45, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'backwards' }));
   }
   async function checkEmail(email) {
     const { status, data } = await api('prices', { email });
@@ -235,6 +245,12 @@ import * as R from './render.js?v=1381f84ccd';
     loginSubmit.disabled = false;
     if (result === 'ok') {
       store.set('ek-welcome', 1);
+      if (!reduced()) {
+        const label = loginSubmit.textContent;
+        loginSubmit.classList.add('is-ok'); loginSubmit.textContent = '✓';
+        await new Promise((r) => setTimeout(r, 650));
+        loginSubmit.classList.remove('is-ok'); loginSubmit.textContent = label;
+      }
       loginDialog.close();
       const then = afterLogin; afterLogin = null;
       if (then) then();
@@ -686,6 +702,7 @@ import * as R from './render.js?v=1381f84ccd';
     const o = lastOrder;
     const box = el('div', 'drawer__done');
     box.setAttribute('role', 'status');
+    box.insertAdjacentHTML('afterbegin', '<svg class="done__check" viewBox="0 0 52 52" width="56" height="56" aria-hidden="true"><circle cx="26" cy="26" r="24"/><path d="M15 27l8 8 15-17"/></svg>');
     box.append(el('b', '', fmt(S.orderDone, { n: o.number })), el('p', '', o.emailed ? S.orderDoneMail : S.orderDoneNoMail));
     body.append(box);
     let url = '';
@@ -815,6 +832,18 @@ import * as R from './render.js?v=1381f84ccd';
       li.append(b); dRelList.append(li);
     }
   }
+  // the detail grows out of the card that was clicked
+  function flipOpen(from) {
+    if (reduced()) return;
+    const src = from?.closest?.('.card, tr, .shelf, li, .opt') || from;
+    const r = detail.getBoundingClientRect();
+    const a = src?.getClientRects?.().length ? src.getBoundingClientRect() : null;
+    const start = a && r.width
+      ? { transform: `translate(${a.left - r.left}px, ${a.top - r.top}px) scale(${Math.max(0.2, a.width / r.width)}, ${Math.max(0.2, a.height / r.height)})`, opacity: 0.15, filter: 'blur(10px)' }
+      : { transform: 'translateY(18px) scale(0.94)', opacity: 0, filter: 'blur(10px)' };
+    detail.style.transformOrigin = a ? '0 0' : '50% 50%';
+    detail.animate([start, { transform: 'none', opacity: 1, filter: 'blur(0)' }], { duration: 600, easing: 'cubic-bezier(.22,1,.36,1)' });
+  }
   function openDetail(code, from) {
     const p = D.p[code];
     if (!p || (!p.ph.length && !p.o)) return false;
@@ -860,7 +889,8 @@ import * as R from './render.js?v=1381f84ccd';
       dAdd.setAttribute('aria-label', fmt(D.addLabel, { name: p.n }));
     }
     show(0); syncButtons();
-    if (!detail.open) detail.showModal();
+    const wasOpen = detail.open;
+    if (!wasOpen) { detail.showModal(); flipOpen(from); }
     detail.scrollTop = 0;
     // on a phone the search box would open the keyboard: start on the first option instead
     if (p.o) ($('.opt:not([hidden]) [data-add]', dOptsList) || $('[data-close]', detail)).focus({ preventScroll: true });
@@ -968,4 +998,21 @@ import * as R from './render.js?v=1381f84ccd';
     }
   }, { rootMargin: '0px 0px -5% 0px' });
   cards.forEach((c) => io.observe(c));
+})();
+
+// ----- dialogs close the way they open: they shrink back and blur out -----
+(() => {
+  const nativeClose = HTMLDialogElement.prototype.close, nativeShow = HTMLDialogElement.prototype.showModal;
+  const calm = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+  HTMLDialogElement.prototype.close = function (v) {
+    if (calm() || !this.open || this._closing || !this.matches('.welcome, .detail, .drawer')) return nativeClose.call(this, v);
+    this._closing = true;
+    this.classList.add('closing');
+    setTimeout(() => { this._closing = false; this.classList.remove('closing'); nativeClose.call(this, v); }, 280);
+  };
+  HTMLDialogElement.prototype.showModal = function () {
+    if (this._closing) { this._closing = false; this.classList.remove('closing'); nativeClose.call(this); }
+    return nativeShow.call(this);
+  };
+  document.querySelectorAll('dialog.welcome, dialog.detail, dialog.drawer').forEach((d) => d.addEventListener('cancel', (e) => { if (!calm()) { e.preventDefault(); d.close(); } }));
 })();

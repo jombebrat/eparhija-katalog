@@ -208,6 +208,25 @@ async function loadOrders() {
   }
 }
 // what this member has bought: totals, and the articles that cost the most over all orders (cancelled ones left out)
+// the figures count up from nothing when the profile opens
+function countStats() {
+  for (const n of [$('[data-st-orders]'), $('[data-st-spent]'), $('[data-st-avg]')]) {
+    const full = n.textContent, m = full.match(/\d[\d.,\s\u00a0]*/);
+    if (!m) continue;
+    const dec = /[.,]\d{1,2}$/.test(m[0].trim()) ? m[0].trim().match(/[.,](\d{1,2})$/)[1].length : 0;
+    const to = Number(m[0].replace(/[^\d]/g, '')) / 10 ** dec;
+    if (!(to > 0)) continue;
+    const t0 = performance.now() + 400, dur = 1100;
+    const at = (v) => full.replace(m[0], money.format(v).replace(/[^\d.,\s\u00a0]/g, '').trim());
+    n.textContent = at(0);
+    const tick = (now) => {
+      const k = Math.min(1, Math.max(0, (now - t0) / dur));
+      n.textContent = k >= 1 ? full : at(to * (1 - (1 - k) ** 3));
+      if (k < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
+}
 function drawStats() {
   const live = orders.filter((o) => o.status !== 'cancelled');
   const sec = $('[data-stats]');
@@ -227,6 +246,7 @@ function drawStats() {
   }
   const top = [...by.values()].sort((a, b) => b.value - a.value || b.qty - a.qty).slice(0, 5);
   const max = top[0]?.value || 1;
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches && !sec.dataset.shown) { sec.dataset.shown = '1'; requestAnimationFrame(countStats); }
   $('[data-top]').innerHTML = top.map((e, i) => `<li class="toplist__item"><span class="toplist__rank">${i + 1}</span>
       <span class="toplist__text"><b>${esc(e.name)}</b><span class="sub">${esc(e.code)} · ${esc(String(e.qty))}${e.unit === 'kg' ? ` ${esc(S.kg)}` : ''}</span><span class="toplist__bar"><span style="width:${Math.max(4, Math.round(e.value / max * 100))}%"></span></span></span>
       <span class="toplist__value">${esc(money.format(e.value))}</span></li>`).join('');
