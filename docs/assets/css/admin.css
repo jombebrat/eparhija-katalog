@@ -545,3 +545,13 @@ body.adm { font-size: var(--t-md); line-height: 1.5; background: var(--adm-bg); 
 .pricebox { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--space-sm); margin: var(--space-md) 0; padding: var(--space-md); border: var(--rule-hair) solid var(--color-rule); border-radius: 14px; background: var(--color-paper); box-shadow: var(--adm-shadow); }
 .pricebox .field { flex: 0 1 16rem; margin: 0; }
 .pricebox .field__help { flex: 1 1 100%; margin: 0; }
+
+/* side menu on a computer: one pill slides to the current tab, its leading edge first (see movePill) */
+.tabs { position: relative; }
+.tabs__pill { display: none; }
+@media (min-width: 60.01rem) {
+  .tabs__pill { display: block; position: absolute; left: 0; right: 0; top: 0; bottom: 0; border-radius: 10px; background: var(--color-paper-3); pointer-events: none; opacity: 0; }
+  .tabs__pill.is-on { opacity: 1; }
+  .tabs a { position: relative; z-index: 1; }
+  .tabs.has-pill a[aria-current="page"] { background: transparent; }
+}

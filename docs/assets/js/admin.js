@@ -231,6 +231,24 @@ const empty = (title, text, action = '') => `<div class="state"><p class="state_
 
 // ---------- draw ----------
 let shownTab = '';
+// the pill behind the current tab: its leading edge moves first and faster, the trailing edge catches up
+const pillNav = $('.tabs');
+const pillEl = document.createElement('span');
+pillEl.className = 'tabs__pill'; pillEl.setAttribute('aria-hidden', 'true');
+pillNav.prepend(pillEl);
+let pillAt = -1;
+function movePill() {
+  const a = $('.tabs a[aria-current="page"]');
+  if (!a || !matchMedia('(min-width: 60.01rem)').matches) { pillEl.classList.remove('is-on'); pillNav.classList.remove('has-pill'); pillAt = -1; return; }
+  const top = a.offsetTop, bottom = pillNav.offsetHeight - (a.offsetTop + a.offsetHeight);
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches || pillAt < 0;
+  const down = top > pillAt;
+  pillEl.style.transition = calm ? 'none' : `top ${down ? 0.55 : 0.36}s cubic-bezier(.65,0,.35,1), bottom ${down ? 0.36 : 0.55}s cubic-bezier(.65,0,.35,1)`;
+  pillEl.style.top = `${top}px`; pillEl.style.bottom = `${bottom}px`;
+  pillEl.classList.add('is-on'); pillNav.classList.add('has-pill');
+  pillAt = top;
+}
+addEventListener('resize', () => { pillAt = -1; movePill(); });
 function draw() {
   if ($('#app').hidden) return;
   const r = route();
@@ -239,6 +257,7 @@ function draw() {
     const a = $(`[data-tab="${t}"]`);
     if (t === r.tab) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
   }
+  movePill();
   if (shownTab !== r.tab) {
     shownTab = r.tab;
     const a = $(`[data-tab="${r.tab}"]`), row = a.parentElement;
