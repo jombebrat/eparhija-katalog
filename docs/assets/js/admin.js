@@ -243,7 +243,7 @@ function movePill() {
   const top = a.offsetTop, bottom = pillNav.offsetHeight - (a.offsetTop + a.offsetHeight);
   const calm = matchMedia('(prefers-reduced-motion: reduce)').matches || pillAt < 0;
   const down = top > pillAt;
-  pillEl.style.transition = calm ? 'none' : `top ${down ? 0.55 : 0.36}s cubic-bezier(.65,0,.35,1), bottom ${down ? 0.36 : 0.55}s cubic-bezier(.65,0,.35,1)`;
+  pillEl.style.transition = calm ? 'none' : `top ${down ? 0.8 : 0.5}s cubic-bezier(.65,0,.35,1), bottom ${down ? 0.5 : 0.8}s cubic-bezier(.65,0,.35,1)`;
   pillEl.style.top = `${top}px`; pillEl.style.bottom = `${bottom}px`;
   pillEl.classList.add('is-on'); pillNav.classList.add('has-pill');
   pillAt = top;
