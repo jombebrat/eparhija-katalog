@@ -261,6 +261,11 @@ function draw() {
   if (shownTab !== r.tab) {
     // the new screen slides in from the side the pill is travelling to
     const order = $$('.tabs a').map((x) => x.dataset.tab);
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const sc = $(`[data-screen="${r.tab}"]`);
+      // the cards and rows rise one after another, for the three seconds the screen is new (what loads later rises too)
+      sc.classList.add('reveal'); clearTimeout(sc._rv); sc._rv = setTimeout(() => sc.classList.remove('reveal'), 3000);
+    }
     if (shownTab && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
       const sc = $(`[data-screen="${r.tab}"]`);
       sc.classList.remove('slide-down', 'slide-up');
