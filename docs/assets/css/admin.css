@@ -564,11 +564,13 @@ body.adm { font-size: var(--t-md); line-height: 1.5; background: var(--adm-bg); 
 @media (prefers-reduced-motion: reduce) { .screen.slide-down, .screen.slide-up { animation: none; } }
 
 /* cards and rows rise one after another when a screen is opened (class "reveal", see draw) */
-@keyframes rise { from { opacity: 0; transform: translateY(22px) scale(0.985); } to { opacity: 1; transform: none; } }
-.screen.reveal :is(.screen__head, .toolbar, .seg, .pricebox, .panel, .pdfcard, .kpi, .tbl-wrap, .chart, .state, .region__count, .region__hint, .stats > *) { animation: rise 0.9s cubic-bezier(.22,1,.36,1) both; animation-delay: calc(var(--rd, 0) * 110ms); }
+@keyframes rise { from { opacity: 0; filter: blur(14px); transform: translateY(14px); } to { opacity: 1; filter: blur(0); transform: none; } }
+@keyframes ghost-out { to { opacity: 0; filter: blur(16px); transform: scale(0.985); } }
+.ghost { position: fixed; z-index: 5; margin: 0; box-sizing: border-box; overflow: hidden; pointer-events: none; background: transparent; animation: ghost-out 0.4s cubic-bezier(.4,0,.8,.4) both; }
+.screen.reveal :is(.screen__head, .toolbar, .seg, .pricebox, .panel, .pdfcard, .kpi, .tbl-wrap, .chart, .state, .region__count, .region__hint, .stats > *) { animation: rise 0.9s cubic-bezier(.22,1,.36,1) both; animation-delay: calc(0.3s + var(--rd, 0) * 120ms); }
 .screen.reveal :nth-child(2) { --rd: 1; } .screen.reveal :nth-child(3) { --rd: 2; } .screen.reveal :nth-child(4) { --rd: 3; }
 .screen.reveal :nth-child(5) { --rd: 4; } .screen.reveal :nth-child(6) { --rd: 5; } .screen.reveal :nth-child(n+7) { --rd: 6; }
-.screen.reveal .tbl tbody tr { animation: rise 0.8s cubic-bezier(.22,1,.36,1) both; animation-delay: calc(0.25s + var(--rd, 0) * 55ms); }
-.screen.reveal .tbl tbody tr:nth-child(7) { animation-delay: 0.58s; } .screen.reveal .tbl tbody tr:nth-child(8) { animation-delay: 0.64s; } .screen.reveal .tbl tbody tr:nth-child(9) { animation-delay: 0.69s; } .screen.reveal .tbl tbody tr:nth-child(10) { animation-delay: 0.74s; } .screen.reveal .tbl tbody tr:nth-child(11) { animation-delay: 0.80s; } .screen.reveal .tbl tbody tr:nth-child(12) { animation-delay: 0.85s; } .screen.reveal .tbl tbody tr:nth-child(13) { animation-delay: 0.91s; } 
+.screen.reveal .tbl tbody tr { animation: rise 0.8s cubic-bezier(.22,1,.36,1) both; animation-delay: calc(0.6s + var(--rd, 0) * 55ms); }
+.screen.reveal .tbl tbody tr:nth-child(7) { animation-delay: 0.93s; } .screen.reveal .tbl tbody tr:nth-child(8) { animation-delay: 0.98s; } .screen.reveal .tbl tbody tr:nth-child(9) { animation-delay: 1.04s; } .screen.reveal .tbl tbody tr:nth-child(10) { animation-delay: 1.09s; } .screen.reveal .tbl tbody tr:nth-child(11) { animation-delay: 1.15s; } .screen.reveal .tbl tbody tr:nth-child(12) { animation-delay: 1.21s; } .screen.reveal .tbl tbody tr:nth-child(13) { animation-delay: 1.26s; } 
 .screen.reveal .tbl tbody tr:nth-child(n+14) { animation: none; }
 @media (prefers-reduced-motion: reduce) { .screen.reveal * { animation: none !important; } }

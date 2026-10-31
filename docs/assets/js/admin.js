@@ -231,6 +231,51 @@ const empty = (title, text, action = '') => `<div class="state"><p class="state_
 
 // ---------- draw ----------
 let shownTab = '';
+
+// ----- opening a screen: the old one blurs away, the title types itself, the numbers count up -----
+const calm = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+function fadeOut(old) {
+  if (!old || old.hidden || calm()) return;
+  const rc = old.getBoundingClientRect();
+  const g = old.cloneNode(true);
+  g.removeAttribute('data-screen'); g.removeAttribute('id'); g.setAttribute('aria-hidden', 'true');
+  g.querySelectorAll('[id]').forEach((x) => x.removeAttribute('id'));
+  g.classList.remove('reveal');
+  Object.assign(g.style, { top: `${rc.top}px`, left: `${rc.left}px`, width: `${rc.width}px`, height: `${Math.min(rc.height, innerHeight - Math.max(rc.top, 0))}px` });
+  g.classList.add('ghost');
+  document.body.append(g);
+  setTimeout(() => g.remove(), 450);
+}
+function typeTitle(h) {
+  if (!h || calm() || h.children.length) return;
+  const text = h.textContent;
+  h.setAttribute('aria-label', text);
+  h.textContent = '\u00a0';
+  let n = 0;
+  setTimeout(() => {
+    const t = setInterval(() => { n++; h.textContent = text.slice(0, n); if (n >= text.length) { clearInterval(t); h.removeAttribute('aria-label'); } }, 38);
+  }, 300);
+}
+const countFmt = (d) => new Intl.NumberFormat('sr-Latn-RS', { minimumFractionDigits: d, maximumFractionDigits: d });
+function countUps(sc) {
+  if (!sc || calm() || !sc.classList.contains('reveal')) return;
+  for (const el of sc.querySelectorAll('.kpi__n:not([data-counted]), .figures dd:not([data-counted])')) {
+    el.dataset.counted = '1';
+    const full = el.textContent, m = full.match(/\d[\d.\s\u00a0]*(?:,\d+)?/);
+    if (!m) continue;
+    const dec = m[0].includes(',') ? m[0].split(',')[1].length : 0;
+    const to = parseFloat(m[0].replace(/[.\s\u00a0]/g, '').replace(',', '.'));
+    if (!Number.isFinite(to) || to === 0) continue;
+    const f = countFmt(dec), t0 = performance.now() + 450, dur = 1200;
+    el.textContent = full.replace(m[0], f.format(0));
+    const tick = (now) => {
+      const p = Math.min(1, Math.max(0, (now - t0) / dur));
+      el.textContent = p >= 1 ? full : full.replace(m[0], f.format(to * (1 - (1 - p) ** 3)));
+      if (p < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
+}
 // the pill behind the current tab: its leading edge moves first and faster, the trailing edge catches up
 const pillNav = $('.tabs');
 const pillEl = document.createElement('span');
@@ -252,6 +297,7 @@ addEventListener('resize', () => { pillAt = -1; movePill(); });
 function draw() {
   if ($('#app').hidden) return;
   const r = route();
+  if (shownTab && shownTab !== r.tab) fadeOut($(`[data-screen="${shownTab}"]`));
   for (const t of TABS) {
     $(`[data-screen="${t}"]`).hidden = t !== r.tab;
     const a = $(`[data-tab="${t}"]`);
@@ -260,18 +306,12 @@ function draw() {
   movePill();
   if (shownTab !== r.tab) {
     // the new screen slides in from the side the pill is travelling to
-    const order = $$('.tabs a').map((x) => x.dataset.tab);
     if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
       const sc = $(`[data-screen="${r.tab}"]`);
       // the cards and rows rise one after another, for the three seconds the screen is new (what loads later rises too)
       sc.classList.add('reveal'); clearTimeout(sc._rv); sc._rv = setTimeout(() => sc.classList.remove('reveal'), 3000);
     }
-    if (shownTab && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      const sc = $(`[data-screen="${r.tab}"]`);
-      sc.classList.remove('slide-down', 'slide-up');
-      void sc.offsetWidth;
-      sc.classList.add(order.indexOf(r.tab) > order.indexOf(shownTab) ? 'slide-down' : 'slide-up');
-    }
+    typeTitle($(`[data-screen="${r.tab}"] h1`));
     shownTab = r.tab;
     const a = $(`[data-tab="${r.tab}"]`), row = a.parentElement;
     // on a phone the tab row scrolls sideways: keep the current tab in view
@@ -280,6 +320,7 @@ function draw() {
   for (const w of NEEDS[r.tab]) if (ST[w] === 'idle') { load(w); return; }
   if (r.tab === 'pregled') drawPdfCard();
   ({ pregled: drawOverview, upiti: drawInquiries, artikli: drawProducts, kategorije: drawCats, svestenstvo: drawPriests, porudzbine: drawOrders, statistika: drawStats })[r.tab](r);
+  countUps($(`[data-screen="${r.tab}"]`));
   drawBadge();
 }
 
