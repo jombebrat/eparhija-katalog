@@ -560,3 +560,17 @@ span.flyer { border-radius: 50%; background: var(--color-ink); }
 .qty--inline button:active { transform: scale(0.82); }
 .add:active { transform: scale(0.96); }
 @media (prefers-reduced-motion: reduce) { .qty--inline.is-new { animation: none; } .qty--inline button:active, .add:active { transform: none; } .flyer { display: none; } }
+
+/* the basket opens as frosted glass sliding in; its lines rise one after another */
+@keyframes drawer-glass-in { from { opacity: 0; transform: translateX(64px); filter: blur(10px); } to { opacity: 1; transform: none; filter: blur(0); } }
+@keyframes drawer-line-in { from { opacity: 0; transform: translateX(22px); filter: blur(6px); } to { opacity: 1; transform: none; filter: blur(0); } }
+@media screen and (prefers-reduced-motion: no-preference) {
+  .drawer[open] { animation: drawer-glass-in 0.65s cubic-bezier(.22,1,.36,1) both; }
+  .drawer::backdrop { animation: scrim-fade 0.5s ease both; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+  .drawer.opening .line, .drawer.opening .drawer__empty, .drawer.opening .drawer__foot { animation: drawer-line-in 0.7s cubic-bezier(.22,1,.36,1) backwards; }
+  .drawer.opening .line:nth-child(1) { animation-delay: 0.25s; } .drawer.opening .line:nth-child(2) { animation-delay: 0.33s; } .drawer.opening .line:nth-child(3) { animation-delay: 0.41s; }
+  .drawer.opening .line:nth-child(4) { animation-delay: 0.49s; } .drawer.opening .line:nth-child(n+5) { animation-delay: 0.55s; }
+  .drawer.opening .drawer__empty { animation-delay: 0.25s; } .drawer.opening .drawer__foot { animation-delay: 0.5s; }
+}
+@keyframes scrim-fade { from { opacity: 0; } to { opacity: 1; } }
+@media screen { .drawer { background: color-mix(in oklab, var(--color-paper) 80%, transparent); -webkit-backdrop-filter: blur(26px) saturate(1.6); backdrop-filter: blur(26px) saturate(1.6); } .drawer .drawer__foot { background: color-mix(in oklab, var(--color-paper) 70%, transparent); } }

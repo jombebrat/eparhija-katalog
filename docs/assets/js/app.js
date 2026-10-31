@@ -714,7 +714,30 @@ import * as R from './render.js?v=1381f84ccd';
   }
 
   let opener = null;
-  $$('[data-open-list]').forEach((b) => b.addEventListener('click', () => { opener = b; renderList(); drawer.showModal(); }));
+  $$('[data-open-list]').forEach((b) => b.addEventListener('click', () => {
+    opener = b; renderList(); drawer.showModal();
+    if (still) return;
+    b.animate([{ transform: 'scale(1)' }, { transform: 'scale(0.86)', offset: 0.25 }, { transform: 'scale(1.1)', offset: 0.6 }, { transform: 'scale(1)' }], { duration: 480, easing: 'cubic-bezier(.34,1.56,.64,1)' });
+    drawer.classList.add('opening'); clearTimeout(drawer._op); drawer._op = setTimeout(() => drawer.classList.remove('opening'), 2200);
+    const tot = $('.drawer__total b', foot);
+    if (tot) countTo(tot);
+  }));
+  // the total counts up from nothing when the basket opens
+  function countTo(node) {
+    const full = node.textContent, m = full.match(/\d[\d.,\s\u00a0]*/);
+    if (!m) return;
+    const digits = m[0].replace(/[^\d]/g, ''), dec = /[.,]\d{1,2}\s*$/.test(m[0].trim()) ? m[0].trim().match(/[.,](\d{1,2})$/)[1].length : 0;
+    const to = Number(digits) / 10 ** dec;
+    if (!(to > 0)) return;
+    const t0 = performance.now() + 350, dur = 1000;
+    node.textContent = full.replace(m[0], money.format(0).replace(/[^\d.,\s\u00a0]/g, '').trim());
+    const tick = (now) => {
+      const k = Math.min(1, Math.max(0, (now - t0) / dur));
+      node.textContent = k >= 1 ? full : full.replace(m[0], money.format(to * (1 - (1 - k) ** 3)).replace(/[^\d.,\s\u00a0]/g, '').trim());
+      if (k < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
   drawer.addEventListener('close', () => { lastOrder = null; lastInquiry = null; quote = null; });
 
   // ---------- product detail ----------
