@@ -574,3 +574,17 @@ body.adm { font-size: var(--t-md); line-height: 1.5; background: var(--adm-bg); 
 .screen.reveal .tbl tbody tr:nth-child(7) { animation-delay: 0.93s; } .screen.reveal .tbl tbody tr:nth-child(8) { animation-delay: 0.98s; } .screen.reveal .tbl tbody tr:nth-child(9) { animation-delay: 1.04s; } .screen.reveal .tbl tbody tr:nth-child(10) { animation-delay: 1.09s; } .screen.reveal .tbl tbody tr:nth-child(11) { animation-delay: 1.15s; } .screen.reveal .tbl tbody tr:nth-child(12) { animation-delay: 1.21s; } .screen.reveal .tbl tbody tr:nth-child(13) { animation-delay: 1.26s; } 
 .screen.reveal .tbl tbody tr:nth-child(n+14) { animation: none; }
 @media (prefers-reduced-motion: reduce) { .screen.reveal * { animation: none !important; } }
+
+/* the sheet opens in the middle, as frosted glass over a blurred page */
+@keyframes sheet-in { from { opacity: 0; transform: translateY(14px) scale(0.96); filter: blur(10px); } to { opacity: 1; transform: none; filter: blur(0); } }
+@keyframes scrim-in { from { opacity: 0; } to { opacity: 1; } }
+@media screen {
+  .sheet { inset: 0; margin: auto; width: min(42rem, calc(100% - 2rem)); height: auto; max-height: min(52rem, calc(100dvh - 3rem)); border: var(--rule-hair) solid color-mix(in oklab, var(--color-ink) 12%, transparent); border-radius: 22px; overflow: hidden; background: color-mix(in oklab, var(--color-paper) 74%, transparent); -webkit-backdrop-filter: blur(28px) saturate(1.8); backdrop-filter: blur(28px) saturate(1.8); box-shadow: 0 30px 80px oklch(10% 0 0 / 0.28), 0 2px 0 oklch(100% 0 0 / 0.5) inset; }
+  .sheet[open] { animation: sheet-in 0.5s cubic-bezier(.22,1,.36,1) both; }
+  .sheet::backdrop { background: oklch(20% 0 0 / 0.28); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); animation: scrim-in 0.4s ease both; }
+  .sheet__inner { height: auto; max-height: inherit; }
+  .sheet__body { min-height: 0; }
+  .sheet__head { background: transparent; border-bottom-color: color-mix(in oklab, var(--color-ink) 9%, transparent); }
+  .sheet__foot { background: color-mix(in oklab, var(--color-paper-2) 55%, transparent); border-top-color: color-mix(in oklab, var(--color-ink) 9%, transparent); }
+}
+@media screen and (prefers-reduced-motion: reduce) { .sheet[open], .sheet::backdrop { animation: none; } }
