@@ -574,3 +574,21 @@ span.flyer { border-radius: 50%; background: var(--color-ink); }
 }
 @keyframes scrim-fade { from { opacity: 0; } to { opacity: 1; } }
 @media screen { .drawer { background: color-mix(in oklab, var(--color-paper) 80%, transparent); -webkit-backdrop-filter: blur(26px) saturate(1.6); backdrop-filter: blur(26px) saturate(1.6); } .drawer .drawer__foot { background: color-mix(in oklab, var(--color-paper) 70%, transparent); } }
+
+/* dialogs (member login, price list choice, language, article detail): frosted glass that springs open, its contents rising in turn */
+@keyframes dialog-pop { from { opacity: 0; transform: translateY(18px) scale(0.94); filter: blur(10px); } to { opacity: 1; transform: none; filter: blur(0); } }
+@media screen {
+  .welcome, .detail { background: color-mix(in oklab, var(--color-paper) 82%, transparent); -webkit-backdrop-filter: blur(26px) saturate(1.6); backdrop-filter: blur(26px) saturate(1.6); border: 1px solid color-mix(in oklab, var(--color-ink) 10%, transparent); box-shadow: 0 30px 80px var(--glass-shadow), inset 0 1px 0 var(--glass-hi); }
+  .welcome::backdrop, .detail::backdrop { -webkit-backdrop-filter: blur(7px); backdrop-filter: blur(7px); }
+}
+@media screen and (prefers-reduced-motion: no-preference) {
+  .welcome[open], .detail[open] { animation: dialog-pop 0.6s cubic-bezier(.22,1,.36,1) both; }
+  .welcome::backdrop, .detail::backdrop { animation: scrim-fade 0.45s ease both; }
+  .welcome[open] .welcome__inner > * { animation: rise-in 0.7s cubic-bezier(.22,1,.36,1) backwards; }
+  .welcome[open] .welcome__inner > :nth-child(1) { animation-delay: 0.12s; } .welcome[open] .welcome__inner > :nth-child(2) { animation-delay: 0.2s; }
+  .welcome[open] .welcome__inner > :nth-child(3) { animation-delay: 0.28s; } .welcome[open] .welcome__inner > :nth-child(4) { animation-delay: 0.36s; }
+  .welcome[open] .welcome__inner > :nth-child(5) { animation-delay: 0.44s; } .welcome[open] .welcome__inner > :nth-child(n+6) { animation-delay: 0.52s; }
+  .welcome[open] .welcome__grb { animation-name: rise-in; }
+  .listbtn:active, .btn:active { transform: scale(0.96); }
+  .listbtn, .btn { transition: transform 0.35s cubic-bezier(.34,1.56,.64,1), background-color var(--dur-short) var(--ease-out), border-color var(--dur-short) var(--ease-out); }
+}
