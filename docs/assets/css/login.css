@@ -1,0 +1,24 @@
+/* Sign-in screens: a dark panel of slowly rising article photos beside the form. Shared by /admin/ and the member account. */
+.art { position: relative; overflow: hidden; isolation: isolate; background: var(--art-bg); color: var(--art-ink); min-height: 100%; }
+.art__cols { position: absolute; inset: 0; display: flex; gap: var(--space-sm); padding-inline: var(--space-md); transform: rotate(-6deg) scale(1.25); opacity: .55; mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 70%, transparent); -webkit-mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 70%, transparent); }
+.art__col { flex: 1; display: grid; align-content: start; gap: var(--space-sm); animation: art-rise 70s linear infinite; }
+.art__col:nth-child(2) { animation-duration: 90s; animation-direction: reverse; margin-top: calc(var(--space-2xl) * -1); }
+.art__col:nth-child(3) { animation-duration: 80s; }
+.art__col img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: var(--radius-card); background: color-mix(in oklab, var(--art-ink) 10%, var(--art-bg)); }
+@keyframes art-rise { to { transform: translateY(-50%); } }
+.art__brand { position: absolute; inset: auto 0 0 0; z-index: 1; display: grid; gap: var(--space-xs); padding: var(--space-3xl) var(--space-xl) var(--space-xl); background: linear-gradient(to top, var(--art-bg) 35%, transparent); }
+.art__grb { width: 56px; height: auto; margin-bottom: var(--space-xs); }
+.art__name { font-size: var(--text-xl, 1.5rem); font-weight: 600; letter-spacing: -.01em; line-height: 1.15; }
+.art__tag { max-width: 34ch; font-size: var(--text-sm); line-height: 1.5; color: color-mix(in oklab, var(--art-ink) 65%, transparent); }
+@media (prefers-reduced-motion: reduce) { .art__col { animation: none; } }
+
+.signin__pane { display: grid; align-content: center; gap: var(--space-md); padding: var(--space-xl); }
+.signin__pane h1, .acct__out .signin__pane h2 { font-size: 1.75rem; letter-spacing: -.015em; line-height: 1.15; }
+.signin__pane > * { animation: signin-in .6s cubic-bezier(.2, .7, .2, 1) both; }
+.signin__pane > :nth-child(2) { animation-delay: .06s; }
+.signin__pane > :nth-child(3) { animation-delay: .12s; }
+.signin__pane > :nth-child(4) { animation-delay: .18s; }
+.signin__pane > :nth-child(n+5) { animation-delay: .24s; }
+@keyframes signin-in { from { opacity: 0; transform: translateY(14px); } }
+@media (prefers-reduced-motion: reduce) { .signin__pane > * { animation: none; } }
+.signin__pane .btn--primary { min-height: 48px; }

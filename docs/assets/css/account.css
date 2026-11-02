@@ -1,7 +1,8 @@
 /* Hallmark · shape: app screen · genre: editorial · theme: Ink (the catalogue's own)
  * nav: the catalogue's slab · signature: the member's orders, each with its PDF and "order again" · states: loading, empty, error, full
  * axes: light/grotesk-sans/chromatic-gold · contrast: pass · v2.0.0 */
-@import url("./site.css?v=0625a4b417");
+@import url("./login.css?v=c2d836be27");
+@import url("./site.css?v=8af57be5f6");
 
 /* the app's own scale, ratio 1.2 */
 :root { --color-success-soft: oklch(95% 0.03 150); --color-success-ink: oklch(36% 0.09 150); }
@@ -12,7 +13,12 @@
 .acct h2 { max-width: none; font-size: var(--t-lg); letter-spacing: -0.01em; line-height: 1.25; }
 .acct__boot { color: var(--color-muted); }
 .acct__lead { max-width: 52ch; color: var(--color-ink-2); }
-.acct__out { display: grid; gap: var(--space-md); max-width: 24rem; }
+.acct__inner:has(.acct__out:not([hidden])) > h1, .acct__inner:has(.acct__out:not([hidden])) > .acct__boot { display: none; }
+.acct__out { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1fr); max-width: 62rem; margin-inline: auto; overflow: hidden; border: var(--rule-hair) solid var(--color-rule, var(--color-paper-3)); border-radius: calc(var(--radius-card) * 2); background: var(--color-paper); box-shadow: var(--glass-shadow); }
+.acct__out[hidden] { display: none; }
+.acct__out .art { min-height: 30rem; }
+.acct__out #h-signin { position: static; width: auto; height: auto; margin: 0; clip-path: none; overflow: visible; white-space: normal; }
+@media (max-width: 52rem) { .acct__out { grid-template-columns: 1fr; } .acct__out .art { display: none; } .signin__pane { padding: var(--space-lg) var(--space-md); } }
 .acct__form { display: grid; gap: var(--space-sm); }
 .acct__form .btn { justify-self: start; }
 .acct__sent { color: var(--color-ink-2); }
@@ -79,7 +85,8 @@ a.listbtn { text-decoration: none; }
   .lines thead th:first-child, .lines td.code { display: none; }
 }
 .acct__pw { margin-top: var(--space-md); }
-.acct__pw summary { width: fit-content; min-height: 44px; display: flex; align-items: center; font-size: var(--text-sm); color: var(--color-muted); cursor: pointer; }
+.acct__pw summary { width: fit-content; min-height: 44px; display: flex; align-items: center; padding-inline: var(--space-md); border: var(--rule-hair) solid var(--color-paper-3); border-radius: var(--radius-pill); font-size: var(--text-sm); color: var(--color-ink-2); cursor: pointer; transition: border-color .2s; }
+.acct__pw summary:hover { border-color: var(--color-ink); }
 .acct__pw .acct__form { margin-top: var(--space-xs); }
 
 /* ---------- the member's profile in the admin's look: white cards on a soft grey ---------- */

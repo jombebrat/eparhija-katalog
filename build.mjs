@@ -5,7 +5,7 @@
 // The pages load the live catalogue again in the browser, so admin changes show without a rebuild;
 // the build only keeps the first paint, search engines and visitors without JavaScript up to date.
 
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, readdirSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -71,9 +71,9 @@ const V = {
   admin: stamp('js/admin.js', { 'render.js': leaf['render.js'], 'catalogue-pdf.js': hashOf('js/catalogue-pdf.js') }),
   account: stamp('js/account.js', { 'render.js': leaf['render.js'] }),
   site: stamp('css/site.css', css3),
-  adminCss: stamp('css/admin.css', css3),
+  adminCss: stamp('css/admin.css', { ...css3, 'login.css': hashOf('css/login.css') }),
 };
-V.accountCss = stamp('css/account.css', { 'site.css': V.site });
+V.accountCss = stamp('css/account.css', { 'site.css': V.site, 'login.css': hashOf('css/login.css') });
 V.legalCss = stamp('css/legal.css', { 'site.css': V.site });
 
 const raw = await loadCatalogue();
@@ -367,9 +367,11 @@ function adminPage() {
   <p class="boot" data-boot>Učitavanje…</p>
 
   <main class="gate" id="gate" hidden>
+    ${artPanel('../', 'Magacin Eparhije zapadnoevropske', 'Pregled zaliha, narudžbine i cenovnici na jednom mestu.')}
+    <div class="signin__pane">
     <form class="gate__form" data-login novalidate>
-      <img class="gate__grb" src="../assets/img/grb-240.webp" width="82" height="96" alt="">
-      <p class="gate__org">Magacin Eparhije zapadnoevropske</p>
+      <img class="gate__grb" src="../assets/img/grb-240.webp" width="56" height="65" alt="">
+      <p class="gate__org">Administracija</p>
       <h1>Prijava za administratore</h1>
       ${field('l-email', 'Korisničko ime ili mejl', 'text', 'username', ' autocapitalize="none" autocorrect="off" spellcheck="false"')}
       ${field('l-pass', 'Lozinka', 'password', 'current-password')}
@@ -377,6 +379,7 @@ function adminPage() {
       <button class="btn btn--primary btn--block" type="submit">Prijavi se</button>
       <p class="gate__note">Nalog otvara vlasnik sajta. <a href="../">Nazad na katalog</a></p>
     </form>
+    </div>
   </main>
 
   <div class="app" id="app" hidden>
@@ -528,6 +531,14 @@ const ACCOUNT_STRINGS = ['acTitle', 'acEmail', 'acSend', 'acSendHelp', 'acSendin
   'acSave', 'acSaving', 'acSaved', 'acSaveFailed', 'acItem', 'acQty', 'acAmount', 'acCatalogue', 'code', 'total', 'kg', 'signOut',
   'loginUnknown', 'loginTooMany', 'loginInvalid', 'loginFailed', 'formName', 'formParish', 'formPhone', 'formAddress', 'optional', 'pricesFor'];
 const accountPath = (l) => `${l.dir}${strings[l.id].acSlug}/`;
+
+// The dark panel beside the sign-in forms: three drifting columns of article photos (every Nth thumbnail), the crest and the name.
+function artPanel(root, name, tag) {
+  const thumbs = readdirSync(join(ASSETS, 'img/p')).filter((f) => f.endsWith('-1-s.webp')).sort();
+  const pick = thumbs.filter((_, i) => i % Math.max(1, Math.floor(thumbs.length / 24)) === 0).slice(0, 24);
+  const col = (n) => { const set = pick.filter((_, i) => i % 3 === n).map((f) => `<img src="${root}assets/img/p/${f}" width="160" height="160" alt="" loading="lazy" decoding="async">`).join(''); return `<div class="art__col" aria-hidden="true">${set}${set}</div>`; };
+  return `<aside class="art" aria-hidden="true"><div class="art__cols">${col(0)}${col(1)}${col(2)}</div><div class="art__brand"><img class="art__grb" src="${root}assets/img/grb-240.webp" width="56" height="65" alt=""><p class="art__name">${name}</p>${tag ? `<p class="art__tag">${tag}</p>` : ""}</div></aside>`;
+}
 function accountPage(lang) {
   const S = strings[lang];
   const me = LANGS.find((l) => l.id === lang);
@@ -575,7 +586,9 @@ function accountPage(lang) {
       <noscript><p>${t(lang, S.acLead)}</p></noscript>
 
       <section class="acct__out" data-out hidden aria-labelledby="h-signin">
-        <h2 id="h-signin" class="visually-hidden">${t(lang, S.acSignIn)}</h2>
+        ${artPanel(root, 'Magacin Eparhije zapadnoevropske', '')}
+        <div class="signin__pane">
+        <h2 id="h-signin">${t(lang, S.acTitle)}</h2>
         <p class="acct__lead">${t(lang, S.acLead)}</p>
         <form class="acct__form" data-send novalidate>
           <div class="field"><label for="ac-email">${t(lang, S.acEmail)}</label><input id="ac-email" name="email" type="email" autocomplete="email" inputmode="email" spellcheck="false" required aria-required="true" aria-describedby="ac-help"></div>
@@ -596,6 +609,7 @@ function accountPage(lang) {
         </form>
         <p class="acct__help" id="ac-help" data-help>${t(lang, S.acSendHelp)}</p>
         <p class="acct__prices" data-prices-for hidden><span data-prices-who></span> <button class="textbtn" type="button" data-forget>${t(lang, S.signOut)}</button></p>
+        </div>
       </section>
 
       <section class="acct__in" data-in hidden aria-labelledby="h-orders">
