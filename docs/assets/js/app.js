@@ -199,6 +199,71 @@ import * as R from './render.js?v=1381f84ccd';
     paintPrices();
   }
 
+
+  // ---------- the first thing a visitor sees: the warehouse as it is now, in motion ----------
+  // Built from the cards on the page, so it always shows the articles that are really there. Once per visit.
+  function startIntro() {
+    window.__introMs = 0;
+    let seen = false;
+    try { seen = !!sessionStorage.getItem('ek-intro'); } catch { /* private mode: show it */ }
+    const token = new URLSearchParams(location.search).get('ponuda');
+    if (reduced() || seen || token || location.hash.length > 1) return Promise.resolve();
+    const pics = [...new Set($$('.card__img img').map((i) => i.currentSrc || i.src).filter(Boolean))];
+    if (pics.length < 18) return Promise.resolve();
+    try { sessionStorage.setItem('ek-intro', '1'); } catch { /* fine */ }
+    for (let i = pics.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [pics[i], pics[j]] = [pics[j], pics[i]]; }
+    const total = $$('.card').length - $$('.card--out').length, cats = $$('[data-cat]').length;
+    const brand = $('.hero h1')?.textContent || '';
+    const crest = $('.wordmark__grb')?.getAttribute('src') || '';
+    const ov = document.createElement('div');
+    ov.className = 'intro';
+    const rowHtml = (n) => `<div class="intro__row">${pics.slice(n * 12, n * 12 + 12).map((u) => `<span class="intro__tile"><img src="${u}" alt=""></span>`).join('')}</div>`;
+    ov.innerHTML = `<div class="intro__rows" aria-hidden="true">${rowHtml(0)}${rowHtml(1)}${rowHtml(2)}</div>
+      <div class="intro__center">${crest ? `<img class="intro__crest" src="${crest}" alt="" width="48" height="56">` : ''}
+        <p class="intro__title"></p>
+        <p class="intro__nums"><span><b data-n="${total}">0</b> ${S.introAvail}</span><span><b data-n="${cats}">0</b> ${S.introCats}</span></p></div>
+      <button class="intro__skip" type="button">${S.introSkip}</button>`;
+    $('.intro__title', ov).textContent = brand;
+    document.body.append(ov);
+    document.documentElement.classList.add('intro-on');
+    let early = false;
+    ov.addEventListener('click', () => { early = true; });
+    const ready = Promise.race([Promise.all(pics.slice(0, 36).map((u) => new Promise((r) => { const i = new Image(); i.onload = i.onerror = r; i.src = u; }))), new Promise((r) => setTimeout(r, 1500))]);
+    return ready.then(() => {
+      const LIFE = 5600, OUT = 900;
+      window.__introMs = LIFE + OUT;
+      const ease = 'cubic-bezier(.22,1,.36,1)';
+      $$('.intro__row', ov).forEach((row, r) => {
+        const dir = r === 1 ? 1 : -1, far = 420 + r * 120;
+        row.animate([{ transform: `translateX(${dir > 0 ? -far : 0}px)` }, { transform: `translateX(${dir > 0 ? 0 : -far}px)` }], { duration: LIFE + OUT, easing: 'linear', fill: 'both' });
+        $$('.intro__tile', row).forEach((t, i) => t.animate([{ opacity: 0, filter: 'blur(14px)', transform: `translateY(${r % 2 ? -40 : 40}px) scale(0.85)` }, { opacity: 1, filter: 'blur(0)', transform: 'none' }], { duration: 800, delay: 120 + i * 55 + r * 90, easing: ease, fill: 'backwards' }));
+      });
+      const center = $('.intro__center', ov);
+      center.animate([{ opacity: 0, filter: 'blur(16px)', transform: 'translateY(24px) scale(0.94)' }, { opacity: 1, filter: 'blur(0)', transform: 'none' }], { duration: 900, delay: 700, easing: ease, fill: 'backwards' });
+      $$('[data-n]', ov).forEach((b) => {
+        const to = Number(b.dataset.n), t0 = performance.now() + 1300, dur = 1500;
+        const tick = (now) => { const k = Math.min(1, Math.max(0, (now - t0) / dur)); b.textContent = String(Math.round(to * (1 - (1 - k) ** 3))); if (k < 1 && ov.isConnected) requestAnimationFrame(tick); };
+        requestAnimationFrame(tick);
+      });
+      return new Promise((resolve) => {
+        let done = false;
+        const end = (fast) => {
+          if (done) return; done = true; clearTimeout(timer);
+          ov.animate([{ opacity: 1, filter: 'blur(0)', transform: 'none' }, { opacity: 0, filter: 'blur(22px)', transform: 'scale(1.07)' }], { duration: fast ? 450 : OUT, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'forwards' }).finished.then(() => {
+            ov.remove(); document.documentElement.classList.remove('intro-on'); window.__introMs = 0; resolve();
+          });
+        };
+        const timer = setTimeout(() => end(false), LIFE);
+        $('.intro__skip', ov).addEventListener('click', () => { window.__introMs = 450; end(true); });
+        ov.addEventListener('click', () => { window.__introMs = 450; end(true); });
+        addEventListener('keydown', (e) => { if (e.key === 'Escape') { window.__introMs = 450; end(true); } }, { once: true });
+        if (early) end(true);
+      });
+    });
+  }
+
+  const introDone = startIntro();
+  window.__introDone = introDone;
   // ---------- the welcome asks for the language, once ----------
   const welcome = $('[data-welcome]');
   function openWelcome() { welcome.showModal(); $('[aria-current="page"]', welcome)?.focus(); }
@@ -961,7 +1026,7 @@ import * as R from './render.js?v=1381f84ccd';
       history.replaceState(null, '', location.pathname + location.hash);
       loadQuote(token);
     } else if (!store.get('ek-welcome')) {
-      openWelcome();
+      introDone.then(openWelcome);
     }
   }
   // "Order again" on the account page comes back here with the list filled
@@ -975,15 +1040,16 @@ import * as R from './render.js?v=1381f84ccd';
 (() => {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) return;
   const h = document.querySelector('.hero h1');
+  const after = window.__introDone || Promise.resolve();
   if (h && !h.children.length) {
     const text = h.textContent;
     h.setAttribute('aria-label', text);
     h.style.minHeight = `${h.offsetHeight}px`;
     h.textContent = ' ';
     let n = 0;
-    setTimeout(() => {
+    after.then(() => setTimeout(() => {
       const t = setInterval(() => { n++; h.textContent = text.slice(0, n); if (n >= text.length) { clearInterval(t); h.removeAttribute('aria-label'); h.style.minHeight = ''; } }, 34);
-    }, 250);
+    }, 250));
   }
   const cards = [...document.querySelectorAll('.card')];
   cards.forEach((c) => c.classList.add('pre'));
@@ -997,7 +1063,7 @@ import * as R from './render.js?v=1381f84ccd';
       io.unobserve(e.target);
     }
   }, { rootMargin: '0px 0px -5% 0px' });
-  cards.forEach((c) => io.observe(c));
+  after.then(() => cards.forEach((c) => io.observe(c)));
 })();
 
 // ----- dialogs close the way they open: they shrink back and blur out -----

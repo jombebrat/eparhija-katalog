@@ -221,7 +221,10 @@
     "optsFind": "Chercher dans la liste",
     "optsFindPh": "Nicolas, Sava, Trinité…",
     "optsNone": "Rien de tel dans la liste.",
-    "orderChoose": "Choisissez d'abord une option pour : {codes}."
+    "orderChoose": "Choisissez d'abord une option pour : {codes}.",
+    "introAvail": "articles disponibles",
+    "introCats": "catégories",
+    "introSkip": "Passer"
   },
   "en": {
     "htmlLang": "en",
@@ -445,7 +448,10 @@
     "optsFind": "Search the list",
     "optsFindPh": "Nicholas, Sava, Trinity…",
     "optsNone": "Nothing like that in the list.",
-    "orderChoose": "Choose an option first for: {codes}."
+    "orderChoose": "Choose an option first for: {codes}.",
+    "introAvail": "items available",
+    "introCats": "categories",
+    "introSkip": "Skip"
   },
   "sr": {
     "htmlLang": "sr-Cyrl",
@@ -671,6 +677,9 @@
     "optsFind": "Претражи листу",
     "optsFindPh": "Никола, Сава, Тројица…",
     "optsNone": "Тога нема на листи.",
-    "orderChoose": "Прво изаберите опцију за: {codes}."
+    "orderChoose": "Прво изаберите опцију за: {codes}.",
+    "introAvail": "артикала на стању",
+    "introCats": "категорија",
+    "introSkip": "Прескочи"
   }
 }

@@ -88,7 +88,7 @@ const T = (lang, key, vars = {}) => {
 };
 const t = (lang, s) => esc(typo(lang, s));
 
-const CLIENT_STRINGS = ['add', 'added', 'noMatch', 'matches', 'photoOf', 'emptyTitle', 'emptyText', 'qty', 'less', 'more', 'remove', 'total', 'copy', 'copied', 'copyFailed', 'clearList', 'mailHello', 'kg', 'perKg', 'close', 'code', 'browse',
+const CLIENT_STRINGS = ['introAvail', 'introCats', 'introSkip', 'add', 'added', 'noMatch', 'matches', 'photoOf', 'emptyTitle', 'emptyText', 'qty', 'less', 'more', 'remove', 'total', 'copy', 'copied', 'copyFailed', 'clearList', 'mailHello', 'kg', 'perKg', 'close', 'code', 'browse',
   'loginUnknown', 'loginTooMany', 'loginFailed', 'loginInvalid', 'checking', 'showPrices', 'signOut', 'pricesFor', 'guestList', 'formName', 'formParish', 'formPhone', 'formAddress', 'formNote', 'optional', 'nameMissing',
   'sendOrder', 'sending', 'orderDone', 'orderDoneMail', 'orderDoneNoMail', 'downloadPdf', 'orderFailed', 'orderUnknown', 'orderUnavailable', 'done', 'outOfStock', 'related', 'inStock',
   'noPhoto', 'addLabel', 'acLink', 'list', 'cartLabel', 'askPrices', 'gatePriest', 'gateLead', 'gateUnknown', 'gateOther', 'gateOtherLead', 'emailPlaceholder', 'inqSend', 'inqDone', 'inqDoneText', 'inqFailed', 'inqTooMany',
