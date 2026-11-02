@@ -23,6 +23,13 @@ Redosled: prvo 1 i 3, jer najviše štede posao.
   - Svako kretanje se beleži (ko, kada, koliko, zašto), a stanje se računa iz njih.
   - Sada se stanje samo prepisuje, bez traga.
 
+## Admin panel: ideje iz Bagista (2. 11.)
+
+Pregledano: [Bagisto 2.0](https://bagisto.com/?p=20110) (Laravel/Vue). Ne prelazimo na Bagisto, preuzimamo samo ove ideje. Ulaze u Fazu 5 (porudžbine).
+
+- [ ] **1. Globalna pretraga u vrhu admina**: jedno polje traži artikle, porudžbine i upite.
+- [ ] **2. Klizni panel sa strane** za detalje porudžbine i promenu statusa (umesto velikog dijaloga), da se ne napušta lista.
+
 ## Cene za nečlanove (viša cena na sajtu)
 
 Ideja: članovi (crkve) i dalje kupuju po nabavnoj ceni, a ko nije član vidi višu cenu odmah, bez upita đakonu.
