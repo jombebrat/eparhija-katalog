@@ -276,15 +276,15 @@ body.adm { font-size: var(--t-md); line-height: 1.5; background: var(--adm-bg); 
   .tbl:not(.tbl--lines):not(.tbl--compact) tbody .c-name { display: block; grid-column: 1; min-width: 0; font-size: var(--t-md); }
   .tbl:not(.tbl--lines):not(.tbl--compact) tbody .c-act { grid-column: 2; grid-row: 1; width: auto; }
   .tbl:not(.tbl--lines):not(.tbl--compact) tbody .c-on { width: auto; }
-  .tbl.tbl--products tbody tr { grid-template-columns: 56px 1fr auto; }
-  .tbl.tbl--products tbody .c-photo { grid-column: 1; grid-row: 1 / span 2; width: auto; align-items: start; }
-  .tbl.tbl--products tbody .c-code { grid-column: 2; grid-row: 2; justify-content: start; font-size: var(--t-sm); color: var(--color-ink-2); }
-  .tbl.tbl--products tbody .c-name { grid-column: 2; grid-row: 1; }
-  .tbl.tbl--products tbody .c-act { grid-column: 3; grid-row: 1; }
-  .tbl.tbl--products tbody :is(.c-cat, .c-price, .c-stock, .c-on) { grid-column: 2 / -1; }
-  .tbl.tbl--cats tbody .c-name { grid-row: 1; }
-  .tbl.tbl--orders tbody .c-no { grid-column: 2; grid-row: 1; justify-content: end; }
-  .tbl.tbl--orders tbody .c-name { grid-row: 1; }
+  .tbl.tbl--products:not(.tbl--lines):not(.tbl--compact) tbody tr { grid-template-columns: 56px 1fr auto; }
+  .tbl.tbl--products:not(.tbl--lines):not(.tbl--compact) tbody .c-photo { grid-column: 1; grid-row: 1 / span 2; width: auto; align-items: start; }
+  .tbl.tbl--products:not(.tbl--lines):not(.tbl--compact) tbody .c-code { grid-column: 2; grid-row: 2; justify-content: start; font-size: var(--t-sm); color: var(--color-ink-2); }
+  .tbl.tbl--products:not(.tbl--lines):not(.tbl--compact) tbody .c-name { grid-column: 2; grid-row: 1; }
+  .tbl.tbl--products:not(.tbl--lines):not(.tbl--compact) tbody .c-act { grid-column: 3; grid-row: 1; }
+  .tbl.tbl--products:not(.tbl--lines):not(.tbl--compact) tbody :is(.c-cat, .c-price, .c-stock, .c-on) { grid-column: 2 / -1; }
+  .tbl.tbl--cats:not(.tbl--lines):not(.tbl--compact) tbody .c-name { grid-row: 1; }
+  .tbl.tbl--orders:not(.tbl--lines):not(.tbl--compact) tbody .c-no { grid-column: 2; grid-row: 1; justify-content: end; }
+  .tbl.tbl--orders:not(.tbl--lines):not(.tbl--compact) tbody .c-name { grid-row: 1; }
   .tbl--lines { font-size: var(--t-sm); }
   .tbl--lines :is(th, td) { padding-inline: var(--space-2xs); }
 }
