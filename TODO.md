@@ -38,3 +38,15 @@ Ideja: članovi (crkve) i dalje kupuju po nabavnoj ceni, a ko nije član vidi vi
   - Porudžbina nečlana: funkcija `order` sada računa cene samo za članove, treba dodati višu cenu i za goste (i naplatu, vidi IBAN/Stripe).
   - PDF cenovnik ostaje samo za članove (nabavne cene); za javnost se po želji pravi druga verzija ili samo „bez cena“.
   - Pravno: u mejlu/uslovima navesti da su cene za crkve i ustanove eparhije posebne, a ostalima važi javna cena.
+
+## Profesionalni izgled (predlozi od 2. 11.)
+
+Redosled: prvo 2 i 6.
+
+- [ ] **1. Prazna stanja i greške** u adminu i na nalogu (nema porudžbina, nema veze, pogrešan kod): ikona/ilustracija i jasna poruka umesto golog teksta.
+- [ ] **2. Podnožje** na svim stranicama: jedan uredan blok sa kontaktom, pravnim stranicama i jezicima (na nalogu je sada gusto).
+- [ ] **3. E-mail poruke** (potvrda porudžbine, kod za prijavu): isti grb i boje kao sajt. Čeka povezivanje mejla.
+- [ ] **4. PDF cenovnik i narudžbenica**: ista tipografija i zaglavlje kao sajt, broj stranice i datum.
+- [ ] **5. Provera na telefonu** svake stranice (korpa, detalj artikla, admin tabele) i brzina učitavanja slika.
+- [ ] **6. Pristupačnost**: kontrast, tastatura, čitači ekrana; proći sve stranice i ispraviti.
+- [ ] **7. Opis artikala**: kratak tekst uz svaki artikal.
