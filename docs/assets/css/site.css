@@ -629,6 +629,8 @@ span.flyer { border-radius: 50%; background: var(--color-ink); }
 @keyframes tick-pop { 0% { transform: scale(0.8); } 60% { transform: scale(1.12); } 100% { transform: scale(1); } }
 
 /* the opening: the warehouse as it is now, three rows of articles sliding past a glass card with the numbers */
+html.intro-pending body > :not(.intro) { visibility: hidden; }
+.intro__tile, .intro__center { opacity: 0; }
 .intro { position: fixed; inset: 0; z-index: 300; overflow: hidden; background: var(--color-paper); }
 html.intro-on { overflow: hidden; }
 .intro__rows { position: absolute; left: 50%; top: 50%; display: grid; gap: var(--space-md); width: max-content; transform: translate(-50%, -50%) rotate(-7deg) scale(1.12); }

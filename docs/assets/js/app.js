@@ -204,12 +204,13 @@ import * as R from './render.js?v=2e5794a19b';
   // Built from the cards on the page, so it always shows the articles that are really there. Once per visit.
   function startIntro() {
     window.__introMs = 0;
+    const release = () => document.documentElement.classList.remove('intro-pending');
     let seen = false;
     try { seen = !!sessionStorage.getItem('ek-intro'); } catch { /* private mode: show it */ }
     const token = new URLSearchParams(location.search).get('ponuda');
-    if (reduced() || seen || token || location.hash.length > 1) return Promise.resolve();
+    if (reduced() || seen || token || location.hash.length > 1) { release(); return Promise.resolve(); }
     const pics = [...new Set($$('.card__img img').map((i) => i.currentSrc || i.src).filter(Boolean))];
-    if (pics.length < 30) return Promise.resolve();
+    if (pics.length < 30) { release(); return Promise.resolve(); }
     try { sessionStorage.setItem('ek-intro', '1'); } catch { /* fine */ }
     for (let i = pics.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [pics[i], pics[j]] = [pics[j], pics[i]]; }
     const total = $$('.card').length - $$('.card--out').length, cats = $$('[data-cat]').length;
@@ -226,6 +227,7 @@ import * as R from './render.js?v=2e5794a19b';
     $('.intro__title', ov).textContent = brand;
     document.body.append(ov);
     document.documentElement.classList.add('intro-on');
+    release();
     let early = false;
     ov.addEventListener('click', () => { early = true; });
     const ready = Promise.race([Promise.all(pics.slice(0, 30).map((u) => new Promise((r) => { const i = new Image(); i.onload = i.onerror = r; i.src = u; }))), new Promise((r) => setTimeout(r, 1500))]);
@@ -236,10 +238,10 @@ import * as R from './render.js?v=2e5794a19b';
       $$('.intro__row', ov).forEach((row, r) => {
         const dir = r === 1 ? 1 : -1, far = 420 + r * 120;
         row.animate([{ transform: `translateX(${dir > 0 ? -far : 0}px)` }, { transform: `translateX(${dir > 0 ? 0 : -far}px)` }], { duration: LIFE + OUT, easing: 'linear', fill: 'both' });
-        $$('.intro__tile', row).forEach((t, i) => t.animate([{ opacity: 0, transform: `translateY(${r % 2 ? -40 : 40}px) scale(0.85)` }, { opacity: 1, transform: 'none' }], { duration: 800, delay: 120 + i * 55 + r * 90, easing: ease, fill: 'backwards' }));
+        $$('.intro__tile', row).forEach((t, i) => t.animate([{ opacity: 0, transform: `translateY(${r % 2 ? -40 : 40}px) scale(0.85)` }, { opacity: 1, transform: 'none' }], { duration: 800, delay: 120 + i * 55 + r * 90, easing: ease, fill: 'both' }));
       });
       const center = $('.intro__center', ov);
-      center.animate([{ opacity: 0, transform: 'translateY(24px) scale(0.94)' }, { opacity: 1, transform: 'none' }], { duration: 900, delay: 700, easing: ease, fill: 'backwards' });
+      center.animate([{ opacity: 0, transform: 'translateY(24px) scale(0.94)' }, { opacity: 1, transform: 'none' }], { duration: 900, delay: 700, easing: ease, fill: 'both' });
       $$('[data-n]', ov).forEach((b) => {
         const to = Number(b.dataset.n), t0 = performance.now() + 1300, dur = 1500;
         const tick = (now) => { const k = Math.min(1, Math.max(0, (now - t0) / dur)); b.textContent = String(Math.round(to * (1 - (1 - k) ** 3))); if (k < 1 && ov.isConnected) requestAnimationFrame(tick); };

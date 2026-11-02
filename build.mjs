@@ -169,7 +169,15 @@ function page(lang, dir) {
   <link rel="preload" href="${root}assets/fonts/onest-${lang === 'sr' ? 'cyrillic' : 'latin'}-700-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="${root}assets/css/site.css?v=${V.site}">
   ${apiUrl ? `<link rel="preconnect" href="${esc(apiUrl)}" crossorigin>` : ''}
-  <script>document.documentElement.className = 'js';</script>
+  <script>document.documentElement.className = 'js';
+  // Opening intro: hide the page until app.js takes over, so the catalogue never flashes first.
+  (function () { try {
+    var d = document.documentElement, q = location.search, seen = false;
+    try { seen = !!sessionStorage.getItem('ek-intro'); } catch (e) {}
+    if (seen || /[?&]ponuda=/.test(q) || location.hash.length > 1 || (matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
+    d.classList.add('intro-pending');
+    setTimeout(function () { d.classList.remove('intro-pending'); }, 4000);
+  } catch (e) {} })();</script>
 </head>
 <body>
   <a class="skip" href="#catalogue">${t(lang, S.skip)}</a>
