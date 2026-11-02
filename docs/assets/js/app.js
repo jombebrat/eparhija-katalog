@@ -209,7 +209,7 @@ import * as R from './render.js?v=1381f84ccd';
     const token = new URLSearchParams(location.search).get('ponuda');
     if (reduced() || seen || token || location.hash.length > 1) return Promise.resolve();
     const pics = [...new Set($$('.card__img img').map((i) => i.currentSrc || i.src).filter(Boolean))];
-    if (pics.length < 18) return Promise.resolve();
+    if (pics.length < 30) return Promise.resolve();
     try { sessionStorage.setItem('ek-intro', '1'); } catch { /* fine */ }
     for (let i = pics.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [pics[i], pics[j]] = [pics[j], pics[i]]; }
     const total = $$('.card').length - $$('.card--out').length, cats = $$('[data-cat]').length;
@@ -217,7 +217,7 @@ import * as R from './render.js?v=1381f84ccd';
     const crest = $('.wordmark__grb')?.getAttribute('src') || '';
     const ov = document.createElement('div');
     ov.className = 'intro';
-    const rowHtml = (n) => `<div class="intro__row">${pics.slice(n * 12, n * 12 + 12).map((u) => `<span class="intro__tile"><img src="${u}" alt=""></span>`).join('')}</div>`;
+    const rowHtml = (n) => `<div class="intro__row">${pics.slice(n * 10, n * 10 + 10).map((u) => `<span class="intro__tile"><img src="${u}" alt=""></span>`).join('')}</div>`;
     ov.innerHTML = `<div class="intro__rows" aria-hidden="true">${rowHtml(0)}${rowHtml(1)}${rowHtml(2)}</div>
       <div class="intro__center">${crest ? `<img class="intro__crest" src="${crest}" alt="" width="48" height="56">` : ''}
         <p class="intro__title"></p>
@@ -228,7 +228,7 @@ import * as R from './render.js?v=1381f84ccd';
     document.documentElement.classList.add('intro-on');
     let early = false;
     ov.addEventListener('click', () => { early = true; });
-    const ready = Promise.race([Promise.all(pics.slice(0, 36).map((u) => new Promise((r) => { const i = new Image(); i.onload = i.onerror = r; i.src = u; }))), new Promise((r) => setTimeout(r, 1500))]);
+    const ready = Promise.race([Promise.all(pics.slice(0, 30).map((u) => new Promise((r) => { const i = new Image(); i.onload = i.onerror = r; i.src = u; }))), new Promise((r) => setTimeout(r, 1500))]);
     return ready.then(() => {
       const LIFE = 5600, OUT = 900;
       window.__introMs = LIFE + OUT;
@@ -236,10 +236,10 @@ import * as R from './render.js?v=1381f84ccd';
       $$('.intro__row', ov).forEach((row, r) => {
         const dir = r === 1 ? 1 : -1, far = 420 + r * 120;
         row.animate([{ transform: `translateX(${dir > 0 ? -far : 0}px)` }, { transform: `translateX(${dir > 0 ? 0 : -far}px)` }], { duration: LIFE + OUT, easing: 'linear', fill: 'both' });
-        $$('.intro__tile', row).forEach((t, i) => t.animate([{ opacity: 0, filter: 'blur(14px)', transform: `translateY(${r % 2 ? -40 : 40}px) scale(0.85)` }, { opacity: 1, filter: 'blur(0)', transform: 'none' }], { duration: 800, delay: 120 + i * 55 + r * 90, easing: ease, fill: 'backwards' }));
+        $$('.intro__tile', row).forEach((t, i) => t.animate([{ opacity: 0, transform: `translateY(${r % 2 ? -40 : 40}px) scale(0.85)` }, { opacity: 1, transform: 'none' }], { duration: 800, delay: 120 + i * 55 + r * 90, easing: ease, fill: 'backwards' }));
       });
       const center = $('.intro__center', ov);
-      center.animate([{ opacity: 0, filter: 'blur(16px)', transform: 'translateY(24px) scale(0.94)' }, { opacity: 1, filter: 'blur(0)', transform: 'none' }], { duration: 900, delay: 700, easing: ease, fill: 'backwards' });
+      center.animate([{ opacity: 0, transform: 'translateY(24px) scale(0.94)' }, { opacity: 1, transform: 'none' }], { duration: 900, delay: 700, easing: ease, fill: 'backwards' });
       $$('[data-n]', ov).forEach((b) => {
         const to = Number(b.dataset.n), t0 = performance.now() + 1300, dur = 1500;
         const tick = (now) => { const k = Math.min(1, Math.max(0, (now - t0) / dur)); b.textContent = String(Math.round(to * (1 - (1 - k) ** 3))); if (k < 1 && ov.isConnected) requestAnimationFrame(tick); };
@@ -249,7 +249,7 @@ import * as R from './render.js?v=1381f84ccd';
         let done = false;
         const end = (fast) => {
           if (done) return; done = true; clearTimeout(timer);
-          ov.animate([{ opacity: 1, filter: 'blur(0)', transform: 'none' }, { opacity: 0, filter: 'blur(22px)', transform: 'scale(1.07)' }], { duration: fast ? 450 : OUT, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'forwards' }).finished.then(() => {
+          ov.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'scale(1.05)' }], { duration: fast ? 450 : OUT, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'forwards' }).finished.then(() => {
             ov.remove(); document.documentElement.classList.remove('intro-on'); window.__introMs = 0; resolve();
           });
         };
