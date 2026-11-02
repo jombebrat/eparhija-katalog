@@ -1,7 +1,7 @@
 // Administration of the warehouse: articles and their stock, categories, clergy, orders.
 // Talks to Supabase over plain fetch (Auth, the REST API, Storage). What a signed-in account may read
 // or change is decided by the database (an account must be listed in the `admins` table).
-import { norm, esc, photoUrl } from './render.js?v=1381f84ccd';
+import { norm, esc, photoUrl } from './render.js?v=2e5794a19b';
 
 const C = JSON.parse(document.getElementById('admin-config').textContent);
 // an admin can sign in with a bare user name: "djakon" is the account djakon@<userDomain>

@@ -91,7 +91,7 @@ const t = (lang, s) => esc(typo(lang, s));
 const CLIENT_STRINGS = ['introAvail', 'introCats', 'introSkip', 'add', 'added', 'noMatch', 'matches', 'photoOf', 'emptyTitle', 'emptyText', 'qty', 'less', 'more', 'remove', 'total', 'copy', 'copied', 'copyFailed', 'clearList', 'mailHello', 'kg', 'perKg', 'close', 'code', 'browse',
   'loginUnknown', 'loginTooMany', 'loginFailed', 'loginInvalid', 'checking', 'showPrices', 'signOut', 'pricesFor', 'guestList', 'formName', 'formParish', 'formPhone', 'formAddress', 'formNote', 'optional', 'nameMissing',
   'sendOrder', 'sending', 'orderDone', 'orderDoneMail', 'orderDoneNoMail', 'downloadPdf', 'orderFailed', 'orderUnknown', 'orderUnavailable', 'done', 'outOfStock', 'related', 'inStock',
-  'noPhoto', 'addLabel', 'acLink', 'list', 'cartLabel', 'askPrices', 'gatePriest', 'gateLead', 'gateUnknown', 'gateOther', 'gateOtherLead', 'emailPlaceholder', 'inqSend', 'inqDone', 'inqDoneText', 'inqFailed', 'inqTooMany',
+  'optAvail', 'backToCatalogue', 'addLabel', 'acLink', 'list', 'cartLabel', 'askPrices', 'gatePriest', 'gateLead', 'gateUnknown', 'gateOther', 'gateOtherLead', 'emailPlaceholder', 'inqSend', 'inqDone', 'inqDoneText', 'inqFailed', 'inqTooMany',
   'emailMissing', 'emailLabel', 'quoteTitle', 'quoteLead', 'quoteOrder', 'quoteGone', 'quoteFor', 'cancel', 'pdfBtn', 'pdfChooseTitle', 'pdfChooseLead', 'pdfBlank', 'pdfWithPrices', 'pdfWorking', 'pdfNone', 'pdfFailed', 'choose', 'chooseLabel', 'optCount', 'optsHead', 'optsFind', 'optsFindPh', 'optsNone', 'orderChoose', 'candlesLead', 'candlesCaption', 'thFormat', 'thSize', 'thDetail', 'thPrice', 'thPriceUnit', 'thList'];
 
 const X = '<svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>';
@@ -266,6 +266,7 @@ function page(lang, dir) {
           <ul class="related__list" role="list" data-related-list></ul>
         </div>
       </div>
+      <button class="detail__back" type="button" data-close>← ${t(lang, S.backToCatalogue)}</button>
       <button class="iconbtn detail__close" type="button" data-close aria-label="${t(lang, S.close)}">${X}</button>
     </div>
   </dialog>
