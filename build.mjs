@@ -399,6 +399,7 @@ function adminPage() {
         <a href="#svestenstvo" data-tab="svestenstvo"><svg class="tabs__ic" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="7" r="2.8"/><path d="M2.5 16c.5-2.8 2.5-4.2 5-4.2s4.5 1.4 5 4.2"/><path d="M13 4.4a2.8 2.8 0 0 1 0 5.2M14.5 12c1.6.5 2.7 1.8 3 4"/></svg><span>Kontakti</span></a>
         <a href="#kategorije" data-tab="kategorije"><svg class="tabs__ic" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5.5h14M3 10h14M3 14.5h9"/></svg><span>Kategorije</span></a>
       </nav>
+      <button class="side__fold" type="button" data-fold aria-pressed="false" title="Skupi meni"><svg class="tabs__ic" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5l-5 5 5 5"/><path d="M16 5l-5 5 5 5" opacity=".45"/></svg><span>Skupi meni</span></button>
     </aside>
     <div class="shell">
     <header class="bar">

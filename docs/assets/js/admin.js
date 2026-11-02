@@ -1308,7 +1308,23 @@ function drawOverview() {
       ${monthChart(live)}
     </section>`;
 
-  box.innerHTML = `${wait}${kpis}${chart}<div class="pair">${best}${map}</div>${feed}`;
+  // the articles at a glance, and the things the admin does most
+  const nAll = D.products.length, nOn = D.products.filter((p) => p.active).length;
+  const nOut = D.products.filter((p) => p.stock === 0).length, nLow = D.products.filter((p) => low(p) && p.stock !== 0).length;
+  const art = (n, label, sub, href, warn) => `<a class="kpi${warn && n ? ' kpi--warn' : ''}" href="${href}"><span class="kpi__label">${label}</span><span class="kpi__n">${n}</span><span class="kpi__sub">${sub}</span></a>`;
+  const arts = `<div class="ov__arts" role="group" aria-label="Artikli">
+      ${art(nAll, 'Artikala ukupno', 'u magacinu', '#artikli')}
+      ${art(nOn, 'Aktivnih', `${nAll - nOn} skrivenih na sajtu`, '#artikli?f=')}
+      ${art(nOut, 'Bez zaliha', nOut ? 'stanje je nula' : 'svega ima', '#artikli?f=out', true)}
+      ${art(nLow, 'Niske zalihe', nLow ? 'ispod minimuma' : 'u redu', '#artikli?f=low', true)}
+    </div>`;
+  const quick = `<div class="quick" aria-label="Brze radnje">
+      <button class="btn btn--primary" type="button" data-new="product">Novi artikal</button>
+      <button class="btn" type="button" data-pdf-refresh>Osveži PDF katalog</button>
+      <a class="btn" href="#porudzbine">Nove porudžbine</a>
+      <a class="btn" href="#upiti">Upiti za cene</a>
+    </div>`;
+  box.innerHTML = `${quick}${wait}${arts}${kpis}${chart}<div class="pair">${best}${map}</div>${feed}`;
 }
 // the map's readout, like the chart's
 function mapTip(dot) {
@@ -1324,6 +1340,23 @@ document.addEventListener('pointerover', (e) => { const d = e.target.closest?.('
 document.addEventListener('focusin', (e) => { if (e.target.matches?.('.ovmap .dot')) mapTip(e.target); });
 document.addEventListener('pointerout', (e) => { const d = e.target.closest?.('.ovmap .dot'); if (d) { const t = $('.ovmap__tip', d.closest('.ovmap')); if (t && document.activeElement !== d) t.hidden = true; } });
 document.addEventListener('focusout', (e) => { if (e.target.matches?.('.ovmap .dot')) { const t = $('.ovmap__tip', e.target.closest('.ovmap')); if (t) t.hidden = true; } });
+
+// ---------- the side menu folds to icons ----------
+(() => {
+  const app = $('#app'), btn = $('[data-fold]');
+  if (!app || !btn) return;
+  const labels = $$('.tabs a').map((a) => [a, $('span:not(.tabs__n)', a)?.textContent || '']);
+  const set = (on) => {
+    app.toggleAttribute('data-fold', on);
+    btn.setAttribute('aria-pressed', String(on));
+    btn.title = on ? 'Raširi meni' : 'Skupi meni';
+    labels.forEach(([a, t]) => { if (on) a.title = t; else a.removeAttribute('title'); });
+    try { localStorage.setItem('adm-fold', on ? '1' : ''); } catch (e) { /* private window */ }
+  };
+  let was = false; try { was = localStorage.getItem('adm-fold') === '1'; } catch (e) { /* ignore */ }
+  set(was);
+  btn.addEventListener('click', () => set(!app.hasAttribute('data-fold')));
+})();
 
 // ---------- the side sheet ----------
 const sheet = $('[data-sheet]');
