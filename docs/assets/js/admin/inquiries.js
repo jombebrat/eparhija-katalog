@@ -1,9 +1,10 @@
 // Price inquiries: list, the quote sheet and its send/member actions.
-import { $, $$, C, call, db, esc, money, one, reason, token, when } from './api.js?v=2ba7833fc5';
-import { D, NEEDS, byCode, empty, failed, nameOf, optById, skeleton, stateOf } from './data.js?v=2ba7833fc5';
-import { formError, head, openSheet, sheet } from './sheet.js?v=2ba7833fc5';
-import { draw } from './shell.js?v=2ba7833fc5';
-import { notify, syncSeg } from './ui.js?v=2ba7833fc5';
+import { showHistory } from './history.js?v=e72fe27b4f';
+import { $, $$, C, call, db, esc, money, one, reason, token, when } from './api.js?v=e72fe27b4f';
+import { D, NEEDS, byCode, empty, failed, nameOf, optById, skeleton, stateOf } from './data.js?v=e72fe27b4f';
+import { formError, head, openSheet, sheet } from './sheet.js?v=e72fe27b4f';
+import { draw } from './shell.js?v=e72fe27b4f';
+import { notify, syncSeg } from './ui.js?v=e72fe27b4f';
 
 // ----- price inquiries: a visitor's list, answered with a quote in one click -----
 export const INQ = { new: 'Nov', sent: 'Ponuda poslata', ordered: 'Poručeno', closed: 'Zatvoren' };
@@ -85,6 +86,7 @@ export function inquirySheet(i) {
       </table></div>
       <p class="order__stock">Cene su iz cenovnika i mogu se promeniti pre slanja. Posetilac dobija PDF ponude i link „Poruči po ovoj ponudi“ koji važi 30 dana.</p>
       ${i.order_id ? `<p class="order__stock">Posetilac je poručio po ponudi: <button class="link" type="button" data-open-order="${i.order_id}">porudžbina br. ${i.order_id}</button>.</p>` : ''}
+      <section class="hist" aria-labelledby="hist-t"><h3 id="hist-t" class="hist__title">Istorija statusa</h3><ol class="hist__list" data-hist="inquiry:${i.id}"><li class="sub">Učitavanje…</li></ol></section>
     </div>
     <footer class="sheet__foot">
       <p class="sheet__msg" role="alert" data-form-msg hidden></p>
@@ -95,8 +97,9 @@ export function inquirySheet(i) {
         ${i.status === 'closed' ? '<button class="btn" type="button" data-inq-status="new">Ponovo otvori</button>' : i.status !== 'ordered' ? '<button class="btn" type="button" data-inq-status="closed">Zatvori upit</button>' : ''}
       </div>
     </footer>
-  </div>`);
+  </div>`, { side: true });
   quoteSums();
+  showHistory('inquiry', i.id, INQ, (x) => (x === 'sent' ? 'done' : x === 'ordered' ? 'new' : x === 'closed' ? 'cancelled' : 'low'));
 }
 function quoteSums() {
   const box = $('[data-inq-sheet]', sheet);

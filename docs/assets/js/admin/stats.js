@@ -1,8 +1,8 @@
 // Statistics screen: sales by month, what to reorder, CSV exports.
-import { $, esc, money, plural, when } from './api.js?v=2ba7833fc5';
-import { D, NEEDS, byCode, catName, empty, failed, low, nameOf, route, skeleton, stateOf } from './data.js?v=2ba7833fc5';
-import { STATUS } from './orders.js?v=2ba7833fc5';
-import { syncSeg } from './ui.js?v=2ba7833fc5';
+import { $, esc, money, plural, when } from './api.js?v=e72fe27b4f';
+import { D, NEEDS, byCode, catName, empty, failed, low, nameOf, route, skeleton, stateOf } from './data.js?v=e72fe27b4f';
+import { STATUS } from './orders.js?v=e72fe27b4f';
+import { syncSeg } from './ui.js?v=e72fe27b4f';
 
 export const DAY = 864e5;
 const PERIODS = { 30: '30 dana', 90: '90 dana', 365: '12 meseci', sve: 'od početka' };

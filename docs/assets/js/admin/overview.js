@@ -1,9 +1,9 @@
 // Overview screen: counters, quick actions, map of parishes.
-import { $, esc, money, norm, plural, thumb } from './api.js?v=2ba7833fc5';
-import { D, NEEDS, byCode, failed, low, nameOf, skeleton, stateOf } from './data.js?v=2ba7833fc5';
-import { INQ } from './inquiries.js?v=2ba7833fc5';
-import { STATUS } from './orders.js?v=2ba7833fc5';
-import { DAY, counted, monthChart, qtyText, reorderList, salesBy, statsModel, whole } from './stats.js?v=2ba7833fc5';
+import { $, esc, money, norm, plural, thumb } from './api.js?v=e72fe27b4f';
+import { D, NEEDS, byCode, failed, low, nameOf, skeleton, stateOf } from './data.js?v=e72fe27b4f';
+import { INQ } from './inquiries.js?v=e72fe27b4f';
+import { STATUS } from './orders.js?v=e72fe27b4f';
+import { DAY, counted, monthChart, qtyText, reorderList, salesBy, statsModel, whole } from './stats.js?v=e72fe27b4f';
 
 // towns of the parishes, for the map (latitude, longitude)
 const TOWNS = {

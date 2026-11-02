@@ -1,5 +1,5 @@
 // Shared motion (screen change, counters), small input helpers and the notice bar with undo.
-import { $, $$ } from './api.js?v=2ba7833fc5';
+import { $, $$ } from './api.js?v=e72fe27b4f';
 
 export const calm = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 export function fadeOut(old) {

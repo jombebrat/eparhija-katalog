@@ -196,7 +196,7 @@ function drawMe() {
 }
 
 const box = $('[data-orders]');
-const STATUS = { new: S.acStatusNew, done: S.acStatusDone, cancelled: S.acStatusCancelled };
+const STATUS = { new: S.acStatusNew, processing: S.acStatusProcessing, ready: S.acStatusReady, done: S.acStatusDone, cancelled: S.acStatusCancelled };
 async function loadOrders() {
   box.innerHTML = `<div class="skel" aria-busy="true">${'<span class="skel__row"></span>'.repeat(3)}</div>`;
   try {

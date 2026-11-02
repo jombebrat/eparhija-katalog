@@ -1,10 +1,10 @@
 // Sign in, sign out and the first load after signing in.
-import { hooks, $, $$, USER_DOMAIN, auth, db, fromAuth, keep, reason, session, shown } from './api.js?v=2ba7833fc5';
-import { D, ST, load } from './data.js?v=2ba7833fc5';
-import { pdfOnEnter } from './pdf.js?v=2ba7833fc5';
-import { closeSheet } from './sheet.js?v=2ba7833fc5';
-import { draw } from './shell.js?v=2ba7833fc5';
-import { hideBar } from './ui.js?v=2ba7833fc5';
+import { hooks, $, $$, USER_DOMAIN, auth, db, fromAuth, keep, reason, session, shown } from './api.js?v=e72fe27b4f';
+import { D, ST, load } from './data.js?v=e72fe27b4f';
+import { pdfOnEnter } from './pdf.js?v=e72fe27b4f';
+import { closeSheet } from './sheet.js?v=e72fe27b4f';
+import { draw } from './shell.js?v=e72fe27b4f';
+import { hideBar } from './ui.js?v=e72fe27b4f';
 
 // ---------- sign in, sign out ----------
 export function showGate(msg = '') {

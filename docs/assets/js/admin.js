@@ -1,24 +1,25 @@
 // Administration of the warehouse: articles and their stock, categories, clergy, orders.
 // Talks to Supabase over plain fetch (Auth, the REST API, Storage). What a signed-in account may read
 // or change is decided by the database (an account must be listed in the `admins` table).
-import { C, session } from './admin/api.js?v=2ba7833fc5';
-import { showGate, enter } from './admin/signin.js?v=2ba7833fc5';
-import './admin/data.js?v=2ba7833fc5';
-import './admin/events.js?v=2ba7833fc5';
-import './admin/forms.js?v=2ba7833fc5';
-import './admin/inquiries.js?v=2ba7833fc5';
-import './admin/lists.js?v=2ba7833fc5';
-import './admin/orders.js?v=2ba7833fc5';
-import './admin/overview.js?v=2ba7833fc5';
-import './admin/pdf.js?v=2ba7833fc5';
-import './admin/product-form.js?v=2ba7833fc5';
-import './admin/products.js?v=2ba7833fc5';
-import './admin/profile.js?v=2ba7833fc5';
-import './admin/sheet.js?v=2ba7833fc5';
-import './admin/shell.js?v=2ba7833fc5';
-import './admin/stats.js?v=2ba7833fc5';
-import './admin/stock.js?v=2ba7833fc5';
-import './admin/ui.js?v=2ba7833fc5';
+import { C, session } from './admin/api.js?v=e72fe27b4f';
+import { showGate, enter } from './admin/signin.js?v=e72fe27b4f';
+import './admin/data.js?v=e72fe27b4f';
+import './admin/events.js?v=e72fe27b4f';
+import './admin/forms.js?v=e72fe27b4f';
+import './admin/inquiries.js?v=e72fe27b4f';
+import './admin/lists.js?v=e72fe27b4f';
+import './admin/orders.js?v=e72fe27b4f';
+import './admin/overview.js?v=e72fe27b4f';
+import './admin/pdf.js?v=e72fe27b4f';
+import './admin/product-form.js?v=e72fe27b4f';
+import './admin/products.js?v=e72fe27b4f';
+import './admin/profile.js?v=e72fe27b4f';
+import './admin/sheet.js?v=e72fe27b4f';
+import './admin/search.js?v=e72fe27b4f';
+import './admin/shell.js?v=e72fe27b4f';
+import './admin/stats.js?v=e72fe27b4f';
+import './admin/stock.js?v=e72fe27b4f';
+import './admin/ui.js?v=e72fe27b4f';
 
 // ---------- start ----------
 document.documentElement.classList.add('js');

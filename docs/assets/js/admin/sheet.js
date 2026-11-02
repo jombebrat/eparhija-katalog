@@ -1,11 +1,12 @@
 // The side sheet (dialog) and the form pieces every form uses.
-import { $, $$, X, esc } from './api.js?v=2ba7833fc5';
+import { $, $$, X, esc } from './api.js?v=e72fe27b4f';
 
 // ---------- the side sheet ----------
 export const sheet = $('[data-sheet]');
 let onSheetClose = null;
 export const setOnSheetClose = (f) => { onSheetClose = f; };
-export function openSheet(html) {
+export function openSheet(html, { side = false } = {}) {
+  sheet.classList.toggle('sheet--side', side);
   sheet.innerHTML = html;
   sheet.showModal();
   sheet.scrollTop = 0;

@@ -1,13 +1,14 @@
 // Orders screen, one order's sheet and status, and the order PDF.
-import { $, $$, C, call, db, esc, money, one, reason, token, when } from './api.js?v=2ba7833fc5';
-import { D, NEEDS, ST, empty, failed, load, optById, skeleton, stateOf } from './data.js?v=2ba7833fc5';
-import { saveFile } from './inquiries.js?v=2ba7833fc5';
-import { formError, head, openSheet } from './sheet.js?v=2ba7833fc5';
-import { draw } from './shell.js?v=2ba7833fc5';
-import { syncSeg } from './ui.js?v=2ba7833fc5';
+import { $, $$, C, call, db, esc, money, one, reason, token, when } from './api.js?v=e72fe27b4f';
+import { D, NEEDS, ST, empty, failed, load, optById, skeleton, stateOf } from './data.js?v=e72fe27b4f';
+import { saveFile } from './inquiries.js?v=e72fe27b4f';
+import { showHistory } from './history.js?v=e72fe27b4f';
+import { formError, head, openSheet } from './sheet.js?v=e72fe27b4f';
+import { draw } from './shell.js?v=e72fe27b4f';
+import { syncSeg } from './ui.js?v=e72fe27b4f';
 
 // ----- orders -----
-export const STATUS = { new: 'Nova', done: 'Izvršena', cancelled: 'Otkazana' };
+export const STATUS = { new: 'Nova', processing: 'U obradi', ready: 'Spremna za preuzimanje', done: 'Izvršena', cancelled: 'Otkazana' };
 export function drawOrders(r) {
   const box = $('[data-region="orders"]');
   const sc = $('[data-screen="porudzbine"]');
@@ -16,7 +17,7 @@ export function drawOrders(r) {
   const st = stateOf(NEEDS.porudzbine);
   if (st === 'loading') { box.innerHTML = skeleton(); return; }
   if (st === 'error') { box.innerHTML = failed('Porudžbine', NEEDS.porudzbine); return; }
-  const counts = { new: 0, done: 0, cancelled: 0, all: D.orders.length };
+  const counts = { new: 0, processing: 0, ready: 0, done: 0, cancelled: 0, all: D.orders.length };
   for (const o of D.orders) counts[o.status]++;
   $$('[data-s] [data-n]', sc).forEach((n) => { n.textContent = counts[n.dataset.n]; });
   if (!D.orders.length) {
@@ -68,9 +69,14 @@ export function orderSheet(o) {
   const facts = [['Mejl', o.email && `<a href="mailto:${esc(o.email)}">${esc(o.email)}</a>`], ['Parohija', esc(o.parish || '')], ['Telefon', o.phone && `<a href="tel:${esc(o.phone.replace(/[^+\d]/g, ''))}">${esc(o.phone)}</a>`],
     ['Adresa za dostavu', esc(o.address || '').replace(/\n/g, '<br>')], ['Napomena', esc(o.note || '').replace(/\n/g, '<br>')], ['Jezik', LANG[o.lang]], ['PDF poslat mejlom', o.emailed ? 'da' : 'ne']].filter(([, x]) => x);
   const taken = o.stock_taken && Object.entries(o.stock_taken).filter(([, n]) => n > 0);
-  const actions = o.status === 'new'
-    ? `<button class="btn btn--primary" type="button" data-status="done">Označi kao izvršenu</button><button class="btn" type="button" data-status="cancelled">Otkaži porudžbinu</button>`
-    : `<button class="btn" type="button" data-status="new">Vrati u nove</button>`;
+  const btn = (to, label, primary = false) => `<button class="btn${primary ? ' btn--primary' : ''}" type="button" data-status="${to}">${label}</button>`;
+  const actions = ({
+    new: btn('processing', 'Počni obradu', true) + btn('done', 'Označi kao izvršenu') + btn('cancelled', 'Otkaži porudžbinu'),
+    processing: btn('ready', 'Spremna za preuzimanje', true) + btn('done', 'Označi kao izvršenu') + btn('cancelled', 'Otkaži porudžbinu') + btn('new', 'Vrati u nove'),
+    ready: btn('done', 'Označi kao izvršenu', true) + btn('cancelled', 'Otkaži porudžbinu') + btn('processing', 'Vrati u obradu'),
+    done: btn('new', 'Vrati u nove'),
+    cancelled: btn('new', 'Vrati u nove'),
+  })[o.status];
   openSheet(`<div class="sheet__inner" data-order-sheet="${o.id}">
     ${head(`Porudžbina br. ${o.id}`, `${esc(when.format(new Date(o.created_at)))} · <span class="tag tag--${o.status}">${STATUS[o.status]}</span>`)}
     <div class="sheet__body">
@@ -83,13 +89,15 @@ export function orderSheet(o) {
       </table>
       <p class="order__stock">${o.status === 'done'
         ? (taken?.length ? `Skinuto sa stanja: ${taken.map(([c, n]) => `${esc(c.startsWith('#') ? optById(c.slice(1))?.sku || o.items.find((l) => String(l.option) === c.slice(1))?.sku || c : c)} × ${n}`).join(', ')}.` : 'Nijedan artikal iz porudžbine nema praćeno stanje, pa stanje nije menjano.')
-        : o.status === 'new' ? 'Kada je označite kao izvršenu, naručene količine se skidaju sa stanja.' : 'Otkazana porudžbina ne menja stanje.'}</p>
+        : o.status === 'cancelled' ? 'Otkazana porudžbina ne menja stanje.' : 'Kada je označite kao izvršenu, naručene količine se skidaju sa stanja.'}</p>
+      <section class="hist" aria-labelledby="hist-t"><h3 id="hist-t" class="hist__title">Istorija statusa</h3><ol class="hist__list" data-hist="order:${o.id}"><li class="sub">Učitavanje…</li></ol></section>
     </div>
     <footer class="sheet__foot">
       <p class="sheet__msg" role="alert" data-form-msg hidden></p>
       <div class="sheet__actions">${actions}<span class="spacer"></span><button class="btn" type="button" data-order-pdf>PDF</button><button class="btn" type="button" data-print>Štampaj</button></div>
     </footer>
-  </div>`);
+  </div>`, { side: true });
+  showHistory('order', o.id, STATUS, (x) => x);
 }
 export async function setStatus(id, status, btn) {
   const o = D.orders.find((x) => x.id === id);

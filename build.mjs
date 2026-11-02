@@ -434,6 +434,12 @@ function adminPage() {
     </aside>
     <div class="shell">
     <header class="bar">
+      <div class="gs" role="search">
+        <svg class="gs__ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l5 5"/></svg>
+        <input class="gs__in" type="search" data-gs placeholder="Traži artikal, porudžbinu, upit" aria-label="Pretraga: artikli, porudžbine, upiti" aria-controls="gs-res" autocomplete="off" spellcheck="false">
+        <kbd class="gs__key" aria-hidden="true">/</kbd>
+        <div class="gs__res" id="gs-res" data-gs-res hidden></div>
+      </div>
       <div class="bar__me">
         <div class="theme" role="group" aria-label="Izgled: dan ili noć" data-theme-switch>
           <button type="button" data-theme-set="light" aria-pressed="false" title="Dan" aria-label="Dan"><svg width="16" height="16" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="10" cy="10" r="3.5"/><path d="M10 2v2M10 16v2M2 10h2M16 10h2M4.3 4.3l1.4 1.4M14.3 14.3l1.4 1.4M4.3 15.7l1.4-1.4M14.3 5.7l1.4-1.4"/></svg></button>
@@ -531,7 +537,7 @@ function adminPage() {
           <button class="btn" type="button" data-csv="orders">Izvezi u Excel (CSV)</button>
         </div>
         <div class="toolbar">
-          ${seg('s', 'Status', [['new', 'Nove', 'new'], ['done', 'Izvršene', 'done'], ['cancelled', 'Otkazane', 'cancelled'], ['all', 'Sve', 'all']])}
+          ${seg('s', 'Status', [['new', 'Nove', 'new'], ['processing', 'U obradi', 'processing'], ['ready', 'Spremne', 'ready'], ['done', 'Izvršene', 'done'], ['cancelled', 'Otkazane', 'cancelled'], ['all', 'Sve', 'all']])}
         </div>
         <div class="region" data-region="orders"></div>
       </section>
@@ -571,7 +577,7 @@ console.log('wrote docs/admin/index.html');
 // ---------- the member's account page, one per language ----------
 const ACCOUNT_STRINGS = ['acTitle', 'acEmail', 'acSend', 'acSendHelp', 'acSending', 'acSent', 'acCode', 'acSignIn', 'acSigningIn', 'acAgain', 'acOther',
   'acWrongCode', 'acNoCode', 'acMailOff', 'acMailFailed', 'acSignedOut', 'acOrders', 'acTabOverview', 'acStats', 'acStatOrders', 'acStatSpent', 'acStatAvg', 'acTop', 'acTopHint', 'acTopNone', 'acOrdersEmpty', 'acOrdersEmptyText', 'acOrdersError', 'acRetry',
-  'acOrder', 'acStatusNew', 'acStatusDone', 'acStatusCancelled', 'acLines', 'acPdf', 'acPdfMaking', 'acPdfFailed', 'acReorder', 'acReorderSome',
+  'acOrder', 'acStatusNew', 'acStatusProcessing', 'acStatusReady', 'acStatusDone', 'acStatusCancelled', 'acLines', 'acPdf', 'acPdfMaking', 'acPdfFailed', 'acReorder', 'acReorderSome',
   'acSave', 'acSaving', 'acSaved', 'acSaveFailed', 'acItem', 'acQty', 'acAmount', 'acCatalogue', 'code', 'total', 'kg', 'signOut',
   'loginUnknown', 'loginTooMany', 'loginInvalid', 'loginFailed', 'formName', 'formParish', 'formPhone', 'formAddress', 'optional', 'pricesFor'];
 const accountPath = (l) => `${l.dir}${strings[l.id].acSlug}/`;

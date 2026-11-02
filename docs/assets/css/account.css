@@ -6,6 +6,7 @@
 
 /* the app's own scale, ratio 1.2 */
 :root { --color-success-soft: oklch(95% 0.03 150); --color-success-ink: oklch(36% 0.09 150); }
+:root { --color-warn-soft: oklch(94% 0.045 50); --color-warn-ink: oklch(43% 0.12 42); }
 .acct-page { --t-xs: 0.8125rem; --t-sm: 0.875rem; --t-md: 1rem; --t-lg: 1.2rem; --t-xl: 1.44rem; --t-2xl: 1.728rem; }
 .acct { padding-block: var(--space-xl) var(--space-3xl); }
 .acct__inner { display: grid; gap: var(--space-lg); }
@@ -60,6 +61,8 @@ a.listbtn { text-decoration: none; }
 
 .tag { display: inline-flex; align-items: center; min-height: 22px; padding: 0 var(--space-xs); border-radius: var(--radius-pill); font-size: var(--t-xs); font-weight: 600; line-height: 1; white-space: nowrap; }
 .tag--new { background: var(--color-accent-soft); color: var(--color-accent-soft-ink); }
+.tag--processing { background: var(--color-warn-soft); color: var(--color-warn-ink); }
+.tag--ready { background: var(--color-success-soft); color: var(--color-success-ink); }
 .tag--done { background: var(--color-success-soft); color: var(--color-success-ink); }
 .tag--cancelled { background: var(--color-paper-3); color: var(--color-ink-2); }
 

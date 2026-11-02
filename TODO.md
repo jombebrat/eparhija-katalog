@@ -27,8 +27,8 @@ Redosled: prvo 1 i 3, jer najviše štede posao.
 
 Pregledano: [Bagisto 2.0](https://bagisto.com/?p=20110) (Laravel/Vue). Ne prelazimo na Bagisto, preuzimamo samo ove ideje. Ulaze u Fazu 5 (porudžbine).
 
-- [ ] **1. Globalna pretraga u vrhu admina**: jedno polje traži artikle, porudžbine i upite.
-- [ ] **2. Klizni panel sa strane** za detalje porudžbine i promenu statusa (umesto velikog dijaloga), da se ne napušta lista.
+- [x] **1. Globalna pretraga u vrhu admina** (urađeno 2. 11.): jedno polje traži artikle, porudžbine i upite; prečica / ili Ctrl+K.
+- [x] **2. Klizni panel sa strane** (urađeno 2. 11.) za porudžbinu i upit, sa istorijom statusa.
 
 ## Cene za nečlanove (viša cena na sajtu)
 

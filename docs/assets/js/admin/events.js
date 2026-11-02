@@ -1,20 +1,20 @@
 // Click, change, input and submit handlers for the whole admin.
-import { $, $$ } from './api.js?v=2ba7833fc5';
-import { D, ST, byCode, catOf, load, route, setParam } from './data.js?v=2ba7833fc5';
-import { catForm, deleteCat, deletePriest, priestForm, submitCat, submitPriest } from './forms.js?v=2ba7833fc5';
-import { addMember, inquirySheet, sendQuote, setInquiry } from './inquiries.js?v=2ba7833fc5';
-import { saveMarkup, savePriestActive } from './lists.js?v=2ba7833fc5';
-import { orderPdf, orderSheet, setStatus } from './orders.js?v=2ba7833fc5';
-import { openPdf, refreshPdf } from './pdf.js?v=2ba7833fc5';
-import { addFiles, byCodeBefore, deleteProduct, drawOptEditor, drawPhotos, edit, productForm, readOptEditor, submitProduct } from './product-form.js?v=2ba7833fc5';
-import { bulk, drawBulk, picked, saveActive, saveStock, shownCodes } from './products.js?v=2ba7833fc5';
-import { closeProfile, passwordForm, submitPassword } from './profile.js?v=2ba7833fc5';
-import { closeSheet, sheet } from './sheet.js?v=2ba7833fc5';
-import { draw } from './shell.js?v=2ba7833fc5';
-import { signOut } from './signin.js?v=2ba7833fc5';
-import { csvOrders, csvProducts, csvStats } from './stats.js?v=2ba7833fc5';
-import { loadMoves, moveForm, submitMove } from './stock.js?v=2ba7833fc5';
-import { notify } from './ui.js?v=2ba7833fc5';
+import { $, $$ } from './api.js?v=e72fe27b4f';
+import { D, ST, byCode, catOf, load, route, setParam } from './data.js?v=e72fe27b4f';
+import { catForm, deleteCat, deletePriest, priestForm, submitCat, submitPriest } from './forms.js?v=e72fe27b4f';
+import { addMember, inquirySheet, sendQuote, setInquiry } from './inquiries.js?v=e72fe27b4f';
+import { saveMarkup, savePriestActive } from './lists.js?v=e72fe27b4f';
+import { orderPdf, orderSheet, setStatus } from './orders.js?v=e72fe27b4f';
+import { openPdf, refreshPdf } from './pdf.js?v=e72fe27b4f';
+import { addFiles, byCodeBefore, deleteProduct, drawOptEditor, drawPhotos, edit, productForm, readOptEditor, submitProduct } from './product-form.js?v=e72fe27b4f';
+import { bulk, drawBulk, picked, saveActive, saveStock, shownCodes } from './products.js?v=e72fe27b4f';
+import { closeProfile, passwordForm, submitPassword } from './profile.js?v=e72fe27b4f';
+import { closeSheet, sheet } from './sheet.js?v=e72fe27b4f';
+import { draw } from './shell.js?v=e72fe27b4f';
+import { signOut } from './signin.js?v=e72fe27b4f';
+import { csvOrders, csvProducts, csvStats } from './stats.js?v=e72fe27b4f';
+import { loadMoves, moveForm, submitMove } from './stock.js?v=e72fe27b4f';
+import { notify } from './ui.js?v=e72fe27b4f';
 
 // ---------- events ----------
 document.addEventListener('click', (e) => {
