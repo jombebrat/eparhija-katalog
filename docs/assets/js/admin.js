@@ -1604,6 +1604,19 @@ const checkbox = ({ id, label, name, checked, help = '' }) => `<div class="field
     <label class="check check--label" for="${id}"><input type="checkbox" id="${id}" name="${name}"${checked ? ' checked' : ''} aria-describedby="${id}-h"> ${label}</label>
     <p class="field__help" id="${id}-h" data-help="${esc(help)}">${esc(help)}</p>
   </div>`;
+function showPanel(form, name) {
+  if (!name) return;
+  $$('[data-panel]', form).forEach((el) => { el.hidden = el.dataset.panel !== name; });
+  $$('[data-ptab]', form).forEach((b) => { const on = b.dataset.ptab === name; b.setAttribute('aria-selected', String(on)); b.tabIndex = on ? 0 : -1; });
+}
+document.addEventListener('click', (e) => { const b = e.target.closest('[data-ptab]'); if (b) showPanel(b.closest('form'), b.dataset.ptab); });
+document.addEventListener('keydown', (e) => {
+  const b = e.target.closest?.('[data-ptab]');
+  if (!b || !['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(e.key)) return;
+  const all = $$('[data-ptab]', b.closest('form')); let i = all.indexOf(b);
+  i = e.key === 'Home' ? 0 : e.key === 'End' ? all.length - 1 : (i + (e.key === 'ArrowRight' ? 1 : -1) + all.length) % all.length;
+  e.preventDefault(); showPanel(b.closest('form'), all[i].dataset.ptab); all[i].focus();
+});
 function invalid(form, name, msg) {
   const el = form.elements[name];
   el.setAttribute('aria-invalid', 'true');
@@ -1642,27 +1655,29 @@ function productForm(p) {
   const price = p.price === '' ? '' : String(p.price).replace('.', ',');
   openSheet(`<form class="sheet__inner" novalidate data-form="product">
     ${head(isNew ? 'Novi artikal' : esc(`${p.code} · ${nameOf(p)}`), isNew ? 'Pojavljuje se u katalogu čim ga sačuvate, osim ako ga ostavite kao nacrt.' : 'Izmene se vide na sajtu pri sledećem otvaranju stranice.')}
+    <div class="ptabs" role="tablist" aria-label="Odeljci artikla" data-ptabs><button class="ptabs__t" type="button" role="tab" id="pt-osnovno" aria-controls="pp-osnovno" aria-selected="true" data-ptab="osnovno">Osnovno</button><button class="ptabs__t" type="button" role="tab" id="pt-opisi" aria-controls="pp-opisi" aria-selected="false" data-ptab="opisi" tabindex="-1">Opisi</button><button class="ptabs__t" type="button" role="tab" id="pt-fotografije" aria-controls="pp-fotografije" aria-selected="false" data-ptab="fotografije" tabindex="-1">Fotografije</button><button class="ptabs__t" type="button" role="tab" id="pt-cena" aria-controls="pp-cena" aria-selected="false" data-ptab="cena" tabindex="-1">Cena i opcije</button><button class="ptabs__t" type="button" role="tab" id="pt-zalihe" aria-controls="pp-zalihe" aria-selected="false" data-ptab="zalihe" tabindex="-1">Zalihe</button><button class="ptabs__t" type="button" role="tab" id="pt-vidljivost" aria-controls="pp-vidljivost" aria-selected="false" data-ptab="vidljivost" tabindex="-1">Vidljivost</button></div>
     <div class="sheet__body">
-      <h3 class="sec">Osnovni podaci</h3>
+    <div class="tabpanel" role="tabpanel" id="pp-osnovno" aria-labelledby="pt-osnovno" data-panel="osnovno">
       <div class="row2">
         ${field({ id: 'f-code', label: 'Šifra', name: 'code', value: p.code, req: true, help: 'Kao u katalogu: P011, H016, 10/1.', attrs: `autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="40"${isNew ? ' autofocus' : ''}` })}
         ${select({ id: 'f-cat', label: 'Kategorija', name: 'category', value: p.category, options: D.cats.map((c) => [c.id, c.name_sr || c.name_fr]) })}
       </div>
-      <h3 class="sec">Nazivi</h3>
       <fieldset class="group">
         <legend class="visually-hidden">Naziv</legend>
         ${field({ id: 'f-name-sr', label: 'Srpski', name: 'name_sr', value: p.name_sr, attrs: 'lang="sr" autocomplete="off"', help: 'Bar jedan naziv. Prazan prevod zamenjuje francuski ili srpski.' })}
         ${field({ id: 'f-name-fr', label: 'Francuski', name: 'name_fr', value: p.name_fr, attrs: 'lang="fr" autocomplete="off"' })}
         ${field({ id: 'f-name-en', label: 'Engleski', name: 'name_en', value: p.name_en, attrs: 'lang="en" autocomplete="off"' })}
       </fieldset>
-      <h3 class="sec">Opisi</h3>
+    </div>
+    <div class="tabpanel" role="tabpanel" id="pp-opisi" aria-labelledby="pt-opisi" data-panel="opisi" hidden>
       <fieldset class="group">
         <legend>Napomena ili dimenzije <span class="req req--quiet">nije obavezno</span></legend>
         ${field({ id: 'f-note-sr', label: 'Srpski', name: 'note_sr', value: p.note_sr, attrs: 'lang="sr" autocomplete="off"', help: 'Kod sveća ovde stoje dimenzije, na primer 72 × 4,5 cm.' })}
         ${field({ id: 'f-note-fr', label: 'Francuski', name: 'note_fr', value: p.note_fr, attrs: 'lang="fr" autocomplete="off"' })}
         ${field({ id: 'f-note-en', label: 'Engleski', name: 'note_en', value: p.note_en, attrs: 'lang="en" autocomplete="off"' })}
       </fieldset>
-      <h3 class="sec">Fotografije</h3>
+    </div>
+    <div class="tabpanel" role="tabpanel" id="pp-fotografije" aria-labelledby="pt-fotografije" data-panel="fotografije" hidden>
       <fieldset class="group">
         <legend class="visually-hidden">Fotografije</legend>
         <ul class="photos" role="list" data-photos></ul>
@@ -1672,7 +1687,8 @@ function productForm(p) {
           <p class="field__help" data-photo-msg aria-live="polite">Prva fotografija je naslovna. JPG, PNG ili WebP; sajt ih sam smanjuje.</p>
         </div>
       </fieldset>
-      <h3 class="sec">Cena i opcije</h3>
+    </div>
+    <div class="tabpanel" role="tabpanel" id="pp-cena" aria-labelledby="pt-cena" data-panel="cena" hidden>
       <div class="row2">
         ${field({ id: 'f-price', label: 'Cena u evrima', name: 'price', value: price, req: true, help: 'Vide je samo sveštenici sa liste.', attrs: 'inputmode="decimal" autocomplete="off" placeholder="12,50"' })}
         ${select({ id: 'f-unit', label: 'Prodaje se na', name: 'unit', value: p.unit, options: [['piece', 'komad'], ['kg', 'kilogram']] })}
@@ -1686,7 +1702,8 @@ function productForm(p) {
         <div class="opts-ed" data-opts-ed></div>
         <p><button class="btn btn--s" type="button" data-opt-add>Dodaj opciju</button></p>
       </fieldset>
-      <h3 class="sec">Zalihe i redosled</h3>
+    </div>
+    <div class="tabpanel" role="tabpanel" id="pp-zalihe" aria-labelledby="pt-zalihe" data-panel="zalihe" hidden>
       <div class="row2">
         ${field({ id: 'f-stock', label: 'Stanje u magacinu', name: 'stock', value: p.stock ?? '', help: 'Prazno: ne prati se. 0: na sajtu piše da ga nema.', attrs: 'inputmode="numeric" autocomplete="off"' })}
         ${field({ id: 'f-min', label: 'Poruči kad padne na', name: 'min_stock', value: p.min_stock ?? '', help: 'Na toj količini artikal ide na listu za naručivanje.', attrs: 'inputmode="numeric" autocomplete="off"' })}
@@ -1694,7 +1711,8 @@ function productForm(p) {
       <div class="row2">
         ${field({ id: 'f-sort', label: 'Redosled u kategoriji', name: 'sort', value: p.sort, help: 'Manji broj stoji pre.', attrs: 'inputmode="numeric" autocomplete="off"' })}
       </div>
-      <h3 class="sec">Vidljivost</h3>
+    </div>
+    <div class="tabpanel" role="tabpanel" id="pp-vidljivost" aria-labelledby="pt-vidljivost" data-panel="vidljivost" hidden>
       <div class="field">
         <span class="field__label" id="f-status-l">Status</span>
         <div class="seg" role="radiogroup" aria-labelledby="f-status-l" data-status-seg>
@@ -1704,6 +1722,7 @@ function productForm(p) {
         <p class="field__help">Nacrt vidite samo vi, ne prikazuje se na sajtu ni u korpi. Objavite ga kad je sve spremno.</p>
       </div>
       ${checkbox({ id: 'f-active', label: 'Prikaži na sajtu', name: 'active', checked: p.active, help: 'Sakriven artikal ostaje u bazi, ali se ne vidi u katalogu.' })}
+    </div>
     </div>
     ${foot(isNew ? 'Dodaj artikal' : 'Sačuvaj izmene', isNew ? '' : '<button class="btn btn--danger" type="button" data-delete-product>Obriši artikal</button>')}
   </form>`);
@@ -1822,7 +1841,7 @@ async function submitProduct(form) {
     if (!o.label_sr) bad('o-sr', `Opcija ${i + 1}: upišite srpski naziv ili je uklonite.`);
     if (o.stockRaw && !/^\d{1,7}$/.test(o.stockRaw)) bad('o-stock', `${o.label_sr || `Opcija ${i + 1}`}: stanje je ceo broj, 0 ili više, ili prazno.`);
   });
-  if (errs.length) { errs[0].focus(); if (formMsg) formError(form, formMsg); return; }
+  if (errs.length) { showPanel(form, errs[0].closest('[data-panel]')?.dataset.panel); errs[0].focus(); if (formMsg) formError(form, formMsg); return; }
 
   const row = {
     code, category: v('category'),
