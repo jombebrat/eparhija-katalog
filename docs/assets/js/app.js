@@ -1,7 +1,7 @@
 // Catalogue: search, category chips, product detail, prices for members and the order list.
 // Everything on the page works without this file; it only adds the tools.
 // The catalogue itself is reloaded from the database, so what the admin changes shows at once.
-import * as R from './render.js?v=1381f84ccd';
+import * as R from './render.js?v=2e5794a19b';
 
 (() => {
   const D = JSON.parse(document.getElementById('catalogue-data').textContent);
@@ -846,6 +846,7 @@ import * as R from './render.js?v=1381f84ccd';
     $('[data-opts-head]').textContent = fmt(S.optsHead, { n: p.o.length });
     $('[data-opts-findbox]').hidden = p.o.length < 8;
     dOptsList.innerHTML = '';
+    detail.classList.toggle('detail--many', p.o.length > 12);
     for (const [id, l, sku, out] of p.o) {
       const li = el('li', `opt${out ? ' opt--out' : ''}`);
       li.dataset.search = norm(`${l} ${sku}`);

@@ -93,6 +93,8 @@ function addButton(p, { lang, S }, cls = 'add') {
   return `<button class="${cls}" type="button" data-add="${esc(p.code)}" aria-label="${esc(typo(lang, S.addLabel).replace('{name}', name))}">${tx(lang, S.add)}</button>`;
 }
 
+const FRAME = '<svg viewBox="0 0 48 48" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="30" height="30" rx="4"/><circle cx="19" cy="19" r="3"/><path d="M9 33l9-9 7 7 5-5 9 9"/></svg>';
+
 function card(p, ctx, catName) {
   const { lang, S, root } = ctx;
   const name = p.name[lang];
@@ -100,12 +102,16 @@ function card(p, ctx, catName) {
   const big = ph ? esc(photoUrl(root, ph.src, false)) : '';
   const pic = ph
     ? `<a class="card__img" href="${big}" data-detail="${esc(p.code)}" tabindex="-1" aria-hidden="true"><img src="${esc(photoUrl(root, ph.src))}" width="${ph.w}" height="${ph.h}" alt="" loading="lazy" decoding="async"></a>`
-    : `<span class="card__img card__img--none" aria-hidden="true"><span>${tx(lang, S.noPhoto)}</span></span>`;
-  return `<li class="card${p.available ? '' : ' card--out'}" data-code="${esc(p.code)}" data-search="${esc(searchKey(p, catName))}">
+    : `<span class="card__img card__img--none" aria-hidden="true">${FRAME}</span>`;
+  const n = p.options?.length || 0;
+  const free = n ? p.options.filter((o) => o.available).length : 0;
+  const note = p.note?.[lang];
+  return `<li class="card${p.available ? '' : ' card--out'}${n ? ' card--multi' : ''}" data-code="${esc(p.code)}" data-search="${esc(searchKey(p, catName))}">
           ${pic}
           <h3 class="card__name">${ph ? `<a href="${big}" data-detail="${esc(p.code)}">${tx(lang, name)}</a>` : tx(lang, name)}</h3>
+          ${note ? `<p class="card__note">${tx(lang, note)}</p>` : ''}
           <p class="card__meta"><span class="card__code">${esc(p.code)}</span><span class="card__price" data-price="${esc(p.code)}"></span></p>
-          ${p.options?.length ? `<p class="card__opts">${tx(lang, S.optCount.replace('{n}', p.options.length))}</p>` : ''}
+          ${n ? `<p class="card__opts"><span class="card__dot" aria-hidden="true"></span>${tx(lang, S.optAvail.replace('{n}', free))}</p>` : ''}
           ${addButton(p, ctx)}
         </li>`;
 }

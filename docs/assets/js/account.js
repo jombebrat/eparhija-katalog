@@ -1,7 +1,7 @@
 // The member's account: sign in with a code sent by email, see past orders and their PDFs,
 // order the same again, keep the details that fill in the order form.
 // The database shows a signed-in member only their own row and their own orders.
-import { esc, toCyrillic } from './render.js?v=1381f84ccd';
+import { esc, toCyrillic } from './render.js?v=2e5794a19b';
 
 const D = JSON.parse(document.getElementById('account-data').textContent);
 const S = D.s;
