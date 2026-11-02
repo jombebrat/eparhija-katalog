@@ -195,8 +195,9 @@ const optionsOf = (code) => D.options.filter((o) => o.product === code);
 const optById = (id) => D.options.find((o) => o.id === Number(id));
 const optStock = (code) => optionsOf(code).reduce((a, o) => a + (o.stock ?? 0), 0);
 // at or under its reorder point (or gone): time to order more
+const isDraft = (p) => p.status === 'draft';
 const low = (p) => p.stock !== null && p.stock !== undefined && (p.stock === 0 || (p.min_stock !== null && p.min_stock !== undefined && p.stock <= p.min_stock));
-const ledgerCounts = (all) => ({ '': all.length, out: all.filter((p) => p.stock === 0).length, low: all.filter(low).length, hidden: all.filter((p) => !p.active).length });
+const ledgerCounts = (all) => ({ '': all.length, out: all.filter((p) => p.stock === 0).length, low: all.filter(low).length, draft: all.filter(isDraft).length, hidden: all.filter((p) => !p.active && !isDraft(p)).length });
 const catOf = (id) => D.cats.find((c) => c.id === id);
 const catName = (id) => { const c = catOf(id); return c ? c.name_sr || c.name_fr || c.id : id; };
 const nameOf = (p) => p.name_sr || p.name_fr || p.name_en || p.code;
@@ -501,17 +502,72 @@ function drawProducts(r) {
     return;
   }
   const nq = norm(q);
-  const list = all.filter((p) => (!k || p.category === k) && (!f || (f === 'out' ? p.stock === 0 : f === 'low' ? low(p) : !p.active)) && (!nq || productKey(p).includes(nq)));
+  const list = all.filter((p) => (!k || p.category === k) && (!f || (f === 'out' ? p.stock === 0 : f === 'low' ? low(p) : f === 'draft' ? isDraft(p) : !p.active && !isDraft(p))) && (!nq || productKey(p).includes(nq)));
   if (!list.length) {
     box.innerHTML = empty('Nijedan artikal ne odgovara.', f === 'out' && !q && !k ? 'Svaki artikal čije se stanje prati ima bar jedan komad.' : f === 'low' && !q && !k ? 'Nijedan artikal nije pao na granicu za naručivanje. Granica se upisuje u artiklu.' : 'Proverite šifru ili naziv, ili izaberite drugu kategoriju.',
       '<button class="btn" type="button" data-clear>Prikaži sve artikle</button>');
     return;
   }
+  const sort = r.p.get('o') || '';
+  const key = sort.replace(/^-/, ''), dir = sort.startsWith('-') ? -1 : 1;
+  const sorters = { code: (p) => p.code, name: (p) => norm(p.name_sr || p.name_fr || p.name_en || ''), price: (p) => Number(p.price), stock: (p) => (p.stock === null || p.stock === undefined ? -1 : p.stock) };
+  if (sorters[key]) list.sort((a, b) => { const x = sorters[key](a), y = sorters[key](b); return (typeof x === 'string' ? x.localeCompare(y, 'sr', { numeric: true }) : x - y) * dir; });
+  const pages = Math.max(1, Math.ceil(list.length / PAGE));
+  const pg = Math.min(Math.max(1, Number(r.p.get('pg')) || 1), pages);
+  const shown = list.slice((pg - 1) * PAGE, pg * PAGE);
+  shownCodes = shown.map((p) => p.code);
+  const th = (k, label, cls = '') => `<th scope="col"${cls ? ` class="${cls}"` : ''} aria-sort="${key === k ? (dir > 0 ? 'ascending' : 'descending') : 'none'}"><button class="sortbtn" type="button" data-sort="${k}">${label}<span class="sortbtn__ic" aria-hidden="true">${key === k ? (dir > 0 ? '↑' : '↓') : ''}</span></button></th>`;
+  const pager = pages > 1 ? `<nav class="pager" aria-label="Stranice">
+      <button class="btn btn--s" type="button" data-pg="${pg - 1}"${pg === 1 ? ' disabled' : ''}>Prethodna</button>
+      <span class="pager__at">${(pg - 1) * PAGE + 1}–${Math.min(pg * PAGE, list.length)} od ${list.length}</span>
+      <button class="btn btn--s" type="button" data-pg="${pg + 1}"${pg === pages ? ' disabled' : ''}>Sledeća</button>
+    </nav>` : '';
+  const stillHere = new Set(D.products.map((p) => p.code));
+  for (const c of [...picked]) if (!stillHere.has(c)) picked.delete(c);
   box.innerHTML = `<p class="region__count" aria-live="polite">${esc(plural(list.length, 'artikal', 'artikla', 'artikala'))}${list.length < all.length ? ` od ${all.length}` : ''}<span class="region__hint">Stanje: upišite broj i pritisnite Enter. Prazno polje znači da se stanje ne prati.</span></p>
+  <div class="bulk" data-bulk hidden role="region" aria-label="Radnje za izabrane artikle"></div>
   <table class="tbl tbl--products">
-    <thead><tr><th scope="col"><span class="visually-hidden">Fotografija</span></th><th scope="col">Šifra</th><th scope="col">Naziv</th><th scope="col">Kategorija</th><th scope="col" class="num">Cena</th><th scope="col" class="num">Stanje</th><th scope="col">Na sajtu</th><th scope="col"><span class="visually-hidden">Izmena</span></th></tr></thead>
-    <tbody>${list.map(productRow).join('')}</tbody>
-  </table>`;
+    <thead><tr><th scope="col" class="c-sel"><label class="check"><input type="checkbox" data-pick-all aria-label="Izaberi sve na ovoj stranici"></label></th><th scope="col"><span class="visually-hidden">Fotografija</span></th>${th('code', 'Šifra')}${th('name', 'Naziv')}<th scope="col">Kategorija</th>${th('price', 'Cena', 'num')}${th('stock', 'Stanje', 'num')}<th scope="col">Na sajtu</th><th scope="col"><span class="visually-hidden">Izmena</span></th></tr></thead>
+    <tbody>${shown.map(productRow).join('')}</tbody>
+  </table>${pager}`;
+  drawBulk();
+}
+const PAGE = 25;
+let shownCodes = [];
+const picked = new Set();
+function drawBulk() {
+  const bar = $('[data-bulk]');
+  if (!bar) return;
+  const n = picked.size;
+  bar.hidden = !n;
+  const all = $('[data-pick-all]');
+  if (all) { all.checked = shownCodes.length > 0 && shownCodes.every((c) => picked.has(c)); all.indeterminate = !all.checked && shownCodes.some((c) => picked.has(c)); }
+  if (!n) { bar.innerHTML = ''; return; }
+  bar.innerHTML = `<span class="bulk__n"><b>${n}</b> ${n === 1 ? 'izabran' : 'izabrano'}</span>
+    <button class="btn btn--s" type="button" data-bulk-act="publish">Objavi</button>
+    <button class="btn btn--s" type="button" data-bulk-act="draft">U nacrt</button>
+    <button class="btn btn--s" type="button" data-bulk-act="show">Prikaži na sajtu</button>
+    <button class="btn btn--s" type="button" data-bulk-act="hide">Sakrij</button>
+    <span class="select select--s"><select class="input" data-bulk-cat aria-label="Premesti u kategoriju"><option value="">Premesti u…</option>${D.cats.map((c) => `<option value="${esc(c.id)}">${esc(c.name_sr || c.name_fr)}</option>`).join('')}</select></span>
+    <button class="btn btn--quiet btn--s" type="button" data-bulk-act="clear">Poništi izbor</button>`;
+}
+async function bulk(act, cat) {
+  const codes = [...picked];
+  if (!codes.length) return;
+  const body = act === 'publish' ? { status: 'published' } : act === 'draft' ? { status: 'draft', active: false } : act === 'show' ? { active: true } : act === 'hide' ? { active: false } : { category: cat };
+  if (act === 'show' && codes.some((c) => isDraft(byCode(c)))) { notify('Nacrti se ne mogu prikazati na sajtu. Prvo ih objavite.', null, true); return; }
+  const bar = $('[data-bulk]');
+  $$('button, select', bar).forEach((b) => { b.disabled = true; });
+  try {
+    const rows = await db(`products?code=in.(${codes.map((c) => `"${c.replace(/"/g, '\\"')}"`).map(encodeURIComponent).join(',')})`, { method: 'PATCH', body, prefer: 'return=representation' });
+    if (!Array.isArray(rows) || rows.length !== codes.length) throw Object.assign(new Error('denied'), { code: '42501' });
+    rows.forEach((row) => Object.assign(byCode(row.code), row));
+    notify(`${codes.length === 1 ? '1 artikal je izmenjen' : `${codes.length} artikala je izmenjeno`}.`);
+    picked.clear();
+  } catch (e) {
+    if (!e.signedOut) notify(`Izmena nije sačuvana. ${reason(e)}`, null, true);
+  }
+  draw();
 }
 
 function stockTag(p) {
@@ -522,16 +578,17 @@ function stockTag(p) {
 function productRow(p) {
   const ph = p.photos?.[0];
   const c = esc(p.code);
-  return `<tr data-code="${c}"${p.active ? '' : ' class="is-hidden"'}>
+  return `<tr data-code="${c}"${p.active ? '' : ' class="is-hidden"'}${picked.has(p.code) ? ' aria-selected="true"' : ''}>
+      <td class="c-sel"><label class="check"><input type="checkbox" data-pick="${c}"${picked.has(p.code) ? ' checked' : ''}><span class="visually-hidden">Izaberi ${c}</span></label></td>
       <td class="c-photo">${ph ? `<img src="${esc(thumb(ph))}" width="${ph.w}" height="${ph.h}" alt="" loading="lazy" decoding="async">` : '<span class="nophoto" aria-hidden="true"></span>'}</td>
       <th scope="row" class="c-code">${c}</th>
-      <td class="c-name">${p.name_sr ? `<span lang="sr">${esc(p.name_sr)}</span><span class="sub" lang="fr">${esc(p.name_fr || '')}</span>` : `<span lang="${p.name_fr ? 'fr' : 'en'}">${esc(nameOf(p))}</span>`}</td>
+      <td class="c-name">${p.name_sr ? `<span lang="sr">${esc(p.name_sr)}</span><span class="sub" lang="fr">${esc(p.name_fr || '')}</span>` : `<span lang="${p.name_fr ? 'fr' : 'en'}">${esc(nameOf(p))}</span>`}${isDraft(p) ? '<span class="tag tag--draft">nacrt</span>' : ''}</td>
       <td class="c-cat" data-label="Kategorija">${esc(catName(p.category))}</td>
       <td class="num c-price" data-label="Cena">${esc(money.format(p.price))}${p.unit === 'kg' ? ' / kg' : ''}</td>
       <td class="num c-stock" data-label="Stanje">${optionsOf(p.code).length
         ? `<span class="stock stock--opts"><span class="stock__sum">${optStock(p.code)}</span><span class="sub">${esc(plural(optionsOf(p.code).length, 'opcija', 'opcije', 'opcija'))}</span>${optionsOf(p.code).every((o) => o.stock === 0) ? '<span class="tag tag--out">nema</span>' : ''}</span>`
         : `<span class="stock"><input class="input input--stock" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" value="${p.stock ?? ''}" placeholder="—" aria-label="Stanje, ${c}" data-stock="${c}">${stockTag(p)}</span>`}</td>
-      <td class="c-on" data-label="Na sajtu"><label class="check"><input type="checkbox" data-active="${c}"${p.active ? ' checked' : ''}><span class="visually-hidden">${c} na sajtu</span></label></td>
+      <td class="c-on" data-label="Na sajtu"><label class="check"><input type="checkbox" data-active="${c}"${p.active ? ' checked' : ''}${isDraft(p) ? ' disabled title="Nacrt se ne prikazuje; prvo ga objavite"' : ''}><span class="visually-hidden">${c} na sajtu</span></label></td>
       <td class="c-act"><button class="btn btn--s" type="button" data-edit="${c}" aria-label="Uredi ${c}">Uredi</button></td>
     </tr>`;
 }
@@ -1425,46 +1482,35 @@ function productForm(p) {
   const isNew = !p;
   const cat = p?.category || route().p.get('k') || D.cats[0]?.id || '';
   const nextSort = Math.max(0, ...D.products.filter((x) => x.category === cat).map((x) => x.sort)) + 10;
-  p ??= { code: '', category: cat, name_sr: '', name_fr: '', name_en: '', note_sr: '', note_fr: '', note_en: '', price: '', unit: 'piece', stock: null, min_stock: null, active: true, sort: nextSort, photos: [] };
+  p ??= { code: '', category: cat, name_sr: '', name_fr: '', name_en: '', note_sr: '', note_fr: '', note_en: '', price: '', unit: 'piece', stock: null, min_stock: null, active: true, status: 'published', sort: nextSort, photos: [] };
   edit = { code: isNew ? null : p.code, photos: [...(p.photos || [])], added: [], removed: [], saved: false, options: isNew ? [] : optionsOf(p.code).map((o) => ({ ...o })), dropped: [] };
   onSheetClose = () => { if (!edit?.saved && edit?.added.length) removeFiles(edit.added); edit = null; };
   const price = p.price === '' ? '' : String(p.price).replace('.', ',');
   openSheet(`<form class="sheet__inner" novalidate data-form="product">
-    ${head(isNew ? 'Novi artikal' : esc(`${p.code} · ${nameOf(p)}`), isNew ? 'Pojavljuje se u katalogu čim ga sačuvate.' : 'Izmene se vide na sajtu pri sledećem otvaranju stranice.')}
+    ${head(isNew ? 'Novi artikal' : esc(`${p.code} · ${nameOf(p)}`), isNew ? 'Pojavljuje se u katalogu čim ga sačuvate, osim ako ga ostavite kao nacrt.' : 'Izmene se vide na sajtu pri sledećem otvaranju stranice.')}
     <div class="sheet__body">
+      <h3 class="sec">Osnovni podaci</h3>
       <div class="row2">
         ${field({ id: 'f-code', label: 'Šifra', name: 'code', value: p.code, req: true, help: 'Kao u katalogu: P011, H016, 10/1.', attrs: `autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="40"${isNew ? ' autofocus' : ''}` })}
         ${select({ id: 'f-cat', label: 'Kategorija', name: 'category', value: p.category, options: D.cats.map((c) => [c.id, c.name_sr || c.name_fr]) })}
       </div>
+      <h3 class="sec">Nazivi</h3>
       <fieldset class="group">
-        <legend>Naziv</legend>
+        <legend class="visually-hidden">Naziv</legend>
         ${field({ id: 'f-name-sr', label: 'Srpski', name: 'name_sr', value: p.name_sr, attrs: 'lang="sr" autocomplete="off"', help: 'Bar jedan naziv. Prazan prevod zamenjuje francuski ili srpski.' })}
         ${field({ id: 'f-name-fr', label: 'Francuski', name: 'name_fr', value: p.name_fr, attrs: 'lang="fr" autocomplete="off"' })}
         ${field({ id: 'f-name-en', label: 'Engleski', name: 'name_en', value: p.name_en, attrs: 'lang="en" autocomplete="off"' })}
       </fieldset>
+      <h3 class="sec">Opisi</h3>
       <fieldset class="group">
         <legend>Napomena ili dimenzije <span class="req req--quiet">nije obavezno</span></legend>
         ${field({ id: 'f-note-sr', label: 'Srpski', name: 'note_sr', value: p.note_sr, attrs: 'lang="sr" autocomplete="off"', help: 'Kod sveća ovde stoje dimenzije, na primer 72 × 4,5 cm.' })}
         ${field({ id: 'f-note-fr', label: 'Francuski', name: 'note_fr', value: p.note_fr, attrs: 'lang="fr" autocomplete="off"' })}
         ${field({ id: 'f-note-en', label: 'Engleski', name: 'note_en', value: p.note_en, attrs: 'lang="en" autocomplete="off"' })}
       </fieldset>
-      <div class="row2">
-        ${field({ id: 'f-price', label: 'Cena u evrima', name: 'price', value: price, req: true, help: 'Vide je samo sveštenici sa liste.', attrs: 'inputmode="decimal" autocomplete="off" placeholder="12,50"' })}
-        ${select({ id: 'f-unit', label: 'Prodaje se na', name: 'unit', value: p.unit, options: [['piece', 'komad'], ['kg', 'kilogram']] })}
-      </div>
-      <div class="row2">
-        ${field({ id: 'f-cost', label: 'Nabavna cena u evrima', name: 'cost', value: p.cost === null || p.cost === undefined ? '' : String(p.cost).replace('.', ','), help: 'Ne vidi se na sajtu. Služi za zaradu u Pregledu.', attrs: 'inputmode="decimal" autocomplete="off" placeholder="nije upisana"' })}
-      </div>
-      <div class="row2">
-        ${field({ id: 'f-stock', label: 'Stanje u magacinu', name: 'stock', value: p.stock ?? '', help: 'Prazno: ne prati se. 0: na sajtu piše da ga nema.', attrs: 'inputmode="numeric" autocomplete="off"' })}
-        ${field({ id: 'f-min', label: 'Poruči kad padne na', name: 'min_stock', value: p.min_stock ?? '', help: 'Na toj količini artikal ide na listu za naručivanje.', attrs: 'inputmode="numeric" autocomplete="off"' })}
-      </div>
-      <div class="row2">
-        ${field({ id: 'f-sort', label: 'Redosled u kategoriji', name: 'sort', value: p.sort, help: 'Manji broj stoji pre.', attrs: 'inputmode="numeric" autocomplete="off"' })}
-      </div>
-      ${checkbox({ id: 'f-active', label: 'Prikaži na sajtu', name: 'active', checked: p.active, help: 'Sakriven artikal ostaje u bazi, ali se ne vidi u katalogu.' })}
+      <h3 class="sec">Fotografije</h3>
       <fieldset class="group">
-        <legend>Fotografije</legend>
+        <legend class="visually-hidden">Fotografije</legend>
         <ul class="photos" role="list" data-photos></ul>
         <div class="photos__add">
           <input class="visually-hidden" id="f-files" type="file" accept="image/*" multiple data-files>
@@ -1472,12 +1518,38 @@ function productForm(p) {
           <p class="field__help" data-photo-msg aria-live="polite">Prva fotografija je naslovna. JPG, PNG ili WebP; sajt ih sam smanjuje.</p>
         </div>
       </fieldset>
+      <h3 class="sec">Cena i opcije</h3>
+      <div class="row2">
+        ${field({ id: 'f-price', label: 'Cena u evrima', name: 'price', value: price, req: true, help: 'Vide je samo sveštenici sa liste.', attrs: 'inputmode="decimal" autocomplete="off" placeholder="12,50"' })}
+        ${select({ id: 'f-unit', label: 'Prodaje se na', name: 'unit', value: p.unit, options: [['piece', 'komad'], ['kg', 'kilogram']] })}
+      </div>
+      <div class="row2">
+        ${field({ id: 'f-cost', label: 'Nabavna cena u evrima', name: 'cost', value: p.cost === null || p.cost === undefined ? '' : String(p.cost).replace('.', ','), help: 'Ne vidi se na sajtu. Služi za zaradu u Pregledu.', attrs: 'inputmode="decimal" autocomplete="off" placeholder="nije upisana"' })}
+      </div>
       <fieldset class="group">
         <legend>Opcije <span class="req req--quiet">nije obavezno</span></legend>
         <p class="field__help opts-ed__help">Na primer sveci na ikoni. Svaka opcija ima svoju šifru (kao u Erplainu) i svoje stanje, a cena je cena artikla. Kad artikal ima opcije, član na sajtu bira jednu.</p>
         <div class="opts-ed" data-opts-ed></div>
         <p><button class="btn btn--s" type="button" data-opt-add>Dodaj opciju</button></p>
       </fieldset>
+      <h3 class="sec">Zalihe i redosled</h3>
+      <div class="row2">
+        ${field({ id: 'f-stock', label: 'Stanje u magacinu', name: 'stock', value: p.stock ?? '', help: 'Prazno: ne prati se. 0: na sajtu piše da ga nema.', attrs: 'inputmode="numeric" autocomplete="off"' })}
+        ${field({ id: 'f-min', label: 'Poruči kad padne na', name: 'min_stock', value: p.min_stock ?? '', help: 'Na toj količini artikal ide na listu za naručivanje.', attrs: 'inputmode="numeric" autocomplete="off"' })}
+      </div>
+      <div class="row2">
+        ${field({ id: 'f-sort', label: 'Redosled u kategoriji', name: 'sort', value: p.sort, help: 'Manji broj stoji pre.', attrs: 'inputmode="numeric" autocomplete="off"' })}
+      </div>
+      <h3 class="sec">Vidljivost</h3>
+      <div class="field">
+        <span class="field__label" id="f-status-l">Status</span>
+        <div class="seg" role="radiogroup" aria-labelledby="f-status-l" data-status-seg>
+          <label class="seg__opt"><input class="visually-hidden" type="radio" name="status" value="published"${p.status !== 'draft' ? ' checked' : ''}><span>Objavljen</span></label>
+          <label class="seg__opt"><input class="visually-hidden" type="radio" name="status" value="draft"${p.status === 'draft' ? ' checked' : ''}><span>Nacrt</span></label>
+        </div>
+        <p class="field__help">Nacrt vidite samo vi, ne prikazuje se na sajtu ni u korpi. Objavite ga kad je sve spremno.</p>
+      </div>
+      ${checkbox({ id: 'f-active', label: 'Prikaži na sajtu', name: 'active', checked: p.active, help: 'Sakriven artikal ostaje u bazi, ali se ne vidi u katalogu.' })}
     </div>
     ${foot(isNew ? 'Dodaj artikal' : 'Sačuvaj izmene', isNew ? '' : '<button class="btn btn--danger" type="button" data-delete-product>Obriši artikal</button>')}
   </form>`);
@@ -1604,7 +1676,8 @@ async function submitProduct(form) {
     note_sr: v('note_sr') || null, note_fr: v('note_fr') || null, note_en: v('note_en') || null,
     price: Math.round(price * 100) / 100, unit: v('unit'), cost: costRaw === '' ? null : Math.round(Number(costRaw) * 100) / 100,
     stock: stockRaw === '' ? null : Number(stockRaw), min_stock: minRaw === '' ? null : Number(minRaw), sort: sortRaw === '' ? 0 : Number(sortRaw),
-    active: form.elements.active.checked, photos: edit.photos,
+    status: form.elements.status.value === 'draft' ? 'draft' : 'published',
+    active: form.elements.status.value === 'draft' ? false : form.elements.active.checked, photos: edit.photos,
   };
   busy(form, true, 'Čuvanje…');
   formError(form, '');
@@ -1907,7 +1980,10 @@ document.addEventListener('click', (e) => {
   if (t.matches('[data-retry]')) { t.dataset.retry.split(' ').forEach((w) => { if (ST[w] === 'error') load(w, true); }); return; }
   if (t.matches('[data-clear]')) { history.replaceState(null, '', `#${route().tab}`); draw(); return; }
   if (t.matches('[data-s-all]')) { setParam('s', 'all'); return; }
-  if (t.matches('[data-f] button')) { setParam('f', t.dataset.v); return; }
+  if (t.matches('[data-f] button')) { setParam('pg', ''); setParam('f', t.dataset.v); return; }
+  if (t.matches('[data-sort]')) { const k = t.dataset.sort, cur = route().p.get('o') || ''; setParam('pg', ''); setParam('o', cur === k ? `-${k}` : cur === `-${k}` ? '' : k); return; }
+  if (t.matches('[data-pg]')) { setParam('pg', t.dataset.pg === '1' ? '' : t.dataset.pg); $('[data-screen="artikli"]').scrollIntoView({ block: 'start' }); return; }
+  if (t.matches('[data-bulk-act]')) { if (t.dataset.bulkAct === 'clear') { picked.clear(); $$('[data-pick]').forEach((c) => { c.checked = false; c.closest('tr').removeAttribute('aria-selected'); }); drawBulk(); } else bulk(t.dataset.bulkAct); return; }
   if (t.matches('[data-g] button')) { setParam('g', t.dataset.v === 'svestenstvo' ? '' : t.dataset.v); return; }
   if (t.matches('[data-s] button')) { setParam('s', t.dataset.v === 'new' ? '' : t.dataset.v); return; }
   if (t.matches('[data-new="product"]')) { if (!D.cats.length) { notify('Prvo napravite kategoriju; svaki artikal pripada jednoj.', null, true); return; } productForm(null); return; }
@@ -2016,7 +2092,10 @@ document.addEventListener('change', (e) => {
   if (t.matches('[data-stock]')) saveStock(t);
   else if (t.matches('[data-active]')) saveActive(t);
   else if (t.matches('[data-priest-active]')) savePriestActive(t);
-  else if (t.matches('[data-k]')) setParam('k', t.value);
+  else if (t.matches('[data-k]')) { setParam('pg', ''); setParam('k', t.value); }
+  else if (t.matches('[data-pick]')) { t.checked ? picked.add(t.dataset.pick) : picked.delete(t.dataset.pick); t.closest('tr').toggleAttribute('aria-selected', t.checked); drawBulk(); }
+  else if (t.matches('[data-pick-all]')) { shownCodes.forEach((c) => (t.checked ? picked.add(c) : picked.delete(c))); $$('[data-pick]').forEach((c) => { c.checked = t.checked; c.closest('tr').toggleAttribute('aria-selected', t.checked); }); drawBulk(); }
+  else if (t.matches('[data-bulk-cat]')) { if (t.value) bulk('cat', t.value); }
   else if (t.matches('[data-files]')) addFiles(t);
 });
 document.addEventListener('focusin', (e) => { if (e.target.matches('[data-stock]')) e.target.select(); });
@@ -2029,7 +2108,7 @@ document.addEventListener('input', (e) => {
   if (!e.target.matches('[data-q]')) return;
   clearTimeout(typing);
   const v = e.target.value;
-  typing = setTimeout(() => setParam('q', v.trim()), 120);
+  typing = setTimeout(() => { setParam('pg', ''); setParam('q', v.trim()); }, 120);
 });
 sheet.addEventListener('submit', (e) => {
   e.preventDefault();

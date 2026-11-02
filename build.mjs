@@ -458,7 +458,7 @@ function adminPage() {
         <div class="toolbar" role="search">
           <div class="field field--grow"><label for="q-artikli">Pretraga</label><input class="input" id="q-artikli" type="search" name="q" autocomplete="off" spellcheck="false" placeholder="P011, кадионица" data-q></div>
           <div class="field"><label for="k-artikli">Kategorija</label><span class="select"><select class="input" id="k-artikli" name="k" data-k><option value="">Sve kategorije</option></select></span></div>
-          ${seg('f', 'Prikaz', [['', 'Svi', ''], ['out', 'Nema na stanju', 'out'], ['low', 'Za naručivanje', 'low'], ['hidden', 'Sakriveni', 'hidden']])}
+          ${seg('f', 'Prikaz', [['', 'Svi', ''], ['out', 'Nema na stanju', 'out'], ['low', 'Za naručivanje', 'low'], ['draft', 'Nacrti', 'draft'], ['hidden', 'Sakriveni', 'hidden']])}
         </div>
         <div class="region" data-region="products"></div>
       </section>
