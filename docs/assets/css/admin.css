@@ -523,6 +523,16 @@ body.adm { font-size: var(--t-md); line-height: 1.5; background: var(--adm-bg); 
 .seg__opt input:focus-visible + span { outline: 2px solid var(--color-focus); outline-offset: 2px; }
 @media (max-width: 48rem) { .tbl.tbl--products:not(.tbl--lines):not(.tbl--compact) tbody .c-sel { grid-column: 1; grid-row: 3; width: auto; } .tbl--products thead .c-sel { display: none; } }
 
+/* ---------- stock ---------- */
+.tbl--stock .c-moves { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--space-2xs); width: auto; white-space: nowrap; }
+.tbl--stock tr.is-opt > * { background: var(--color-paper-2); }
+.tbl--stock tr.is-opt .c-name { padding-left: var(--space-lg); color: var(--color-ink-2); }
+.tbl--moves .c-when { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.screens .toolbar.toolbar--inner { margin-bottom: var(--space-md); padding: 0; border: 0; background: none; box-shadow: none; }
+.tbl--moves td.num { white-space: nowrap; }
+.mv-now { padding: var(--space-xs) var(--space-sm); border-radius: var(--radius); background: var(--color-paper-2); font-size: var(--t-sm); }
+@media (max-width: 48rem) { .tbl--stock tbody tr.is-opt { padding-left: var(--space-md); } .tbl--stock .c-moves { justify-content: flex-start; } }
+
 /* ---------- collapsible side menu (wide screens) ---------- */
 .side__fold { display: flex; align-items: center; gap: var(--space-sm); min-height: 44px; margin-top: auto; padding: 0 var(--space-sm); border: 0; border-radius: 10px; background: none; color: var(--color-muted); font: inherit; font-size: var(--t-sm); cursor: pointer; }
 .side__fold .tabs__ic { transition: transform var(--dur-micro) var(--ease-out); }
