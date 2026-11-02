@@ -30,6 +30,23 @@ Pregledano: [Bagisto 2.0](https://bagisto.com/?p=20110) (Laravel/Vue). Ne prelaz
 - [x] **1. Globalna pretraga u vrhu admina** (urađeno 2. 11.): jedno polje traži artikle, porudžbine i upite; prečica / ili Ctrl+K.
 - [x] **2. Klizni panel sa strane** (urađeno 2. 11.) za porudžbinu i upit, sa istorijom statusa.
 
+## Mejl članovima o statusu porudžbine + kod za praćenje (obavezno, od 2. 11.)
+
+Čeka podešavanje slanja mejlova (Resend ili Gmail, adresa pošiljaoca, DNS zapisi za domen). Bez toga ne stižu ni potvrda porudžbine ni kod za prijavu.
+
+- [ ] **1. Podešavanje mejla**: izbor servisa, adresa pošiljaoca (npr. magacin@magacinzapadnoevropski.com), DNS zapisi (SPF, DKIM), tajni ključ u Supabase.
+- [ ] **2. Novi status „Poslata“** (porudžbina je obrađena i poslata) sa poljem **Kod za praćenje pošiljke** (i, po želji, prevoznik i link za praćenje).
+  - Polje se upisuje u panelu porudžbine kad se označi „Poslata“; čuva se uz porudžbinu i vidi u istoriji.
+  - Član kod za praćenje vidi na svom nalogu (sa linkom ako je poznat prevoznik) i u mejlu.
+  - Potrebna migracija: kolone `tracking_code`, `carrier` (po potrebi `tracking_url`) u `orders`, i status `shipped` u proveri statusa.
+- [ ] **3. Automatski mejl pri promeni statusa**, na jeziku porudžbine (FR/EN/SR):
+  - U obradi: porudžbina primljena i priprema se.
+  - Spremna za preuzimanje: može da se preuzme.
+  - Poslata: sa kodom za praćenje.
+  - Izvršena: zahvalnica (po želji sa PDF-om).
+  - U panelu kvačica „ne šalji mejl članu“ za pojedinačnu promenu; ispod statusa piše da li je mejl poslat (`emailed`/istorija).
+- [ ] **4. Mejl pošto je poslat u istoriji statusa** (ko, kada, na koju adresu), da se vidi šta je član dobio.
+
 ## Cene za nečlanove (viša cena na sajtu)
 
 Ideja: članovi (crkve) i dalje kupuju po nabavnoj ceni, a ko nije član vidi višu cenu odmah, bez upita đakonu.
