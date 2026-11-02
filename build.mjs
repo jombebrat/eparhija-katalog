@@ -64,11 +64,32 @@ function stamp(rel, deps) {
   if (after !== before) writeFileSync(file, after);
   return hashOf(rel);
 }
+// The admin is one entry (js/admin.js) plus the modules in js/admin/. Every file links the others with the same
+// ?v=, taken from the content of all of them together (so two files never load as different copies), and
+// the outside files they use (render.js, catalogue-pdf.js) with their own hashes.
+function stampAdmin(outside) {
+  const files = ['js/admin.js', ...readdirSync(join(ASSETS, 'js/admin')).filter((f) => f.endsWith('.js')).sort().map((f) => `js/admin/${f}`)];
+  const text = Object.fromEntries(files.map((f) => [f, readFileSync(join(ASSETS, f), 'utf8')]));
+  for (const f of files) {
+    for (const [ref, v] of Object.entries(outside)) {
+      text[f] = text[f].replace(new RegExp(`(['"]\\.\\.?/${ref.replace(/\./g, '\\.')})(\\?v=[0-9a-f]+)?(['"])`, 'g'), `$1?v=${v}$3`);
+    }
+  }
+  const inner = /(['"]\.\/(?:admin\/)?[\w-]+\.js)\?v=(?:@V|[0-9a-f]+)(['"])/g;
+  const h = createHash('sha256');
+  for (const f of files) h.update(f).update(text[f].replace(inner, '$1$2'));
+  const v = h.digest('hex').slice(0, 10);
+  for (const f of files) {
+    const next = text[f].replace(inner, `$1?v=${v}$2`);
+    if (next !== readFileSync(join(ASSETS, f), 'utf8')) writeFileSync(join(ASSETS, f), next);
+  }
+  return v;
+}
 const leaf = { 'render.js': hashOf('js/render.js'), 'tokens.css': hashOf('css/tokens.css'), 'base.css': hashOf('css/base.css'), 'fonts.css': hashOf('css/fonts.css') };
 const css3 = { 'tokens.css': leaf['tokens.css'], 'base.css': leaf['base.css'], 'fonts.css': leaf['fonts.css'] };
 const V = {
   app: stamp('js/app.js', { 'render.js': leaf['render.js'] }),
-  admin: stamp('js/admin.js', { 'render.js': leaf['render.js'], 'catalogue-pdf.js': hashOf('js/catalogue-pdf.js') }),
+  admin: stampAdmin({ 'render.js': leaf['render.js'], 'catalogue-pdf.js': hashOf('js/catalogue-pdf.js') }),
   account: stamp('js/account.js', { 'render.js': leaf['render.js'] }),
   site: stamp('css/site.css', css3),
   adminCss: stamp('css/admin.css', { ...css3, 'login.css': hashOf('css/login.css') }),
