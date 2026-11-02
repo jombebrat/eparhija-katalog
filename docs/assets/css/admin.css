@@ -6,7 +6,7 @@
 @import url("./tokens.css?v=04c89e1815");
 @import url("./base.css?v=3c92bcd680");
 @import url("./fonts.css?v=272f648b17");
-@import url("./login.css?v=c2d836be27");
+@import url("./login.css?v=90fa9f4a03");
 
 /* ---------- the app's own scale: fixed, ratio 1.2 ---------- */
 :root {
@@ -98,7 +98,7 @@ body.adm { font-size: var(--t-md); line-height: 1.5; background: var(--adm-bg); 
 .gate .signin__pane { padding-inline: clamp(var(--space-md), 6vw, var(--space-3xl)); }
 .gate__form { display: grid; gap: var(--space-md); width: min(24rem, 100%); margin-inline: auto; }
 .gate__grb { display: none; width: 56px; height: auto; }
-.gate__org { font-size: var(--t-sm); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--color-muted); }
+.gate__org { font-size: var(--t-sm); font-weight: 600; color: var(--color-muted); }
 .gate h1 { margin-bottom: var(--space-xs); font-size: var(--text-2xl, 1.75rem); letter-spacing: -.015em; }
 .gate .field { gap: var(--space-2xs); }
 .gate__form > * { animation: signin-in .6s cubic-bezier(.2, .7, .2, 1) both; }

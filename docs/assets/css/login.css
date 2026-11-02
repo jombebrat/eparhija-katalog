@@ -1,6 +1,7 @@
+/* Hallmark · shape: app screen · genre: editorial · theme: Ink · sign-in panel shared by admin and account · v2.0.0 */
 /* Sign-in screens: a dark panel of slowly rising article photos beside the form. Shared by /admin/ and the member account. */
 .art { position: relative; overflow: hidden; isolation: isolate; background: var(--art-bg); color: var(--art-ink); min-height: 100%; }
-.art__cols { position: absolute; inset: 0; display: flex; gap: var(--space-sm); padding-inline: var(--space-md); transform: rotate(-6deg) scale(1.25); opacity: .55; mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 70%, transparent); -webkit-mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 70%, transparent); }
+.art__cols { position: absolute; inset: 0; display: flex; gap: var(--space-sm); padding-inline: var(--space-md); transform: rotate(-6deg) scale(1.25); opacity: .55; mask-image: linear-gradient(to bottom, transparent, var(--color-ink) 18%, var(--color-ink) 70%, transparent); -webkit-mask-image: linear-gradient(to bottom, transparent, var(--color-ink) 18%, var(--color-ink) 70%, transparent); }
 .art__col { flex: 1; display: grid; align-content: start; gap: var(--space-sm); animation: art-rise 70s linear infinite; }
 .art__col:nth-child(2) { animation-duration: 90s; animation-direction: reverse; margin-top: calc(var(--space-2xl) * -1); }
 .art__col:nth-child(3) { animation-duration: 80s; }
@@ -22,3 +23,4 @@
 @keyframes signin-in { from { opacity: 0; transform: translateY(14px); } }
 @media (prefers-reduced-motion: reduce) { .signin__pane > * { animation: none; } }
 .signin__pane .btn--primary { min-height: 48px; }
+.signin__pane :focus-visible { outline: 2px solid var(--color-ink); outline-offset: 2px; }
