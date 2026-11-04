@@ -1,9 +1,9 @@
 // The category and contact forms.
-import { $, db, eq, esc, one, plural, reason, slug } from './api.js?v=e72fe27b4f';
-import { D, GROUPS, catOf, groupOf, nameOf, route } from './data.js?v=e72fe27b4f';
-import { busy, checkbox, closeSheet, field, foot, formError, head, invalid, openSheet, select, sheet } from './sheet.js?v=e72fe27b4f';
-import { draw } from './shell.js?v=e72fe27b4f';
-import { notify } from './ui.js?v=e72fe27b4f';
+import { $, db, eq, esc, one, plural, reason, slug } from './api.js?v=d45242a137';
+import { D, GROUPS, catOf, groupOf, nameOf, route } from './data.js?v=d45242a137';
+import { busy, checkbox, closeSheet, field, foot, formError, head, invalid, openSheet, select, sheet } from './sheet.js?v=d45242a137';
+import { draw } from './shell.js?v=d45242a137';
+import { notify } from './ui.js?v=d45242a137';
 
 // ----- the category form -----
 let editCat = null;
@@ -98,7 +98,7 @@ export function priestForm(p) {
       ${field({ id: 'p-address', label: 'Adresa za dostavu', name: 'address', value: p.address, help: 'Upisuje se sama u porudžbinu; član je može menjati u svom nalogu.', attrs: 'autocomplete="off"' })}
       ${checkbox({ id: 'p-active', label: 'Vidi cene i može da naruči', name: 'active', checked: p.active, help: 'Isključite umesto brisanja kad neko privremeno ne treba pristup.' })}
     </div>
-    ${foot(isNew ? 'Dodaj kontakt' : 'Sačuvaj izmene', isNew ? '' : '<button class="btn btn--danger" type="button" data-delete-priest>Obriši sa liste</button>')}
+    ${foot(isNew ? 'Dodaj kontakt' : 'Sačuvaj izmene', isNew ? '' : `<button class="btn" type="button" data-as-member="${esc(p.email)}" data-as-lang="fr">Uđi kao član</button><button class="btn btn--danger" type="button" data-delete-priest>Obriši sa liste</button>`)}
   </form>`);
 }
 export async function submitPriest(form) {

@@ -1,20 +1,20 @@
 // Click, change, input and submit handlers for the whole admin.
-import { $, $$ } from './api.js?v=e72fe27b4f';
-import { D, ST, byCode, catOf, load, route, setParam } from './data.js?v=e72fe27b4f';
-import { catForm, deleteCat, deletePriest, priestForm, submitCat, submitPriest } from './forms.js?v=e72fe27b4f';
-import { addMember, inquirySheet, sendQuote, setInquiry } from './inquiries.js?v=e72fe27b4f';
-import { saveMarkup, savePriestActive } from './lists.js?v=e72fe27b4f';
-import { orderPdf, orderSheet, setStatus } from './orders.js?v=e72fe27b4f';
-import { openPdf, refreshPdf } from './pdf.js?v=e72fe27b4f';
-import { addFiles, byCodeBefore, deleteProduct, drawOptEditor, drawPhotos, edit, productForm, readOptEditor, submitProduct } from './product-form.js?v=e72fe27b4f';
-import { bulk, drawBulk, picked, saveActive, saveStock, shownCodes } from './products.js?v=e72fe27b4f';
-import { closeProfile, passwordForm, submitPassword } from './profile.js?v=e72fe27b4f';
-import { closeSheet, sheet } from './sheet.js?v=e72fe27b4f';
-import { draw } from './shell.js?v=e72fe27b4f';
-import { signOut } from './signin.js?v=e72fe27b4f';
-import { csvOrders, csvProducts, csvStats } from './stats.js?v=e72fe27b4f';
-import { loadMoves, moveForm, submitMove } from './stock.js?v=e72fe27b4f';
-import { notify } from './ui.js?v=e72fe27b4f';
+import { $, $$ } from './api.js?v=d45242a137';
+import { D, ST, byCode, catOf, load, route, setParam } from './data.js?v=d45242a137';
+import { catForm, deleteCat, deletePriest, priestForm, submitCat, submitPriest } from './forms.js?v=d45242a137';
+import { addMember, inquirySheet, sendQuote, setInquiry } from './inquiries.js?v=d45242a137';
+import { saveMarkup, savePriestActive } from './lists.js?v=d45242a137';
+import { orderPdf, orderSheet, setStatus, viewAs } from './orders.js?v=d45242a137';
+import { openPdf, refreshPdf } from './pdf.js?v=d45242a137';
+import { addFiles, byCodeBefore, deleteProduct, drawOptEditor, drawPhotos, edit, productForm, readOptEditor, submitProduct } from './product-form.js?v=d45242a137';
+import { bulk, drawBulk, picked, saveActive, saveStock, shownCodes } from './products.js?v=d45242a137';
+import { closeProfile, passwordForm, submitPassword } from './profile.js?v=d45242a137';
+import { closeSheet, sheet } from './sheet.js?v=d45242a137';
+import { draw } from './shell.js?v=d45242a137';
+import { signOut } from './signin.js?v=d45242a137';
+import { csvOrders, csvProducts, csvStats } from './stats.js?v=d45242a137';
+import { loadMoves, moveForm, submitMove } from './stock.js?v=d45242a137';
+import { notify } from './ui.js?v=d45242a137';
 
 // ---------- events ----------
 document.addEventListener('click', (e) => {
@@ -58,6 +58,7 @@ document.addEventListener('click', (e) => {
   if (t.matches('[data-add-member]')) { addMember(Number(t.closest('[data-inq-sheet]').dataset.inqSheet), t); return; }
   if (t.matches('[data-inq-status]')) { setInquiry(Number(t.closest('[data-inq-sheet]').dataset.inqSheet), t.dataset.inqStatus, t); return; }
   if (t.matches('[data-print]')) { window.print(); return; }
+  if (t.matches('[data-as-member]')) { viewAs(t.dataset.asMember, t.dataset.asLang, t); return; }
   if (t.matches('[data-order-pdf]')) { orderPdf(Number(t.closest('[data-order-sheet]').dataset.orderSheet), t); return; }
   if (t.matches('[data-csv]')) { ({ products: csvProducts, orders: csvOrders, stats: csvStats })[t.dataset.csv](); return; }
   if (t.matches('[data-p] button')) { setParam('p', t.dataset.v === '90' ? '' : t.dataset.v); return; }

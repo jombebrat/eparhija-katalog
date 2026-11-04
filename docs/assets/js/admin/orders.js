@@ -1,11 +1,11 @@
 // Orders screen, one order's sheet and status, and the order PDF.
-import { $, $$, C, call, db, esc, money, one, reason, token, when } from './api.js?v=e72fe27b4f';
-import { D, NEEDS, ST, empty, failed, load, optById, skeleton, stateOf } from './data.js?v=e72fe27b4f';
-import { saveFile } from './inquiries.js?v=e72fe27b4f';
-import { showHistory } from './history.js?v=e72fe27b4f';
-import { formError, head, openSheet } from './sheet.js?v=e72fe27b4f';
-import { draw } from './shell.js?v=e72fe27b4f';
-import { syncSeg } from './ui.js?v=e72fe27b4f';
+import { $, $$, C, SITE, call, db, esc, money, one, reason, token, when } from './api.js?v=d45242a137';
+import { D, NEEDS, ST, empty, failed, load, optById, skeleton, stateOf } from './data.js?v=d45242a137';
+import { saveFile } from './inquiries.js?v=d45242a137';
+import { showHistory } from './history.js?v=d45242a137';
+import { formError, head, openSheet } from './sheet.js?v=d45242a137';
+import { draw } from './shell.js?v=d45242a137';
+import { syncSeg } from './ui.js?v=d45242a137';
 
 // ----- orders -----
 export const STATUS = { new: 'Nova', processing: 'U obradi', ready: 'Spremna za preuzimanje', done: 'Izvršena', cancelled: 'Otkazana' };
@@ -63,6 +63,29 @@ export async function orderPdf(id, btn) {
   }
 }
 
+// open a member's account page as that member: the server hands the admin a one-time code
+export async function viewAs(email, lang, btn) {
+  const win = window.open('about:blank', '_blank');
+  const label = btn.textContent;
+  btn.disabled = true; btn.textContent = 'Otvaranje…';
+  try {
+    const t = await token();
+    const j = await call(`${C.url}/functions/v1/as-member`, {
+      method: 'POST', headers: { apikey: C.key, Authorization: `Bearer ${t}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+    const dir = { fr: '', en: 'en/', sr: 'sr/' }[lang] ?? '';
+    const slug = { fr: 'compte', en: 'account', sr: 'nalog' }[lang] ?? 'compte';
+    const url = `${SITE}${dir}${slug}/#as=${encodeURIComponent(j.email)}:${j.code}`;
+    if (win) win.location.href = url; else location.href = url;
+  } catch (e) {
+    win?.close();
+    if (!e.signedOut) formError(btn.closest('.sheet__inner, form') || document.body, `Nalog nije otvoren. ${reason(e)}`);
+  } finally {
+    btn.disabled = false; btn.textContent = label;
+  }
+}
+
 // ----- one order -----
 const LANG = { fr: 'francuski', en: 'engleski', sr: 'srpski' };
 export function orderSheet(o) {
@@ -94,7 +117,7 @@ export function orderSheet(o) {
     </div>
     <footer class="sheet__foot">
       <p class="sheet__msg" role="alert" data-form-msg hidden></p>
-      <div class="sheet__actions">${actions}<span class="spacer"></span><button class="btn" type="button" data-order-pdf>PDF</button><button class="btn" type="button" data-print>Štampaj</button></div>
+      <div class="sheet__actions">${actions}<span class="spacer"></span><button class="btn" type="button" data-as-member="${esc(o.email)}" data-as-lang="${o.lang || 'fr'}">Uđi kao član</button><button class="btn" type="button" data-order-pdf>PDF</button><button class="btn" type="button" data-print>Štampaj</button></div>
     </footer>
   </div>`, { side: true });
   showHistory('order', o.id, STATUS, (x) => x);

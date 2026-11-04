@@ -629,6 +629,7 @@ function accountPage(lang) {
     </div>
   </header>
 
+  <div class="asbar" data-asbar hidden role="status"><span>Pregled kao admin: <b data-as></b></span><button type="button" data-asexit>Izađi</button></div>
   <main id="main" class="acct">
     <div class="container acct__inner">
       <h1>${t(lang, S.acTitle)}</h1>

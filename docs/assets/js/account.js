@@ -368,11 +368,34 @@ $('[data-signout]').addEventListener('click', () => {
   const t = session?.access_token;
   keep(null);
   store.del('ek-email');
+  store.del('ek-viewas');
   me = null; orders = null;
   showOut();
   if (t) call(`${D.api.url}/auth/v1/logout`, { method: 'POST', headers: headers({ Authorization: `Bearer ${t}` }) }).catch(() => {});
 });
 
+// an admin opens a member's page from the admin panel: #as=email:code signs in with the one-time code
+const bar = $('[data-asbar]');
+function drawAsBar() {
+  const who = store.get('ek-viewas');
+  bar.hidden = !(who && session && session.email === who);
+  $('[data-as]').textContent = who || '';
+}
+$('[data-asexit]').addEventListener('click', () => { store.del('ek-viewas'); $('[data-signout]').click(); bar.hidden = true; });
+async function viewAsStart() {
+  const m = /^#as=([^:]+):(\d{6,})$/.exec(location.hash);
+  if (!m) return false;
+  history.replaceState(null, '', location.pathname + location.search);
+  const mail = decodeURIComponent(m[1]).toLowerCase();
+  try {
+    const j = await call(`${D.api.url}/auth/v1/verify`, { method: 'POST', headers: headers(), body: JSON.stringify({ type: 'email', email: mail, token: m[2] }) });
+    keep(j);
+    store.set('ek-viewas', mail);
+    store.set('ek-email', session.email);
+    return true;
+  } catch { return false; }
+}
+
 // ---------- start ----------
 if (!D.api) { $('[data-boot]').hidden = true; out.hidden = false; say(S.acMailOff, true); send.querySelector('button').disabled = true; }
-else if (session) enter(); else showOut();
+else viewAsStart().then(() => { if (session) { enter(); drawAsBar(); } else showOut(); });
