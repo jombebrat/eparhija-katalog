@@ -1,12 +1,12 @@
 // Orders screen, one order's sheet and status, and the order PDF.
-import { $, $$, C, SITE, call, db, esc, money, one, reason, token, when } from './api.js?v=0d0dfe6320';
-import { D, NEEDS, ST, byLabel, empty, failed, inRange, load, optById, rangeOf, skeleton, stateOf, syncRange } from './data.js?v=0d0dfe6320';
-import { saveFile } from './inquiries.js?v=0d0dfe6320';
-import { showHistory } from './history.js?v=0d0dfe6320';
-import { closeSheet, formError, head, openSheet } from './sheet.js?v=0d0dfe6320';
-import { draw } from './shell.js?v=0d0dfe6320';
-import { notify, syncSeg } from './ui.js?v=0d0dfe6320';
-import { CARRIERS, trackUrl } from './shipping.js?v=0d0dfe6320';
+import { $, $$, C, SITE, call, db, esc, money, one, reason, token, when } from './api.js?v=5945b4a4e1';
+import { D, NEEDS, ST, byLabel, empty, failed, inRange, load, optById, rangeOf, skeleton, stateOf, syncRange } from './data.js?v=5945b4a4e1';
+import { saveFile } from './inquiries.js?v=5945b4a4e1';
+import { showHistory } from './history.js?v=5945b4a4e1';
+import { closeSheet, formError, head, openSheet } from './sheet.js?v=5945b4a4e1';
+import { draw } from './shell.js?v=5945b4a4e1';
+import { notify, syncSeg } from './ui.js?v=5945b4a4e1';
+import { CARRIERS, trackUrl } from './shipping.js?v=5945b4a4e1';
 
 // ----- orders -----
 export const STATUS = { new: 'Nova', processing: 'U obradi', ready: 'Spremna za preuzimanje', done: 'Izvršena', cancelled: 'Otkazana' };
@@ -110,7 +110,7 @@ export function orderSheet(o) {
   openSheet(`<div class="sheet__inner" data-order-sheet="${o.id}">
     ${head(`Porudžbina br. ${o.id}`, `${esc(when.format(new Date(o.created_at)))} · <span class="tag tag--${o.status}">${STATUS[o.status]}</span>${o.edited_at ? ' <span class="tag tag--edited">Izmenjena</span>' : ''}`)}
     <div class="sheet__body">
-      ${o.edited_at && o.items_original ? `<aside class="order__edited"><p><b>Član je izmenio porudžbinu</b> (${esc(when.format(new Date(o.edited_at)))}). Prvobitno naručeno:</p><ul>${o.items_original.map((l) => `<li>${esc(l.sku || l.code)} · ${esc(l.name)} × ${l.qty}${l.unit === 'kg' ? ' kg' : ''}</li>`).join('')}</ul><p class="sub">Prvobitni iznos: ${esc(money.format(o.total_original ?? 0))}</p></aside>` : ''}
+      ${o.edited_at && o.items_original ? `<aside class="order__edited"><p><b>Član je izmenio porudžbinu</b> (${esc(when.format(new Date(o.edited_at)))}). Prvobitno naručeno:</p><ul>${o.items_original.map((l) => `<li>${esc(l.sku || l.code)} · ${esc(l.name)} × ${l.qty}${l.unit === 'kg' ? ' kg' : ''}</li>`).join('')}</ul>${o.total_original != null ? `<p class="sub">Prvobitni iznos: ${esc(money.format(o.total_original))}</p>` : ''}</aside>` : ''}
       <p class="order__who">${esc(o.name || o.email)}</p>
       <dl class="facts">${facts.map(([k, x]) => `<div><dt>${k}</dt><dd>${x}</dd></div>`).join('')}</dl>
       <table class="tbl tbl--lines">

@@ -1,8 +1,8 @@
 // Articles screen: list, search, sort, pages, bulk actions and quick edits.
-import { $, $$, db, eq, esc, money, norm, one, plural, reason, thumb } from './api.js?v=0d0dfe6320';
-import { D, NEEDS, byCode, catName, empty, failed, isDraft, ledgerCounts, low, nameOf, optStock, optionsOf, skeleton, stateOf } from './data.js?v=0d0dfe6320';
-import { draw } from './shell.js?v=0d0dfe6320';
-import { notify, syncInput, syncSeg } from './ui.js?v=0d0dfe6320';
+import { $, $$, db, eq, esc, money, norm, one, plural, reason, thumb } from './api.js?v=5945b4a4e1';
+import { D, NEEDS, byCode, catName, empty, failed, isDraft, ledgerCounts, low, nameOf, optStock, optionsOf, skeleton, stateOf } from './data.js?v=5945b4a4e1';
+import { draw } from './shell.js?v=5945b4a4e1';
+import { notify, syncInput, syncSeg } from './ui.js?v=5945b4a4e1';
 
 // ----- articles: the stock ledger -----
 export const productKey = (p) => norm([p.code, p.code.replace(/^p/i, 'r').replace(/^h/i, 'n'), p.name_sr, p.name_fr, p.name_en].join(' '));

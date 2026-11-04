@@ -1,7 +1,7 @@
 // The members' PDF price list: made here, kept in the private bucket, offered to members.
-import { $, $$, C, SITE, call, photoUrl, plural, reason, session, token } from './api.js?v=0d0dfe6320';
-import { D, Q, markupOf } from './data.js?v=0d0dfe6320';
-import { notify } from './ui.js?v=0d0dfe6320';
+import { $, $$, C, SITE, call, photoUrl, plural, reason, session, token } from './api.js?v=5945b4a4e1';
+import { D, Q, markupOf } from './data.js?v=5945b4a4e1';
+import { notify } from './ui.js?v=5945b4a4e1';
 
 // ---------- the members' PDF price list ----------
 // Made here, in the browser, from the articles as they are now; kept in the private bucket `catalogue`.
