@@ -3,12 +3,18 @@
 import nodemailer from 'nodemailer';
 
 const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]!));
+// web addresses in the text become links in the HTML part (the text part keeps them plain)
+const linkify = (h: string) => h.replace(/https?:\/\/[^\s<]+/g, (u) => {
+  const tail = u.match(/[.,;:!?)]+$/)?.[0] ?? '';
+  const url = tail ? u.slice(0, -tail.length) : u;
+  return `<a href="${url}">${url}</a>${tail}`;
+});
 const env = (k: string) => Deno.env.get(k) || '';
 
 export const mailOn = () => !!((env('SMTP_PASS') && env('SMTP_USER')) || (env('RESEND_API_KEY') && env('ORDER_FROM')));
 
 export async function sendMail(to: string, replyTo: string, subject: string, text: string, filename?: string, pdfB64?: string): Promise<boolean> {
-  const html = `<div style="font-family:Arial,sans-serif;font-size:15px;line-height:1.5;color:#222">${esc(text).replace(/\n/g, '<br>')}</div>`;
+  const html = `<div style="font-family:Arial,sans-serif;font-size:15px;line-height:1.5;color:#222">${linkify(esc(text)).replace(/\n/g, '<br>')}</div>`;
   try {
     if (env('SMTP_PASS') && env('SMTP_USER')) {
       const port = Number(env('SMTP_PORT')) || 465;
