@@ -46,6 +46,11 @@ export const T: Record<Lang, Record<string, string>> = {
     chCancelMail: 'Le client {who} ({email}) a annulé la commande n°\u00a0{n} depuis son profil.\n\nContenu annulé :\n{before}\n\nTotal : {total}\n\nStatut dans l’administration : annulée.',
     chEditSubject: 'Commande n°\u00a0{n} modifiée par le client',
     chEditMail: 'Le client {who} ({email}) a modifié la commande n°\u00a0{n} depuis son profil.\n\nAvant :\n{before}\nTotal : {totalBefore}\n\nMaintenant :\n{after}\nTotal : {total}\n\nCommande dans l’administration : {admin}',
+    mailBtnAccount: 'Ouvrir mon profil',
+    mailBtnAdmin: 'Ouvrir dans l’administration',
+    mailBtnQuote: 'Commander selon ce devis',
+    codeHeading: 'Votre code de connexion',
+    factNumber: 'Commande',
   },
   en: {
     org: 'Warehouse of the Eparchy of Western Europe',
@@ -89,6 +94,11 @@ export const T: Record<Lang, Record<string, string>> = {
     chCancelMail: 'The customer {who} ({email}) cancelled order no.\u00a0{n} from their profile.\n\nCancelled contents:\n{before}\n\nTotal: {total}\n\nStatus in the admin: cancelled.',
     chEditSubject: 'Order no.\u00a0{n} edited by the customer',
     chEditMail: 'The customer {who} ({email}) edited order no.\u00a0{n} from their profile.\n\nBefore:\n{before}\nTotal: {totalBefore}\n\nNow:\n{after}\nTotal: {total}\n\nOrder in the admin: {admin}',
+    mailBtnAccount: 'Open my profile',
+    mailBtnAdmin: 'Open in the admin',
+    mailBtnQuote: 'Order as quoted',
+    codeHeading: 'Your sign-in code',
+    factNumber: 'Order',
   },
   sr: {
     org: 'Магацин Епархије западноевропске',
@@ -132,6 +142,11 @@ export const T: Record<Lang, Record<string, string>> = {
     chCancelMail: 'Члан {who} ({email}) је отказао поруџбину бр.\u00a0{n} из свог профила.\n\nОтказан садржај:\n{before}\n\nЗбир: {total}\n\nСтатус у администрацији: отказана.',
     chEditSubject: 'Поруџбина бр.\u00a0{n}: члан је изменио',
     chEditMail: 'Члан {who} ({email}) је изменио поруџбину бр.\u00a0{n} из свог профила.\n\nПре:\n{before}\nЗбир: {totalBefore}\n\nСада:\n{after}\nЗбир: {total}\n\nПоруџбина у администрацији: {admin}',
+    mailBtnAccount: 'Отвори мој профил',
+    mailBtnAdmin: 'Отвори у администрацији',
+    mailBtnQuote: 'Поручи по овој понуди',
+    codeHeading: 'Ваш код за пријаву',
+    factNumber: 'Поруџбина',
   },
 };
 

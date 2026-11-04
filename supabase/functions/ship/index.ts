@@ -42,7 +42,7 @@ Deno.serve(async (req) => {
   const subject = clean(body.subject, 200);
   const message = clean(body.message, 5000);
   if (!Number.isInteger(id) || !subject || !message) return json({ error: 'invalid' }, 400);
-  const { data: order } = await db.from('orders').select('id, email, invoice_path, invoice_name').eq('id', id).maybeSingle();
+  const { data: order } = await db.from('orders').select('id, email, lang, invoice_path, invoice_name').eq('id', id).maybeSingle();
   if (!order) return json({ error: 'not_found' }, 404);
 
   if (!mailOn()) return json({ sent: false, reason: 'mail_off' });
@@ -55,7 +55,7 @@ Deno.serve(async (req) => {
   }
   // sent after the answer, so the admin does not wait for the mail server
   const to = order.email;
-  const work = sendMail(to, Deno.env.get('WAREHOUSE_EMAIL') || to, subject, message, filename, pdf)
+  const work = sendMail(to, Deno.env.get('WAREHOUSE_EMAIL') || to, subject, message, filename, pdf, { lang: (['fr', 'en', 'sr'].includes(order.lang) ? order.lang : 'fr') })
     .then((ok) => console.log(ok ? 'ship sent' : 'ship NOT sent', u.user!.email, '-> order', id));
   const rt = (globalThis as { EdgeRuntime?: { waitUntil?: (p: Promise<unknown>) => void } }).EdgeRuntime;
   if (rt?.waitUntil) rt.waitUntil(work); else await work;

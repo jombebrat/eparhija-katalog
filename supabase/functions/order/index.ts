@@ -160,8 +160,10 @@ async function finishOrder(saved: { id: number; created_at: string }, lang: Lang
     emailed = true;
     background((async () => {
       const [a, b] = await Promise.all([
-        sendMail(email, warehouse, subject, `${fill(t.mailPriest, { n: saved.id, total: money })}\n\n${fill(t.mailManage, { account: accountUrl(lang), contact: warehouse })}`, filename, pdf),
-        sendMail(warehouse, email, fill(T[wl].subject, { n: saved.id }), fill(T[wl].mailWarehouse, { n: saved.id, total: money, who: [who.name, who.parish].filter(Boolean).join(', ') || email, email }), filename, pdf),
+        sendMail(email, warehouse, subject, `${fill(t.mailPriest, { n: saved.id, total: money })}\n\n${fill(t.mailManage, { account: accountUrl(lang), contact: warehouse })}`, filename, pdf,
+          { lang, heading: fill(t.order, { n: saved.id }), facts: [[t.factNumber, `n\u00b0\u00a0${saved.id}`], [t.total, money]], cta: { label: t.mailBtnAccount, url: accountUrl(lang) } }),
+        sendMail(warehouse, email, fill(T[wl].subject, { n: saved.id }), fill(T[wl].mailWarehouse, { n: saved.id, total: money, who: [who.name, who.parish].filter(Boolean).join(', ') || email, email }), filename, pdf,
+          { lang: wl, heading: fill(T[wl].order, { n: saved.id }), facts: [[T[wl].factNumber, `n\u00b0\u00a0${saved.id}`], [T[wl].from, [who.name, who.parish].filter(Boolean).join(', ') || email], [T[wl].total, money]], cta: { label: T[wl].mailBtnAdmin, url: `${SITE}admin/#porudzbine` } }),
       ]);
       if (a && b) await db.from('orders').update({ emailed: true }).eq('id', saved.id);
       else console.error('order mail not sent', saved.id, a, b);
@@ -196,7 +198,7 @@ async function sendCode(req: Request, body: Record<string, unknown>) {
   await db.from('attempts').insert({ ip, ok: true, kind: 'code' });
   const t = T[lang];
   // the code goes out after the answer; the page already waits for it to arrive
-  background(sendMail(email, Deno.env.get('WAREHOUSE_EMAIL') || email, fill(t.codeSubject, { code }), fill(t.codeMail, { code })).then((ok) => { if (!ok) console.error('code mail not sent'); }));
+  background(sendMail(email, Deno.env.get('WAREHOUSE_EMAIL') || email, fill(t.codeSubject, { code }), fill(t.codeMail, { code }), undefined, undefined, { lang, heading: t.codeHeading, code }).then((ok) => { if (!ok) console.error('code mail not sent'); }));
   return json({ ok: true });
 }
 
@@ -263,7 +265,8 @@ async function inquiry(req: Request, body: Record<string, unknown>) {
   if (warehouse && mailOn()) {
     const wl = pickLang(Deno.env.get('WAREHOUSE_LANG') ?? 'sr');
     background(sendMail(warehouse, email, fill(T[wl].inqSubject, { n: saved.id }),
-      fill(T[wl].inqMail, { n: saved.id, who: who.name || email, email, count: asked.length, admin: `${SITE}admin/#upiti` }))
+      fill(T[wl].inqMail, { n: saved.id, who: who.name || email, email, count: asked.length, admin: `${SITE}admin/#upiti` }), undefined, undefined,
+      { lang: wl, cta: { label: T[wl].mailBtnAdmin, url: `${SITE}admin/#upiti` } })
       .then(async (ok) => { if (ok) await db.from('inquiries').update({ emailed: true }).eq('id', saved.id); else console.error('inquiry mail not sent', saved.id); }));
   }
   return json({ ok: true, number: saved.id });
@@ -294,7 +297,8 @@ async function quoteFor(req: Request, body: Record<string, unknown>) {
     if (!mailOn()) return json({ error: 'mail_off' }, 503);
     const money = new Intl.NumberFormat(LOCALE[lang], { style: 'currency', currency: 'EUR' }).format(total);
     emailed = true; // sent after the answer
-    background(sendMail(inq.email, Deno.env.get('WAREHOUSE_EMAIL') || inq.email, fill(t.quoteSubject, { n: inq.id }), fill(t.quoteMail, { n: inq.id, total: money, link }), filename, pdf)
+    background(sendMail(inq.email, Deno.env.get('WAREHOUSE_EMAIL') || inq.email, fill(t.quoteSubject, { n: inq.id }), fill(t.quoteMail, { n: inq.id, total: money, link }), filename, pdf,
+      { lang, heading: fill(t.quote, { n: inq.id }), facts: [[t.total, money]], cta: { label: t.mailBtnQuote, url: link } })
       .then(async (ok) => { if (!ok) { console.error('quote mail not sent', inq.id); await db.from('inquiries').update({ emailed: false }).eq('id', inq.id); } }));
   }
   const { data: row } = await db.from('inquiries').update({
@@ -419,7 +423,7 @@ async function memberChange(req: Request, body: Record<string, unknown>) {
     const mail = cancel
       ? [fill(w.chCancelSubject, { n: id }), fill(w.chCancelMail, { n: id, who, email: o.email, before: listOf(before, wl), total: eur.format(Number(o.total)) })]
       : [fill(w.chEditSubject, { n: id }), fill(w.chEditMail, { n: id, who, email: o.email, before: listOf(before, wl), after: listOf(after, wl), totalBefore: eur.format(Number(o.total)), total: eur.format(sumOf(after)), admin: `${SITE}admin/#porudzbine` })];
-    background(sendMail(warehouse, o.email, mail[0], mail[1]).then((ok) => { if (!ok) console.error('member change mail not sent', id); }));
+    background(sendMail(warehouse, o.email, mail[0], mail[1], undefined, undefined, { lang: wl, cta: { label: w.mailBtnAdmin, url: `${SITE}admin/#porudzbine` } }).then((ok) => { if (!ok) console.error('member change mail not sent', id); }));
   }
   return json({ ok: true, order: row });
 }
