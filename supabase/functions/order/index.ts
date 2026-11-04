@@ -3,10 +3,10 @@
 //     -> { number, total, emailed, pdf (base64), filename }
 //     Only an email on the members' list (table priests) may order. Prices and names come from the database, never from the page.
 //     An article with options (the saint of an icon) is ordered with one: option is its id in the table options.
-//     When RESEND_API_KEY, ORDER_FROM and WAREHOUSE_EMAIL are set, the PDF is emailed to the member who ordered and the warehouse
+//     When mail is set up (SMTP_USER + SMTP_PASS, or RESEND_API_KEY + ORDER_FROM) and WAREHOUSE_EMAIL is set, the PDF is emailed to the member who ordered and the warehouse
 //     (the warehouse's message is in WAREHOUSE_LANG: fr, en or sr, default sr).
 //   POST { action: 'code', email, lang }
-//     -> { ok } and a 6-digit sign-in code by email, for members only (needs RESEND_API_KEY and ORDER_FROM).
+//     -> { ok } and a 6-digit sign-in code by email, for members only (needs mail set up, see mail.ts).
 //     The page then signs in with Supabase Auth (verify, type email) and reads its own orders.
 //   POST { action: 'pdf', id } with Authorization: Bearer <session>
 //     -> { pdf, filename } for an order of the signed-in member, or any order for an admin.
@@ -19,6 +19,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { orderPdf, type Line, type Assets } from './pdf.ts';
 import { readItems, buildLines, total as sumOf, type Item, type Problem } from './lines.ts';
+import { mailOn, sendMail } from './mail.ts';
 import { T, LOCALE, fill, type Lang, toCyrillic } from './i18n.ts';
 
 const CORS = {
@@ -64,23 +65,6 @@ const toB64 = (bytes: Uint8Array) => {
   return btoa(s);
 };
 const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]!));
-
-async function sendMail(to: string, replyTo: string, subject: string, text: string, filename?: string, pdf?: string) {
-  const key = Deno.env.get('RESEND_API_KEY');
-  const from = Deno.env.get('ORDER_FROM');
-  if (!key || !from) return false;
-  const r = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      from, to: [to], reply_to: replyTo, subject, text,
-      html: `<div style="font-family:Arial,sans-serif;font-size:15px;line-height:1.5;color:#222">${esc(text).replace(/\n/g, '<br>')}</div>`,
-      ...(pdf ? { attachments: [{ filename, content: pdf }] } : {}),
-    }),
-  });
-  if (!r.ok) console.error('resend', r.status, await r.text());
-  return r.ok;
-}
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response(null, { headers: CORS });
@@ -193,7 +177,7 @@ async function sendCode(req: Request, body: Record<string, unknown>) {
     await db.from('attempts').insert({ ip, ok: false });
     return json({ error: 'unknown' }, 404);
   }
-  if (!Deno.env.get('RESEND_API_KEY') || !Deno.env.get('ORDER_FROM')) return json({ error: 'mail_off' }, 503);
+  if (!mailOn()) return json({ error: 'mail_off' }, 503);
   // the member's sign-in account is made the first time; "already registered" is fine
   await db.auth.admin.createUser({ email, email_confirm: true, user_metadata: { member: true } });
   const { data, error } = await db.auth.admin.generateLink({ type: 'magiclink', email });
@@ -234,7 +218,6 @@ async function pdfAgain(req: Request, body: Record<string, unknown>) {
 
 const SITE = (Deno.env.get('SITE_URL') ?? 'https://magacinzapadnoevropski.com/').replace(/\/?$/, '/');
 const langPath = (l: Lang) => (l === 'fr' ? '' : `${l}/`);
-const mailOn = () => !!(Deno.env.get('RESEND_API_KEY') && Deno.env.get('ORDER_FROM'));
 const pickLang = (v: unknown) => (['fr', 'en', 'sr'].includes(String(v)) ? v : 'fr') as Lang;
 
 async function adminOf(req: Request) {
