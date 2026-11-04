@@ -466,7 +466,6 @@ import * as R from './render.js?v=2e5794a19b';
   const el = (tag, cls, text) => { const x = document.createElement(tag); if (cls) x.className = cls; if (text !== undefined) x.textContent = text; return x; };
 
   let lastOrder = null;
-  let step = 'list'; // members: the list first, then "Continue" opens the review with the sender's details
   function renderList() {
     const codes = Object.keys(list);
     body.innerHTML = '';
@@ -476,7 +475,6 @@ import * as R from './render.js?v=2e5794a19b';
     if (quote) return renderQuote();
     if (lastInquiry) return renderInquiryDone();
     if (!codes.length) {
-      step = 'list';
       const box = el('div', 'drawer__empty');
       box.append(el('b', '', S.emptyTitle), el('p', '', S.emptyText));
       const a = el('a', 'btn btn--quiet', S.browse); a.href = '#catalogue'; a.dataset.close = '';
@@ -484,7 +482,6 @@ import * as R from './render.js?v=2e5794a19b';
       body.append(box);
       return;
     }
-    if (step === 'review' && prices) return renderReview();
     for (const code of codes) {
       const it = itemOf(code);
       if (!it) continue;
@@ -727,75 +724,9 @@ import * as R from './render.js?v=2e5794a19b';
     total.append(el('span', '', S.total));
     const tb = el('b', '', money.format(sum())); tb.dataset.total = '';
     total.append(tb);
-    const next = el('button', 'btn btn--primary', S.listNext); next.type = 'button';
-    next.addEventListener('click', () => { step = 'review'; renderList(); drawer.querySelector('.drawer__scroll')?.scrollTo(0, 0); $('[data-review-back]', body)?.focus(); });
+    const next = el('a', 'btn btn--primary', S.listNext); next.href = D.checkout;
     const { help, row } = listActions();
     foot.append(total, next, help, row);
-  }
-
-  // the review: what is ordered, then who is sending it, then the button
-  function renderReview() {
-    $('#drawer-title').textContent = S.reviewTitle;
-    const back = el('button', 'textbtn review__back', `← ${S.reviewBack}`); back.type = 'button'; back.dataset.reviewBack = '';
-    back.addEventListener('click', () => { step = 'list'; renderList(); });
-    const ul = el('ul', 'review__list'); ul.setAttribute('role', 'list');
-    for (const k of Object.keys(list)) {
-      const it = itemOf(k);
-      if (!it) continue;
-      const pr = priceOf(it.code);
-      const li = el('li');
-      const name = el('span', 'review__name', it.name);
-      if (!it.p.kg) name.append(el('span', 'review__sku', it.sku));
-      li.append(el('span', 'review__qty', `${list[k]}${it.p.kg ? ` ${S.kg}` : ' ×'}`), name, el('span', 'review__sum', pr === null ? '' : money.format(lineSum(k))));
-      ul.append(li);
-    }
-    const total = el('p', 'drawer__total');
-    total.append(el('span', '', S.total), el('b', '', money.format(sum())));
-    body.append(back, ul, total);
-    renderOrderForm();
-  }
-
-  function renderOrderForm() {
-    const form = el('form', 'order-form'); form.noValidate = true;
-    const field = formField('of', store.get('ek-form', {}));
-    form.addEventListener('change', (e) => { const f = store.get('ek-form', {}); f[e.target.name] = e.target.value; store.set('ek-form', f); });
-    form.addEventListener('input', (e) => e.target.removeAttribute('aria-invalid'));
-    const grid = el('div', 'order-form__grid');
-    grid.append(field('name', S.formName, 'text', false, 'input', 'name'), field('parish', S.formParish, 'text', true, 'input', 'organization'),
-      field('phone', S.formPhone, 'tel', true, 'input', 'tel'), field('address', S.formAddress, 'text', true, 'input', 'street-address'));
-    const note = field('note', S.formNote, 'text', true, 'textarea');
-    const send = el('button', 'btn btn--primary', S.sendOrder); send.type = 'submit';
-    const help = el('p', 'drawer__help'); help.setAttribute('aria-live', 'polite'); help.id = 'order-help';
-    form.append(el('h3', 'review__who', S.reviewWho), el('p', 'drawer__member', `${S.quoteFor}: ${store.get('ek-email') || ''}`), grid, note, send, help);
-    foot.append(form);
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const data = Object.fromEntries(new FormData(form));
-      const nameInput = $('#of-name', form);
-      if (String(data.name || '').trim().length < 2) {
-        nameInput.setAttribute('aria-invalid', 'true'); nameInput.setAttribute('aria-describedby', 'order-help');
-        help.textContent = S.nameMissing; nameInput.focus(); return;
-      }
-      nameInput.removeAttribute('aria-invalid');
-      store.set('ek-form', { name: data.name, parish: data.parish, phone: data.phone, address: data.address });
-      send.disabled = true; send.setAttribute('aria-busy', 'true'); send.textContent = S.sending; help.textContent = '';
-      let res = null;
-      try {
-        res = await api('order', { email: store.get('ek-email'), lang: D.lang, items: payload(), ...data });
-      } catch { res = null; }
-      send.disabled = false; send.removeAttribute('aria-busy'); send.textContent = S.sendOrder;
-      if (res && res.status === 200 && res.data.number) {
-        lastOrder = res.data; step = 'list';
-        list = {}; save(); syncButtons(); renderList();
-        $('[data-done-pdf]', foot)?.focus();
-        return;
-      }
-      if (res && res.status === 404) { signOut(); help.textContent = S.loginUnknown; return; }
-      help.textContent = res && res.data?.error === 'unknown_item' ? S.orderUnknown
-        : res && res.data?.error === 'choose' ? fmt(S.orderChoose, { codes: (res.data.codes || []).join(', ') })
-        : res && res.data?.error === 'unavailable' ? fmt(S.orderUnavailable, { codes: (res.data.codes || []).join(', ') })
-        : res && res.status === 429 ? S.loginTooMany : S.orderFailed;
-    });
   }
 
   function renderDone() {
@@ -855,7 +786,7 @@ import * as R from './render.js?v=2e5794a19b';
     };
     requestAnimationFrame(tick);
   }
-  drawer.addEventListener('close', () => { lastOrder = null; lastInquiry = null; quote = null; step = 'list'; });
+  drawer.addEventListener('close', () => { lastOrder = null; lastInquiry = null; quote = null; });
 
   // ---------- product detail ----------
   const detail = $('[data-detail-dialog]');

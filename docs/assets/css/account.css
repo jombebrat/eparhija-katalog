@@ -2,7 +2,7 @@
  * nav: the catalogue's slab · signature: the member's orders, each with its PDF and "order again" · states: loading, empty, error, full
  * axes: light/grotesk-sans/chromatic-gold · contrast: pass · v2.0.0 */
 @import url("./login.css?v=90fa9f4a03");
-@import url("./site.css?v=bd12aaa392");
+@import url("./site.css?v=9306af22f2");
 
 /* the app's own scale, ratio 1.2 */
 :root { --color-success-soft: oklch(95% 0.03 150); --color-success-ink: oklch(36% 0.09 150); }
@@ -172,3 +172,23 @@ a.listbtn { text-decoration: none; }
 .asbar button { font: inherit; padding: .25rem .75rem; border: 1px solid currentColor; border-radius: .4rem; background: transparent; color: inherit; cursor: pointer; }
 
 .toplist__more { margin-block-start: var(--space-sm); }
+
+/* ---------- checkout: the page "Continue" in the basket leads to ---------- */
+.co { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: var(--space-xl); align-items: start; }
+.co__card { display: grid; gap: var(--space-md); padding: var(--space-lg); border: var(--rule-hair) solid var(--color-rule); border-radius: 14px; background: var(--color-paper); box-shadow: var(--acct-shadow); }
+.co__card h2 { margin: 0; font-size: var(--t-xl); }
+.co__lines { display: grid; margin: 0; padding: 0; list-style: none; }
+.co__lines li { display: grid; grid-template-columns: 48px minmax(0, 1fr) auto auto; align-items: center; gap: var(--space-sm); padding: var(--space-xs) 0; border-bottom: var(--rule-hair) solid var(--color-rule); }
+.co__img { display: block; width: 48px; height: 48px; border-radius: 8px; overflow: hidden; background: var(--color-paper-2, rgba(0, 0, 0, .05)); }
+.co__img img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.co__name { overflow-wrap: anywhere; }
+.co__sku { display: block; color: var(--color-ink-2); font-size: var(--t-xs); }
+.co__qty { color: var(--color-ink-2); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.co__sum { min-width: 4.5rem; font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; }
+.co__for { margin: 0; color: var(--color-ink-2); font-size: var(--t-sm); overflow-wrap: anywhere; }
+.co__form textarea { width: 100%; font: inherit; }
+.co__msg, .co__done { display: grid; justify-items: start; gap: var(--space-md); max-width: 36rem; padding: var(--space-xl); border: var(--rule-hair) solid var(--color-rule); border-radius: 14px; background: var(--color-paper); box-shadow: var(--acct-shadow); }
+.co__msg-title { margin: 0; font-size: var(--t-xl); font-weight: 700; }
+.co__msg p, .co__done p { margin: 0; }
+.co__msg-act { display: flex; flex-wrap: wrap; gap: var(--space-sm); }
+@media (max-width: 860px) { .co { grid-template-columns: minmax(0, 1fr); } .co__card { padding: var(--space-md); } }

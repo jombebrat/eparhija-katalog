@@ -91,6 +91,7 @@ const V = {
   app: stamp('js/app.js', { 'render.js': leaf['render.js'] }),
   admin: stampAdmin({ 'render.js': leaf['render.js'], 'catalogue-pdf.js': hashOf('js/catalogue-pdf.js') }),
   account: stamp('js/account.js', { 'render.js': leaf['render.js'] }),
+  checkout: stamp('js/checkout.js', { 'render.js': leaf['render.js'] }),
   site: stamp('css/site.css', css3),
   adminCss: stamp('css/admin.css', { ...css3, 'login.css': hashOf('css/login.css') }),
 };
@@ -155,6 +156,7 @@ function page(lang, dir) {
     items: S.items, sizes: S.sizes,
     cats: cd.cats, p: cd.p,
     account: `${root}${dir}${S.acSlug}/`,
+    checkout: `${root}${dir}${S.coSlug}/`,
   };
 
   const alternates = LANGS.map((l) => `<link rel="alternate" hreflang="${strings[l.id].htmlLang}" href="${site.url ? absolute(l) : here(l)}">`).join('\n  ')
@@ -775,6 +777,81 @@ for (const l of LANGS) {
   const out = join(ROOT, 'docs', accountPath(l), 'index.html');
   mkdirSync(dirname(out), { recursive: true });
   writeFileSync(out, accountPage(l.id));
+  console.log('wrote', out.replace(ROOT + '/', ''));
+}
+
+// ---------- the checkout page (where "Continue" in the basket leads), one per language ----------
+const CHECKOUT_STRINGS = ['reviewTitle', 'reviewBack', 'reviewWho', 'quoteFor', 'total', 'list', 'formName', 'formParish', 'formPhone', 'formAddress', 'formNote', 'optional',
+  'sendOrder', 'sending', 'orderDone', 'orderDoneMail', 'orderDoneNoMail', 'downloadPdf', 'orderFailed', 'orderUnknown', 'orderUnavailable', 'orderChoose', 'nameMissing',
+  'loginUnknown', 'loginTooMany', 'acLink', 'emptyTitle', 'emptyText', 'browse', 'kg', 'perKg', 'coNeedEmail', 'acCatalogue', 'done'];
+const checkoutPath = (l) => `${l.dir}${strings[l.id].coSlug}/`;
+function checkoutPage(lang) {
+  const S = strings[lang];
+  const me = LANGS.find((l) => l.id === lang);
+  const root = '../'.repeat(checkoutPath(me).split('/').filter(Boolean).length);
+  const catalogue = root + me.dir;
+  const apiUrl = (process.env.SITE_API_URL || site.supabaseUrl || '').replace(/\/$/, '');
+  const cd = R.clientData(model, { lang, S, root });
+  const data = {
+    lang, locale: S.locale, root, catalogue, account: `${root}${me.dir}${S.acSlug}/`,
+    api: apiUrl ? { url: apiUrl, key: site.supabaseKey || '' } : null,
+    s: Object.fromEntries(CHECKOUT_STRINGS.map((k) => [k, T(lang, k)])),
+    p: Object.fromEntries(Object.entries(cd.p).map(([c, x]) => [c, { n: x.n, ph: x.ph[0]?.[0] || '', ...(x.kg ? { kg: 1 } : {}), ...(x.o ? { o: Object.fromEntries(x.o.map(([id, l, sku]) => [id, [l, sku]])) } : {}) }])),
+  };
+  const langLinks = flagLinks(lang, (l) => `${root}${checkoutPath(l)}`);
+  return `<!doctype html>
+<html lang="${S.htmlLang}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>${t(lang, S.reviewTitle)} · ${t(lang, S.brand)}</title>
+  <meta name="robots" content="noindex">
+  ${LANGS.map((l) => `<link rel="alternate" hreflang="${strings[l.id].htmlLang}" href="${root}${checkoutPath(l)}">`).join('\n  ')}
+  <link rel="icon" href="${root}favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="${root}apple-touch-icon.png">
+  <link rel="stylesheet" href="${root}assets/css/account.css?v=${V.accountCss}">
+  <script>document.documentElement.className = 'js';</script>
+</head>
+<body class="acct-page co-page">
+  <a class="skip" href="#main">${t(lang, S.skip)}</a>
+  <header class="slab">
+    <div class="container slab__inner">
+      <a class="wordmark" href="${catalogue}"><img class="wordmark__grb" src="${root}assets/img/grb-112.webp" width="48" height="56" alt=""><span class="visually-hidden">${t(lang, S.brand)}</span></a>
+      <nav class="langs" aria-label="${t(lang, S.langsLabel)}">
+        ${langLinks}
+      </nav>
+      <a class="listbtn" href="${catalogue}">${t(lang, S.acCatalogue)}</a>
+    </div>
+  </header>
+
+  <main id="main" class="acct">
+    <div class="container acct__inner">
+      <h1>${t(lang, S.reviewTitle)}</h1>
+      <p class="acct__boot" data-boot>…</p>
+      <div data-co></div>
+    </div>
+  </main>
+
+  <footer class="colophon">
+    <div class="container colophon__inner">
+      <img class="colophon__grb" src="${root}assets/img/grb-112.webp" width="48" height="56" alt="">
+      <div class="colophon__text">
+        <p><b>${t(lang, S.brand)}.</b> ${t(lang, S.orgFull)}, ${t(lang, S.address)}.</p>
+        ${legalLine(lang, root)}
+      </div>
+    </div>
+  </footer>
+
+  <script type="application/json" id="checkout-data">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>
+  <script type="module" src="${root}assets/js/checkout.js?v=${V.checkout}"></script>
+</body>
+</html>
+`;
+}
+for (const l of LANGS) {
+  const out = join(ROOT, 'docs', checkoutPath(l), 'index.html');
+  mkdirSync(dirname(out), { recursive: true });
+  writeFileSync(out, checkoutPage(l.id));
   console.log('wrote', out.replace(ROOT + '/', ''));
 }
 
