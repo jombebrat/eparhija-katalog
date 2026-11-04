@@ -278,32 +278,38 @@ function drawOrders() {
     box.innerHTML = `<div class="state"><p class="state__title">${esc(S.acOrdersEmpty)}</p><p>${esc(S.acOrdersEmptyText)}</p><a class="btn" href="${esc(D.catalogue)}">${esc(S.acCatalogue)}</a></div>`;
     return;
   }
-  box.innerHTML = `<ol class="orders" role="list">${orders.map((o) => `<li class="myorder" data-order="${o.id}">
-      <div class="myorder__head">
-        <p class="myorder__no">${esc(fill(S.acOrder, { n: o.id }))}</p>
-        <span class="tag tag--${esc(o.status)}">${esc(STATUS[o.status] || o.status)}</span>
-        <p class="myorder__date">${esc(day.format(new Date(o.created_at)))}</p>
-        <p class="myorder__total">${esc(money.format(o.total))}</p>
+  box.innerHTML = `<ol class="orders" role="list">${orders.map((o) => `<li class="myorder myorder--${esc(o.status)}" data-order="${o.id}">
+      <div class="myorder__top">
+        <div class="myorder__id">
+          <p class="myorder__no">${esc(fill(S.acOrder, { n: o.id }))}</p>
+          <p class="myorder__date">${esc(day.format(new Date(o.created_at)))} · ${esc(count(o.items.length))}</p>
+        </div>
+        <div class="myorder__side">
+          <span class="tag tag--${esc(o.status)}">${esc(STATUS[o.status] || o.status)}</span>
+          <p class="myorder__total">${esc(money.format(o.total))}</p>
+        </div>
       </div>
       ${o.tracking_code ? trackOf(o) : ''}
       <details class="myorder__lines">
-        <summary>${esc(S.acLines)} <span class="myorder__count">(${esc(count(o.items.length))})</span></summary>
+        <summary>${esc(S.acLines)}</summary>
         <table class="lines">
           <thead><tr><th scope="col">${esc(S.code)}</th><th scope="col">${esc(S.acItem)}</th><th scope="col" class="num">${esc(S.acQty)}</th><th scope="col" class="num">${esc(S.acAmount)}</th></tr></thead>
           <tbody>${o.items.map((l) => `<tr><td class="code">${esc(l.sku || l.code)}</td><td>${esc(l.name)}</td><td class="num">${esc(String(l.qty))}${l.unit === 'kg' ? ` ${esc(S.kg)}` : ''}</td><td class="num">${esc(money.format(l.price * l.qty))}</td></tr>`).join('')}</tbody>
         </table>
       </details>
-      <div class="myorder__actions">
-        <button class="btn" type="button" data-pdf="${o.id}">${esc(S.acPdf)}</button>
-        ${o.invoice_path ? `<button class="btn" type="button" data-invoice="${esc(o.invoice_path)}">${esc(S.acInvoice)}</button>` : ''}
-        <button class="textbtn" type="button" data-again-order="${o.id}">${esc(S.acReorder)}</button>
-        <p class="myorder__msg" data-msg aria-live="polite"></p>
+      <div class="myorder__foot">
+        <div class="myorder__tools">
+          <button class="btn btn--small" type="button" data-pdf="${o.id}">${esc(S.acPdf)}</button>
+          ${o.invoice_path ? `<button class="btn btn--small" type="button" data-invoice="${esc(o.invoice_path)}">${esc(S.acInvoice)}</button>` : ''}
+          <button class="textbtn" type="button" data-again-order="${o.id}">${esc(S.acReorder)}</button>
+        </div>
+        ${o.status === 'new' ? `<div class="myorder__manage">
+          <button class="btn btn--small" type="button" data-edit="${o.id}">${esc(S.acEdit)}</button>
+          <button class="textbtn textbtn--danger" type="button" data-cancel="${o.id}">${esc(S.acCancel)}</button>
+        </div>` : ''}
       </div>
-      ${o.status === 'new' ? `<div class="myorder__manage">
-        <p class="myorder__hint">${esc(S.acManageHint)}</p>
-        <div class="myorder__actions"><button class="btn" type="button" data-edit="${o.id}">${esc(S.acEdit)}</button><button class="btn btn--quiet" type="button" data-cancel="${o.id}">${esc(S.acCancel)}</button></div>
-        <div data-change></div>
-      </div>` : ['processing', 'ready'].includes(o.status) ? `<p class="myorder__hint">${esc(S.acLockedHint)}</p>` : ''}
+      <p class="myorder__msg" data-msg aria-live="polite"></p>
+      ${['processing', 'ready'].includes(o.status) ? `<p class="myorder__hint">${esc(S.acLockedHint)}</p>` : ''}
     </li>`).join('')}</ol>`;
 }
 
@@ -384,78 +390,88 @@ async function orderAgain(id, b) {
   location.href = `${D.catalogue}#liste`;
 }
 
-// ----- cancel or edit an order that is still "new" -----
-const qtyOf = (l) => `${l.qty}${l.unit === 'kg' ? ` ${S.kg}` : ''}`;
-function changeBox(el) { return $('[data-change]', el.closest('.myorder')); }
+// ----- cancel or edit an order that is still "new": in a window of its own -----
+const dlg = document.createElement('dialog');
+dlg.className = 'acdlg';
+dlg.setAttribute('aria-labelledby', 'acdlg-title');
+document.body.append(dlg);
+dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
 function editTotal(form) {
   const o = orders.find((x) => x.id === Number(form.dataset.edit));
   const sum = $$('[data-row]', form).filter((r) => !r.classList.contains('is-removed')).reduce((a, r) => a + Number(o.items[Number(r.dataset.row)].price) * (Math.max(1, Math.round(Number(r.querySelector('input').value))) || 1), 0);
   $('[data-edit-total]', form).textContent = money.format(sum);
 }
-function openEdit(id, b) {
+function openEdit(id) {
   const o = orders.find((x) => x.id === id);
-  const box = changeBox(b);
-  if (box.querySelector('[data-edit-form]')) { box.innerHTML = ''; return; }
-  box.innerHTML = `<form class="myorder__edit" data-edit-form data-edit="${o.id}" novalidate>
-    <p class="myorder__hint">${esc(S.acEditHelp)}</p>
+  dlg.innerHTML = `<form class="acdlg__in" data-edit-form data-edit="${o.id}" novalidate>
+    <header class="acdlg__head"><h2 id="acdlg-title">${esc(S.acEdit)}</h2><p>${esc(fill(S.acOrder, { n: o.id }))}</p></header>
+    <p class="acdlg__help">${esc(S.acEditHelp)}</p>
     <ul class="editlines" role="list">${o.items.map((l, i) => `<li class="editline" data-row="${i}">
-      <span class="editline__name"><b>${esc(l.name)}</b><span class="sub">${esc(l.sku || l.code)} · ${esc(money.format(l.price))}</span></span>
+      <span class="editline__name"><b>${esc(l.name)}</b><span class="sub">${esc(l.sku || l.code)} · ${esc(money.format(l.price))}${l.unit === 'kg' ? ` ${esc(S.kg)}` : ''}</span></span>
       <input class="editline__qty" type="number" inputmode="numeric" min="1" max="999" step="1" value="${esc(String(l.qty))}" aria-label="${esc(fill(S.acQtyOf, { name: l.name }))}">
-      <button class="textbtn" type="button" data-rm>${esc(S.acRemove)}</button></li>`).join('')}</ul>
-    <p class="myorder__editfoot"><b data-edit-total>${esc(money.format(o.total))}</b></p>
-    <div class="myorder__actions"><button class="btn btn--primary" type="submit">${esc(S.acEditSave)}</button><button class="btn" type="button" data-edit-close>${esc(S.acEditClose)}</button></div>
+      <button class="textbtn textbtn--danger" type="button" data-rm>${esc(S.acRemove)}</button></li>`).join('')}</ul>
+    <p class="acdlg__total"><span>${esc(S.acAmount)}</span><b data-edit-total>${esc(money.format(o.total))}</b></p>
+    <p class="acdlg__msg" data-dlg-msg aria-live="polite"></p>
+    <footer class="acdlg__foot"><button class="btn" type="button" data-dlg-close>${esc(S.acEditClose)}</button><button class="btn btn--primary" type="submit">${esc(S.acEditSave)}</button></footer>
   </form>`;
-  $('input', box).focus();
+  dlg.showModal();
 }
-function askCancel(id, b) {
-  const box = changeBox(b);
-  box.innerHTML = `<div class="myorder__confirm" role="alert"><p>${esc(fill(S.acCancelAsk, { n: id }))}</p>
-    <div class="myorder__actions"><button class="btn btn--primary" type="button" data-cancel-yes="${id}">${esc(S.acCancelYes)}</button><button class="btn" type="button" data-cancel-no>${esc(S.acCancelNo)}</button></div></div>`;
-  $('[data-cancel-yes]', box).focus();
+function askCancel(id) {
+  dlg.innerHTML = `<div class="acdlg__in">
+    <header class="acdlg__head"><h2 id="acdlg-title">${esc(S.acCancel)}</h2><p>${esc(fill(S.acOrder, { n: id }))}</p></header>
+    <p class="acdlg__help">${esc(fill(S.acCancelAsk, { n: id }))}</p>
+    <p class="acdlg__msg" data-dlg-msg aria-live="polite"></p>
+    <footer class="acdlg__foot"><button class="btn" type="button" data-dlg-close>${esc(S.acCancelNo)}</button><button class="btn btn--danger" type="button" data-cancel-yes="${id}">${esc(S.acCancelYes)}</button></footer>
+  </div>`;
+  if (!dlg.open) dlg.showModal();
 }
 // one request for both: the server checks that the order is still "new" and tells the warehouse
-async function changeOrder(id, body, b) {
-  const li = b.closest('.myorder');
-  const msg = $('[data-msg]', li);
-  const all = $$('button', li);
+async function changeOrder(id, body) {
+  const msg = $('[data-dlg-msg]', dlg);
+  const all = $$('button', dlg);
   all.forEach((x) => { x.disabled = true; });
   msg.textContent = ''; msg.classList.remove('is-error');
   try {
     const t = await token();
     const j = await call(`${D.api.url}/functions/v1/order`, { method: 'POST', headers: headers({ Authorization: `Bearer ${t}` }), body: JSON.stringify({ id, ...body }) });
     Object.assign(orders.find((x) => x.id === id), j.order);
+    dlg.close();
     drawOrders();
     const fresh = $(`[data-order="${id}"] [data-msg]`);
     if (fresh) fresh.textContent = body.action === 'member-cancel' ? S.acCancelDone : S.acEditDone;
   } catch (e) {
-    if (e.signedOut || e.status === 401) { keep(null); showOut(S.acSignedOut); return; }
+    if (e.signedOut || e.status === 401) { dlg.close(); keep(null); showOut(S.acSignedOut); return; }
     all.forEach((x) => { x.disabled = false; });
     msg.classList.add('is-error');
     if (e.code === 'locked') { msg.textContent = S.acChangeLocked; loadOrders(); return; }
     msg.textContent = e.code === 'unavailable' ? fill(S.acChangeUnavail, { codes: (e.body?.codes || []).join(', ') }) : S.acChangeFailed;
   }
 }
-box.addEventListener('input', (e) => { const f = e.target.closest('[data-edit-form]'); if (f) editTotal(f); });
-box.addEventListener('submit', (e) => {
+dlg.addEventListener('input', (e) => { const f = e.target.closest('[data-edit-form]'); if (f) editTotal(f); });
+dlg.addEventListener('submit', (e) => {
   const f = e.target.closest('[data-edit-form]');
   if (!f) return;
   e.preventDefault();
   const id = Number(f.dataset.edit);
   const o = orders.find((x) => x.id === id);
   const rows = $$('[data-row]', f).filter((r) => !r.classList.contains('is-removed'));
-  if (!rows.length) { askCancel(id, f); return; }
+  if (!rows.length) { askCancel(id); return; }
   const items = rows.map((r) => { const l = o.items[Number(r.dataset.row)]; return { code: l.code, ...(l.option ? { option: l.option } : {}), qty: Math.min(999, Math.max(1, Math.round(Number($('input', r).value)) || 1)) }; });
-  changeOrder(id, { action: 'member-edit', items }, $('[type=submit]', f));
+  changeOrder(id, { action: 'member-edit', items });
+});
+dlg.addEventListener('click', (e) => {
+  const b = e.target.closest('button');
+  if (!b) return;
+  if (b.matches('[data-rm]')) { const r = b.closest('[data-row]'); r.classList.toggle('is-removed'); $('input', r).disabled = r.classList.contains('is-removed'); editTotal(b.closest('form')); return; }
+  if (b.matches('[data-dlg-close]')) dlg.close();
+  else if (b.matches('[data-cancel-yes]')) changeOrder(Number(b.dataset.cancelYes), { action: 'member-cancel' });
 });
 
 box.addEventListener('click', (e) => {
   const b = e.target.closest('button');
   if (!b) return;
-  if (b.matches('[data-rm]')) { const r = b.closest('[data-row]'); r.classList.toggle('is-removed'); $('input', r).disabled = r.classList.contains('is-removed'); editTotal(b.closest('form')); return; }
-  if (b.matches('[data-edit]')) return openEdit(Number(b.dataset.edit), b);
-  if (b.matches('[data-edit-close], [data-cancel-no]')) { changeBox(b).innerHTML = ''; return; }
-  if (b.matches('[data-cancel]')) return askCancel(Number(b.dataset.cancel), b);
-  if (b.matches('[data-cancel-yes]')) return changeOrder(Number(b.dataset.cancelYes), { action: 'member-cancel' }, b);
+  if (b.matches('[data-edit]')) return openEdit(Number(b.dataset.edit));
+  if (b.matches('[data-cancel]')) return askCancel(Number(b.dataset.cancel));
   if (b.matches('[data-retry]')) loadOrders();
   else if (b.matches('[data-pdf]')) pdf(Number(b.dataset.pdf), b);
   else if (b.matches('[data-invoice]')) invoice(b.dataset.invoice, b);
