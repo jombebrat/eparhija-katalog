@@ -1,9 +1,9 @@
 // One search for the whole admin: articles, orders and inquiries. A result opens like the same row in its own screen.
-import { $, $$, esc, money, norm } from './api.js?v=df6c61df58';
-import { D, ST, load, catName } from './data.js?v=df6c61df58';
-import { productKey } from './products.js?v=df6c61df58';
-import { STATUS } from './orders.js?v=df6c61df58';
-import { INQ } from './inquiries.js?v=df6c61df58';
+import { $, $$, esc, money, norm } from './api.js?v=0d0dfe6320';
+import { D, ST, load, catName } from './data.js?v=0d0dfe6320';
+import { productKey } from './products.js?v=0d0dfe6320';
+import { STATUS } from './orders.js?v=0d0dfe6320';
+import { INQ } from './inquiries.js?v=0d0dfe6320';
 
 const input = $('[data-gs]');
 const box = $('[data-gs-res]');

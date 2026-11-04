@@ -736,3 +736,8 @@ body.adm { font-size: var(--t-md); line-height: 1.5; background: var(--adm-bg); 
 .msg__prev summary { cursor: pointer; color: var(--color-ink-2); font-size: var(--t-sm); }
 .msg__pre { margin: var(--space-sm) 0 0; padding: var(--space-md); border-radius: 10px; background: var(--color-paper-2, rgba(0, 0, 0, .04)); white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; font-size: var(--t-sm); line-height: 1.5; }
 .msg__act { display: flex; flex-wrap: wrap; gap: var(--space-sm); }
+
+.tag--edited { background: var(--color-warn-soft); color: var(--color-warn-ink); margin-left: var(--space-2xs); }
+.order__edited { display: grid; gap: var(--space-2xs); margin-bottom: var(--space-md); padding: var(--space-sm) var(--space-md); border: var(--rule-hair) solid var(--color-rule); border-left: 3px solid var(--color-warn-ink); border-radius: 8px; background: var(--color-warn-soft); font-size: var(--t-sm); }
+.order__edited p { margin: 0; }
+.order__edited ul { margin: 0; padding-left: 1.1em; }

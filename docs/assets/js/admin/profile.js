@@ -1,7 +1,7 @@
 // Profile menu, day/night theme and the password dialog.
-import { $, $$, auth, esc, reason, session, shown, token } from './api.js?v=df6c61df58';
-import { busy, closeSheet, field, foot, formError, head, invalid, openSheet } from './sheet.js?v=df6c61df58';
-import { notify } from './ui.js?v=df6c61df58';
+import { $, $$, auth, esc, reason, session, shown, token } from './api.js?v=0d0dfe6320';
+import { busy, closeSheet, field, foot, formError, head, invalid, openSheet } from './sheet.js?v=0d0dfe6320';
+import { notify } from './ui.js?v=0d0dfe6320';
 
 // ----- password -----
 export function passwordForm() {

@@ -244,3 +244,9 @@ a.listbtn { text-decoration: none; }
   .myorder__foot { flex-direction: column; align-items: stretch; }
   .myorder__manage { justify-content: space-between; }
 }
+
+/* notice after an edit or a cancellation */
+.actoast { position: fixed; z-index: 1000; left: 50%; bottom: var(--space-lg); width: max-content; max-width: min(30rem, calc(100vw - 2rem)); padding: var(--space-sm) var(--space-lg); border-radius: 12px; background: oklch(22% 0.02 265); color: oklch(98% 0 0); font-weight: 600; text-align: center; box-shadow: 0 12px 32px oklch(20% 0.02 265 / 0.3); opacity: 0; transform: translate(-50%, 16px); pointer-events: none; transition: opacity .25s ease, transform .25s ease; }
+.actoast.is-on { opacity: 1; transform: translate(-50%, 0); }
+.actoast:empty { display: none; }
+@media (prefers-reduced-motion: reduce) { .actoast { transition: none; } }

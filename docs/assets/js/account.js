@@ -390,6 +390,16 @@ async function orderAgain(id, b) {
   location.href = `${D.catalogue}#liste`;
 }
 
+// a notice that stays in view for a few seconds, whatever the scroll position
+const toast = document.createElement('div');
+toast.className = 'actoast'; toast.setAttribute('role', 'status'); toast.setAttribute('aria-live', 'polite');
+document.body.append(toast);
+let toastTimer;
+function showToast(text) {
+  toast.textContent = text; toast.classList.add('is-on');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove('is-on'), 7000);
+}
+
 // ----- cancel or edit an order that is still "new": in a window of its own -----
 const dlg = document.createElement('dialog');
 dlg.className = 'acdlg';
@@ -438,7 +448,9 @@ async function changeOrder(id, body) {
     dlg.close();
     drawOrders();
     const fresh = $(`[data-order="${id}"] [data-msg]`);
-    if (fresh) fresh.textContent = body.action === 'member-cancel' ? S.acCancelDone : S.acEditDone;
+    const done = body.action === 'member-cancel' ? S.acCancelDone : S.acEditDone;
+    if (fresh) fresh.textContent = done;
+    showToast(done);
   } catch (e) {
     if (e.signedOut || e.status === 401) { dlg.close(); keep(null); showOut(S.acSignedOut); return; }
     all.forEach((x) => { x.disabled = false; });
