@@ -1,12 +1,12 @@
 // Orders screen, one order's sheet and status, and the order PDF.
-import { $, $$, C, SITE, call, db, esc, money, one, reason, token, when } from './api.js?v=37993e7293';
-import { D, NEEDS, ST, byLabel, empty, failed, inRange, load, optById, rangeOf, skeleton, stateOf, syncRange } from './data.js?v=37993e7293';
-import { saveFile } from './inquiries.js?v=37993e7293';
-import { showHistory } from './history.js?v=37993e7293';
-import { formError, head, openSheet } from './sheet.js?v=37993e7293';
-import { draw } from './shell.js?v=37993e7293';
-import { syncSeg } from './ui.js?v=37993e7293';
-import { CARRIERS, trackUrl } from './shipping.js?v=37993e7293';
+import { $, $$, C, SITE, call, db, esc, money, one, reason, token, when } from './api.js?v=c9b2bf5879';
+import { D, NEEDS, ST, byLabel, empty, failed, inRange, load, optById, rangeOf, skeleton, stateOf, syncRange } from './data.js?v=c9b2bf5879';
+import { saveFile } from './inquiries.js?v=c9b2bf5879';
+import { showHistory } from './history.js?v=c9b2bf5879';
+import { formError, head, openSheet } from './sheet.js?v=c9b2bf5879';
+import { draw } from './shell.js?v=c9b2bf5879';
+import { syncSeg } from './ui.js?v=c9b2bf5879';
+import { CARRIERS, trackUrl } from './shipping.js?v=c9b2bf5879';
 
 // ----- orders -----
 export const STATUS = { new: 'Nova', processing: 'U obradi', ready: 'Spremna za preuzimanje', done: 'Izvršena', cancelled: 'Otkazana' };

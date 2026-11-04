@@ -53,8 +53,11 @@ Deno.serve(async (req) => {
     const { data: file } = await db.storage.from('invoices').download(order.invoice_path);
     if (file) { filename = order.invoice_name || 'facture.pdf'; pdf = toB64(new Uint8Array(await file.arrayBuffer())); }
   }
-  const ok = await sendMail(order.email, Deno.env.get('WAREHOUSE_EMAIL') || order.email, subject, message, filename, pdf);
-  if (!ok) return json({ sent: false, reason: 'mail_failed' });
-  console.log('ship', u.user.email, '-> order', id);
+  // sent after the answer, so the admin does not wait for the mail server
+  const to = order.email;
+  const work = sendMail(to, Deno.env.get('WAREHOUSE_EMAIL') || to, subject, message, filename, pdf)
+    .then((ok) => console.log(ok ? 'ship sent' : 'ship NOT sent', u.user!.email, '-> order', id));
+  const rt = (globalThis as { EdgeRuntime?: { waitUntil?: (p: Promise<unknown>) => void } }).EdgeRuntime;
+  if (rt?.waitUntil) rt.waitUntil(work); else await work;
   return json({ sent: true });
 });

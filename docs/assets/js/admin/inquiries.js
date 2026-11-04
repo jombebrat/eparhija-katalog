@@ -1,10 +1,10 @@
 // Price inquiries: list, the quote sheet and its send/member actions.
-import { showHistory } from './history.js?v=37993e7293';
-import { $, $$, C, call, db, esc, money, one, reason, token, when } from './api.js?v=37993e7293';
-import { D, NEEDS, byCode, empty, failed, nameOf, optById, skeleton, stateOf } from './data.js?v=37993e7293';
-import { formError, head, openSheet, sheet } from './sheet.js?v=37993e7293';
-import { draw } from './shell.js?v=37993e7293';
-import { notify, syncSeg } from './ui.js?v=37993e7293';
+import { showHistory } from './history.js?v=c9b2bf5879';
+import { $, $$, C, call, db, esc, money, one, reason, token, when } from './api.js?v=c9b2bf5879';
+import { D, NEEDS, byCode, empty, failed, nameOf, optById, skeleton, stateOf } from './data.js?v=c9b2bf5879';
+import { formError, head, openSheet, sheet } from './sheet.js?v=c9b2bf5879';
+import { draw } from './shell.js?v=c9b2bf5879';
+import { notify, syncSeg } from './ui.js?v=c9b2bf5879';
 
 // ----- price inquiries: a visitor's list, answered with a quote in one click -----
 export const INQ = { new: 'Nov', sent: 'Ponuda poslata', ordered: 'Poručeno', closed: 'Zatvoren' };
@@ -141,7 +141,7 @@ export async function sendQuote(id, send, btn) {
     if (!send) saveFile(j.pdf, j.filename);
     inquirySheet(i);
     draw();
-    if (send) notify(`Ponuda br. ${id} je poslata na ${i.email}.`);
+    if (send) notify(`Ponuda br. ${id} se šalje na ${i.email}.`);
   } catch (e) {
     if (e.signedOut) return;
     all.forEach((b) => { b.disabled = false; });

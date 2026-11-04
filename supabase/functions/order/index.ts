@@ -194,8 +194,9 @@ async function sendCode(req: Request, body: Record<string, unknown>) {
   if (error || !code) { console.error('code', error); return json({ error: 'server' }, 500); }
   await db.from('attempts').insert({ ip, ok: true, kind: 'code' });
   const t = T[lang];
-  const ok = await sendMail(email, Deno.env.get('WAREHOUSE_EMAIL') || email, fill(t.codeSubject, { code }), fill(t.codeMail, { code }));
-  return ok ? json({ ok: true }) : json({ error: 'mail_failed' }, 502);
+  // the code goes out after the answer; the page already waits for it to arrive
+  background(sendMail(email, Deno.env.get('WAREHOUSE_EMAIL') || email, fill(t.codeSubject, { code }), fill(t.codeMail, { code })).then((ok) => { if (!ok) console.error('code mail not sent'); }));
+  return json({ ok: true });
 }
 
 // the PDF of an earlier order, for the member who sent it or for an admin
@@ -260,9 +261,9 @@ async function inquiry(req: Request, body: Record<string, unknown>) {
   const warehouse = Deno.env.get('WAREHOUSE_EMAIL');
   if (warehouse && mailOn()) {
     const wl = pickLang(Deno.env.get('WAREHOUSE_LANG') ?? 'sr');
-    const ok = await sendMail(warehouse, email, fill(T[wl].inqSubject, { n: saved.id }),
-      fill(T[wl].inqMail, { n: saved.id, who: who.name || email, email, count: asked.length, admin: `${SITE}admin/#upiti` }));
-    if (ok) await db.from('inquiries').update({ emailed: true }).eq('id', saved.id);
+    background(sendMail(warehouse, email, fill(T[wl].inqSubject, { n: saved.id }),
+      fill(T[wl].inqMail, { n: saved.id, who: who.name || email, email, count: asked.length, admin: `${SITE}admin/#upiti` }))
+      .then(async (ok) => { if (ok) await db.from('inquiries').update({ emailed: true }).eq('id', saved.id); else console.error('inquiry mail not sent', saved.id); }));
   }
   return json({ ok: true, number: saved.id });
 }
@@ -291,8 +292,9 @@ async function quoteFor(req: Request, body: Record<string, unknown>) {
   if (body.send) {
     if (!mailOn()) return json({ error: 'mail_off' }, 503);
     const money = new Intl.NumberFormat(LOCALE[lang], { style: 'currency', currency: 'EUR' }).format(total);
-    emailed = await sendMail(inq.email, Deno.env.get('WAREHOUSE_EMAIL') || inq.email, fill(t.quoteSubject, { n: inq.id }), fill(t.quoteMail, { n: inq.id, total: money, link }), filename, pdf);
-    if (!emailed) return json({ error: 'mail_failed' }, 502);
+    emailed = true; // sent after the answer
+    background(sendMail(inq.email, Deno.env.get('WAREHOUSE_EMAIL') || inq.email, fill(t.quoteSubject, { n: inq.id }), fill(t.quoteMail, { n: inq.id, total: money, link }), filename, pdf)
+      .then(async (ok) => { if (!ok) { console.error('quote mail not sent', inq.id); await db.from('inquiries').update({ emailed: false }).eq('id', inq.id); } }));
   }
   const { data: row } = await db.from('inquiries').update({
     quote: lines, quote_total: total, quoted_at: now.toISOString(),
