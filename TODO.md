@@ -32,9 +32,9 @@ Pregledano: [Bagisto 2.0](https://bagisto.com/?p=20110) (Laravel/Vue). Ne prelaz
 
 ## Mejl članovima o statusu porudžbine + kod za praćenje (obavezno, od 2. 11.)
 
-Čeka podešavanje slanja mejlova (Resend ili Gmail, adresa pošiljaoca, DNS zapisi za domen). Bez toga ne stižu ni potvrda porudžbine ni kod za prijavu.
+Slanje mejlova je podešeno (SMTP). Račun (PDF) se šalje funkcijom `ship`; status „Poslata“ i automatski mejlovi po statusu su dole još otvoreni (provereno u kodu pre nego što se označi urađenim).
 
-- [ ] **1. Podešavanje mejla**: izbor servisa, adresa pošiljaoca (npr. magacin@magacinzapadnoevropski.com), DNS zapisi (SPF, DKIM), tajni ključ u Supabase.
+- [x] **1. Podešavanje mejla** (urađeno 4. 11.: SMTP Private Email, SPF/DKIM; preostaje DMARC): izbor servisa, adresa pošiljaoca (npr. magacin@magacinzapadnoevropski.com), DNS zapisi (SPF, DKIM), tajni ključ u Supabase.
 - [ ] **2. Novi status „Poslata“** (porudžbina je obrađena i poslata) sa poljem **Kod za praćenje pošiljke** (i, po želji, prevoznik i link za praćenje).
   - Polje se upisuje u panelu porudžbine kad se označi „Poslata“; čuva se uz porudžbinu i vidi u istoriji.
   - Član kod za praćenje vidi na svom nalogu (sa linkom ako je poznat prevoznik) i u mejlu.
@@ -69,7 +69,7 @@ Redosled: prvo 2 i 6.
 
 - [ ] **1. Prazna stanja i greške** u adminu i na nalogu (nema porudžbina, nema veze, pogrešan kod): ikona/ilustracija i jasna poruka umesto golog teksta.
 - [ ] **2. Podnožje** na svim stranicama: jedan uredan blok sa kontaktom, pravnim stranicama i jezicima (na nalogu je sada gusto).
-- [ ] **3. E-mail poruke** (potvrda porudžbine, kod za prijavu): isti grb i boje kao sajt. Čeka povezivanje mejla.
+- [x] **3. E-mail poruke** (urađeno 4. 11.) (potvrda porudžbine, kod za prijavu): isti grb i boje kao sajt. Čeka povezivanje mejla.
 - [ ] **4. PDF cenovnik i narudžbenica**: ista tipografija i zaglavlje kao sajt, broj stranice i datum.
 - [ ] **5. Provera na telefonu** svake stranice (korpa, detalj artikla, admin tabele) i brzina učitavanja slika.
 - [ ] **6. Pristupačnost**: kontrast, tastatura, čitači ekrana; proći sve stranice i ispraviti.

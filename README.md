@@ -85,25 +85,29 @@ Artikal sa opcijama (P064, P066, P074, P127, A007: ikone sa svecima) poručuje s
 
 Pristup čuva sama baza (RLS i prava po kolonama), ne stranica. Fotografije koje se otpreme iz administracije idu u Storage, u javni bucket `products`.
 
-Dve serverske funkcije:
+Serverske funkcije (`prices`, `order`, `as-member`, `ship`; prve dve niže):
 
 - `supabase/functions/prices`: mejl → cene (posle 10 pogrešnih pokušaja sa iste adrese u 15 minuta odgovara „previše pokušaja“).
 - `supabase/functions/order`: mejl + stavke → porudžbina u bazi, PDF sa grbom, mejlovi; uz to šalje članu kod za prijavu na nalog, ponovo pravi PDF stare porudžbine, prima upite za cene, pravi i šalje ponude i prima porudžbine po ponudi. `SITE_URL` (nije obavezno) je adresa sajta za linkove u mejlovima, ako sajt pređe na sopstveni domen.
 
-**Slanje mejlova** (PDF svešteniku i magacinu) radi preko servisa [Resend](https://resend.com): u Resend-u potvrdi domen magacina (DNS zapis), napravi API ključ, pa u Supabase-u (*Edge Functions → Secrets*) dodaj:
+**Slanje mejlova** radi preko SMTP sandučeta (Private Email, `mail.privateemail.com:465`, nodemailer); Resend je rezerva. Mejlovi su dizajnirani u HTML-u u stilu sajta (grb, dugme, podnožje), uz tekstualni deo (`supabase/functions/order/mail.ts`, kopija u `ship/`). Podešavanje u Supabase-u (*Edge Functions → Secrets*), **vrednosti se nikad ne upisuju u repo**:
 
 ```
-RESEND_API_KEY   = re_...
-ORDER_FROM       = Magacin Eparhije <porudzbine@domen-magacina.fr>
-WAREHOUSE_EMAIL  = magacin@domen-magacina.fr
+SMTP_USER        = contact@magacinzapadnoevropski.com
+SMTP_PASS        = (lozinka sandučeta, samo u Secrets)
+ORDER_FROM       = Magacin Eparhije <contact@magacinzapadnoevropski.com>
+WAREHOUSE_EMAIL  = adresa magacina
 WAREHOUSE_LANG   = sr        (jezik poruke magacinu: fr, en ili sr)
+RESEND_API_KEY   = re_...    (nije obavezno, rezerva)
 ```
 
-Dok ovo nije podešeno, porudžbina se ipak čuva (vidi se u administraciji), član dobija PDF za preuzimanje, ali **prijava na „Moj nalog“ ne radi** (kod ne može da stigne). Za probu bez sopstvenog domena: u Resend-u `ORDER_FROM = onboarding@resend.dev`; tada mejlovi stižu samo na adresu Resend naloga.
+Dok slanje nije podešeno, porudžbina se ipak čuva (vidi se u administraciji), član dobija PDF za preuzimanje, ali **prijava na „Moj nalog“ ne radi** (kod ne može da stigne). 
 
 Na dnu svake strane PDF-a su podaci firme (MAGACIN ZAPADNOEVROPSKI SASU, kapital, RCS, PDV broj). PDF je i dalje potvrda porudžbine ili ponuda, ne račun: račune pravi knjigovodstveni program (npr. Erplain).
 
 **Novi Supabase projekat:** primeni migracije iz `supabase/migrations/` po redu, objavi dve funkcije (`supabase functions deploy prices` i `order`, obe bez JWT provere, vidi `supabase/config.toml`), u `data/site.json` upiši `supabaseUrl` (`https://<ref>.supabase.co`) i `supabaseKey` (publishable ključ, `sb_publishable_…`, sme da bude javan), pokreni `node build.mjs` i dodaj prvog administratora (gore).
+
+**Član menja ili otkazuje porudžbinu** (Moj nalog): dok je status „nova“, kartica porudžbine ima „Izmeni“ (količine ili uklanjanje stavki, u prozoru) i „Otkaži“; funkcija `order` (`member-edit`, `member-cancel`) proverava da je porudžbina njegova i da još nije u obradi, magacin dobija mejl, a član poruku na ekranu. Admin vidi oznaku „Izmenjena“ i prvobitne stavke i iznos (kolone `edited_at`, `items_original`, `total_original`); otkazanu porudžbinu može da vrati u nove ili obriše. Za nastavak rada vidi `CLAUDE.md`.
 
 ## Kontakt magacina na sajtu
 
