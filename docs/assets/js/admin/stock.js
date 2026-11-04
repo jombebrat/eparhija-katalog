@@ -1,10 +1,10 @@
 // Stock screen: current figures, receipts, issues, corrections and the ledger.
-import { $, db, esc, norm, plural, reason, shown, when } from './api.js?v=d45242a137';
-import { D, NEEDS, byCode, empty, failed, nameOf, optById, optStock, optionsOf, route, skeleton, stateOf } from './data.js?v=d45242a137';
-import { PAGE, productKey, stockTag } from './products.js?v=d45242a137';
-import { busy, closeSheet, field, foot, formError, head, invalid, openSheet, select, sheet } from './sheet.js?v=d45242a137';
-import { draw } from './shell.js?v=d45242a137';
-import { notify, syncInput, syncSeg } from './ui.js?v=d45242a137';
+import { $, db, esc, norm, plural, reason, shown, when } from './api.js?v=53224adb82';
+import { D, NEEDS, byCode, empty, failed, nameOf, optById, optStock, optionsOf, route, skeleton, stateOf } from './data.js?v=53224adb82';
+import { PAGE, productKey, stockTag } from './products.js?v=53224adb82';
+import { busy, closeSheet, field, foot, formError, head, invalid, openSheet, select, sheet } from './sheet.js?v=53224adb82';
+import { draw } from './shell.js?v=53224adb82';
+import { notify, syncInput, syncSeg } from './ui.js?v=53224adb82';
 
 const KIND = { initial: 'Početno stanje', receipt: 'Prijem', issue: 'Izdavanje', correction: 'Korekcija', order: 'Porudžbina', order_undo: 'Povraćaj' };
 const MV = { rows: [], key: null, more: false, busy: false, error: null };

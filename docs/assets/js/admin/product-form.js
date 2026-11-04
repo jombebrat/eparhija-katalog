@@ -1,9 +1,9 @@
 // The article form: tabs, options, photos, saving and deleting.
-import { $, $$, addPhoto, db, eq, esc, one, reason, removeFiles, thumb } from './api.js?v=d45242a137';
-import { D, allRows, byCode, nameOf, optionsOf, route } from './data.js?v=d45242a137';
-import { busy, checkbox, closeSheet, field, foot, formError, head, invalid, setOnSheetClose, openSheet, select, sheet, showPanel } from './sheet.js?v=d45242a137';
-import { draw } from './shell.js?v=d45242a137';
-import { notify } from './ui.js?v=d45242a137';
+import { $, $$, addPhoto, db, eq, esc, one, reason, removeFiles, thumb } from './api.js?v=53224adb82';
+import { D, allRows, byCode, nameOf, optionsOf, route } from './data.js?v=53224adb82';
+import { busy, checkbox, closeSheet, field, foot, formError, head, invalid, setOnSheetClose, openSheet, select, sheet, showPanel } from './sheet.js?v=53224adb82';
+import { draw } from './shell.js?v=53224adb82';
+import { notify } from './ui.js?v=53224adb82';
 
 // ----- the article form -----
 export let edit = null; // { code (old), photos, added: [] }

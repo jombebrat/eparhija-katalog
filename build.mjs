@@ -423,6 +423,7 @@ function adminPage() {
         <a href="#pregled" data-tab="pregled"><svg class="tabs__ic" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="6" height="6" rx="1.5"/><rect x="11" y="3" width="6" height="6" rx="1.5"/><rect x="3" y="11" width="6" height="6" rx="1.5"/><rect x="11" y="11" width="6" height="6" rx="1.5"/></svg><span>Pregled</span></a>
         <a href="#upiti" data-tab="upiti"><svg class="tabs__ic" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 5.5h13v8h-7l-3.5 3v-3h-2.5z"/></svg><span>Upiti</span> <span class="tabs__n" data-new-inquiries hidden></span></a>
         <a href="#porudzbine" data-tab="porudzbine"><svg class="tabs__ic" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2.5l1.7 8h8l1.5-5.5H6"/><circle cx="8" cy="16" r="1"/><circle cx="14" cy="16" r="1"/></svg><span>Porudžbine</span> <span class="tabs__n" data-new-orders hidden></span></a>
+        <a href="#fakture" data-tab="fakture"><svg class="tabs__ic" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2.5h7l3 3V17l-2-1.2-2 1.2-2-1.2-2 1.2-2-1.2V2.5z"/><path d="M8 8h4M8 11h4"/></svg><span>Fakture</span></a>
         <a href="#artikli" data-tab="artikli"><svg class="tabs__ic" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2.8 16.5 6v8L10 17.2 3.5 14V6z"/><path d="M3.8 6.1 10 9.3l6.2-3.2M10 9.3v7.8"/></svg><span>Artikli</span></a>
         <a href="#zalihe" data-tab="zalihe"><svg class="tabs__ic" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5L10 4.5l6.5 4v7.5h-13z"/><path d="M7.5 16v-4h5v4"/></svg><span>Zalihe</span></a>
         <a href="#statistika" data-tab="statistika"><svg class="tabs__ic" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16V9M10 16V4M16 16v-5"/></svg><span>Statistika</span></a>
@@ -540,6 +541,18 @@ function adminPage() {
           ${seg('s', 'Status', [['new', 'Nove', 'new'], ['processing', 'U obradi', 'processing'], ['ready', 'Spremne', 'ready'], ['done', 'Izvršene', 'done'], ['cancelled', 'Otkazane', 'cancelled'], ['all', 'Sve', 'all']])}
         </div>
         <div class="region" data-region="orders"></div>
+      </section>
+
+      <section class="screen" data-screen="fakture" aria-labelledby="h-fakture" hidden>
+        <div class="screen__head">
+          <div><h1 id="h-fakture">Fakture</h1><p class="screen__sub" data-invoice-count></p></div>
+        </div>
+        <div class="toolbar" role="search">
+          <div class="field field--grow"><label for="q-fakture">Pretraga</label><input class="input" id="q-fakture" type="search" name="q" autocomplete="off" spellcheck="false" placeholder="broj fakture, parohija ili mejl" data-q></div>
+          <div class="field"><span class="field__label" id="y-l">Godina</span><div class="seg" role="group" aria-labelledby="y-l" data-y></div></div>
+          ${seg('f', 'Status', [['', 'Sve'], ['paid', 'Plaćene'], ['unpaid', 'Neplaćene'], ['cancelled', 'Otkazane']])}
+        </div>
+        <div class="region" data-region="invoices"></div>
       </section>
 
       <section class="screen" data-screen="statistika" aria-labelledby="h-statistika" hidden>

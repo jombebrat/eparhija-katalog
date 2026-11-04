@@ -1,6 +1,6 @@
 // The data the screens show (loaded once, kept here), lookups, the address (route) and the loading/empty/error states.
-import { db, esc, reason } from './api.js?v=d45242a137';
-import { draw } from './shell.js?v=d45242a137';
+import { db, esc, reason } from './api.js?v=53224adb82';
+import { draw } from './shell.js?v=53224adb82';
 
 // ---------- data ----------
 export const D = { products: [], cats: [], priests: [], groups: [], orders: [], inquiries: [], options: [] };
@@ -56,10 +56,10 @@ export const catName = (id) => { const c = catOf(id); return c ? c.name_sr || c.
 export const nameOf = (p) => p.name_sr || p.name_fr || p.name_en || p.code;
 
 // ---------- routes: the tab and its filters live in the address ----------
-export const TABS = ['pregled', 'upiti', 'porudzbine', 'artikli', 'zalihe', 'statistika', 'svestenstvo', 'kategorije'];
+export const TABS = ['pregled', 'upiti', 'porudzbine', 'fakture', 'artikli', 'zalihe', 'statistika', 'svestenstvo', 'kategorije'];
 export const NEEDS = {
   pregled: ['orders', 'products', 'inquiries', 'priests', 'cats'], upiti: ['inquiries', 'products', 'priests'],
-  artikli: ['products', 'cats'], zalihe: ['products', 'cats'], kategorije: ['cats', 'products'], svestenstvo: ['priests', 'groups'], porudzbine: ['orders', 'products'], statistika: ['orders', 'products', 'cats'],
+  artikli: ['products', 'cats'], zalihe: ['products', 'cats'], kategorije: ['cats', 'products'], svestenstvo: ['priests', 'groups'], porudzbine: ['orders', 'products'], fakture: ['orders'], statistika: ['orders', 'products', 'cats'],
 };
 export function route() {
   const [tab, qs] = location.hash.slice(1).split('?');

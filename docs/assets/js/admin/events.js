@@ -1,20 +1,20 @@
 // Click, change, input and submit handlers for the whole admin.
-import { $, $$ } from './api.js?v=d45242a137';
-import { D, ST, byCode, catOf, load, route, setParam } from './data.js?v=d45242a137';
-import { catForm, deleteCat, deletePriest, priestForm, submitCat, submitPriest } from './forms.js?v=d45242a137';
-import { addMember, inquirySheet, sendQuote, setInquiry } from './inquiries.js?v=d45242a137';
-import { saveMarkup, savePriestActive } from './lists.js?v=d45242a137';
-import { orderPdf, orderSheet, setStatus, viewAs } from './orders.js?v=d45242a137';
-import { openPdf, refreshPdf } from './pdf.js?v=d45242a137';
-import { addFiles, byCodeBefore, deleteProduct, drawOptEditor, drawPhotos, edit, productForm, readOptEditor, submitProduct } from './product-form.js?v=d45242a137';
-import { bulk, drawBulk, picked, saveActive, saveStock, shownCodes } from './products.js?v=d45242a137';
-import { closeProfile, passwordForm, submitPassword } from './profile.js?v=d45242a137';
-import { closeSheet, sheet } from './sheet.js?v=d45242a137';
-import { draw } from './shell.js?v=d45242a137';
-import { signOut } from './signin.js?v=d45242a137';
-import { csvOrders, csvProducts, csvStats } from './stats.js?v=d45242a137';
-import { loadMoves, moveForm, submitMove } from './stock.js?v=d45242a137';
-import { notify } from './ui.js?v=d45242a137';
+import { $, $$ } from './api.js?v=53224adb82';
+import { D, ST, byCode, catOf, load, route, setParam } from './data.js?v=53224adb82';
+import { catForm, deleteCat, deletePriest, priestForm, submitCat, submitPriest } from './forms.js?v=53224adb82';
+import { addMember, inquirySheet, sendQuote, setInquiry } from './inquiries.js?v=53224adb82';
+import { saveMarkup, savePriestActive } from './lists.js?v=53224adb82';
+import { orderPdf, orderSheet, setStatus, viewAs } from './orders.js?v=53224adb82';
+import { openPdf, refreshPdf } from './pdf.js?v=53224adb82';
+import { addFiles, byCodeBefore, deleteProduct, drawOptEditor, drawPhotos, edit, productForm, readOptEditor, submitProduct } from './product-form.js?v=53224adb82';
+import { bulk, drawBulk, picked, saveActive, saveStock, shownCodes } from './products.js?v=53224adb82';
+import { closeProfile, passwordForm, submitPassword } from './profile.js?v=53224adb82';
+import { closeSheet, sheet } from './sheet.js?v=53224adb82';
+import { draw } from './shell.js?v=53224adb82';
+import { signOut } from './signin.js?v=53224adb82';
+import { csvOrders, csvProducts, csvStats } from './stats.js?v=53224adb82';
+import { loadMoves, moveForm, submitMove } from './stock.js?v=53224adb82';
+import { notify } from './ui.js?v=53224adb82';
 
 // ---------- events ----------
 document.addEventListener('click', (e) => {
@@ -32,6 +32,7 @@ document.addEventListener('click', (e) => {
   if (t.matches('[data-pg]')) { setParam('pg', t.dataset.pg === '1' ? '' : t.dataset.pg); $(`[data-screen="${route().tab}"]`).scrollIntoView({ block: 'start' }); return; }
   if (t.matches('[data-bulk-act]')) { if (t.dataset.bulkAct === 'clear') { picked.clear(); $$('[data-pick]').forEach((c) => { c.checked = false; c.closest('tr').removeAttribute('aria-selected'); }); drawBulk(); } else bulk(t.dataset.bulkAct); return; }
   if (t.matches('[data-g] button')) { setParam('g', t.dataset.v === 'svestenstvo' ? '' : t.dataset.v); return; }
+  if (t.matches('[data-y] button')) { setParam('y', t.dataset.v); return; }
   if (t.matches('[data-s] button')) { setParam('s', t.dataset.v === 'new' ? '' : t.dataset.v); return; }
   if (t.matches('[data-new="product"]')) { if (!D.cats.length) { notify('Prvo napravite kategoriju; svaki artikal pripada jednoj.', null, true); return; } productForm(null); return; }
   if (t.matches('[data-new="cat"]')) { catForm(null); return; }

@@ -1,15 +1,16 @@
 // The frame: tab pill, drawing the current screen, badges and the folding side menu.
-import { $, $$, plural } from './api.js?v=d45242a137';
-import { D, NEEDS, ST, TABS, load, route } from './data.js?v=d45242a137';
-import { drawInquiries } from './inquiries.js?v=d45242a137';
-import { drawCats, drawPriests } from './lists.js?v=d45242a137';
-import { drawOrders } from './orders.js?v=d45242a137';
-import { drawOverview } from './overview.js?v=d45242a137';
-import { drawPdfCard } from './pdf.js?v=d45242a137';
-import { drawProducts } from './products.js?v=d45242a137';
-import { drawStats } from './stats.js?v=d45242a137';
-import { drawStock } from './stock.js?v=d45242a137';
-import { countUps, fadeOut, typeTitle } from './ui.js?v=d45242a137';
+import { $, $$, plural } from './api.js?v=53224adb82';
+import { D, NEEDS, ST, TABS, load, route } from './data.js?v=53224adb82';
+import { drawInquiries } from './inquiries.js?v=53224adb82';
+import { drawCats, drawPriests } from './lists.js?v=53224adb82';
+import { drawOrders } from './orders.js?v=53224adb82';
+import { drawInvoices } from './invoices.js?v=53224adb82';
+import { drawOverview } from './overview.js?v=53224adb82';
+import { drawPdfCard } from './pdf.js?v=53224adb82';
+import { drawProducts } from './products.js?v=53224adb82';
+import { drawStats } from './stats.js?v=53224adb82';
+import { drawStock } from './stock.js?v=53224adb82';
+import { countUps, fadeOut, typeTitle } from './ui.js?v=53224adb82';
 
 // ---------- draw ----------
 let shownTab = '';
@@ -57,7 +58,7 @@ export function draw() {
   }
   for (const w of NEEDS[r.tab]) if (ST[w] === 'idle') { load(w); return; }
   if (r.tab === 'pregled') drawPdfCard();
-  ({ pregled: drawOverview, upiti: drawInquiries, artikli: drawProducts, zalihe: drawStock, kategorije: drawCats, svestenstvo: drawPriests, porudzbine: drawOrders, statistika: drawStats })[r.tab](r);
+  ({ pregled: drawOverview, upiti: drawInquiries, artikli: drawProducts, zalihe: drawStock, kategorije: drawCats, svestenstvo: drawPriests, porudzbine: drawOrders, fakture: drawInvoices, statistika: drawStats })[r.tab](r);
   countUps($(`[data-screen="${r.tab}"]`));
   drawBadge();
 }
