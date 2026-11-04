@@ -434,6 +434,7 @@ function adminPage() {
         <p class="tabs__group">Podešavanja</p>
         <a href="#svestenstvo" data-tab="svestenstvo"><svg class="tabs__ic" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="7" r="2.8"/><path d="M2.5 16c.5-2.8 2.5-4.2 5-4.2s4.5 1.4 5 4.2"/><path d="M13 4.4a2.8 2.8 0 0 1 0 5.2M14.5 12c1.6.5 2.7 1.8 3 4"/></svg><span>Kontakti</span></a>
         <a href="#kategorije" data-tab="kategorije"><svg class="tabs__ic" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5.5h14M3 10h14M3 14.5h9"/></svg><span>Kategorije</span></a>
+        <a href="#poruke" data-tab="poruke"><svg class="tabs__ic" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5.5A1.5 1.5 0 0 1 4.5 4h11A1.5 1.5 0 0 1 17 5.5v7a1.5 1.5 0 0 1-1.5 1.5H9l-3.5 3v-3h-1A1.5 1.5 0 0 1 3 12.5v-7z"/><path d="M6.5 8h7M6.5 10.5h4"/></svg><span>Poruke</span></a>
       </nav>
       <button class="side__fold" type="button" data-fold aria-pressed="false" title="Skupi meni"><svg class="tabs__ic" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5l-5 5 5 5"/><path d="M16 5l-5 5 5 5" opacity=".45"/></svg><span>Skupi meni</span></button>
     </aside>
@@ -559,6 +560,13 @@ function adminPage() {
           ${rangeSort('fakture', [['', 'Po broju, najnovija prva'], ['no', 'Po broju, od prve'], ['old', 'Po datumu, najstarija prva'], ['new', 'Po datumu, najnovija prva'], ['az', 'Po imenu A–Š'], ['za', 'Po imenu Š–A'], ['sum', 'Po iznosu, najveći prvi']])}
         </div>
         <div class="region" data-region="invoices"></div>
+      </section>
+
+      <section class="screen" data-screen="poruke" aria-labelledby="h-poruke" hidden>
+        <div class="screen__head">
+          <div><h1 id="h-poruke">Poruke</h1><p class="screen__sub">Tekst automatske poruke članu kada je porudžbina završena i poslata</p></div>
+        </div>
+        <div class="region" data-region="messages"></div>
       </section>
 
       <section class="screen" data-screen="statistika" aria-labelledby="h-statistika" hidden>

@@ -1,16 +1,17 @@
 // The frame: tab pill, drawing the current screen, badges and the folding side menu.
-import { $, $$, plural } from './api.js?v=5a8c3dbe0f';
-import { D, NEEDS, ST, TABS, load, route } from './data.js?v=5a8c3dbe0f';
-import { drawInquiries } from './inquiries.js?v=5a8c3dbe0f';
-import { drawCats, drawPriests } from './lists.js?v=5a8c3dbe0f';
-import { drawOrders } from './orders.js?v=5a8c3dbe0f';
-import { drawInvoices } from './invoices.js?v=5a8c3dbe0f';
-import { drawOverview } from './overview.js?v=5a8c3dbe0f';
-import { drawPdfCard } from './pdf.js?v=5a8c3dbe0f';
-import { drawProducts } from './products.js?v=5a8c3dbe0f';
-import { drawStats } from './stats.js?v=5a8c3dbe0f';
-import { drawStock } from './stock.js?v=5a8c3dbe0f';
-import { countUps, fadeOut, typeTitle } from './ui.js?v=5a8c3dbe0f';
+import { $, $$, plural } from './api.js?v=7648825353';
+import { D, NEEDS, ST, TABS, load, route } from './data.js?v=7648825353';
+import { drawInquiries } from './inquiries.js?v=7648825353';
+import { drawCats, drawPriests } from './lists.js?v=7648825353';
+import { drawOrders } from './orders.js?v=7648825353';
+import { drawMessages } from './messages.js?v=7648825353';
+import { drawInvoices } from './invoices.js?v=7648825353';
+import { drawOverview } from './overview.js?v=7648825353';
+import { drawPdfCard } from './pdf.js?v=7648825353';
+import { drawProducts } from './products.js?v=7648825353';
+import { drawStats } from './stats.js?v=7648825353';
+import { drawStock } from './stock.js?v=7648825353';
+import { countUps, fadeOut, typeTitle } from './ui.js?v=7648825353';
 
 // ---------- draw ----------
 let shownTab = '';
@@ -58,7 +59,7 @@ export function draw() {
   }
   for (const w of NEEDS[r.tab]) if (ST[w] === 'idle') { load(w); return; }
   if (r.tab === 'pregled') drawPdfCard();
-  ({ pregled: drawOverview, upiti: drawInquiries, artikli: drawProducts, zalihe: drawStock, kategorije: drawCats, svestenstvo: drawPriests, porudzbine: drawOrders, fakture: drawInvoices, statistika: drawStats })[r.tab](r);
+  ({ pregled: drawOverview, upiti: drawInquiries, artikli: drawProducts, zalihe: drawStock, kategorije: drawCats, svestenstvo: drawPriests, porudzbine: drawOrders, fakture: drawInvoices, poruke: drawMessages, statistika: drawStats })[r.tab](r);
   countUps($(`[data-screen="${r.tab}"]`));
   drawBadge();
 }

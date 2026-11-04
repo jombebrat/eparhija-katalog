@@ -725,3 +725,14 @@ body.adm { font-size: var(--t-md); line-height: 1.5; background: var(--adm-bg); 
 .facts.facts--row dd { font-size: var(--t-lg, 1.25rem); font-weight: 600; font-variant-numeric: tabular-nums; }
 
 .more { margin: var(--space-sm) 0 0; }
+
+/* ---------- Poruke: the text of the automatic messages ---------- */
+.msgs { display: grid; gap: var(--space-lg); max-width: 46rem; }
+.msgs__help { margin: 0; color: var(--color-ink-2); font-size: var(--t-sm); line-height: 1.55; }
+.msgs__help code, .msg__prev code { padding: 0 .3em; border-radius: 4px; background: var(--color-paper-2, rgba(0, 0, 0, .06)); }
+.msg { display: grid; gap: var(--space-md); padding: var(--space-lg); border: var(--rule-hair) solid var(--color-rule); border-radius: 14px; background: var(--color-paper); }
+.msg__title { margin: 0; font-size: var(--t-md, 1.05rem); }
+.msg textarea.input { min-height: 14rem; line-height: 1.5; resize: vertical; }
+.msg__prev summary { cursor: pointer; color: var(--color-ink-2); font-size: var(--t-sm); }
+.msg__pre { margin: var(--space-sm) 0 0; padding: var(--space-md); border-radius: 10px; background: var(--color-paper-2, rgba(0, 0, 0, .04)); white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; font-size: var(--t-sm); line-height: 1.5; }
+.msg__act { display: flex; flex-wrap: wrap; gap: var(--space-sm); }

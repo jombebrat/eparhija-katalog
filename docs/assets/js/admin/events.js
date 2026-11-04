@@ -1,21 +1,22 @@
 // Click, change, input and submit handlers for the whole admin.
-import { $, $$ } from './api.js?v=5a8c3dbe0f';
-import { D, ST, byCode, catOf, load, route, setParam, MORE } from './data.js?v=5a8c3dbe0f';
-import { catForm, deleteCat, deletePriest, priestForm, submitCat, submitPriest } from './forms.js?v=5a8c3dbe0f';
-import { addMember, inquirySheet, sendQuote, setInquiry } from './inquiries.js?v=5a8c3dbe0f';
-import { saveMarkup, savePriestActive } from './lists.js?v=5a8c3dbe0f';
-import { orderPdf, orderSheet, setStatus, viewAs } from './orders.js?v=5a8c3dbe0f';
-import { finishForm, openInvoice, submitFinish } from './shipping.js?v=5a8c3dbe0f';
-import { openPdf, refreshPdf } from './pdf.js?v=5a8c3dbe0f';
-import { addFiles, byCodeBefore, deleteProduct, drawOptEditor, drawPhotos, edit, productForm, readOptEditor, submitProduct } from './product-form.js?v=5a8c3dbe0f';
-import { bulk, drawBulk, picked, saveActive, saveStock, shownCodes } from './products.js?v=5a8c3dbe0f';
-import { closeProfile, passwordForm, submitPassword } from './profile.js?v=5a8c3dbe0f';
-import { closeSheet, sheet } from './sheet.js?v=5a8c3dbe0f';
-import { draw } from './shell.js?v=5a8c3dbe0f';
-import { signOut } from './signin.js?v=5a8c3dbe0f';
-import { csvOrders, csvProducts, csvStats } from './stats.js?v=5a8c3dbe0f';
-import { loadMoves, moveForm, submitMove } from './stock.js?v=5a8c3dbe0f';
-import { notify } from './ui.js?v=5a8c3dbe0f';
+import { $, $$ } from './api.js?v=7648825353';
+import { D, ST, byCode, catOf, load, route, setParam, MORE } from './data.js?v=7648825353';
+import { catForm, deleteCat, deletePriest, priestForm, submitCat, submitPriest } from './forms.js?v=7648825353';
+import { addMember, inquirySheet, sendQuote, setInquiry } from './inquiries.js?v=7648825353';
+import { saveMarkup, savePriestActive } from './lists.js?v=7648825353';
+import { orderPdf, orderSheet, setStatus, viewAs } from './orders.js?v=7648825353';
+import { saveTemplate } from './messages.js?v=7648825353';
+import { finishForm, openInvoice, submitFinish } from './shipping.js?v=7648825353';
+import { openPdf, refreshPdf } from './pdf.js?v=7648825353';
+import { addFiles, byCodeBefore, deleteProduct, drawOptEditor, drawPhotos, edit, productForm, readOptEditor, submitProduct } from './product-form.js?v=7648825353';
+import { bulk, drawBulk, picked, saveActive, saveStock, shownCodes } from './products.js?v=7648825353';
+import { closeProfile, passwordForm, submitPassword } from './profile.js?v=7648825353';
+import { closeSheet, sheet } from './sheet.js?v=7648825353';
+import { draw } from './shell.js?v=7648825353';
+import { signOut } from './signin.js?v=7648825353';
+import { csvOrders, csvProducts, csvStats } from './stats.js?v=7648825353';
+import { loadMoves, moveForm, submitMove } from './stock.js?v=7648825353';
+import { notify } from './ui.js?v=7648825353';
 
 // ---------- events ----------
 document.addEventListener('click', (e) => {
@@ -141,5 +142,6 @@ sheet.addEventListener('submit', (e) => {
 document.addEventListener('submit', (e) => {
   const f = e.target;
   if (f.matches?.('[data-markup-form]')) { e.preventDefault(); saveMarkup(f); }
+  if (f.matches?.('[data-tpl-form]')) { e.preventDefault(); saveTemplate(f); }
 });
 window.addEventListener('hashchange', () => { closeSheet(); draw(); });

@@ -1,10 +1,10 @@
 // Finishing an order: the admin attaches the invoice made in Erplain and a tracking code, reads the message the member
 // will get (in the member's language), and sends it. The order becomes "done" (stock is taken, as before).
-import { $, C, call, db, esc, one, reason, token } from './api.js?v=5a8c3dbe0f';
-import { D, ST, load } from './data.js?v=5a8c3dbe0f';
-import { checkbox, field, formError, head, openSheet, select, sheet } from './sheet.js?v=5a8c3dbe0f';
-import { draw } from './shell.js?v=5a8c3dbe0f';
-import { notify } from './ui.js?v=5a8c3dbe0f';
+import { $, C, call, db, esc, one, reason, token } from './api.js?v=7648825353';
+import { D, ST, load } from './data.js?v=7648825353';
+import { checkbox, field, formError, head, openSheet, select, sheet } from './sheet.js?v=7648825353';
+import { draw } from './shell.js?v=7648825353';
+import { notify } from './ui.js?v=7648825353';
 
 // carriers and where the member can follow the parcel
 export const CARRIERS = [
@@ -19,43 +19,38 @@ export const CARRIERS = [
 export const trackUrl = (carrier, code) => CARRIERS.find((c) => c[0] === carrier)?.[2]?.(encodeURIComponent(code)) || '';
 const carrierName = (v) => CARRIERS.find((c) => c[0] === v)?.[1] || '';
 
-// the member's message, in the language the member orders in
+// the member's message, in the language the member orders in: the text is the admin's (tab Poruke), these are the starting texts
 const WORDS = {
-  fr: {
-    subject: 'Votre commande n° {n} est terminée et expédiée',
-    hello: 'Bonjour,', done: 'Votre commande n° {n} est terminée et expédiée.',
-    track: 'Suivi du colis{via} : {code}', invoice: 'La facture est jointe à ce message.',
-    bye: 'Merci pour votre confiance.\n\nL’entrepôt du Diocèse d’Europe occidentale',
-  },
-  en: {
-    subject: 'Your order no. {n} is complete and shipped',
-    hello: 'Hello,', done: 'Your order no. {n} is complete and has been shipped.',
-    track: 'Parcel tracking{via}: {code}', invoice: 'The invoice is attached to this message.',
-    bye: 'Thank you for your trust.\n\nThe warehouse of the Eparchy of Western Europe',
-  },
-  sr: {
-    subject: 'Ваша поруџбина бр. {n} је завршена и послата',
-    hello: 'Добар дан,', done: 'Ваша поруџбина бр. {n} је завршена и послата.',
-    track: 'Праћење пошиљке{via}: {code}', invoice: 'Фактура је у прилогу ове поруке.',
-    bye: 'Хвала на поверењу.\n\nМагацин Епархије западноевропске',
-  },
+  fr: { track: 'Suivi du colis{via} : {code}', invoice: 'La facture est jointe à ce message.' },
+  en: { track: 'Parcel tracking{via}: {code}', invoice: 'The invoice is attached to this message.' },
+  sr: { track: 'Праћење пошиљке{via}: {code}', invoice: 'Фактура је у прилогу ове поруке.' },
 };
-export function draftFor(o, { carrier = '', code = '', invoice = false } = {}) {
-  const w = WORDS[o.lang] || WORDS.fr;
-  const n = (s) => s.replace('{n}', o.id);
-  const parts = [w.hello, n(w.done)];
+export const DEFAULTS = {
+  fr: { subject: 'Votre commande n° {n} est terminée et expédiée', body: 'Bonjour,\n\nVotre commande n° {n} est terminée et expédiée.\n\n{tracking}\n\n{invoice}\n\nMerci pour votre confiance.\n\nL’entrepôt du Diocèse d’Europe occidentale' },
+  en: { subject: 'Your order no. {n} is complete and shipped', body: 'Hello,\n\nYour order no. {n} is complete and has been shipped.\n\n{tracking}\n\n{invoice}\n\nThank you for your trust.\n\nThe warehouse of the Eparchy of Western Europe' },
+  sr: { subject: 'Ваша поруџбина бр. {n} је завршена и послата', body: 'Добар дан,\n\nВаша поруџбина бр. {n} је завршена и послата.\n\n{tracking}\n\n{invoice}\n\nХвала на поверењу.\n\nМагацин Епархије западноевропске' },
+};
+export const templateOf = (lang) => {
+  const row = D.templates.find((t) => t.key === 'shipped' && t.lang === lang);
+  return row ? { subject: row.subject, body: row.body } : DEFAULTS[lang] || DEFAULTS.fr;
+};
+// a template with the order's numbers filled in; an empty {tracking} or {invoice} takes its blank line with it
+export function render(tpl, lang, { n, carrier = '', code = '', invoice = false }) {
+  const w = WORDS[lang] || WORDS.fr;
+  let tracking = '';
   if (code) {
     const via = carrier && carrier !== 'other' ? ` (${carrierName(carrier)})` : '';
     const url = trackUrl(carrier, code);
-    parts.push(w.track.replace('{via}', via).replace('{code}', code) + (url ? `\n${url}` : ''));
+    tracking = w.track.replace('{via}', via).replace('{code}', code) + (url ? `\n${url}` : '');
   }
-  if (invoice) parts.push(w.invoice);
-  parts.push(w.bye);
-  return { subject: n(w.subject), message: parts.join('\n\n') };
+  const f = (t) => t.replaceAll('{n}', n).replaceAll('{tracking}', tracking).replaceAll('{invoice}', invoice ? w.invoice : '').replace(/\n{3,}/g, '\n\n').trim();
+  return { subject: f(tpl.subject).replace(/\s*\n\s*/g, ' '), message: f(tpl.body) };
 }
+export const draftFor = (o, ctx = {}) => render(templateOf(o.lang), o.lang, { n: o.id, ...ctx });
 
 // the form, in the order's sheet
-export function finishForm(o) {
+export async function finishForm(o) {
+  await load('templates');
   const draft = draftFor(o, { carrier: o.carrier || '', code: o.tracking_code || '', invoice: !!o.invoice_path });
   const again = o.status === 'done';
   touched = !!o.shipped_note;

@@ -1,10 +1,10 @@
 // The data the screens show (loaded once, kept here), lookups, the address (route) and the loading/empty/error states.
-import { db, esc, reason } from './api.js?v=5a8c3dbe0f';
-import { draw } from './shell.js?v=5a8c3dbe0f';
+import { db, esc, reason } from './api.js?v=7648825353';
+import { draw } from './shell.js?v=7648825353';
 
 // ---------- data ----------
-export const D = { products: [], cats: [], priests: [], groups: [], orders: [], inquiries: [], options: [] };
-export const ST = { products: 'idle', cats: 'idle', priests: 'idle', groups: 'idle', orders: 'idle', inquiries: 'idle' };
+export const D = { products: [], cats: [], priests: [], groups: [], orders: [], inquiries: [], options: [], templates: [] };
+export const ST = { products: 'idle', cats: 'idle', priests: 'idle', groups: 'idle', orders: 'idle', inquiries: 'idle', templates: 'idle' };
 export const GROUPS = [['svestenstvo', 'Sveštenstvo'], ['ostali', 'Ostali kontakti']];
 export const groupOf = (p) => p.grp || 'svestenstvo';
 export const markupOf = (g) => Number(D.groups.find((x) => x.grp === g)?.markup ?? 0);
@@ -29,6 +29,7 @@ export const Q = {
   groups: () => db('contact_groups?select=*&order=grp.asc'),
   orders: () => allRows('orders?select=*&order=created_at.desc'),
   inquiries: () => allRows('inquiries?select=*&order=created_at.desc'),
+  templates: () => db('message_templates?select=*&order=key.asc,lang.asc'),
 };
 export async function load(what, force = false) {
   if (!force && (ST[what] === 'ready' || ST[what] === 'loading')) return;
@@ -56,10 +57,10 @@ export const catName = (id) => { const c = catOf(id); return c ? c.name_sr || c.
 export const nameOf = (p) => p.name_sr || p.name_fr || p.name_en || p.code;
 
 // ---------- routes: the tab and its filters live in the address ----------
-export const TABS = ['pregled', 'upiti', 'porudzbine', 'fakture', 'artikli', 'zalihe', 'statistika', 'svestenstvo', 'kategorije'];
+export const TABS = ['pregled', 'upiti', 'porudzbine', 'fakture', 'artikli', 'zalihe', 'statistika', 'svestenstvo', 'kategorije', 'poruke'];
 export const NEEDS = {
   pregled: ['orders', 'products', 'inquiries', 'priests', 'cats'], upiti: ['inquiries', 'products', 'priests'],
-  artikli: ['products', 'cats'], zalihe: ['products', 'cats'], kategorije: ['cats', 'products'], svestenstvo: ['priests', 'groups'], porudzbine: ['orders', 'products'], fakture: ['orders'], statistika: ['orders', 'products', 'cats'],
+  artikli: ['products', 'cats'], zalihe: ['products', 'cats'], kategorije: ['cats', 'products'], svestenstvo: ['priests', 'groups'], porudzbine: ['orders', 'products'], fakture: ['orders'], poruke: ['templates'], statistika: ['orders', 'products', 'cats'],
 };
 export function route() {
   const [tab, qs] = location.hash.slice(1).split('?');
