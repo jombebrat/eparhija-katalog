@@ -200,7 +200,7 @@ const STATUS = { new: S.acStatusNew, processing: S.acStatusProcessing, ready: S.
 async function loadOrders() {
   box.innerHTML = `<div class="skel" aria-busy="true">${'<span class="skel__row"></span>'.repeat(3)}</div>`;
   try {
-    orders = await rest('orders?select=id,created_at,status,items,total,lang&order=created_at.desc&limit=200');
+    orders = await rest('orders?select=id,created_at,status,items,total,lang,invoice_path,invoice_name,carrier,tracking_code&order=created_at.desc&limit=200');
     drawOrders();
   } catch (e) {
     if (e.signedOut) { showOut(S.acSignedOut); return; }
@@ -262,6 +262,16 @@ function drawTop(max = topRows[0]?.value || 1) {
       <span class="toplist__value">${esc(money.format(e.value))}</span></li>`).join('');
 }
 $('[data-top-more]').addEventListener('click', () => { topOpen = !topOpen; drawTop(); });
+// where the member can follow the parcel (the admin chooses the carrier when the order is sent)
+const TRACK = {
+  colissimo: ['Colissimo', (c) => `https://www.laposte.fr/outils/suivre-vos-envois?code=${c}`], chronopost: ['Chronopost', (c) => `https://www.chronopost.fr/tracking-no-denomination?listeNumerosLT=${c}`],
+  dpd: ['DPD', (c) => `https://www.dpd.fr/trace/${c}`], ups: ['UPS', (c) => `https://www.ups.com/track?tracknum=${c}`], dhl: ['DHL', (c) => `https://www.dhl.com/fr-fr/home/tracking.html?tracking-id=${c}`],
+};
+function trackOf(o) {
+  const t = TRACK[o.carrier];
+  const url = t?.[1](encodeURIComponent(o.tracking_code));
+  return `<p class="myorder__track">${esc(S.acTracking)}${t ? ` (${esc(t[0])})` : ''}: ${url ? `<a href="${esc(url)}" target="_blank" rel="noopener">${esc(o.tracking_code)}</a>` : `<b>${esc(o.tracking_code)}</b>`}</p>`;
+}
 function drawOrders() {
   drawStats();
   if (!orders.length) {
@@ -275,6 +285,7 @@ function drawOrders() {
         <p class="myorder__date">${esc(day.format(new Date(o.created_at)))}</p>
         <p class="myorder__total">${esc(money.format(o.total))}</p>
       </div>
+      ${o.tracking_code ? trackOf(o) : ''}
       <details class="myorder__lines">
         <summary>${esc(S.acLines)} <span class="myorder__count">(${esc(count(o.items.length))})</span></summary>
         <table class="lines">
@@ -284,6 +295,7 @@ function drawOrders() {
       </details>
       <div class="myorder__actions">
         <button class="btn" type="button" data-pdf="${o.id}">${esc(S.acPdf)}</button>
+        ${o.invoice_path ? `<button class="btn" type="button" data-invoice="${esc(o.invoice_path)}">${esc(S.acInvoice)}</button>` : ''}
         <button class="textbtn" type="button" data-again-order="${o.id}">${esc(S.acReorder)}</button>
         <p class="myorder__msg" data-msg aria-live="polite"></p>
       </div>
@@ -307,6 +319,25 @@ async function pdf(id, b) {
     if (e.signedOut || e.status === 401) { keep(null); showOut(S.acSignedOut); return; }
     msg.textContent = S.acPdfFailed; msg.classList.add('is-error');
   } finally { b.disabled = false; b.textContent = label; }
+}
+
+// the invoice the warehouse attached, from the private bucket: the database lets a member read only their own
+async function invoice(path, b) {
+  const msg = $('[data-msg]', b.closest('.myorder'));
+  b.disabled = true; msg.textContent = ''; msg.classList.remove('is-error');
+  const win = window.open('about:blank', '_blank');
+  try {
+    const t = await token();
+    const r = await fetch(`${D.api.url}/storage/v1/object/authenticated/invoices/${path}`, { headers: headers({ Authorization: `Bearer ${t}` }) });
+    if (!r.ok) throw Object.assign(new Error('invoice'), { status: r.status });
+    const url = URL.createObjectURL(await r.blob());
+    if (win) win.location.href = url; else location.href = url;
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
+  } catch (e) {
+    win?.close();
+    if (e.signedOut || e.status === 401) { keep(null); showOut(S.acSignedOut); return; }
+    msg.textContent = S.acInvoiceFailed; msg.classList.add('is-error');
+  } finally { b.disabled = false; }
 }
 
 // the same articles go back into the list, and the catalogue opens with it
@@ -353,6 +384,7 @@ box.addEventListener('click', (e) => {
   if (!b) return;
   if (b.matches('[data-retry]')) loadOrders();
   else if (b.matches('[data-pdf]')) pdf(Number(b.dataset.pdf), b);
+  else if (b.matches('[data-invoice]')) invoice(b.dataset.invoice, b);
   else if (b.matches('[data-again-order]')) orderAgain(Number(b.dataset.againOrder), b);
 });
 

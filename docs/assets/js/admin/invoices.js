@@ -1,7 +1,7 @@
 // Invoices: the history of invoices imported from Erplain (an order whose note starts with "[Erplain FAC-…]").
-import { $, $$, esc, money, when } from './api.js?v=64c2840099';
-import { D, NEEDS, byLabel, empty, failed, inRange, rangeOf, skeleton, stateOf, syncRange } from './data.js?v=64c2840099';
-import { syncInput, syncSeg } from './ui.js?v=64c2840099';
+import { $, $$, esc, money, when } from './api.js?v=5a8c3dbe0f';
+import { D, NEEDS, byLabel, empty, failed, inRange, rangeOf, skeleton, stateOf, syncRange } from './data.js?v=5a8c3dbe0f';
+import { syncInput, syncSeg } from './ui.js?v=5a8c3dbe0f';
 
 const PAID = { paid: 'Plaćena', unpaid: 'Neplaćena', cancelled: 'Otkazana' };
 // the invoice behind an order: its number, the amount with tax and whether it was paid

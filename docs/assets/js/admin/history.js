@@ -1,5 +1,5 @@
 // The history of an order's or an inquiry's status: who changed it, and when (read from the table status_log).
-import { $, db, esc, shown, when } from './api.js?v=64c2840099';
+import { $, db, esc, shown, when } from './api.js?v=5a8c3dbe0f';
 
 export async function showHistory(entity, id, labels, tagOf) {
   const box = $(`[data-hist="${entity}:${id}"]`);

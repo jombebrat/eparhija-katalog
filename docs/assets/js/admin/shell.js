@@ -1,16 +1,16 @@
 // The frame: tab pill, drawing the current screen, badges and the folding side menu.
-import { $, $$, plural } from './api.js?v=64c2840099';
-import { D, NEEDS, ST, TABS, load, route } from './data.js?v=64c2840099';
-import { drawInquiries } from './inquiries.js?v=64c2840099';
-import { drawCats, drawPriests } from './lists.js?v=64c2840099';
-import { drawOrders } from './orders.js?v=64c2840099';
-import { drawInvoices } from './invoices.js?v=64c2840099';
-import { drawOverview } from './overview.js?v=64c2840099';
-import { drawPdfCard } from './pdf.js?v=64c2840099';
-import { drawProducts } from './products.js?v=64c2840099';
-import { drawStats } from './stats.js?v=64c2840099';
-import { drawStock } from './stock.js?v=64c2840099';
-import { countUps, fadeOut, typeTitle } from './ui.js?v=64c2840099';
+import { $, $$, plural } from './api.js?v=5a8c3dbe0f';
+import { D, NEEDS, ST, TABS, load, route } from './data.js?v=5a8c3dbe0f';
+import { drawInquiries } from './inquiries.js?v=5a8c3dbe0f';
+import { drawCats, drawPriests } from './lists.js?v=5a8c3dbe0f';
+import { drawOrders } from './orders.js?v=5a8c3dbe0f';
+import { drawInvoices } from './invoices.js?v=5a8c3dbe0f';
+import { drawOverview } from './overview.js?v=5a8c3dbe0f';
+import { drawPdfCard } from './pdf.js?v=5a8c3dbe0f';
+import { drawProducts } from './products.js?v=5a8c3dbe0f';
+import { drawStats } from './stats.js?v=5a8c3dbe0f';
+import { drawStock } from './stock.js?v=5a8c3dbe0f';
+import { countUps, fadeOut, typeTitle } from './ui.js?v=5a8c3dbe0f';
 
 // ---------- draw ----------
 let shownTab = '';

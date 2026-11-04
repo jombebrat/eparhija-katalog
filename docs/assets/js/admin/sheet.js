@@ -1,5 +1,5 @@
 // The side sheet (dialog) and the form pieces every form uses.
-import { $, $$, X, esc } from './api.js?v=64c2840099';
+import { $, $$, X, esc } from './api.js?v=5a8c3dbe0f';
 
 // ---------- the side sheet ----------
 export const sheet = $('[data-sheet]');

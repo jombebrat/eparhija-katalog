@@ -1,25 +1,25 @@
 // Administration of the warehouse: articles and their stock, categories, clergy, orders.
 // Talks to Supabase over plain fetch (Auth, the REST API, Storage). What a signed-in account may read
 // or change is decided by the database (an account must be listed in the `admins` table).
-import { C, session } from './admin/api.js?v=64c2840099';
-import { showGate, enter } from './admin/signin.js?v=64c2840099';
-import './admin/data.js?v=64c2840099';
-import './admin/events.js?v=64c2840099';
-import './admin/forms.js?v=64c2840099';
-import './admin/inquiries.js?v=64c2840099';
-import './admin/lists.js?v=64c2840099';
-import './admin/orders.js?v=64c2840099';
-import './admin/overview.js?v=64c2840099';
-import './admin/pdf.js?v=64c2840099';
-import './admin/product-form.js?v=64c2840099';
-import './admin/products.js?v=64c2840099';
-import './admin/profile.js?v=64c2840099';
-import './admin/sheet.js?v=64c2840099';
-import './admin/search.js?v=64c2840099';
-import './admin/shell.js?v=64c2840099';
-import './admin/stats.js?v=64c2840099';
-import './admin/stock.js?v=64c2840099';
-import './admin/ui.js?v=64c2840099';
+import { C, session } from './admin/api.js?v=5a8c3dbe0f';
+import { showGate, enter } from './admin/signin.js?v=5a8c3dbe0f';
+import './admin/data.js?v=5a8c3dbe0f';
+import './admin/events.js?v=5a8c3dbe0f';
+import './admin/forms.js?v=5a8c3dbe0f';
+import './admin/inquiries.js?v=5a8c3dbe0f';
+import './admin/lists.js?v=5a8c3dbe0f';
+import './admin/orders.js?v=5a8c3dbe0f';
+import './admin/overview.js?v=5a8c3dbe0f';
+import './admin/pdf.js?v=5a8c3dbe0f';
+import './admin/product-form.js?v=5a8c3dbe0f';
+import './admin/products.js?v=5a8c3dbe0f';
+import './admin/profile.js?v=5a8c3dbe0f';
+import './admin/sheet.js?v=5a8c3dbe0f';
+import './admin/search.js?v=5a8c3dbe0f';
+import './admin/shell.js?v=5a8c3dbe0f';
+import './admin/stats.js?v=5a8c3dbe0f';
+import './admin/stock.js?v=5a8c3dbe0f';
+import './admin/ui.js?v=5a8c3dbe0f';
 
 // ---------- start ----------
 document.documentElement.classList.add('js');

@@ -1,11 +1,12 @@
 // Orders screen, one order's sheet and status, and the order PDF.
-import { $, $$, C, SITE, call, db, esc, money, one, reason, token, when } from './api.js?v=64c2840099';
-import { D, NEEDS, ST, byLabel, empty, failed, inRange, load, optById, rangeOf, skeleton, stateOf, syncRange } from './data.js?v=64c2840099';
-import { saveFile } from './inquiries.js?v=64c2840099';
-import { showHistory } from './history.js?v=64c2840099';
-import { formError, head, openSheet } from './sheet.js?v=64c2840099';
-import { draw } from './shell.js?v=64c2840099';
-import { syncSeg } from './ui.js?v=64c2840099';
+import { $, $$, C, SITE, call, db, esc, money, one, reason, token, when } from './api.js?v=5a8c3dbe0f';
+import { D, NEEDS, ST, byLabel, empty, failed, inRange, load, optById, rangeOf, skeleton, stateOf, syncRange } from './data.js?v=5a8c3dbe0f';
+import { saveFile } from './inquiries.js?v=5a8c3dbe0f';
+import { showHistory } from './history.js?v=5a8c3dbe0f';
+import { formError, head, openSheet } from './sheet.js?v=5a8c3dbe0f';
+import { draw } from './shell.js?v=5a8c3dbe0f';
+import { syncSeg } from './ui.js?v=5a8c3dbe0f';
+import { CARRIERS, trackUrl } from './shipping.js?v=5a8c3dbe0f';
 
 // ----- orders -----
 export const STATUS = { new: 'Nova', processing: 'U obradi', ready: 'Spremna za preuzimanje', done: 'Izvršena', cancelled: 'Otkazana' };
@@ -94,14 +95,16 @@ export async function viewAs(email, lang, btn) {
 const LANG = { fr: 'francuski', en: 'engleski', sr: 'srpski' };
 export function orderSheet(o) {
   const facts = [['Mejl', o.email && `<a href="mailto:${esc(o.email)}">${esc(o.email)}</a>`], ['Parohija', esc(o.parish || '')], ['Telefon', o.phone && `<a href="tel:${esc(o.phone.replace(/[^+\d]/g, ''))}">${esc(o.phone)}</a>`],
-    ['Adresa za dostavu', esc(o.address || '').replace(/\n/g, '<br>')], ['Napomena', esc(o.note || '').replace(/\n/g, '<br>')], ['Jezik', LANG[o.lang]], ['PDF poslat mejlom', o.emailed ? 'da' : 'ne']].filter(([, x]) => x);
+    ['Adresa za dostavu', esc(o.address || '').replace(/\n/g, '<br>')], ['Napomena', esc(o.note || '').replace(/\n/g, '<br>')], ['Jezik', LANG[o.lang]], ['PDF poslat mejlom', o.emailed ? 'da' : 'ne'],
+    ['Faktura', o.invoice_path && `<button class="link" type="button" data-invoice="${esc(o.invoice_path)}">${esc(o.invoice_name || 'faktura.pdf')}</button>`],
+    ['Praćenje pošiljke', o.tracking_code && `${esc(CARRIERS.find((c) => c[0] === o.carrier)?.[1] || '')} ${trackUrl(o.carrier, o.tracking_code) ? `<a href="${esc(trackUrl(o.carrier, o.tracking_code))}" target="_blank" rel="noopener">${esc(o.tracking_code)}</a>` : esc(o.tracking_code)}`]].filter(([, x]) => x);
   const taken = o.stock_taken && Object.entries(o.stock_taken).filter(([, n]) => n > 0);
-  const btn = (to, label, primary = false) => `<button class="btn${primary ? ' btn--primary' : ''}" type="button" data-status="${to}">${label}</button>`;
+  const btn = (to, label, primary = false) => `<button class="btn${primary ? ' btn--primary' : ''}" type="button" ${to === 'done' ? 'data-finish' : `data-status="${to}"`}>${label}</button>`;
   const actions = ({
     new: btn('processing', 'Počni obradu', true) + btn('done', 'Označi kao izvršenu') + btn('cancelled', 'Otkaži porudžbinu'),
     processing: btn('ready', 'Spremna za preuzimanje', true) + btn('done', 'Označi kao izvršenu') + btn('cancelled', 'Otkaži porudžbinu') + btn('new', 'Vrati u nove'),
     ready: btn('done', 'Označi kao izvršenu', true) + btn('cancelled', 'Otkaži porudžbinu') + btn('processing', 'Vrati u obradu'),
-    done: btn('new', 'Vrati u nove'),
+    done: `<button class="btn btn--primary" type="button" data-finish>Faktura i praćenje</button>` + btn('new', 'Vrati u nove'),
     cancelled: btn('new', 'Vrati u nove'),
   })[o.status];
   openSheet(`<div class="sheet__inner" data-order-sheet="${o.id}">

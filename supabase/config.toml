@@ -10,3 +10,6 @@ verify_jwt = false
 
 [functions.as-member]
 verify_jwt = false
+
+[functions.ship]
+verify_jwt = false

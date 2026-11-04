@@ -596,7 +596,7 @@ console.log('wrote docs/admin/index.html');
 // ---------- the member's account page, one per language ----------
 const ACCOUNT_STRINGS = ['acTitle', 'acEmail', 'acSend', 'acSendHelp', 'acSending', 'acSent', 'acCode', 'acSignIn', 'acSigningIn', 'acAgain', 'acOther',
   'acWrongCode', 'acNoCode', 'acMailOff', 'acMailFailed', 'acSignedOut', 'acOrders', 'acTabOverview', 'acStats', 'acStatOrders', 'acStatSpent', 'acStatAvg', 'acTop', 'acTopHint', 'acTopNone', 'acTopAll', 'acTopLess', 'acOrdersEmpty', 'acOrdersEmptyText', 'acOrdersError', 'acRetry',
-  'acOrder', 'acStatusNew', 'acStatusProcessing', 'acStatusReady', 'acStatusDone', 'acStatusCancelled', 'acLines', 'acPdf', 'acPdfMaking', 'acPdfFailed', 'acReorder', 'acReorderSome',
+  'acOrder', 'acStatusNew', 'acStatusProcessing', 'acStatusReady', 'acStatusDone', 'acStatusCancelled', 'acLines', 'acPdf', 'acPdfMaking', 'acPdfFailed', 'acInvoice', 'acInvoiceFailed', 'acTracking', 'acReorder', 'acReorderSome',
   'acSave', 'acSaving', 'acSaved', 'acSaveFailed', 'acItem', 'acQty', 'acAmount', 'acCatalogue', 'code', 'total', 'kg', 'signOut',
   'loginUnknown', 'loginTooMany', 'loginInvalid', 'loginFailed', 'formName', 'formParish', 'formPhone', 'formAddress', 'optional', 'pricesFor'];
 const accountPath = (l) => `${l.dir}${strings[l.id].acSlug}/`;

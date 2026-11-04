@@ -45,6 +45,8 @@ a.listbtn { text-decoration: none; }
 .myorder__head { display: grid; grid-template-columns: auto auto minmax(0, 1fr) auto; align-items: baseline; gap: var(--space-2xs) var(--space-sm); }
 .myorder__no { font-weight: 700; }
 .myorder__date { color: var(--color-ink-2); font-size: var(--t-sm); }
+.myorder__track { margin: 0; font-size: var(--t-sm); color: var(--color-ink-2); }
+.myorder__track a { overflow-wrap: anywhere; }
 .myorder__total { font-weight: 700; font-variant-numeric: tabular-nums; }
 .myorder__lines summary { display: inline-flex; align-items: center; min-height: 40px; font-size: var(--t-sm); font-weight: 600; cursor: pointer; }
 .myorder__lines summary:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; border-radius: 4px; }

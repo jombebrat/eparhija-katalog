@@ -1,6 +1,6 @@
 // The data the screens show (loaded once, kept here), lookups, the address (route) and the loading/empty/error states.
-import { db, esc, reason } from './api.js?v=64c2840099';
-import { draw } from './shell.js?v=64c2840099';
+import { db, esc, reason } from './api.js?v=5a8c3dbe0f';
+import { draw } from './shell.js?v=5a8c3dbe0f';
 
 // ---------- data ----------
 export const D = { products: [], cats: [], priests: [], groups: [], orders: [], inquiries: [], options: [] };
