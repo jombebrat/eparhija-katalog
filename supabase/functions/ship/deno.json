@@ -1,6 +1,6 @@
 {
   "imports": {
-    "@supabase/supabase-js": "npm:@supabase/supabase-js@2",
+    "@supabase/supabase-js": "npm:@supabase/supabase-js@2.49.4",
     "nodemailer": "npm:nodemailer@6.9.16"
   }
 }
