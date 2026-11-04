@@ -59,6 +59,11 @@ async function pdfAssets(): Promise<Assets> {
 const clientIp = (req: Request) =>
   (req.headers.get('x-forwarded-for') ?? '').split(',')[0].trim() || req.headers.get('cf-connecting-ip') || 'unknown';
 const clean = (v: unknown, max: number) => String(v ?? '').replace(/[\u0000-\u0008\u000B-\u001F\u007F]/g, '').trim().slice(0, max);
+// keeps the function alive until the promise is done, after the response has gone out
+const background = (p: Promise<unknown>) => {
+  const rt = (globalThis as { EdgeRuntime?: { waitUntil?: (p: Promise<unknown>) => void } }).EdgeRuntime;
+  if (rt?.waitUntil) rt.waitUntil(p); else void p;
+};
 const toB64 = (bytes: Uint8Array) => {
   let s = '';
   for (let i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
@@ -146,16 +151,20 @@ async function finishOrder(saved: { id: number; created_at: string }, lang: Lang
   const filename = fill(t.file, { n: saved.id });
   const subject = fill(t.subject, { n: saved.id });
 
+  // the mails go out after the answer: the page does not wait for the mail server (it takes a few seconds)
   let emailed = false;
   const warehouse = Deno.env.get('WAREHOUSE_EMAIL');
   const wl = (['fr', 'en', 'sr'].includes(Deno.env.get('WAREHOUSE_LANG') ?? '') ? Deno.env.get('WAREHOUSE_LANG') : 'sr') as Lang;
-  if (warehouse && pdf) {
-    const [a, b] = await Promise.all([
-      sendMail(email, warehouse, subject, fill(t.mailPriest, { n: saved.id, total: money }), filename, pdf),
-      sendMail(warehouse, email, fill(T[wl].subject, { n: saved.id }), fill(T[wl].mailWarehouse, { n: saved.id, total: money, who: [who.name, who.parish].filter(Boolean).join(', ') || email, email }), filename, pdf),
-    ]);
-    emailed = a && b;
-    if (emailed) await db.from('orders').update({ emailed: true }).eq('id', saved.id);
+  if (warehouse && pdf && mailOn()) {
+    emailed = true;
+    background((async () => {
+      const [a, b] = await Promise.all([
+        sendMail(email, warehouse, subject, fill(t.mailPriest, { n: saved.id, total: money }), filename, pdf),
+        sendMail(warehouse, email, fill(T[wl].subject, { n: saved.id }), fill(T[wl].mailWarehouse, { n: saved.id, total: money, who: [who.name, who.parish].filter(Boolean).join(', ') || email, email }), filename, pdf),
+      ]);
+      if (a && b) await db.from('orders').update({ emailed: true }).eq('id', saved.id);
+      else console.error('order mail not sent', saved.id, a, b);
+    })());
   }
   return { number: saved.id, total, emailed, pdf, filename };
 }

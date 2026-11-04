@@ -15,6 +15,7 @@ export async function sendMail(to: string, replyTo: string, subject: string, tex
       const t = nodemailer.createTransport({
         host: env('SMTP_HOST') || 'mail.privateemail.com', port, secure: port === 465,
         auth: { user: env('SMTP_USER'), pass: env('SMTP_PASS') },
+        connectionTimeout: 10000, greetingTimeout: 10000, socketTimeout: 25000,
       });
       await t.sendMail({
         from: env('ORDER_FROM') || env('SMTP_USER'), to, replyTo, subject, text, html,
