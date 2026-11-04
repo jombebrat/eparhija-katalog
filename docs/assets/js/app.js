@@ -106,6 +106,10 @@ import * as R from './render.js?v=2e5794a19b';
     set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* private mode: kept until the tab closes */ } },
     del: (k) => { try { localStorage.removeItem(k); } catch { /* nothing stored */ } },
   };
+  // The details of the last order are kept per e-mail address: someone else signing in on this browser must not inherit them.
+  const formKey = (email) => String(email || '').trim().toLowerCase();
+  const formFor = (email) => { const f = store.get('ek-form', {}) || {}; return f.for && f.for === formKey(email) ? f : {}; };
+  const keepForm = (email, patch) => store.set('ek-form', { ...formFor(email), ...patch, for: formKey(email) });
 
   // ---------- language: remembered, and the welcome asks for it ----------
   $$('a[data-lang]').forEach((a) => a.addEventListener('click', () => {
@@ -183,8 +187,8 @@ import * as R from './render.js?v=2e5794a19b';
     if (status === 200 && data.prices) {
       prices = data.prices; priest = data.priest || {};
       store.set('ek-email', email);
-      const form = store.get('ek-form', {});
-      store.set('ek-form', { name: form.name || priest.name || '', parish: form.parish || priest.parish || '', phone: form.phone || priest.phone || '', address: form.address || priest.address || '' });
+      const form = formFor(email);
+      keepForm(email, { name: form.name || priest.name || '', parish: form.parish || priest.parish || '', phone: form.phone || priest.phone || '', address: form.address || priest.address || '' });
       paintPrices();
       return 'ok';
     }
@@ -196,6 +200,7 @@ import * as R from './render.js?v=2e5794a19b';
   function signOut() {
     prices = null; priest = null;
     store.del('ek-email');
+    store.del('ek-form');
     paintPrices();
   }
 
@@ -606,7 +611,7 @@ import * as R from './render.js?v=2e5794a19b';
   let lastInquiry = null;
   function renderInquiryForm() {
     const form = el('form', 'order-form'); form.noValidate = true;
-    const saved = { ...store.get('ek-form', {}), email: store.get('ek-inq-email') || '' };
+    const saved = { ...formFor(store.get('ek-inq-email')), email: store.get('ek-inq-email') || '' };
     const field = formField('iq', saved);
     const grid = el('div', 'order-form__grid');
     grid.append(field('name', S.formName, 'text', false, 'input', 'name'), field('email', S.emailLabel, 'email', false, 'input', 'email'),
@@ -633,7 +638,7 @@ import * as R from './render.js?v=2e5794a19b';
       }
       input.removeAttribute('aria-invalid');
       store.set('ek-inq-email', email);
-      store.set('ek-form', { ...store.get('ek-form', {}), name: data.name, parish: data.parish, phone: data.phone });
+      keepForm(email, { name: data.name, parish: data.parish, phone: data.phone });
       send.disabled = true; send.setAttribute('aria-busy', 'true'); send.textContent = S.sending; help.textContent = '';
       let res = null;
       try {
@@ -689,7 +694,7 @@ import * as R from './render.js?v=2e5794a19b';
       body.append(row);
     }
     const form = el('form', 'order-form'); form.noValidate = true;
-    const field = formField('qf', { name: quote.name, parish: quote.parish, phone: quote.phone, address: store.get('ek-form', {}).address });
+    const field = formField('qf', { name: quote.name, parish: quote.parish, phone: quote.phone, address: formFor(quote.email || store.get('ek-inq-email')).address });
     const total = el('p', 'drawer__total');
     total.append(el('span', '', S.total), el('b', '', money.format(quote.total)));
     const grid = el('div', 'order-form__grid');

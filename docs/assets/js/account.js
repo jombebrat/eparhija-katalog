@@ -18,6 +18,10 @@ const store = {
   set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* private window */ } },
   del: (k) => { try { localStorage.removeItem(k); } catch { /* nothing */ } },
 };
+// The details of the last order are kept per e-mail address: someone else signing in on this browser must not inherit them.
+const formKey = (email) => String(email || '').trim().toLowerCase();
+const formFor = (email) => { const f = store.get('ek-form', {}) || {}; return f.for && f.for === formKey(email) ? f : {}; };
+const keepForm = (email, patch) => store.set('ek-form', { ...formFor(email), ...patch, for: formKey(email) });
 
 // ---------- talking to Supabase ----------
 async function call(url, init) {
@@ -188,7 +192,7 @@ function drawMe() {
   $('[data-name]').textContent = nameFor(me?.name) || session.email;
   $('[data-meta]').textContent = [me?.parish, session.email].filter(Boolean).join(' · ');
   const f = $('[data-details]');
-  const saved = store.get('ek-form', {});
+  const saved = formFor(session.email);
   f.elements.name.value = nameFor(me?.name || saved.name || '');
   f.elements.parish.value = me?.parish || saved.parish || '';
   f.elements.phone.value = me?.phone || saved.phone || '';
@@ -500,7 +504,7 @@ $('[data-details]').addEventListener('submit', async (e) => {
   try {
     const rows = await rest('rpc/update_my_details', { method: 'POST', body: JSON.stringify({ p_name: v('name'), p_parish: v('parish'), p_phone: v('phone'), p_address: v('address') }) });
     me = (Array.isArray(rows) ? rows[0] : rows) || me;
-    store.set('ek-form', { ...store.get('ek-form', {}), name: v('name'), parish: v('parish'), phone: v('phone'), address: v('address') });
+    keepForm(session.email, { name: v('name'), parish: v('parish'), phone: v('phone'), address: v('address') });
     drawMe();
     h.textContent = S.acSaved;
   } catch (err) {
@@ -513,6 +517,7 @@ $('[data-signout]').addEventListener('click', () => {
   const t = session?.access_token;
   keep(null);
   store.del('ek-email');
+  store.del('ek-form');
   store.del('ek-viewas');
   me = null; orders = null;
   showOut();

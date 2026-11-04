@@ -12,6 +12,10 @@ const store = {
   set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* private window */ } },
   del: (k) => { try { localStorage.removeItem(k); } catch { /* nothing */ } },
 };
+// The details of the last order are kept per e-mail address: someone else signing in on this browser must not inherit them.
+const formKey = (email) => String(email || '').trim().toLowerCase();
+const formFor = (email) => { const f = store.get('ek-form', {}) || {}; return f.for && f.for === formKey(email) ? f : {}; };
+const keepForm = (email, patch) => store.set('ek-form', { ...formFor(email), ...patch, for: formKey(email) });
 const KEY = 'eparhija-katalog-liste';
 const box = $('[data-co]');
 const show = (html) => { $('[data-boot]').hidden = true; box.innerHTML = html; };
@@ -55,7 +59,7 @@ async function start() {
 }
 
 function drawForm(email, priest) {
-  const saved = { ...priest, ...Object.fromEntries(Object.entries(store.get('ek-form', {}) || {}).filter(([, v]) => v)) };
+  const saved = { ...priest, ...Object.fromEntries(Object.entries(formFor(email)).filter(([k, v]) => v && k !== 'for')) };
   const val = (n) => (n === 'name' && D.lang === 'sr' ? toCyrillic(saved.name) : saved[n] || '');
   const field = (name, label, type, optional, auto, tag = 'input') => `<div class="field"><label for="co-${name}">${esc(label)}${optional ? ` <span class="field__opt">(${esc(S.optional)})</span>` : ''}</label>${tag === 'textarea'
     ? `<textarea id="co-${name}" name="${name}" rows="3" maxlength="1000">${esc(val(name))}</textarea>`
@@ -83,7 +87,7 @@ function drawForm(email, priest) {
   const form = $('.co__form');
   const help = $('#co-help');
   form.addEventListener('input', (e) => e.target.removeAttribute('aria-invalid'));
-  form.addEventListener('change', (e) => { const f = store.get('ek-form', {}) || {}; f[e.target.name] = e.target.value; store.set('ek-form', f); });
+  form.addEventListener('change', (e) => keepForm(email, { [e.target.name]: e.target.value }));
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const data = Object.fromEntries(new FormData(form));
@@ -92,7 +96,7 @@ function drawForm(email, priest) {
       nameInput.setAttribute('aria-invalid', 'true'); nameInput.setAttribute('aria-describedby', 'co-help');
       help.textContent = S.nameMissing; nameInput.focus(); return;
     }
-    store.set('ek-form', { name: data.name, parish: data.parish, phone: data.phone, address: data.address });
+    keepForm(email, { name: data.name, parish: data.parish, phone: data.phone, address: data.address });
     const send = $('[type=submit]', form);
     send.disabled = true; send.setAttribute('aria-busy', 'true'); send.textContent = S.sending; help.textContent = '';
     let r = null;
