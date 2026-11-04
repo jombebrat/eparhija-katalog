@@ -26,7 +26,7 @@ async function call(url, init) {
   const text = r.status === 204 ? '' : await r.text();
   let body = null;
   try { body = text ? JSON.parse(text) : null; } catch { body = null; }
-  if (!r.ok) throw Object.assign(new Error(body?.error || body?.msg || body?.message || r.statusText), { status: r.status, code: body?.error_code || body?.error || body?.code });
+  if (!r.ok) throw Object.assign(new Error(body?.error || body?.msg || body?.message || r.statusText), { status: r.status, code: body?.error_code || body?.error || body?.code, body });
   return body;
 }
 const headers = (extra = {}) => ({ apikey: D.api.key, 'Content-Type': 'application/json', ...extra });
@@ -299,6 +299,11 @@ function drawOrders() {
         <button class="textbtn" type="button" data-again-order="${o.id}">${esc(S.acReorder)}</button>
         <p class="myorder__msg" data-msg aria-live="polite"></p>
       </div>
+      ${o.status === 'new' ? `<div class="myorder__manage">
+        <p class="myorder__hint">${esc(S.acManageHint)}</p>
+        <div class="myorder__actions"><button class="btn" type="button" data-edit="${o.id}">${esc(S.acEdit)}</button><button class="btn btn--quiet" type="button" data-cancel="${o.id}">${esc(S.acCancel)}</button></div>
+        <div data-change></div>
+      </div>` : ['processing', 'ready'].includes(o.status) ? `<p class="myorder__hint">${esc(S.acLockedHint)}</p>` : ''}
     </li>`).join('')}</ol>`;
 }
 
@@ -379,9 +384,78 @@ async function orderAgain(id, b) {
   location.href = `${D.catalogue}#liste`;
 }
 
+// ----- cancel or edit an order that is still "new" -----
+const qtyOf = (l) => `${l.qty}${l.unit === 'kg' ? ` ${S.kg}` : ''}`;
+function changeBox(el) { return $('[data-change]', el.closest('.myorder')); }
+function editTotal(form) {
+  const o = orders.find((x) => x.id === Number(form.dataset.edit));
+  const sum = $$('[data-row]', form).filter((r) => !r.classList.contains('is-removed')).reduce((a, r) => a + Number(o.items[Number(r.dataset.row)].price) * (Math.max(1, Math.round(Number(r.querySelector('input').value))) || 1), 0);
+  $('[data-edit-total]', form).textContent = money.format(sum);
+}
+function openEdit(id, b) {
+  const o = orders.find((x) => x.id === id);
+  const box = changeBox(b);
+  if (box.querySelector('[data-edit-form]')) { box.innerHTML = ''; return; }
+  box.innerHTML = `<form class="myorder__edit" data-edit-form data-edit="${o.id}" novalidate>
+    <p class="myorder__hint">${esc(S.acEditHelp)}</p>
+    <ul class="editlines" role="list">${o.items.map((l, i) => `<li class="editline" data-row="${i}">
+      <span class="editline__name"><b>${esc(l.name)}</b><span class="sub">${esc(l.sku || l.code)} · ${esc(money.format(l.price))}</span></span>
+      <input class="editline__qty" type="number" inputmode="numeric" min="1" max="999" step="1" value="${esc(String(l.qty))}" aria-label="${esc(fill(S.acQtyOf, { name: l.name }))}">
+      <button class="textbtn" type="button" data-rm>${esc(S.acRemove)}</button></li>`).join('')}</ul>
+    <p class="myorder__editfoot"><b data-edit-total>${esc(money.format(o.total))}</b></p>
+    <div class="myorder__actions"><button class="btn btn--primary" type="submit">${esc(S.acEditSave)}</button><button class="btn" type="button" data-edit-close>${esc(S.acEditClose)}</button></div>
+  </form>`;
+  $('input', box).focus();
+}
+function askCancel(id, b) {
+  const box = changeBox(b);
+  box.innerHTML = `<div class="myorder__confirm" role="alert"><p>${esc(fill(S.acCancelAsk, { n: id }))}</p>
+    <div class="myorder__actions"><button class="btn btn--primary" type="button" data-cancel-yes="${id}">${esc(S.acCancelYes)}</button><button class="btn" type="button" data-cancel-no>${esc(S.acCancelNo)}</button></div></div>`;
+  $('[data-cancel-yes]', box).focus();
+}
+// one request for both: the server checks that the order is still "new" and tells the warehouse
+async function changeOrder(id, body, b) {
+  const li = b.closest('.myorder');
+  const msg = $('[data-msg]', li);
+  const all = $$('button', li);
+  all.forEach((x) => { x.disabled = true; });
+  msg.textContent = ''; msg.classList.remove('is-error');
+  try {
+    const t = await token();
+    const j = await call(`${D.api.url}/functions/v1/order`, { method: 'POST', headers: headers({ Authorization: `Bearer ${t}` }), body: JSON.stringify({ id, ...body }) });
+    Object.assign(orders.find((x) => x.id === id), j.order);
+    drawOrders();
+    const fresh = $(`[data-order="${id}"] [data-msg]`);
+    if (fresh) fresh.textContent = body.action === 'member-cancel' ? S.acCancelDone : S.acEditDone;
+  } catch (e) {
+    if (e.signedOut || e.status === 401) { keep(null); showOut(S.acSignedOut); return; }
+    all.forEach((x) => { x.disabled = false; });
+    msg.classList.add('is-error');
+    if (e.code === 'locked') { msg.textContent = S.acChangeLocked; loadOrders(); return; }
+    msg.textContent = e.code === 'unavailable' ? fill(S.acChangeUnavail, { codes: (e.body?.codes || []).join(', ') }) : S.acChangeFailed;
+  }
+}
+box.addEventListener('input', (e) => { const f = e.target.closest('[data-edit-form]'); if (f) editTotal(f); });
+box.addEventListener('submit', (e) => {
+  const f = e.target.closest('[data-edit-form]');
+  if (!f) return;
+  e.preventDefault();
+  const id = Number(f.dataset.edit);
+  const o = orders.find((x) => x.id === id);
+  const rows = $$('[data-row]', f).filter((r) => !r.classList.contains('is-removed'));
+  if (!rows.length) { askCancel(id, f); return; }
+  const items = rows.map((r) => { const l = o.items[Number(r.dataset.row)]; return { code: l.code, ...(l.option ? { option: l.option } : {}), qty: Math.min(999, Math.max(1, Math.round(Number($('input', r).value)) || 1)) }; });
+  changeOrder(id, { action: 'member-edit', items }, $('[type=submit]', f));
+});
+
 box.addEventListener('click', (e) => {
   const b = e.target.closest('button');
   if (!b) return;
+  if (b.matches('[data-rm]')) { const r = b.closest('[data-row]'); r.classList.toggle('is-removed'); $('input', r).disabled = r.classList.contains('is-removed'); editTotal(b.closest('form')); return; }
+  if (b.matches('[data-edit]')) return openEdit(Number(b.dataset.edit), b);
+  if (b.matches('[data-edit-close], [data-cancel-no]')) { changeBox(b).innerHTML = ''; return; }
+  if (b.matches('[data-cancel]')) return askCancel(Number(b.dataset.cancel), b);
+  if (b.matches('[data-cancel-yes]')) return changeOrder(Number(b.dataset.cancelYes), { action: 'member-cancel' }, b);
   if (b.matches('[data-retry]')) loadOrders();
   else if (b.matches('[data-pdf]')) pdf(Number(b.dataset.pdf), b);
   else if (b.matches('[data-invoice]')) invoice(b.dataset.invoice, b);

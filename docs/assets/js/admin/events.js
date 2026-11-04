@@ -1,22 +1,22 @@
 // Click, change, input and submit handlers for the whole admin.
-import { $, $$ } from './api.js?v=c9b2bf5879';
-import { D, ST, byCode, catOf, load, route, setParam, MORE } from './data.js?v=c9b2bf5879';
-import { catForm, deleteCat, deletePriest, priestForm, submitCat, submitPriest } from './forms.js?v=c9b2bf5879';
-import { addMember, inquirySheet, sendQuote, setInquiry } from './inquiries.js?v=c9b2bf5879';
-import { saveMarkup, savePriestActive } from './lists.js?v=c9b2bf5879';
-import { orderPdf, orderSheet, setStatus, viewAs } from './orders.js?v=c9b2bf5879';
-import { saveTemplate } from './messages.js?v=c9b2bf5879';
-import { finishForm, openInvoice, submitFinish } from './shipping.js?v=c9b2bf5879';
-import { openPdf, refreshPdf } from './pdf.js?v=c9b2bf5879';
-import { addFiles, byCodeBefore, deleteProduct, drawOptEditor, drawPhotos, edit, productForm, readOptEditor, submitProduct } from './product-form.js?v=c9b2bf5879';
-import { bulk, drawBulk, picked, saveActive, saveStock, shownCodes } from './products.js?v=c9b2bf5879';
-import { closeProfile, passwordForm, submitPassword } from './profile.js?v=c9b2bf5879';
-import { closeSheet, sheet } from './sheet.js?v=c9b2bf5879';
-import { draw } from './shell.js?v=c9b2bf5879';
-import { signOut } from './signin.js?v=c9b2bf5879';
-import { csvOrders, csvProducts, csvStats } from './stats.js?v=c9b2bf5879';
-import { loadMoves, moveForm, submitMove } from './stock.js?v=c9b2bf5879';
-import { notify } from './ui.js?v=c9b2bf5879';
+import { $, $$ } from './api.js?v=df6c61df58';
+import { D, ST, byCode, catOf, load, route, setParam, MORE } from './data.js?v=df6c61df58';
+import { catForm, deleteCat, deletePriest, priestForm, submitCat, submitPriest } from './forms.js?v=df6c61df58';
+import { addMember, inquirySheet, sendQuote, setInquiry } from './inquiries.js?v=df6c61df58';
+import { saveMarkup, savePriestActive } from './lists.js?v=df6c61df58';
+import { deleteOrder, orderPdf, orderSheet, setStatus, viewAs } from './orders.js?v=df6c61df58';
+import { saveTemplate } from './messages.js?v=df6c61df58';
+import { finishForm, openInvoice, submitFinish } from './shipping.js?v=df6c61df58';
+import { openPdf, refreshPdf } from './pdf.js?v=df6c61df58';
+import { addFiles, byCodeBefore, deleteProduct, drawOptEditor, drawPhotos, edit, productForm, readOptEditor, submitProduct } from './product-form.js?v=df6c61df58';
+import { bulk, drawBulk, picked, saveActive, saveStock, shownCodes } from './products.js?v=df6c61df58';
+import { closeProfile, passwordForm, submitPassword } from './profile.js?v=df6c61df58';
+import { closeSheet, sheet } from './sheet.js?v=df6c61df58';
+import { draw } from './shell.js?v=df6c61df58';
+import { signOut } from './signin.js?v=df6c61df58';
+import { csvOrders, csvProducts, csvStats } from './stats.js?v=df6c61df58';
+import { loadMoves, moveForm, submitMove } from './stock.js?v=df6c61df58';
+import { notify } from './ui.js?v=df6c61df58';
 
 // ---------- events ----------
 document.addEventListener('click', (e) => {
@@ -53,6 +53,7 @@ document.addEventListener('click', (e) => {
   }
   if (t.matches('[data-finish]')) { const o = D.orders.find((x) => x.id === Number(t.closest('[data-order-sheet]').dataset.orderSheet)); if (o) finishForm(o); return; }
   if (t.matches('[data-invoice]')) { openInvoice(t.dataset.invoice, t); return; }
+  if (t.matches('[data-delete-order]')) { deleteOrder(Number(t.closest('[data-order-sheet]').dataset.orderSheet), t); return; }
   if (t.matches('[data-status]')) { setStatus(Number(t.closest('[data-order-sheet]').dataset.orderSheet), t.dataset.status, t); return; }
   if (t.matches('[data-open-inq], tr[data-inq]')) {
     if (e.target.closest('a')) return;

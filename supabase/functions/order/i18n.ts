@@ -41,6 +41,11 @@ export const T: Record<Lang, Record<string, string>> = {
     inqSubject: 'Demande de prix n°\u00a0{n}',
     inqMail: 'Nouvelle demande de prix n°\u00a0{n} de {who} ({email}) : {count} articles.\n\nRépondez depuis l’administration : {admin}',
     codeMail: 'Bonjour,\n\nVoici votre code pour ouvrir votre compte sur le catalogue de l’entrepôt du Diocèse :\n\n{code}\n\nIl est valable une heure. Si vous n’avez rien demandé, ignorez ce message.',
+    mailManage: 'Vous pouvez annuler ou modifier cette commande tant qu’elle est « Reçue », avant le début de la préparation. Pour cela : ouvrez votre profil ({account}), connectez-vous avec votre e-mail (un code de connexion vous est envoyé), puis, sous « Vos commandes », cliquez sur « Modifier » ou « Annuler la commande ». L’entrepôt est prévenu automatiquement de tout changement. Une fois la préparation commencée, écrivez-nous à {contact}.',
+    chCancelSubject: 'Commande n°\u00a0{n} annulée par le client',
+    chCancelMail: 'Le client {who} ({email}) a annulé la commande n°\u00a0{n} depuis son profil.\n\nContenu annulé :\n{before}\n\nTotal : {total}\n\nStatut dans l’administration : annulée.',
+    chEditSubject: 'Commande n°\u00a0{n} modifiée par le client',
+    chEditMail: 'Le client {who} ({email}) a modifié la commande n°\u00a0{n} depuis son profil.\n\nAvant :\n{before}\nTotal : {totalBefore}\n\nMaintenant :\n{after}\nTotal : {total}\n\nCommande dans l’administration : {admin}',
   },
   en: {
     org: 'Warehouse of the Eparchy of Western Europe',
@@ -79,6 +84,11 @@ export const T: Record<Lang, Record<string, string>> = {
     inqSubject: 'Price request no. {n}',
     inqMail: 'New price request no. {n} from {who} ({email}): {count} items.\n\nAnswer it in the admin: {admin}',
     codeMail: 'Hello,\n\nHere is your code to open your account on the Eparchy warehouse catalogue:\n\n{code}\n\nIt works for one hour. If you did not ask for it, ignore this message.',
+    mailManage: 'You can cancel or edit this order while it is “Received”, before preparation starts. To do so: open your profile ({account}), sign in with your email (a sign-in code is sent to you), then under “Your orders” click “Edit order” or “Cancel order”. The warehouse is told automatically about any change. Once preparation has started, write to us at {contact}.',
+    chCancelSubject: 'Order no.\u00a0{n} cancelled by the customer',
+    chCancelMail: 'The customer {who} ({email}) cancelled order no.\u00a0{n} from their profile.\n\nCancelled contents:\n{before}\n\nTotal: {total}\n\nStatus in the admin: cancelled.',
+    chEditSubject: 'Order no.\u00a0{n} edited by the customer',
+    chEditMail: 'The customer {who} ({email}) edited order no.\u00a0{n} from their profile.\n\nBefore:\n{before}\nTotal: {totalBefore}\n\nNow:\n{after}\nTotal: {total}\n\nOrder in the admin: {admin}',
   },
   sr: {
     org: 'Магацин Епархије западноевропске',
@@ -117,6 +127,11 @@ export const T: Record<Lang, Record<string, string>> = {
     inqSubject: 'Нови упит за цене бр. {n}',
     inqMail: 'Нови упит за цене бр. {n}: {who} ({email}), артикала: {count}.\n\nОдговорите у администрацији: {admin}',
     codeMail: 'Добар дан,\n\nово је ваш код за улазак у налог на каталогу магацина Епархије:\n\n{code}\n\nВажи један сат. Ако нисте тражили код, занемарите ову поруку.',
+    mailManage: 'Ову поруџбину можете да откажете или измените док је „Примљена“, пре почетка обраде. Отворите свој профил ({account}), пријавите се својом е-поштом (стиже вам код за пријаву), па у делу „Ваше поруџбине“ кликните на „Измени поруџбину“ или „Откажи поруџбину“. Магацин се о свакој промени обавештава аутоматски. Када обрада почне, пишите нам на {contact}.',
+    chCancelSubject: 'Поруџбина бр.\u00a0{n}: члан је отказао',
+    chCancelMail: 'Члан {who} ({email}) је отказао поруџбину бр.\u00a0{n} из свог профила.\n\nОтказан садржај:\n{before}\n\nЗбир: {total}\n\nСтатус у администрацији: отказана.',
+    chEditSubject: 'Поруџбина бр.\u00a0{n}: члан је изменио',
+    chEditMail: 'Члан {who} ({email}) је изменио поруџбину бр.\u00a0{n} из свог профила.\n\nПре:\n{before}\nЗбир: {totalBefore}\n\nСада:\n{after}\nЗбир: {total}\n\nПоруџбина у администрацији: {admin}',
   },
 };
 

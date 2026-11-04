@@ -1,12 +1,12 @@
 // Orders screen, one order's sheet and status, and the order PDF.
-import { $, $$, C, SITE, call, db, esc, money, one, reason, token, when } from './api.js?v=c9b2bf5879';
-import { D, NEEDS, ST, byLabel, empty, failed, inRange, load, optById, rangeOf, skeleton, stateOf, syncRange } from './data.js?v=c9b2bf5879';
-import { saveFile } from './inquiries.js?v=c9b2bf5879';
-import { showHistory } from './history.js?v=c9b2bf5879';
-import { formError, head, openSheet } from './sheet.js?v=c9b2bf5879';
-import { draw } from './shell.js?v=c9b2bf5879';
-import { syncSeg } from './ui.js?v=c9b2bf5879';
-import { CARRIERS, trackUrl } from './shipping.js?v=c9b2bf5879';
+import { $, $$, C, SITE, call, db, esc, money, one, reason, token, when } from './api.js?v=df6c61df58';
+import { D, NEEDS, ST, byLabel, empty, failed, inRange, load, optById, rangeOf, skeleton, stateOf, syncRange } from './data.js?v=df6c61df58';
+import { saveFile } from './inquiries.js?v=df6c61df58';
+import { showHistory } from './history.js?v=df6c61df58';
+import { closeSheet, formError, head, openSheet } from './sheet.js?v=df6c61df58';
+import { draw } from './shell.js?v=df6c61df58';
+import { notify, syncSeg } from './ui.js?v=df6c61df58';
+import { CARRIERS, trackUrl } from './shipping.js?v=df6c61df58';
 
 // ----- orders -----
 export const STATUS = { new: 'Nova', processing: 'U obradi', ready: 'Spremna za preuzimanje', done: 'Izvršena', cancelled: 'Otkazana' };
@@ -105,7 +105,7 @@ export function orderSheet(o) {
     processing: btn('ready', 'Spremna za preuzimanje', true) + btn('done', 'Označi kao izvršenu') + btn('cancelled', 'Otkaži porudžbinu') + btn('new', 'Vrati u nove'),
     ready: btn('done', 'Označi kao izvršenu', true) + btn('cancelled', 'Otkaži porudžbinu') + btn('processing', 'Vrati u obradu'),
     done: `<button class="btn btn--primary" type="button" data-finish>Faktura i praćenje</button>` + btn('new', 'Vrati u nove'),
-    cancelled: btn('new', 'Vrati u nove'),
+    cancelled: btn('new', 'Vrati u nove') + `<button class="btn btn--danger" type="button" data-delete-order>Obriši porudžbinu</button>`,
   })[o.status];
   openSheet(`<div class="sheet__inner" data-order-sheet="${o.id}">
     ${head(`Porudžbina br. ${o.id}`, `${esc(when.format(new Date(o.created_at)))} · <span class="tag tag--${o.status}">${STATUS[o.status]}</span>`)}
@@ -119,7 +119,7 @@ export function orderSheet(o) {
       </table>
       <p class="order__stock">${o.status === 'done'
         ? (taken?.length ? `Skinuto sa stanja: ${taken.map(([c, n]) => `${esc(c.startsWith('#') ? optById(c.slice(1))?.sku || o.items.find((l) => String(l.option) === c.slice(1))?.sku || c : c)} × ${n}`).join(', ')}.` : 'Nijedan artikal iz porudžbine nema praćeno stanje, pa stanje nije menjano.')
-        : o.status === 'cancelled' ? 'Otkazana porudžbina ne menja stanje.' : 'Kada je označite kao izvršenu, naručene količine se skidaju sa stanja.'}</p>
+        : o.status === 'cancelled' ? 'Otkazana porudžbina ne menja stanje. Možete je trajno obrisati (dugme „Obriši porudžbinu“), brisanje se ne može vratiti.' : 'Kada je označite kao izvršenu, naručene količine se skidaju sa stanja.'}</p>
       <section class="hist" aria-labelledby="hist-t"><h3 id="hist-t" class="hist__title">Istorija statusa</h3><ol class="hist__list" data-hist="order:${o.id}"><li class="sub">Učitavanje…</li></ol></section>
     </div>
     <footer class="sheet__foot">
@@ -128,6 +128,35 @@ export function orderSheet(o) {
     </footer>
   </div>`, { side: true });
   showHistory('order', o.id, STATUS, (x) => x);
+}
+// a cancelled order can be removed for good: the first click asks, the second one deletes
+export async function deleteOrder(id, btn) {
+  const o = D.orders.find((x) => x.id === id);
+  if (!o || o.status !== 'cancelled') return;
+  const box = btn.closest('.sheet__inner');
+  if (!btn.dataset.armed) {
+    btn.dataset.armed = '1'; btn.dataset.label = btn.textContent;
+    btn.textContent = 'Potvrdi: obriši zauvek';
+    formError(box, `Porudžbina br. ${o.id} se briše zauvek i ne može se vratiti. Kliknite ponovo za potvrdu.`);
+    setTimeout(() => { if (btn.isConnected && btn.dataset.armed) { delete btn.dataset.armed; btn.textContent = btn.dataset.label; } }, 6000);
+    return;
+  }
+  $$('.sheet__actions button', box).forEach((b) => { b.disabled = true; });
+  try {
+    const t = await token();
+    await db(`orders?id=eq.${id}&status=eq.cancelled`, { method: 'DELETE' });
+    if (o.invoice_path) call(`${C.url}/storage/v1/object/invoices/${o.invoice_path}`, { method: 'DELETE', headers: { apikey: C.key, Authorization: `Bearer ${t}` } }).catch(() => {});
+  } catch (e) {
+    if (e.signedOut) return;
+    $$('.sheet__actions button', box).forEach((b) => { b.disabled = false; });
+    delete btn.dataset.armed; btn.textContent = btn.dataset.label;
+    formError(box, `Nije obrisano. ${reason(e)}`);
+    return;
+  }
+  D.orders = D.orders.filter((x) => x.id !== id);
+  closeSheet();
+  draw();
+  notify(`Porudžbina br. ${id} je obrisana.`);
 }
 export async function setStatus(id, status, btn) {
   const o = D.orders.find((x) => x.id === id);

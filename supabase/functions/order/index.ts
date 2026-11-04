@@ -83,6 +83,7 @@ Deno.serve(async (req) => {
   if (body.action === 'quote') return quoteFor(req, body);
   if (body.action === 'quote-get') return quoteGet(body);
   if (body.action === 'quote-order') return quoteOrder(req, body);
+  if (body.action === 'member-cancel' || body.action === 'member-edit') return memberChange(req, body);
   const email = clean(body.email, 200).toLowerCase();
   const lang = (['fr', 'en', 'sr'].includes(String(body.lang)) ? body.lang : 'fr') as Lang;
   const items = readItems(body.items);
@@ -159,7 +160,7 @@ async function finishOrder(saved: { id: number; created_at: string }, lang: Lang
     emailed = true;
     background((async () => {
       const [a, b] = await Promise.all([
-        sendMail(email, warehouse, subject, fill(t.mailPriest, { n: saved.id, total: money }), filename, pdf),
+        sendMail(email, warehouse, subject, `${fill(t.mailPriest, { n: saved.id, total: money })}\n\n${fill(t.mailManage, { account: accountUrl(lang), contact: warehouse })}`, filename, pdf),
         sendMail(warehouse, email, fill(T[wl].subject, { n: saved.id }), fill(T[wl].mailWarehouse, { n: saved.id, total: money, who: [who.name, who.parish].filter(Boolean).join(', ') || email, email }), filename, pdf),
       ]);
       if (a && b) await db.from('orders').update({ emailed: true }).eq('id', saved.id);
@@ -344,4 +345,81 @@ async function quoteOrder(req: Request, body: Record<string, unknown>) {
   await db.from('inquiries').update({ status: 'ordered', order_id: saved.id }).eq('id', q.id);
   void req;
   return json(await finishOrder(saved, lang, q.email, who, lines, total));
+}
+
+// ---------- the member cancels or edits an order that is still "new" ----------
+
+const ACCOUNT_SLUG: Record<Lang, string> = { fr: 'compte', en: 'account', sr: 'nalog' };
+const accountUrl = (l: Lang) => `${SITE}${langPath(l)}${ACCOUNT_SLUG[l]}/`;
+const keyOf = (l: { code: string; option?: number | null }) => `${l.code}#${l.option ?? ''}`;
+const listOf = (lines: Line[], lang: Lang) => {
+  const eur = new Intl.NumberFormat(LOCALE[lang], { style: 'currency', currency: 'EUR' });
+  return lines.map((l) => `- ${l.sku || l.code}  ${l.name}  \u00d7 ${l.qty}${l.unit === 'kg' ? ' kg' : ''}  (${eur.format(l.price * l.qty)})`).join('\n');
+};
+
+async function memberChange(req: Request, body: Record<string, unknown>) {
+  const jwt = (req.headers.get('authorization') ?? '').replace(/^Bearer\s+/i, '');
+  const id = Number(body.id);
+  if (!jwt || !Number.isInteger(id)) return json({ error: 'invalid' }, 400);
+  const { data: u } = await db.auth.getUser(jwt);
+  const user = u?.user;
+  if (!user) return json({ error: 'signed_out' }, 401);
+  const { data: o } = await db.from('orders').select('*').eq('id', id).maybeSingle();
+  if (!o || o.email !== (user.email ?? '').toLowerCase()) return json({ error: 'not_found' }, 404);
+  if (o.status !== 'new') return json({ error: 'locked' }, 409);
+  const lang = pickLang(o.lang);
+  const before = o.items as Line[];
+  const cancel = body.action === 'member-cancel';
+  let after = before;
+  let patch: Record<string, unknown> = { status: 'cancelled' };
+  if (!cancel) {
+    // the quantities of the lines already in the order; a line left out is removed; nothing new can be added
+    const asked = Array.isArray(body.items) ? (body.items as Record<string, unknown>[]) : null;
+    if (!asked?.length) return json({ error: 'invalid' }, 400);
+    const known = new Map(before.map((l) => [keyOf(l), l]));
+    const seen = new Set<string>();
+    const next: Line[] = [];
+    for (const a of asked) {
+      const opt = a.option === undefined || a.option === null || a.option === '' ? null : Number(a.option);
+      const k = `${clean(a.code, 40)}#${opt ?? ''}`;
+      const was = known.get(k);
+      const qty = Math.round(Number(a.qty));
+      if (!was || seen.has(k) || !Number.isFinite(qty) || qty < 1 || qty > 999) return json({ error: 'invalid' }, 400);
+      seen.add(k);
+      next.push({ ...was, qty });
+    }
+    // a larger quantity needs the article to be on offer still
+    const more = next.filter((l) => l.qty > (known.get(keyOf(l))?.qty ?? 0));
+    if (more.length) {
+      const [{ data: products }, { data: options }] = await Promise.all([
+        db.from('products').select('code, available').eq('active', true).in('code', more.map((l) => l.code)),
+        db.from('options').select('id, available').eq('active', true).in('id', more.filter((l) => l.option).map((l) => l.option)),
+      ]);
+      const okP = new Map((products ?? []).map((p) => [p.code, p.available]));
+      const okO = new Map((options ?? []).map((x) => [x.id, x.available]));
+      const gone = more.filter((l) => !okP.get(l.code) || (l.option && !okO.get(l.option))).map((l) => l.sku || l.code);
+      if (gone.length) return json({ error: 'unavailable', codes: gone }, 409);
+    }
+    after = before.filter((l) => seen.has(keyOf(l))).map((l) => next.find((n) => keyOf(n) === keyOf(l))!);
+    patch = {
+      items: after, total: sumOf(after), edited_at: new Date().toISOString(),
+      items_original: o.items_original ?? before, total_original: o.total_original ?? o.total,
+    };
+  }
+  const { data: row } = await db.from('orders').update(patch).eq('id', id).eq('status', 'new').select('id, status, items, total, edited_at').maybeSingle();
+  if (!row) return json({ error: 'locked' }, 409); // the warehouse started on it in the meantime
+
+  // the warehouse is told every time, in its own language
+  const warehouse = Deno.env.get('WAREHOUSE_EMAIL');
+  if (warehouse && mailOn()) {
+    const wl = pickLang(Deno.env.get('WAREHOUSE_LANG') ?? 'sr');
+    const w = T[wl];
+    const eur = new Intl.NumberFormat(LOCALE[wl], { style: 'currency', currency: 'EUR' });
+    const who = [o.name, o.parish].filter(Boolean).join(', ') || o.email;
+    const mail = cancel
+      ? [fill(w.chCancelSubject, { n: id }), fill(w.chCancelMail, { n: id, who, email: o.email, before: listOf(before, wl), total: eur.format(Number(o.total)) })]
+      : [fill(w.chEditSubject, { n: id }), fill(w.chEditMail, { n: id, who, email: o.email, before: listOf(before, wl), after: listOf(after, wl), totalBefore: eur.format(Number(o.total)), total: eur.format(sumOf(after)), admin: `${SITE}admin/#porudzbine` })];
+    background(sendMail(warehouse, o.email, mail[0], mail[1]).then((ok) => { if (!ok) console.error('member change mail not sent', id); }));
+  }
+  return json({ ok: true, order: row });
 }

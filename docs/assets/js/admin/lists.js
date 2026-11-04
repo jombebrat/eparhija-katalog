@@ -1,8 +1,8 @@
 // Categories and contacts (clergy) lists with their quick edits.
-import { $, db, esc, norm, one, reason } from './api.js?v=c9b2bf5879';
-import { D, GROUPS, NEEDS, empty, failed, groupOf, markupOf, skeleton, stateOf } from './data.js?v=c9b2bf5879';
-import { pdfLater } from './pdf.js?v=c9b2bf5879';
-import { notify, syncInput } from './ui.js?v=c9b2bf5879';
+import { $, db, esc, norm, one, reason } from './api.js?v=df6c61df58';
+import { D, GROUPS, NEEDS, empty, failed, groupOf, markupOf, skeleton, stateOf } from './data.js?v=df6c61df58';
+import { pdfLater } from './pdf.js?v=df6c61df58';
+import { notify, syncInput } from './ui.js?v=df6c61df58';
 
 // ----- categories -----
 export function drawCats() {
