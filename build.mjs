@@ -379,6 +379,10 @@ function adminPage() {
   const seg = (attr, label, items) => `<div class="field"><span class="field__label" id="${attr}-l">${label}</span><div class="seg" role="group" aria-labelledby="${attr}-l" data-${attr}>
           ${items.map(([v, t, n]) => `<button type="button" data-v="${v}" aria-pressed="false">${t}${n !== undefined ? ` <span class="seg__n" data-n="${n}"></span>` : ''}</button>`).join('\n          ')}
         </div></div>`;
+  // date range and sort order, kept in the address (od, do, o)
+  const rangeSort = (id, sorts) => `<div class="field"><label for="od-${id}">Od datuma</label><input class="input" id="od-${id}" name="od" type="date" data-prm></div>
+          <div class="field"><label for="do-${id}">Do datuma</label><input class="input" id="do-${id}" name="do" type="date" data-prm></div>
+          <div class="field"><label for="o-${id}">Redosled</label><span class="select"><select class="input" id="o-${id}" name="o" data-prm>${sorts.map(([v, t]) => `<option value="${v}">${t}</option>`).join('')}</select></span></div>`;
   return `<!doctype html>
 <html lang="sr-Latn">
 <head>
@@ -539,6 +543,7 @@ function adminPage() {
         </div>
         <div class="toolbar">
           ${seg('s', 'Status', [['new', 'Nove', 'new'], ['processing', 'U obradi', 'processing'], ['ready', 'Spremne', 'ready'], ['done', 'Izvršene', 'done'], ['cancelled', 'Otkazane', 'cancelled'], ['all', 'Sve', 'all']])}
+          ${rangeSort('porudzbine', [['', 'Najnovije prvo'], ['old', 'Najstarije prvo'], ['az', 'Po imenu A–Š'], ['za', 'Po imenu Š–A'], ['sum', 'Po iznosu, najveći prvi']])}
         </div>
         <div class="region" data-region="orders"></div>
       </section>
@@ -551,6 +556,7 @@ function adminPage() {
           <div class="field field--grow"><label for="q-fakture">Pretraga</label><input class="input" id="q-fakture" type="search" name="q" autocomplete="off" spellcheck="false" placeholder="broj fakture, parohija ili mejl" data-q></div>
           <div class="field"><span class="field__label" id="y-l">Godina</span><div class="seg" role="group" aria-labelledby="y-l" data-y></div></div>
           ${seg('f', 'Status', [['', 'Sve'], ['paid', 'Plaćene'], ['unpaid', 'Neplaćene'], ['cancelled', 'Otkazane']])}
+          ${rangeSort('fakture', [['', 'Po broju, najnovija prva'], ['no', 'Po broju, od prve'], ['old', 'Po datumu, najstarija prva'], ['new', 'Po datumu, najnovija prva'], ['az', 'Po imenu A–Š'], ['za', 'Po imenu Š–A'], ['sum', 'Po iznosu, najveći prvi']])}
         </div>
         <div class="region" data-region="invoices"></div>
       </section>

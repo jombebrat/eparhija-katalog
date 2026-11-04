@@ -1,7 +1,7 @@
 // Invoices: the history of invoices imported from Erplain (an order whose note starts with "[Erplain FAC-…]").
-import { $, $$, esc, money, when } from './api.js?v=bdf0fa49e0';
-import { D, NEEDS, empty, failed, skeleton, stateOf } from './data.js?v=bdf0fa49e0';
-import { syncInput, syncSeg } from './ui.js?v=bdf0fa49e0';
+import { $, $$, esc, money, when } from './api.js?v=64c2840099';
+import { D, NEEDS, byLabel, empty, failed, inRange, rangeOf, skeleton, stateOf, syncRange } from './data.js?v=64c2840099';
+import { syncInput, syncSeg } from './ui.js?v=64c2840099';
 
 const PAID = { paid: 'Plaćena', unpaid: 'Neplaćena', cancelled: 'Otkazana' };
 // the invoice behind an order: its number, the amount with tax and whether it was paid
@@ -34,8 +34,18 @@ export function drawInvoices(r) {
     box.innerHTML = empty('Još nema faktura.', 'Ovde se prikazuju fakture uvezene iz Erplaina.');
     return;
   }
-  const list = all.filter(({ o, i }) => (!y || year(i) === y) && (!f || i.state === f)
+  const rg = rangeOf(r);
+  syncRange(sc, r);
+  const list = all.filter(({ o, i }) => (!y || year(i) === y) && (!f || i.state === f) && inRange(i.date.getTime(), rg)
     && (!q || `${i.no} ${o.name || ''} ${o.parish || ''} ${o.email}`.toLowerCase().includes(q)));
+  // the number is what counts: invoices are numbered in the order they were issued
+  const num = (i) => { const m = /(\d+)\s*$/.exec(i.no); return m ? Number(m[1]) : 0; };
+  const sorts = {
+    '': (a, b) => num(b.i) - num(a.i) || b.i.date - a.i.date, no: (a, b) => num(a.i) - num(b.i) || a.i.date - b.i.date,
+    old: (a, b) => a.i.date - b.i.date || num(a.i) - num(b.i), new: (a, b) => b.i.date - a.i.date || num(b.i) - num(a.i),
+    az: (a, b) => byLabel(a.o, b.o) || num(a.i) - num(b.i), za: (a, b) => byLabel(b.o, a.o) || num(a.i) - num(b.i), sum: (a, b) => Number(b.o.total) - Number(a.o.total),
+  };
+  list.sort(sorts[rg.sort] || sorts['']);
   if (!list.length) { box.innerHTML = empty('Nijedna faktura ne odgovara.', 'Promenite godinu, filter ili pretragu.', '<button class="btn" type="button" data-clear>Prikaži sve</button>'); return; }
   const sum = list.filter((x) => x.i.state !== 'cancelled');
   const ht = sum.reduce((a, x) => a + Number(x.o.total), 0);

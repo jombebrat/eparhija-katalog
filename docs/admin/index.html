@@ -186,6 +186,9 @@
           <button type="button" data-v="cancelled" aria-pressed="false">Otkazane <span class="seg__n" data-n="cancelled"></span></button>
           <button type="button" data-v="all" aria-pressed="false">Sve <span class="seg__n" data-n="all"></span></button>
         </div></div>
+          <div class="field"><label for="od-porudzbine">Od datuma</label><input class="input" id="od-porudzbine" name="od" type="date" data-prm></div>
+          <div class="field"><label for="do-porudzbine">Do datuma</label><input class="input" id="do-porudzbine" name="do" type="date" data-prm></div>
+          <div class="field"><label for="o-porudzbine">Redosled</label><span class="select"><select class="input" id="o-porudzbine" name="o" data-prm><option value="">Najnovije prvo</option><option value="old">Najstarije prvo</option><option value="az">Po imenu A–Š</option><option value="za">Po imenu Š–A</option><option value="sum">Po iznosu, najveći prvi</option></select></span></div>
         </div>
         <div class="region" data-region="orders"></div>
       </section>
@@ -203,6 +206,9 @@
           <button type="button" data-v="unpaid" aria-pressed="false">Neplaćene</button>
           <button type="button" data-v="cancelled" aria-pressed="false">Otkazane</button>
         </div></div>
+          <div class="field"><label for="od-fakture">Od datuma</label><input class="input" id="od-fakture" name="od" type="date" data-prm></div>
+          <div class="field"><label for="do-fakture">Do datuma</label><input class="input" id="do-fakture" name="do" type="date" data-prm></div>
+          <div class="field"><label for="o-fakture">Redosled</label><span class="select"><select class="input" id="o-fakture" name="o" data-prm><option value="">Po broju, najnovija prva</option><option value="no">Po broju, od prve</option><option value="old">Po datumu, najstarija prva</option><option value="new">Po datumu, najnovija prva</option><option value="az">Po imenu A–Š</option><option value="za">Po imenu Š–A</option><option value="sum">Po iznosu, najveći prvi</option></select></span></div>
         </div>
         <div class="region" data-region="invoices"></div>
       </section>
@@ -235,6 +241,6 @@
   <noscript><p class="boot">Administracija radi samo sa uključenim JavaScriptom.</p></noscript>
 
   <script type="application/json" id="admin-config">{"url":"https://ivzzhtaksdwbhhioilsn.supabase.co","key":"sb_publishable_rxpulg5CJqz_TpV1brvBCQ_C2ioyLyW","userDomain":"magacin.example.com"}</script>
-  <script type="module" src="../assets/js/admin.js?v=bdf0fa49e0"></script>
+  <script type="module" src="../assets/js/admin.js?v=64c2840099"></script>
 </body>
 </html>

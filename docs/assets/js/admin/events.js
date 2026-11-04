@@ -1,20 +1,20 @@
 // Click, change, input and submit handlers for the whole admin.
-import { $, $$ } from './api.js?v=bdf0fa49e0';
-import { D, ST, byCode, catOf, load, route, setParam, MORE } from './data.js?v=bdf0fa49e0';
-import { catForm, deleteCat, deletePriest, priestForm, submitCat, submitPriest } from './forms.js?v=bdf0fa49e0';
-import { addMember, inquirySheet, sendQuote, setInquiry } from './inquiries.js?v=bdf0fa49e0';
-import { saveMarkup, savePriestActive } from './lists.js?v=bdf0fa49e0';
-import { orderPdf, orderSheet, setStatus, viewAs } from './orders.js?v=bdf0fa49e0';
-import { openPdf, refreshPdf } from './pdf.js?v=bdf0fa49e0';
-import { addFiles, byCodeBefore, deleteProduct, drawOptEditor, drawPhotos, edit, productForm, readOptEditor, submitProduct } from './product-form.js?v=bdf0fa49e0';
-import { bulk, drawBulk, picked, saveActive, saveStock, shownCodes } from './products.js?v=bdf0fa49e0';
-import { closeProfile, passwordForm, submitPassword } from './profile.js?v=bdf0fa49e0';
-import { closeSheet, sheet } from './sheet.js?v=bdf0fa49e0';
-import { draw } from './shell.js?v=bdf0fa49e0';
-import { signOut } from './signin.js?v=bdf0fa49e0';
-import { csvOrders, csvProducts, csvStats } from './stats.js?v=bdf0fa49e0';
-import { loadMoves, moveForm, submitMove } from './stock.js?v=bdf0fa49e0';
-import { notify } from './ui.js?v=bdf0fa49e0';
+import { $, $$ } from './api.js?v=64c2840099';
+import { D, ST, byCode, catOf, load, route, setParam, MORE } from './data.js?v=64c2840099';
+import { catForm, deleteCat, deletePriest, priestForm, submitCat, submitPriest } from './forms.js?v=64c2840099';
+import { addMember, inquirySheet, sendQuote, setInquiry } from './inquiries.js?v=64c2840099';
+import { saveMarkup, savePriestActive } from './lists.js?v=64c2840099';
+import { orderPdf, orderSheet, setStatus, viewAs } from './orders.js?v=64c2840099';
+import { openPdf, refreshPdf } from './pdf.js?v=64c2840099';
+import { addFiles, byCodeBefore, deleteProduct, drawOptEditor, drawPhotos, edit, productForm, readOptEditor, submitProduct } from './product-form.js?v=64c2840099';
+import { bulk, drawBulk, picked, saveActive, saveStock, shownCodes } from './products.js?v=64c2840099';
+import { closeProfile, passwordForm, submitPassword } from './profile.js?v=64c2840099';
+import { closeSheet, sheet } from './sheet.js?v=64c2840099';
+import { draw } from './shell.js?v=64c2840099';
+import { signOut } from './signin.js?v=64c2840099';
+import { csvOrders, csvProducts, csvStats } from './stats.js?v=64c2840099';
+import { loadMoves, moveForm, submitMove } from './stock.js?v=64c2840099';
+import { notify } from './ui.js?v=64c2840099';
 
 // ---------- events ----------
 document.addEventListener('click', (e) => {
@@ -122,6 +122,7 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Enter' && e.target.matches('[data-stock]')) { e.preventDefault(); saveStock(e.target); }
   if (e.key === 'Escape' && e.target.matches('[data-stock]')) { const p = byCode(e.target.dataset.stock); e.target.value = p?.stock ?? ''; e.target.removeAttribute('aria-invalid'); }
 });
+document.addEventListener('change', (e) => { if (e.target.matches('[data-prm]')) { const { name, value } = e.target; setParam('pg', ''); setParam(name, value); } });
 let typing = 0;
 document.addEventListener('input', (e) => {
   if (!e.target.matches('[data-q]')) return;

@@ -1,6 +1,6 @@
 // The data the screens show (loaded once, kept here), lookups, the address (route) and the loading/empty/error states.
-import { db, esc, reason } from './api.js?v=bdf0fa49e0';
-import { draw } from './shell.js?v=bdf0fa49e0';
+import { db, esc, reason } from './api.js?v=64c2840099';
+import { draw } from './shell.js?v=64c2840099';
 
 // ---------- data ----------
 export const D = { products: [], cats: [], priests: [], groups: [], orders: [], inquiries: [], options: [] };
@@ -88,3 +88,14 @@ export const MORE = new Set();
 export const shownOf = (key, all, limit) => (MORE.has(key) ? all : all.slice(0, limit));
 export const moreBtn = (key, total, limit) => (total > limit
   ? `<p class="more"><button class="btn btn--s" type="button" data-more="${key}" aria-expanded="${MORE.has(key)}">${MORE.has(key) ? `Prikaži samo prvih ${limit}` : `Prikaži sve (${total})`}</button></p>` : '');
+
+// ---------- date range and sort order of the order and invoice lists ----------
+export const rangeOf = (r) => ({ from: r.p.get('od') || '', to: r.p.get('do') || '', sort: r.p.get('o') || '' });
+export const inRange = (at, { from, to }) => (!from || at >= Date.parse(`${from}T00:00:00`)) && (!to || at <= Date.parse(`${to}T23:59:59`));
+export function syncRange(sc, r) {
+  const { from, to, sort } = rangeOf(r);
+  const set = (n, v) => { const el = sc.querySelector(`[name="${n}"]`); if (el && el.value !== v) el.value = v; };
+  set('od', from); set('do', to); set('o', sort);
+}
+const label = (x) => String(x.parish || x.name || x.email || '');
+export const byLabel = (a, b) => label(a).localeCompare(label(b), 'fr', { sensitivity: 'base' }) || String(a.name || '').localeCompare(String(b.name || ''), 'fr', { sensitivity: 'base' });

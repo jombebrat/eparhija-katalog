@@ -1,11 +1,11 @@
 // Orders screen, one order's sheet and status, and the order PDF.
-import { $, $$, C, SITE, call, db, esc, money, one, reason, token, when } from './api.js?v=bdf0fa49e0';
-import { D, NEEDS, ST, empty, failed, load, optById, skeleton, stateOf } from './data.js?v=bdf0fa49e0';
-import { saveFile } from './inquiries.js?v=bdf0fa49e0';
-import { showHistory } from './history.js?v=bdf0fa49e0';
-import { formError, head, openSheet } from './sheet.js?v=bdf0fa49e0';
-import { draw } from './shell.js?v=bdf0fa49e0';
-import { syncSeg } from './ui.js?v=bdf0fa49e0';
+import { $, $$, C, SITE, call, db, esc, money, one, reason, token, when } from './api.js?v=64c2840099';
+import { D, NEEDS, ST, byLabel, empty, failed, inRange, load, optById, rangeOf, skeleton, stateOf, syncRange } from './data.js?v=64c2840099';
+import { saveFile } from './inquiries.js?v=64c2840099';
+import { showHistory } from './history.js?v=64c2840099';
+import { formError, head, openSheet } from './sheet.js?v=64c2840099';
+import { draw } from './shell.js?v=64c2840099';
+import { syncSeg } from './ui.js?v=64c2840099';
 
 // ----- orders -----
 export const STATUS = { new: 'Nova', processing: 'U obradi', ready: 'Spremna za preuzimanje', done: 'Izvršena', cancelled: 'Otkazana' };
@@ -24,7 +24,11 @@ export function drawOrders(r) {
     box.innerHTML = empty('Još nema porudžbina.', 'Kada sveštenik pošalje listu sa sajta, porudžbina se pojavi ovde, a PDF stigne i magacinu na mejl ako je mejl podešen.');
     return;
   }
-  const list = D.orders.filter((o) => s === 'all' || o.status === s);
+  const rg = rangeOf(r);
+  syncRange(sc, r);
+  const list = D.orders.filter((o) => (s === 'all' || o.status === s) && inRange(Date.parse(o.created_at), rg));
+  const cmp = { old: (a, b) => Date.parse(a.created_at) - Date.parse(b.created_at), az: byLabel, za: (a, b) => byLabel(b, a), sum: (a, b) => Number(b.total) - Number(a.total) }[rg.sort];
+  if (cmp) list.sort(cmp);
   if (!list.length) {
     box.innerHTML = empty(s === 'new' ? 'Nema novih porudžbina.' : `Nema porudžbina sa statusom „${STATUS[s]}“.`, s === 'new' ? 'Sve pristigle porudžbine su obrađene.' : 'Promenite filter da vidite ostale.',
       '<button class="btn" type="button" data-s-all>Prikaži sve porudžbine</button>');
