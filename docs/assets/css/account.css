@@ -2,7 +2,7 @@
  * nav: the catalogue's slab · signature: the member's orders, each with its PDF and "order again" · states: loading, empty, error, full
  * axes: light/grotesk-sans/chromatic-gold · contrast: pass · v2.0.0 */
 @import url("./login.css?v=90fa9f4a03");
-@import url("./site.css?v=9306af22f2");
+@import url("./site.css?v=2987fdbb82");
 
 /* the app's own scale, ratio 1.2 */
 :root { --color-success-soft: oklch(95% 0.03 150); --color-success-ink: oklch(36% 0.09 150); }
