@@ -35,8 +35,8 @@ Trojezični (FR glavni, EN, SR ćirilica) katalog i porudžbine magacina Eparhij
 
 ## Testiranje (lokalno)
 - Statički server: `cd docs && python3 -m http.server 8765` (često se ugasi, pokrenuti ponovo).
-- Mock Supabase na Deno-u (`mock.sh start|stop`, `mock/supa.ts`) sa test članom otac.nikola@example.com (kod 123456) i adminom admin@example.com. Testovi su puppeteer skripte (tok člana: izmena/otkazivanje; admin: oznaka "Izmenjena", potrebna "Sve" filter; pregled mejlova).
-- Ovi alati su u scratchpad folderu sesije i ne nalaze se u repou; mogu da se naprave ponovo.
+- Mock Supabase (Deno), test nalozi i puppeteer skripte su u `tools/test/` (uputstvo u `tools/test/README.md`). Test nalozi: član otac.nikola@example.com (kod 123456), admin admin@example.com. Cene u mock-u su izmišljene.
+- Skripte pokrivaju tok člana (izmena/otkazivanje), admin oznaku "Izmenjena" (treba filter "Sve") i pregled mejlova.
 
 ## Nije proveravano na pravom sajtu
 Stvarna isporuka mejlova (Gmail/Apple Mail, spam), SPF/DKIM PASS (podešeno, nije potvrđeno), DMARC TXT zapis (preporučen), brisanje porudžbine u pravoj bazi, prikaz prvobitnog iznosa u adminu.
