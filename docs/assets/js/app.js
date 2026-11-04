@@ -466,6 +466,7 @@ import * as R from './render.js?v=2e5794a19b';
   const el = (tag, cls, text) => { const x = document.createElement(tag); if (cls) x.className = cls; if (text !== undefined) x.textContent = text; return x; };
 
   let lastOrder = null;
+  let step = 'list'; // members: the list first, then "Continue" opens the review with the sender's details
   function renderList() {
     const codes = Object.keys(list);
     body.innerHTML = '';
@@ -475,6 +476,7 @@ import * as R from './render.js?v=2e5794a19b';
     if (quote) return renderQuote();
     if (lastInquiry) return renderInquiryDone();
     if (!codes.length) {
+      step = 'list';
       const box = el('div', 'drawer__empty');
       box.append(el('b', '', S.emptyTitle), el('p', '', S.emptyText));
       const a = el('a', 'btn btn--quiet', S.browse); a.href = '#catalogue'; a.dataset.close = '';
@@ -482,6 +484,7 @@ import * as R from './render.js?v=2e5794a19b';
       body.append(box);
       return;
     }
+    if (step === 'review' && prices) return renderReview();
     for (const code of codes) {
       const it = itemOf(code);
       if (!it) continue;
@@ -536,7 +539,7 @@ import * as R from './render.js?v=2e5794a19b';
       });
       body.append(row);
     }
-    if (prices) renderOrderForm(); else renderGuestFoot();
+    if (prices) renderListFoot(); else renderGuestFoot();
   }
 
   function listActions() {
@@ -718,23 +721,53 @@ import * as R from './render.js?v=2e5794a19b';
     });
   }
 
+  // members: the foot of the list is the total and one button; the details come on the next screen
+  function renderListFoot() {
+    const total = el('p', 'drawer__total');
+    total.append(el('span', '', S.total));
+    const tb = el('b', '', money.format(sum())); tb.dataset.total = '';
+    total.append(tb);
+    const next = el('button', 'btn btn--primary', S.listNext); next.type = 'button';
+    next.addEventListener('click', () => { step = 'review'; renderList(); drawer.querySelector('.drawer__scroll')?.scrollTo(0, 0); $('[data-review-back]', body)?.focus(); });
+    const { help, row } = listActions();
+    foot.append(total, next, help, row);
+  }
+
+  // the review: what is ordered, then who is sending it, then the button
+  function renderReview() {
+    $('#drawer-title').textContent = S.reviewTitle;
+    const back = el('button', 'textbtn review__back', `← ${S.reviewBack}`); back.type = 'button'; back.dataset.reviewBack = '';
+    back.addEventListener('click', () => { step = 'list'; renderList(); });
+    const ul = el('ul', 'review__list'); ul.setAttribute('role', 'list');
+    for (const k of Object.keys(list)) {
+      const it = itemOf(k);
+      if (!it) continue;
+      const pr = priceOf(it.code);
+      const li = el('li');
+      const name = el('span', 'review__name', it.name);
+      if (!it.p.kg) name.append(el('span', 'review__sku', it.sku));
+      li.append(el('span', 'review__qty', `${list[k]}${it.p.kg ? ` ${S.kg}` : ' ×'}`), name, el('span', 'review__sum', pr === null ? '' : money.format(lineSum(k))));
+      ul.append(li);
+    }
+    const total = el('p', 'drawer__total');
+    total.append(el('span', '', S.total), el('b', '', money.format(sum())));
+    body.append(back, ul, total);
+    renderOrderForm();
+  }
+
   function renderOrderForm() {
     const form = el('form', 'order-form'); form.noValidate = true;
     const field = formField('of', store.get('ek-form', {}));
     form.addEventListener('change', (e) => { const f = store.get('ek-form', {}); f[e.target.name] = e.target.value; store.set('ek-form', f); });
     form.addEventListener('input', (e) => e.target.removeAttribute('aria-invalid'));
-    const total = el('p', 'drawer__total');
-    total.append(el('span', '', S.total));
-    const tb = el('b', '', money.format(sum())); tb.dataset.total = '';
-    total.append(tb);
     const grid = el('div', 'order-form__grid');
     grid.append(field('name', S.formName, 'text', false, 'input', 'name'), field('parish', S.formParish, 'text', true, 'input', 'organization'),
       field('phone', S.formPhone, 'tel', true, 'input', 'tel'), field('address', S.formAddress, 'text', true, 'input', 'street-address'));
     const note = field('note', S.formNote, 'text', true, 'textarea');
     const send = el('button', 'btn btn--primary', S.sendOrder); send.type = 'submit';
-    const { help, row } = listActions();
-    form.append(total, grid, note, send, help);
-    foot.append(form, row);
+    const help = el('p', 'drawer__help'); help.setAttribute('aria-live', 'polite'); help.id = 'order-help';
+    form.append(el('h3', 'review__who', S.reviewWho), el('p', 'drawer__member', `${S.quoteFor}: ${store.get('ek-email') || ''}`), grid, note, send, help);
+    foot.append(form);
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const data = Object.fromEntries(new FormData(form));
@@ -752,7 +785,7 @@ import * as R from './render.js?v=2e5794a19b';
       } catch { res = null; }
       send.disabled = false; send.removeAttribute('aria-busy'); send.textContent = S.sendOrder;
       if (res && res.status === 200 && res.data.number) {
-        lastOrder = res.data;
+        lastOrder = res.data; step = 'list';
         list = {}; save(); syncButtons(); renderList();
         $('[data-done-pdf]', foot)?.focus();
         return;
@@ -822,7 +855,7 @@ import * as R from './render.js?v=2e5794a19b';
     };
     requestAnimationFrame(tick);
   }
-  drawer.addEventListener('close', () => { lastOrder = null; lastInquiry = null; quote = null; });
+  drawer.addEventListener('close', () => { lastOrder = null; lastInquiry = null; quote = null; step = 'list'; });
 
   // ---------- product detail ----------
   const detail = $('[data-detail-dialog]');

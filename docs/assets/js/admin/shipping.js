@@ -1,10 +1,10 @@
 // Finishing an order: the admin attaches the invoice made in Erplain and a tracking code, reads the message the member
 // will get (in the member's language), and sends it. The order becomes "done" (stock is taken, as before).
-import { $, C, call, db, esc, one, reason, token } from './api.js?v=7648825353';
-import { D, ST, load } from './data.js?v=7648825353';
-import { checkbox, field, formError, head, openSheet, select, sheet } from './sheet.js?v=7648825353';
-import { draw } from './shell.js?v=7648825353';
-import { notify } from './ui.js?v=7648825353';
+import { $, C, call, db, esc, one, reason, token } from './api.js?v=37993e7293';
+import { D, ST, load } from './data.js?v=37993e7293';
+import { checkbox, field, formError, head, openSheet, select, sheet } from './sheet.js?v=37993e7293';
+import { draw } from './shell.js?v=37993e7293';
+import { notify } from './ui.js?v=37993e7293';
 
 // carriers and where the member can follow the parcel
 export const CARRIERS = [

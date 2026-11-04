@@ -463,7 +463,7 @@ body.adm { font-size: var(--t-md); line-height: 1.5; background: var(--adm-bg); 
 
 /* ---------- the look: white cards on a soft grey ground ---------- */
 .screens .panel, .pdfcard, .wait, .kpi, .region:not(.ov):not(.stats):not(:empty), .state--card { padding: var(--space-lg); border: var(--rule-hair) solid var(--color-rule); border-radius: 14px; background: var(--color-paper); box-shadow: var(--adm-shadow); }
-.screens .pdfcard { margin-top: 0; margin-bottom: var(--space-lg); }
+.screens .pdfcard { margin-top: 0; }
 .kpi { border-top-width: var(--rule-hair); }
 .ov { gap: var(--space-lg); }
 .ov__kpis { gap: var(--space-md); }

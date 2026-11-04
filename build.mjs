@@ -111,7 +111,7 @@ const t = (lang, s) => esc(typo(lang, s));
 
 const CLIENT_STRINGS = ['introAvail', 'introCats', 'introSkip', 'add', 'added', 'noMatch', 'matches', 'photoOf', 'emptyTitle', 'emptyText', 'qty', 'less', 'more', 'remove', 'total', 'copy', 'copied', 'copyFailed', 'clearList', 'mailHello', 'kg', 'perKg', 'close', 'code', 'browse',
   'loginUnknown', 'loginTooMany', 'loginFailed', 'loginInvalid', 'checking', 'showPrices', 'signOut', 'pricesFor', 'guestList', 'formName', 'formParish', 'formPhone', 'formAddress', 'formNote', 'optional', 'nameMissing',
-  'sendOrder', 'sending', 'orderDone', 'orderDoneMail', 'orderDoneNoMail', 'downloadPdf', 'orderFailed', 'orderUnknown', 'orderUnavailable', 'done', 'outOfStock', 'related', 'inStock',
+  'sendOrder', 'listNext', 'reviewTitle', 'reviewBack', 'reviewWho', 'sending', 'orderDone', 'orderDoneMail', 'orderDoneNoMail', 'downloadPdf', 'orderFailed', 'orderUnknown', 'orderUnavailable', 'done', 'outOfStock', 'related', 'inStock',
   'optAvail', 'backToCatalogue', 'addLabel', 'acLink', 'list', 'cartLabel', 'askPrices', 'gatePriest', 'gateLead', 'gateUnknown', 'gateOther', 'gateOtherLead', 'emailPlaceholder', 'inqSend', 'inqDone', 'inqDoneText', 'inqFailed', 'inqTooMany',
   'emailMissing', 'emailLabel', 'quoteTitle', 'quoteLead', 'quoteOrder', 'quoteGone', 'quoteFor', 'cancel', 'pdfBtn', 'pdfChooseTitle', 'pdfChooseLead', 'pdfBlank', 'pdfWithPrices', 'pdfWorking', 'pdfNone', 'pdfFailed', 'choose', 'chooseLabel', 'optCount', 'optsHead', 'optsFind', 'optsFindPh', 'optsNone', 'orderChoose', 'candlesLead', 'candlesCaption', 'thFormat', 'thSize', 'thDetail', 'thPrice', 'thPriceUnit', 'thList'];
 
@@ -431,6 +431,7 @@ function adminPage() {
         <a href="#artikli" data-tab="artikli"><svg class="tabs__ic" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2.8 16.5 6v8L10 17.2 3.5 14V6z"/><path d="M3.8 6.1 10 9.3l6.2-3.2M10 9.3v7.8"/></svg><span>Artikli</span></a>
         <a href="#zalihe" data-tab="zalihe"><svg class="tabs__ic" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5L10 4.5l6.5 4v7.5h-13z"/><path d="M7.5 16v-4h5v4"/></svg><span>Zalihe</span></a>
         <a href="#statistika" data-tab="statistika"><svg class="tabs__ic" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16V9M10 16V4M16 16v-5"/></svg><span>Statistika</span></a>
+        <a href="#cenovnik" data-tab="cenovnik"><svg class="tabs__ic" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2.5h6.5L15 6v11.5H5z"/><path d="M11.5 2.5V6H15M7.5 10h5M7.5 13h5"/></svg><span>Cenovnik</span></a>
         <p class="tabs__group">Podešavanja</p>
         <a href="#svestenstvo" data-tab="svestenstvo"><svg class="tabs__ic" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="7" r="2.8"/><path d="M2.5 16c.5-2.8 2.5-4.2 5-4.2s4.5 1.4 5 4.2"/><path d="M13 4.4a2.8 2.8 0 0 1 0 5.2M14.5 12c1.6.5 2.7 1.8 3 4"/></svg><span>Kontakti</span></a>
         <a href="#kategorije" data-tab="kategorije"><svg class="tabs__ic" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5.5h14M3 10h14M3 14.5h9"/></svg><span>Kategorije</span></a>
@@ -471,15 +472,6 @@ function adminPage() {
         <div class="screen__head">
           <div><h1 id="h-pregled">Pregled</h1><p class="screen__sub" data-today></p></div>
         </div>
-        <section class="panel pdfcard" aria-labelledby="h-pdf">
-          <div class="panel__head"><h2 id="h-pdf">PDF cenovnik za članove</h2><p class="panel__sub">Svi artikli sa slikama i cenama, na srpskom, francuskom i engleskom, u jednom fajlu. Članovi ga preuzimaju sa sajta, posetioci bez prijave ga ne vide.</p></div>
-          <p class="pdfcard__state" data-pdf-state aria-live="polite">Proveravam…</p>
-          <div class="pdfcard__actions">
-            <button class="btn btn--primary" type="button" data-pdf-refresh>Osveži PDF</button>
-            <button class="btn" type="button" data-pdf-get hidden>Pregledaj PDF</button>
-          </div>
-          <p class="pdfcard__help">PDF se osvežava sam jednom dnevno, čim otvorite administraciju, i pravi se u dve verzije: sa cenama i bez cena. Dugme ga osvežava odmah, na primer posle unosa novih artikala. Dok traje, ostavite stranicu otvorenom.</p>
-        </section>
         <div class="region ov" data-region="overview"></div>
       </section>
 
@@ -567,6 +559,21 @@ function adminPage() {
           <div><h1 id="h-poruke">Poruke</h1><p class="screen__sub">Tekst automatske poruke članu kada je porudžbina završena i poslata</p></div>
         </div>
         <div class="region" data-region="messages"></div>
+      </section>
+
+      <section class="screen" data-screen="cenovnik" aria-labelledby="h-cenovnik" hidden>
+        <div class="screen__head">
+          <div><h1 id="h-cenovnik">PDF cenovnik</h1><p class="screen__sub">Fajl koji članovi preuzimaju sa sajta</p></div>
+        </div>
+        <section class="panel pdfcard" aria-labelledby="h-pdf">
+          <div class="panel__head"><h2 id="h-pdf">PDF cenovnik za članove</h2><p class="panel__sub">Svi artikli sa slikama i cenama, na srpskom, francuskom i engleskom, u jednom fajlu. Članovi ga preuzimaju sa sajta, posetioci bez prijave ga ne vide.</p></div>
+          <p class="pdfcard__state" data-pdf-state aria-live="polite">Proveravam…</p>
+          <div class="pdfcard__actions">
+            <button class="btn btn--primary" type="button" data-pdf-refresh>Osveži PDF</button>
+            <button class="btn" type="button" data-pdf-get hidden>Pregledaj PDF</button>
+          </div>
+          <p class="pdfcard__help">PDF se osvežava sam jednom dnevno, čim otvorite administraciju, i pravi se u dve verzije: sa cenama i bez cena. Dugme ga osvežava odmah, na primer posle unosa novih artikala. Dok traje, ostavite stranicu otvorenom.</p>
+        </section>
       </section>
 
       <section class="screen" data-screen="statistika" aria-labelledby="h-statistika" hidden>

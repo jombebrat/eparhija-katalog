@@ -1,9 +1,9 @@
 // The automatic messages: the text the member gets when an order is finished and sent, in each language.
 // The admin edits it here; the dialog "Završi porudžbinu" starts from it.
-import { $, $$, db, esc, one, reason } from './api.js?v=7648825353';
-import { D, NEEDS, failed, skeleton, stateOf } from './data.js?v=7648825353';
-import { DEFAULTS, render, templateOf } from './shipping.js?v=7648825353';
-import { notify } from './ui.js?v=7648825353';
+import { $, $$, db, esc, one, reason } from './api.js?v=37993e7293';
+import { D, NEEDS, failed, skeleton, stateOf } from './data.js?v=37993e7293';
+import { DEFAULTS, render, templateOf } from './shipping.js?v=37993e7293';
+import { notify } from './ui.js?v=37993e7293';
 
 const LANGS = [['fr', 'Francuski', 'fr'], ['en', 'Engleski', 'en'], ['sr', 'Srpski (ćirilica)', 'sr-Cyrl']];
 const SAMPLE = { n: 1234, carrier: 'colissimo', code: '6A12345678901', invoice: true };
