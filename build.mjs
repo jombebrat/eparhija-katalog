@@ -589,7 +589,7 @@ console.log('wrote docs/admin/index.html');
 
 // ---------- the member's account page, one per language ----------
 const ACCOUNT_STRINGS = ['acTitle', 'acEmail', 'acSend', 'acSendHelp', 'acSending', 'acSent', 'acCode', 'acSignIn', 'acSigningIn', 'acAgain', 'acOther',
-  'acWrongCode', 'acNoCode', 'acMailOff', 'acMailFailed', 'acSignedOut', 'acOrders', 'acTabOverview', 'acStats', 'acStatOrders', 'acStatSpent', 'acStatAvg', 'acTop', 'acTopHint', 'acTopNone', 'acOrdersEmpty', 'acOrdersEmptyText', 'acOrdersError', 'acRetry',
+  'acWrongCode', 'acNoCode', 'acMailOff', 'acMailFailed', 'acSignedOut', 'acOrders', 'acTabOverview', 'acStats', 'acStatOrders', 'acStatSpent', 'acStatAvg', 'acTop', 'acTopHint', 'acTopNone', 'acTopAll', 'acTopLess', 'acOrdersEmpty', 'acOrdersEmptyText', 'acOrdersError', 'acRetry',
   'acOrder', 'acStatusNew', 'acStatusProcessing', 'acStatusReady', 'acStatusDone', 'acStatusCancelled', 'acLines', 'acPdf', 'acPdfMaking', 'acPdfFailed', 'acReorder', 'acReorderSome',
   'acSave', 'acSaving', 'acSaved', 'acSaveFailed', 'acItem', 'acQty', 'acAmount', 'acCatalogue', 'code', 'total', 'kg', 'signOut',
   'loginUnknown', 'loginTooMany', 'loginInvalid', 'loginFailed', 'formName', 'formParish', 'formPhone', 'formAddress', 'optional', 'pricesFor'];
@@ -702,6 +702,7 @@ function accountPage(lang) {
                 <section class="acct__top" aria-labelledby="h-top">
                   <h3 id="h-top">${t(lang, S.acTop)}</h3>
                   <ol class="toplist" data-top role="list"></ol>
+                  <button class="btn btn--s toplist__more" type="button" data-top-more aria-expanded="false" hidden></button>
                   <p class="acct__meta">${t(lang, S.acTopHint)}</p>
                 </section>
               </section>

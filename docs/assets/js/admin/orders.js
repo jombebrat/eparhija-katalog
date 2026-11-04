@@ -1,11 +1,11 @@
 // Orders screen, one order's sheet and status, and the order PDF.
-import { $, $$, C, SITE, call, db, esc, money, one, reason, token, when } from './api.js?v=53224adb82';
-import { D, NEEDS, ST, empty, failed, load, optById, skeleton, stateOf } from './data.js?v=53224adb82';
-import { saveFile } from './inquiries.js?v=53224adb82';
-import { showHistory } from './history.js?v=53224adb82';
-import { formError, head, openSheet } from './sheet.js?v=53224adb82';
-import { draw } from './shell.js?v=53224adb82';
-import { syncSeg } from './ui.js?v=53224adb82';
+import { $, $$, C, SITE, call, db, esc, money, one, reason, token, when } from './api.js?v=bdf0fa49e0';
+import { D, NEEDS, ST, empty, failed, load, optById, skeleton, stateOf } from './data.js?v=bdf0fa49e0';
+import { saveFile } from './inquiries.js?v=bdf0fa49e0';
+import { showHistory } from './history.js?v=bdf0fa49e0';
+import { formError, head, openSheet } from './sheet.js?v=bdf0fa49e0';
+import { draw } from './shell.js?v=bdf0fa49e0';
+import { syncSeg } from './ui.js?v=bdf0fa49e0';
 
 // ----- orders -----
 export const STATUS = { new: 'Nova', processing: 'U obradi', ready: 'Spremna za preuzimanje', done: 'Izvršena', cancelled: 'Otkazana' };

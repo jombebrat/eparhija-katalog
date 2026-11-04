@@ -244,13 +244,24 @@ function drawStats() {
     e.qty += Number(l.qty); e.value += Number(l.price) * Number(l.qty); e.orders += 1;
     by.set(k, e);
   }
-  const top = [...by.values()].sort((a, b) => b.value - a.value || b.qty - a.qty).slice(0, 5);
+  const top = [...by.values()].sort((a, b) => b.value - a.value || b.qty - a.qty);
   const max = top[0]?.value || 1;
+  topRows = top;
   if (!matchMedia('(prefers-reduced-motion: reduce)').matches && !sec.dataset.shown) { sec.dataset.shown = '1'; requestAnimationFrame(countStats); }
+  drawTop(max);
+}
+let topRows = [], topOpen = false;
+function drawTop(max = topRows[0]?.value || 1) {
+  const top = topOpen ? topRows : topRows.slice(0, 5);
+  const more = $('[data-top-more]');
+  more.hidden = topRows.length <= 5;
+  more.textContent = topOpen ? S.acTopLess : fill(S.acTopAll, { n: topRows.length });
+  more.setAttribute('aria-expanded', String(topOpen));
   $('[data-top]').innerHTML = top.map((e, i) => `<li class="toplist__item"><span class="toplist__rank">${i + 1}</span>
       <span class="toplist__text"><b>${esc(e.name)}</b><span class="sub">${esc(e.code)} · ${esc(String(e.qty))}${e.unit === 'kg' ? ` ${esc(S.kg)}` : ''}</span><span class="toplist__bar"><span style="width:${Math.max(4, Math.round(e.value / max * 100))}%"></span></span></span>
       <span class="toplist__value">${esc(money.format(e.value))}</span></li>`).join('');
 }
+$('[data-top-more]').addEventListener('click', () => { topOpen = !topOpen; drawTop(); });
 function drawOrders() {
   drawStats();
   if (!orders.length) {

@@ -1,8 +1,8 @@
 // Statistics screen: sales by month, what to reorder, CSV exports.
-import { $, esc, money, plural, when } from './api.js?v=53224adb82';
-import { D, NEEDS, byCode, catName, empty, failed, low, nameOf, route, skeleton, stateOf } from './data.js?v=53224adb82';
-import { STATUS } from './orders.js?v=53224adb82';
-import { syncSeg } from './ui.js?v=53224adb82';
+import { $, esc, money, plural, when } from './api.js?v=bdf0fa49e0';
+import { D, NEEDS, byCode, catName, empty, failed, low, nameOf, route, skeleton, stateOf, moreBtn, shownOf } from './data.js?v=bdf0fa49e0';
+import { STATUS } from './orders.js?v=bdf0fa49e0';
+import { syncSeg } from './ui.js?v=bdf0fa49e0';
 
 export const DAY = 864e5;
 const PERIODS = { 30: '30 dana', 90: '90 dana', 365: '12 meseci', sve: 'od početka' };
@@ -136,27 +136,29 @@ export function drawStats(r) {
     </dl>
     <p class="region__hint">${esc(PERIODS[per] === 'od početka' ? 'Od prve porudžbine.' : `Poslednjih ${PERIODS[per]}.`)} Računaju se sve porudžbine osim otkazanih.</p>`;
 
-  const ranked = [...m.sales].sort((a, b) => (by === 'iznos' ? b[1].value - a[1].value : b[1].qty - a[1].qty) || b[1].orders - a[1].orders).slice(0, 10);
+  const ranked = [...m.sales].sort((a, b) => (by === 'iznos' ? b[1].value - a[1].value : b[1].qty - a[1].qty) || b[1].orders - a[1].orders);
+  const rankedAll = ranked, rankedShown = shownOf('best', ranked, 10);
   const best = `<section class="panel" aria-labelledby="h-best">
       <div class="panel__head panel__head--row"><h2 id="h-best">Najviše se prodaje</h2>
         <div class="seg seg--s" role="group" aria-label="Poređaj" data-po><button type="button" data-v="kol" aria-pressed="${by === 'kol'}">po količini</button><button type="button" data-v="iznos" aria-pressed="${by === 'iznos'}">po iznosu</button></div></div>
-      ${ranked.length ? `<div class="tbl-wrap"><table class="tbl tbl--compact">
+      ${rankedAll.length ? `<div class="tbl-wrap"><table class="tbl tbl--compact">
         <thead><tr><th scope="col" class="num opt">#</th><th scope="col">Artikal</th><th scope="col" class="num">Količina</th><th scope="col" class="num">Iznos</th><th scope="col" class="num opt">Porudžbina</th></tr></thead>
-        <tbody>${ranked.map(([code, s], i) => `<tr><td class="num opt">${i + 1}</td><th scope="row"><span class="c-code">${codeBtn(code)}</span> <span class="sub">${esc(name(code, s.name))}</span></th>
+        <tbody>${rankedShown.map(([code, s], i) => `<tr><td class="num opt">${i + 1}</td><th scope="row"><span class="c-code">${codeBtn(code)}</span> <span class="sub">${esc(name(code, s.name))}</span></th>
           <td class="num">${esc(qtyText(s.qty, s.unit))}</td><td class="num">${esc(money.format(s.value))}</td><td class="num opt">${s.orders}</td></tr>`).join('')}</tbody>
-      </table></div>` : '<p class="state__hint">U ovom periodu nema prodaje.</p>'}
+      </table></div>${moreBtn('best', rankedAll.length, 10)}` : '<p class="state__hint">U ovom periodu nema prodaje.</p>'}
     </section>`;
 
   const least = D.products.filter((p) => p.active).map((p) => ({ p, s: m.sales.get(p.code), last: m.ever.get(p.code)?.last || 0 }))
-    .sort((a, b) => (a.s?.qty || 0) - (b.s?.qty || 0) || a.last - b.last || catOrder(a.p) - catOrder(b.p) || a.p.sort - b.p.sort).slice(0, 10);
+    .sort((a, b) => (a.s?.qty || 0) - (b.s?.qty || 0) || a.last - b.last || catOrder(a.p) - catOrder(b.p) || a.p.sort - b.p.sort);
+  const leastShown = shownOf('least', least, 10);
   const never = D.products.filter((p) => p.active && !m.sales.has(p.code)).length;
   const worst = `<section class="panel" aria-labelledby="h-least">
       <div class="panel__head"><h2 id="h-least">Najmanje se prodaje</h2><p class="panel__sub">${esc(never ? `${plural(never, 'artikal nije poručen', 'artikla nisu poručena', 'artikala nije poručeno')} u ovom periodu; ovde su oni koji najduže čekaju.` : 'Svaki artikal je poručen bar jednom u ovom periodu.')}</p></div>
       <div class="tbl-wrap"><table class="tbl tbl--compact">
         <thead><tr><th scope="col">Artikal</th><th scope="col" class="num">Količina</th><th scope="col" class="num">Poslednji put poručen</th><th scope="col" class="num opt">Stanje</th></tr></thead>
-        <tbody>${least.map(({ p, s, last }) => `<tr><th scope="row"><span class="c-code">${codeBtn(p.code)}</span> <span class="sub">${esc(nameOf(p))}</span></th>
+        <tbody>${leastShown.map(({ p, s, last }) => `<tr><th scope="row"><span class="c-code">${codeBtn(p.code)}</span> <span class="sub">${esc(nameOf(p))}</span></th>
           <td class="num">${s ? esc(qtyText(s.qty, p.unit)) : '0'}</td><td class="num">${last ? esc(dayText.format(new Date(last))) : 'nikad'}</td><td class="num opt">${p.stock ?? '—'}</td></tr>`).join('')}</tbody>
-      </table></div>
+      </table></div>${moreBtn('least', least.length, 10)}
     </section>`;
 
   const people = new Map();
@@ -165,13 +167,14 @@ export function drawStats(r) {
     x.n++; x.value += Number(o.total); x.last = Math.max(x.last, Date.parse(o.created_at));
     people.set(o.email, x);
   }
-  const topPeople = [...people.values()].sort((a, b) => b.value - a.value).slice(0, 10);
+  const topPeople = [...people.values()].sort((a, b) => b.value - a.value);
+  const topShown = shownOf('people', topPeople, 10);
   const who = `<section class="panel" aria-labelledby="h-people">
       <div class="panel__head"><h2 id="h-people">Članovi koji najviše poručuju</h2></div>
       <div class="tbl-wrap"><table class="tbl tbl--compact">
         <thead><tr><th scope="col">Član</th><th scope="col" class="num">Porudžbina</th><th scope="col" class="num">Iznos</th><th scope="col" class="num">Poslednja</th></tr></thead>
-        <tbody>${topPeople.map((x) => `<tr><th scope="row">${esc(x.name)}<span class="sub">${esc(x.parish)}</span></th><td class="num">${x.n}</td><td class="num">${esc(money.format(x.value))}</td><td class="num">${esc(dayText.format(new Date(x.last)))}</td></tr>`).join('')}</tbody>
-      </table></div>
+        <tbody>${topShown.map((x) => `<tr><th scope="row">${esc(x.name)}<span class="sub">${esc(x.parish)}</span></th><td class="num">${x.n}</td><td class="num">${esc(money.format(x.value))}</td><td class="num">${esc(dayText.format(new Date(x.last)))}</td></tr>`).join('')}</tbody>
+      </table></div>${moreBtn('people', topPeople.length, 10)}
     </section>`;
 
   const months = `<section class="panel" aria-labelledby="h-months">

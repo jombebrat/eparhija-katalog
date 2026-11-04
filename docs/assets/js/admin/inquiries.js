@@ -1,10 +1,10 @@
 // Price inquiries: list, the quote sheet and its send/member actions.
-import { showHistory } from './history.js?v=53224adb82';
-import { $, $$, C, call, db, esc, money, one, reason, token, when } from './api.js?v=53224adb82';
-import { D, NEEDS, byCode, empty, failed, nameOf, optById, skeleton, stateOf } from './data.js?v=53224adb82';
-import { formError, head, openSheet, sheet } from './sheet.js?v=53224adb82';
-import { draw } from './shell.js?v=53224adb82';
-import { notify, syncSeg } from './ui.js?v=53224adb82';
+import { showHistory } from './history.js?v=bdf0fa49e0';
+import { $, $$, C, call, db, esc, money, one, reason, token, when } from './api.js?v=bdf0fa49e0';
+import { D, NEEDS, byCode, empty, failed, nameOf, optById, skeleton, stateOf } from './data.js?v=bdf0fa49e0';
+import { formError, head, openSheet, sheet } from './sheet.js?v=bdf0fa49e0';
+import { draw } from './shell.js?v=bdf0fa49e0';
+import { notify, syncSeg } from './ui.js?v=bdf0fa49e0';
 
 // ----- price inquiries: a visitor's list, answered with a quote in one click -----
 export const INQ = { new: 'Nov', sent: 'Ponuda poslata', ordered: 'Poručeno', closed: 'Zatvoren' };

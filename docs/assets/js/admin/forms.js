@@ -1,9 +1,9 @@
 // The category and contact forms.
-import { $, db, eq, esc, one, plural, reason, slug } from './api.js?v=53224adb82';
-import { D, GROUPS, catOf, groupOf, nameOf, route } from './data.js?v=53224adb82';
-import { busy, checkbox, closeSheet, field, foot, formError, head, invalid, openSheet, select, sheet } from './sheet.js?v=53224adb82';
-import { draw } from './shell.js?v=53224adb82';
-import { notify } from './ui.js?v=53224adb82';
+import { $, db, eq, esc, one, plural, reason, slug } from './api.js?v=bdf0fa49e0';
+import { D, GROUPS, catOf, groupOf, nameOf, route } from './data.js?v=bdf0fa49e0';
+import { busy, checkbox, closeSheet, field, foot, formError, head, invalid, openSheet, select, sheet } from './sheet.js?v=bdf0fa49e0';
+import { draw } from './shell.js?v=bdf0fa49e0';
+import { notify } from './ui.js?v=bdf0fa49e0';
 
 // ----- the category form -----
 let editCat = null;

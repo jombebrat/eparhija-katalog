@@ -1,6 +1,6 @@
 // The data the screens show (loaded once, kept here), lookups, the address (route) and the loading/empty/error states.
-import { db, esc, reason } from './api.js?v=53224adb82';
-import { draw } from './shell.js?v=53224adb82';
+import { db, esc, reason } from './api.js?v=bdf0fa49e0';
+import { draw } from './shell.js?v=bdf0fa49e0';
 
 // ---------- data ----------
 export const D = { products: [], cats: [], priests: [], groups: [], orders: [], inquiries: [], options: [] };
@@ -82,3 +82,9 @@ export const failed = (what, list) => `<div class="state state--error" role="ale
     <button class="btn" type="button" data-retry="${list.join(' ')}">Pokušaj ponovo</button>
   </div>`;
 export const empty = (title, text, action = '') => `<div class="state"><p class="state__title">${esc(title)}</p><p>${esc(text)}</p>${action}</div>`;
+
+// lists that show their first rows and open to the whole list on a click (kept while the admin is open)
+export const MORE = new Set();
+export const shownOf = (key, all, limit) => (MORE.has(key) ? all : all.slice(0, limit));
+export const moreBtn = (key, total, limit) => (total > limit
+  ? `<p class="more"><button class="btn btn--s" type="button" data-more="${key}" aria-expanded="${MORE.has(key)}">${MORE.has(key) ? `Prikaži samo prvih ${limit}` : `Prikaži sve (${total})`}</button></p>` : '');

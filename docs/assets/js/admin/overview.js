@@ -1,9 +1,9 @@
 // Overview screen: counters, quick actions, map of parishes.
-import { $, esc, money, norm, plural, thumb } from './api.js?v=53224adb82';
-import { D, NEEDS, byCode, failed, low, nameOf, skeleton, stateOf } from './data.js?v=53224adb82';
-import { INQ } from './inquiries.js?v=53224adb82';
-import { STATUS } from './orders.js?v=53224adb82';
-import { DAY, counted, monthChart, qtyText, reorderList, salesBy, statsModel, whole } from './stats.js?v=53224adb82';
+import { $, esc, money, norm, plural, thumb } from './api.js?v=bdf0fa49e0';
+import { D, NEEDS, byCode, failed, low, nameOf, skeleton, stateOf, moreBtn, shownOf } from './data.js?v=bdf0fa49e0';
+import { INQ } from './inquiries.js?v=bdf0fa49e0';
+import { STATUS } from './orders.js?v=bdf0fa49e0';
+import { DAY, counted, monthChart, qtyText, reorderList, salesBy, statsModel, whole } from './stats.js?v=bdf0fa49e0';
 
 // towns of the parishes, for the map (latitude, longitude)
 const TOWNS = {
@@ -98,18 +98,19 @@ export function drawOverview() {
 
   // what sells (90 days), with photos
   const sales = salesBy(live.filter((o) => Date.parse(o.created_at) >= Date.now() - 90 * DAY));
-  const top = [...sales].sort((a, b) => b[1].value - a[1].value).slice(0, 6);
+  const top = [...sales].sort((a, b) => b[1].value - a[1].value);
   const topMax = top[0]?.[1].value || 1;
+  const topShown = shownOf('ovbest', top, 6);
   const best = `<section class="panel" aria-labelledby="h-ov-best">
       <div class="panel__head"><h2 id="h-ov-best">Najprodavanije</h2><p class="panel__sub">Poslednjih 90 dana, po iznosu.</p></div>
-      ${top.length ? `<ol class="toplist" role="list">${top.map(([code, s], i) => {
+      ${top.length ? `<ol class="toplist" role="list">${topShown.map(([code, s], i) => {
         const p = byCode(code); const ph = p?.photos?.[0];
         return `<li class="toplist__item"><span class="toplist__rank">${i + 1}</span>
           <span class="toplist__img">${ph ? `<img src="${esc(thumb(ph))}" alt="" width="${ph.w}" height="${ph.h}" loading="lazy">` : ''}</span>
           <span class="toplist__text"><b>${esc(p ? nameOf(p) : s.name)}</b><span class="sub">${esc(code)} · ${esc(s.unit === 'kg' ? qtyText(s.qty, s.unit) : `${s.qty} kom.`)} · ${plural(s.orders, 'porudžbina', 'porudžbine', 'porudžbina')}</span>
             <span class="toplist__bar"><span style="width:${(s.value / topMax) * 100}%"></span></span></span>
           <span class="toplist__value">${esc(money.format(s.value))}</span></li>`;
-      }).join('')}</ol>` : '<p class="state__hint">U poslednjih 90 dana nema prodaje.</p>'}
+      }).join('')}</ol>${moreBtn('ovbest', top.length, 6)}` : '<p class="state__hint">U poslednjih 90 dana nema prodaje.</p>'}
     </section>`;
 
   // where it goes: the parishes on the map
