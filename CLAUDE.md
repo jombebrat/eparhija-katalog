@@ -38,6 +38,9 @@ Trojezični (FR glavni, EN, SR ćirilica) katalog i porudžbine magacina Eparhij
 - Mock Supabase (Deno), test nalozi i puppeteer skripte su u `tools/test/` (uputstvo u `tools/test/README.md`). Test nalozi: član otac.nikola@example.com (kod 123456), admin admin@example.com. Cene u mock-u su izmišljene.
 - Skripte pokrivaju tok člana (izmena/otkazivanje), admin oznaku "Izmenjena" (treba filter "Sve") i pregled mejlova.
 
+## Sajt u izradi (lozinka na ulazu)
+`data/site.json` → `gate` ({on, salt, rounds, hash}). Dok je `on: true`, `build.mjs` ubacuje u sve javne strane (ne i `/admin/`) prekrivku "Sajt u izradi" sa poljem za lozinku; proverava se u pregledaču (PBKDF2), u repou je samo otisak, nikad lozinka. Isključivanje: `on: false`, pa `OFFLINE=1 node build.mjs` i objava. Nova lozinka: `node tools/gate-hash.mjs <lozinka>`. Ovo samo skriva sajt od posetilaca, nije prava zaštita (katalog je u javnom repou); mejlovi članovima vode na sajt, pa i oni moraju da unesu lozinku dok je uključeno.
+
 ## Nije proveravano na pravom sajtu
 Stvarna isporuka mejlova (Gmail/Apple Mail, spam), SPF/DKIM PASS (podešeno, nije potvrđeno), DMARC TXT zapis (preporučen), brisanje porudžbine u pravoj bazi, prikaz prvobitnog iznosa u adminu.
 

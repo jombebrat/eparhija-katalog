@@ -14,6 +14,66 @@ import * as R from './docs/assets/js/render.js';
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const read = (p) => JSON.parse(readFileSync(join(ROOT, p), 'utf8'));
 const site = read('data/site.json');
+// ----- "site under construction": a password in front of every public page (not the admin, which has its own sign-in) -----
+// data/site.json: "gate": { "on": true, "hash": "<PBKDF2 of the password>", "salt": "...", "rounds": N }. Only the hash is kept here, never the password.
+// This only hides the site from visitors; it is not real access control (the catalogue is still in the public repository).
+const GATE = site.gate && site.gate.on && site.gate.hash ? site.gate : null;
+const GATE_TEXT = {
+  fr: ['Site en construction', 'Le site sera bientôt disponible. Entrez le mot de passe pour accéder à la version de test.', 'Mot de passe', 'Entrer', 'Mot de passe incorrect.'],
+  en: ['Website under construction', 'The website will be available soon. Enter the password to see the test version.', 'Password', 'Enter', 'Wrong password.'],
+  sr: ['Сајт је у изради', 'Сајт ускоро постаје доступан. Унесите лозинку да бисте видели пробну верзију.', 'Лозинка', 'Уђи', 'Погрешна лозинка.'],
+};
+function gateHead(lang) {
+  if (!GATE) return '';
+  const T = GATE_TEXT[lang] || GATE_TEXT.fr;
+  const cfg = JSON.stringify({ h: GATE.hash, s: GATE.salt, r: GATE.rounds, t: T }).replace(/</g, '\\u003c');
+  return `
+  <meta name="robots" content="noindex, nofollow">
+  <style id="gate-css">
+    html:not(.gate-open) body > *:not(#site-gate) { display: none !important; }
+    html:not(.gate-open):not(.gate-js) body::before { content: "${GATE_TEXT.fr[0]} · ${GATE_TEXT.en[0]} · ${GATE_TEXT.sr[0]}"; display: block; padding: 4rem 1.5rem; text-align: center; font: 600 1.25rem/1.4 system-ui, sans-serif; }
+    #site-gate { position: fixed; inset: 0; z-index: 2147483647; display: grid; place-items: center; padding: 1rem; background: #111; font-family: system-ui, sans-serif; }
+    #site-gate form { width: min(24rem, 100%); padding: 2rem 1.5rem; border-radius: 12px; background: #fff; color: #111; text-align: center; }
+    #site-gate img { width: 64px; height: auto; margin-bottom: .75rem; }
+    #site-gate h1 { margin: 0 0 .5rem; font-size: 1.4rem; line-height: 1.25; }
+    #site-gate p { margin: 0 0 1.25rem; color: #444; line-height: 1.5; }
+    #site-gate input { box-sizing: border-box; width: 100%; padding: .75rem; border: 1px solid #888; border-radius: 8px; font: inherit; }
+    #site-gate button { width: 100%; margin-top: .75rem; padding: .75rem; border: 0; border-radius: 8px; background: #111; color: #fff; font: inherit; font-weight: 600; cursor: pointer; }
+    #site-gate button:disabled { opacity: .6; cursor: wait; }
+    #site-gate .gate-err { min-height: 1.4em; margin: .6rem 0 0; color: #b00020; font-size: .95rem; }
+  </style>
+  <script>(function () {
+    var C = ${cfg}, de = document.documentElement, K = 'ek-gate';
+    try { if (localStorage.getItem(K) === C.h) { de.classList.add('gate-open'); return; } } catch (e) {}
+    de.classList.add('gate-js');
+    var hex = function (b) { return Array.prototype.map.call(new Uint8Array(b), function (x) { return ('0' + x.toString(16)).slice(-2); }).join(''); };
+    function ready() {
+      var g = document.createElement('div'); g.id = 'site-gate';
+      g.innerHTML = '<form novalidate><img src="/assets/img/grb-112.png" alt="" width="64" height="64"><h1></h1><p></p><input type="password" autocomplete="current-password" required><button type="submit"></button><p class="gate-err" role="alert"></p></form>';
+      var q = function (s) { return g.querySelector(s); };
+      q('h1').textContent = C.t[0]; q('p').textContent = C.t[1];
+      q('input').setAttribute('aria-label', C.t[2]); q('input').placeholder = C.t[2]; q('button').textContent = C.t[3];
+      q('form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var b = q('button'), err = q('.gate-err'), pw = q('input').value;
+        err.textContent = ''; b.disabled = true;
+        var enc = new TextEncoder();
+        crypto.subtle.importKey('raw', enc.encode(pw), 'PBKDF2', false, ['deriveBits'])
+          .then(function (k) { return crypto.subtle.deriveBits({ name: 'PBKDF2', hash: 'SHA-256', salt: enc.encode(C.s), iterations: C.r }, k, 256); })
+          .then(function (bits) {
+            if (hex(bits) === C.h) { try { localStorage.setItem(K, C.h); } catch (e) {} de.classList.add('gate-open'); g.remove(); }
+            else { err.textContent = C.t[4]; q('input').select(); }
+            b.disabled = false;
+          })
+          .catch(function () { err.textContent = C.t[4]; b.disabled = false; });
+      });
+      document.body.appendChild(g); q('input').focus();
+    }
+    if (document.body) ready(); else document.addEventListener('DOMContentLoaded', ready);
+  })();</script>`;
+}
+const gated = (html, lang) => (GATE ? html.replace('<head>', '<head>' + gateHead(lang)) : html);
+
 const strings = read('data/strings.json');
 const legal = read('data/legal.json');
 
@@ -366,7 +426,7 @@ function page(lang, dir) {
 for (const l of LANGS) {
   const out = join(ROOT, 'docs', l.dir, 'index.html');
   mkdirSync(dirname(out), { recursive: true });
-  writeFileSync(out, page(l.id, l.dir));
+  writeFileSync(out, gated(page(l.id, l.dir), l.id));
   console.log('wrote', out.replace(ROOT + '/', ''));
 }
 
@@ -777,7 +837,7 @@ function accountPage(lang) {
 for (const l of LANGS) {
   const out = join(ROOT, 'docs', accountPath(l), 'index.html');
   mkdirSync(dirname(out), { recursive: true });
-  writeFileSync(out, accountPage(l.id));
+  writeFileSync(out, gated(accountPage(l.id), l.id));
   console.log('wrote', out.replace(ROOT + '/', ''));
 }
 
@@ -852,7 +912,7 @@ function checkoutPage(lang) {
 for (const l of LANGS) {
   const out = join(ROOT, 'docs', checkoutPath(l), 'index.html');
   mkdirSync(dirname(out), { recursive: true });
-  writeFileSync(out, checkoutPage(l.id));
+  writeFileSync(out, gated(checkoutPage(l.id), l.id));
   console.log('wrote', out.replace(ROOT + '/', ''));
 }
 
@@ -928,6 +988,6 @@ ${sections}
 for (const l of LANGS) {
   const out = join(ROOT, 'docs', legalPath(l), 'index.html');
   mkdirSync(dirname(out), { recursive: true });
-  writeFileSync(out, legalPage(l.id));
+  writeFileSync(out, gated(legalPage(l.id), l.id));
   console.log('wrote', out.replace(ROOT + '/', ''));
 }

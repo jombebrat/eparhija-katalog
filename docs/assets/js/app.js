@@ -1049,6 +1049,12 @@ import * as R from './render.js?v=2e5794a19b';
     setTimeout(() => { this._closing = false; this.classList.remove('closing'); nativeClose.call(this, v); }, 280);
   };
   HTMLDialogElement.prototype.showModal = function () {
+    // while the "site under construction" password is shown, a modal dialog would make it unusable: open it after the unlock
+    const de = document.documentElement;
+    if (de.classList.contains('gate-js') && !de.classList.contains('gate-open')) {
+      new MutationObserver((_, o) => { if (de.classList.contains('gate-open')) { o.disconnect(); this.showModal(); } }).observe(de, { attributes: true, attributeFilter: ['class'] });
+      return;
+    }
     if (this._closing) { this._closing = false; this.classList.remove('closing'); nativeClose.call(this); }
     return nativeShow.call(this);
   };

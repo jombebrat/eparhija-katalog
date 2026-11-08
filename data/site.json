@@ -9,5 +9,12 @@
     "sr": "23, rue du Simplon, 75018 Paris"
   },
   "supabaseUrl": "https://ivzzhtaksdwbhhioilsn.supabase.co",
-  "supabaseKey": "sb_publishable_rxpulg5CJqz_TpV1brvBCQ_C2ioyLyW"
+  "supabaseKey": "sb_publishable_rxpulg5CJqz_TpV1brvBCQ_C2ioyLyW",
+  "gate": {
+    "_help": "Sajt u izradi: lozinka na ulazu. on:false isključuje (pa node build.mjs). Ovde je samo otisak lozinke, nikad lozinka. Novi otisak: node tools/gate-hash.mjs <lozinka>.",
+    "on": true,
+    "salt": "f9c9085c35261b1e4486913c",
+    "rounds": 300000,
+    "hash": "9e2b4eedec29a6f08e136bb15733d57b816cd2ac0da7cff730377bbc8ee5c9dd"
+  }
 }
